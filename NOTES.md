@@ -117,6 +117,16 @@ How it works:
 - All cron routes share `apps/web/lib/cron/isCronRequestAuthorized.ts` (constant-time compare).
 - Upstream's `/api/cron/bookingReminder` (host reminders for pending requests) still exists. Schedule it too.
 
+## AI request helper (built 2026-11-13)
+- `BookingRequestInsight`: summary, fit (GOOD/UNCLEAR/POOR), spamLikely, concerns, suggestedReply. It's advisory only and never acted on automatically.
+- Code: `packages/features/booking-request-insights`.
+  - Calls the Anthropic TS SDK with `client.beta.messages.parse`, a zod (v4) schema, effort `low`, and server-side `fallbacks: "default"`.
+  - Model: `claude-opus-5-5`, overridable with `REQUEST_INSIGHTS_MODEL`.
+- Prompt injection: the requester's answers are fenced in `<request>`, with `<` and `>` neutralised, and the system prompt says to treat them as data.
+- Off unless `ANTHROPIC_API_KEY` is set. **No key on the dev machine yet.** Verified with mocks and with a deliberately invalid key, which gave a real 401 that was logged gracefully.
+- **Cron (every minute):** `POST /api/cron/request-insights`. Owner read: tRPC `requestInsights.get({ bookingUid })`, scoped to the host.
+- Gotcha: new env vars must be added to `turbo.json` `globalEnv`, or Turbo strips them.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

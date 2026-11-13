@@ -924,6 +924,7 @@ model Booking {
   // @@partial_index([reassignById])
   attendeeConfirmation BookingAttendeeConfirmation?
   remindersSent        BookingReminderSent[]
+  requestInsight       BookingRequestInsight?
 
   @@index([eventTypeId])
   @@index([userId])
@@ -2928,4 +2929,24 @@ model BookingReminderSent {
   sentAt        DateTime @default(now())
 
   @@unique([bookingId, minutesBefore])
+}
+
+enum BookingRequestFit {
+  GOOD
+  UNCLEAR
+  POOR
+}
+
+/// AI-generated triage of a booking request for the host. Advisory only; never acted on automatically.
+model BookingRequestInsight {
+  id             Int               @id @default(autoincrement())
+  bookingId      Int               @unique
+  booking        Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  summary        String
+  fit            BookingRequestFit
+  spamLikely     Boolean
+  concerns       String[]
+  suggestedReply String
+  model          String
+  createdAt      DateTime          @default(now())
 }

@@ -25,6 +25,7 @@ import { oooRouter } from "./ooo/_router";
 import { slotsRouter } from "./slots/_router";
 import { travelSchedulesRouter } from "./travelSchedules/_router";
 import { userAdminRouter } from "./users/_router";
+import { requestInsightsRouter } from "./requestInsights/_router";
 import { waitlistRouter } from "./waitlist/_router";
 import { webhookRouter } from "./webhook/_router";
 
@@ -37,6 +38,7 @@ export const viewerRouter = router({
   deploymentSetup: deploymentSetupRouter,
   bookings: bookingsRouter,
   waitlist: waitlistRouter,
+  requestInsights: requestInsightsRouter,
   calendars: calendarsRouter,
   calVideo: calVideoRouter,
   credentials: credentialsRouter,

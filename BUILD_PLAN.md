@@ -18,11 +18,11 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 3. Waitlist: join/offer/expire/claim/remove + emails + cron + owner tRPC + settings toggle — 19 unit tests, verified live (join errors, cancel→offer, claim→booking via normal flow, reuse blocked, cron expiry→next person, auth 401s)
 - [x] 4. Confirm-or-release: settings (validated 1–168h), request emails via cron, confirm page/API, missed → host alert or release via cancel service → waitlist offer — 10 unit tests, verified live end to end
 - [x] 5. Reminders: per-service offsets (default 24h), exactly-once via unique sent log, no stale/late reminders, cron — 8 unit tests + shared cron auth (3 tests), verified live
-- [ ] 6. AI request helper: summary + spam/low-fit flag for pending requests (Anthropic API, model from env, graceful no-op without key); shown to owner in email + booking; tests (mock LLM)
+- [x] 6. AI request helper: async cron triage (summary/fit/spam/concerns/reply) via Anthropic SDK structured output + fallbacks, injection-fenced, host-scoped read — 8 unit tests; live: no-key no-op, auth 401s, real SDK call with invalid key handled. NEEDS a real ANTHROPIC_API_KEY to see real output.
 - [ ] 7. Pro plan: plan field on user, feature gating (approval, screening beyond 1 form, waitlist, confirm-or-release, AI, custom domain, branding removal), Polar checkout + webhook (signature verified) → plan updates; tests
 - [ ] 8. Owner-facing pages for new features (functional, not polished): waitlist list, settings toggles per event type
 - [ ] 9. Full regression: booking flows, cancel/reschedule, emails, type-check whole repo, unit tests for touched packages
 - [ ] 10. Production readiness: env docs, migrations, cron setup docs, security review of new endpoints
 
 ## Log
-- 2026-11-13: items 0–5 done.
+- 2026-11-13: items 0–6 done.
