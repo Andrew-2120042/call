@@ -107,6 +107,16 @@ How it works:
 - **Cron (production must schedule this every 5 minutes):** `POST /api/cron/attendee-confirmations` with header `authorization: $CRON_API_KEY`.
 - Shared email layout: `packages/emails/src/templates/ActionEmail.tsx`.
 
+## Attendee reminders (built 2026-11-13)
+- Setting: `EventType.attendeeReminderMinutes` (Int[]; default `{1440}`, meaning 24h before; max 5 values, each 1–20160).
+- `BookingReminderSent` (unique bookingId + minutesBefore) guarantees each reminder is sent exactly once.
+- Rules:
+  - Never sent if the booking was made after the reminder time.
+  - If several reminders are due, only the nearest goes out and the stale ones are retired.
+- **Cron (every 5 minutes):** `POST /api/cron/attendee-reminders` (CRON_API_KEY).
+- All cron routes share `apps/web/lib/cron/isCronRequestAuthorized.ts` (constant-time compare).
+- Upstream's `/api/cron/bookingReminder` (host reminders for pending requests) still exists. Schedule it too.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

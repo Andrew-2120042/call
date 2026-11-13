@@ -137,6 +137,7 @@ const BaseEventTypeUpdateInput: z.ZodType<TUpdateInputSchema> = z
     waitlistEnabled: z.boolean().optional(),
     attendeeConfirmationHours: z.number().int().min(1).max(168).nullable().optional(),
     releaseUnconfirmedBookings: z.boolean().optional(),
+    attendeeReminderMinutes: z.array(z.number().int().min(1).max(20160)).max(5).optional(),
     requiresBookerEmailVerification: z.boolean().optional(),
     canSendCalVideoTranscriptionEmails: z.boolean().optional(),
     autoTranslateDescriptionEnabled: z.boolean().optional(),

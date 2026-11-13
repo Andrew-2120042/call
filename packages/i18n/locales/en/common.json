@@ -4776,5 +4776,9 @@
   "attendance_confirmed_body": "Thanks! {{hostName}} knows you're coming.",
   "attendance_confirm_deadline_passed": "The confirmation deadline has passed.",
   "attendance_confirm_booking_cancelled": "This booking was cancelled.",
-  "attendance_confirm_invalid": "This link isn't valid."
+  "attendance_confirm_invalid": "This link isn't valid.",
+  "attendee_reminder_subject": "Reminder: {{eventTitle}} on {{date}}",
+  "attendee_reminder_title": "See you soon",
+  "attendee_reminder_body": "This is a reminder of your booking with {{hostName}} on {{date}}. Need to change it? You can reschedule or cancel from your booking page.",
+  "attendee_reminder_cta": "View or change booking"
 }

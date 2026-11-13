@@ -354,6 +354,7 @@ export type EventTypeUpdateInput = {
   waitlistEnabled?: boolean;
   attendeeConfirmationHours?: number | null;
   releaseUnconfirmedBookings?: boolean;
+  attendeeReminderMinutes?: number[];
   requiresBookerEmailVerification?: boolean;
   canSendCalVideoTranscriptionEmails?: boolean;
   autoTranslateDescriptionEnabled?: boolean;

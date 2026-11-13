@@ -102,3 +102,18 @@ export class HostUnconfirmedBookingEmail extends ActionBaseEmail<
     };
   }
 }
+
+export class AttendeeReminderEmail extends ActionBaseEmail<
+  CommonData & { hostName: string; manageUrl: string }
+> {
+  protected content() {
+    const { t, serviceTitle, hostName, startTime, to, manageUrl } = this.data;
+    const date = formatInZone(startTime, to.timeZone);
+    return {
+      subject: t("attendee_reminder_subject", { eventTitle: serviceTitle, date, ...RAW }),
+      title: t("attendee_reminder_title"),
+      body: t("attendee_reminder_body", { date, hostName, ...RAW }),
+      cta: { label: t("attendee_reminder_cta"), href: manageUrl },
+    };
+  }
+}

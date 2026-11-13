@@ -211,6 +211,8 @@ model EventType {
   attendeeConfirmationHours          Int?
   /// When the attendee misses the confirmation deadline: cancel and free the slot (true) or only alert the host.
   releaseUnconfirmedBookings         Boolean                @default(false)
+  /// Minutes before the start at which attendees get a reminder email (empty = no reminders).
+  attendeeReminderMinutes            Int[]                  @default([1440])
   requiresBookerEmailVerification    Boolean                @default(false)
   canSendCalVideoTranscriptionEmails Boolean                @default(true)
 
@@ -921,6 +923,7 @@ model Booking {
 
   // @@partial_index([reassignById])
   attendeeConfirmation BookingAttendeeConfirmation?
+  remindersSent        BookingReminderSent[]
 
   @@index([eventTypeId])
   @@index([userId])
@@ -2914,4 +2917,15 @@ model BookingAttendeeConfirmation {
   resolvedAt  DateTime?
 
   @@index([status, deadline])
+}
+
+/// One row per reminder actually sent, so each reminder goes out exactly once even with overlapping cron runs.
+model BookingReminderSent {
+  id            Int      @id @default(autoincrement())
+  bookingId     Int
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  minutesBefore Int
+  sentAt        DateTime @default(now())
+
+  @@unique([bookingId, minutesBefore])
 }
