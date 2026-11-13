@@ -1,5 +1,6 @@
 import process from "node:process";
 import { getCspHeader, getCspNonce } from "@lib/csp";
+import { isAppHost, routeCustomDomainPath } from "@lib/customDomainRouting";
 import { get } from "@vercel/edge-config";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -65,8 +66,82 @@ const shouldEnforceCsp = (url: URL) => {
   return url.pathname.startsWith("/auth/login") || url.pathname.startsWith("/login");
 };
 
+// The paths this proxy handled before custom domains existed; on the app's own host nothing else changes.
+const APP_HOST_PATHS = [
+  /^\/auth\/login/,
+  /^\/login/,
+  /^\/apps\/installed/,
+  /^\/auth\/logout/,
+  /\/embed$/,
+  /^\/availability$/,
+  /^\/api\/auth\/signup/,
+];
+
+type Resolution = { kind: "active" | "inactive"; username: string } | { kind: "unknown" };
+const resolutionCache = new Map<string, { value: Resolution; expires: number }>();
+const RESOLUTION_TTL_MS = 60_000;
+
+async function resolveCustomDomain(host: string): Promise<Resolution> {
+  const cached = resolutionCache.get(host);
+  if (cached && cached.expires > Date.now()) return cached.value;
+  let value: Resolution = { kind: "unknown" };
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_WEBAPP_URL}/api/custom-domains/resolve?host=${encodeURIComponent(host)}`
+    );
+    if (res.ok) value = (await res.json()) as Resolution;
+  } catch {
+    // Treat lookup failures as unknown but don't cache them, so a blip doesn't take a domain down for a minute.
+    return value;
+  }
+  resolutionCache.set(host, { value, expires: Date.now() + RESOLUTION_TTL_MS });
+  return value;
+}
+
+async function handleCustomDomain(req: NextRequest, host: string): Promise<NextResponse | null> {
+  const url = req.nextUrl;
+  const resolution = await resolveCustomDomain(host);
+  const appUrl = process.env.NEXT_PUBLIC_WEBAPP_URL;
+  if (resolution.kind === "unknown") {
+    return new NextResponse("This domain isn't connected to a booking page.", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
+  const route = routeCustomDomainPath(url.pathname, resolution.username);
+  if (resolution.kind === "inactive") {
+    // The owner's plan lapsed: keep their bookers working on the main app URL.
+    const target = route.kind === "rewrite" ? route.pathname : url.pathname;
+    return NextResponse.redirect(new URL(`${target}${url.search}`, appUrl), 307);
+  }
+  if (route.kind === "redirect-to-app") {
+    return NextResponse.redirect(new URL(`${route.pathname}${url.search}`, appUrl), 307);
+  }
+  if (route.kind === "rewrite") {
+    const rewritten = url.clone();
+    rewritten.pathname = route.pathname;
+    return NextResponse.rewrite(rewritten);
+  }
+  return null;
+}
+
 const proxy = async (req: NextRequest): Promise<NextResponse<unknown>> => {
   const url = req.nextUrl;
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "";
+  const extraAppHosts = (process.env.APP_EXTRA_HOSTS ?? "")
+    .split(",")
+    .map((h) => h.trim())
+    .filter(Boolean);
+  const onAppHost =
+    !host ||
+    isAppHost(host, [process.env.NEXT_PUBLIC_WEBAPP_URL, process.env.NEXT_PUBLIC_WEBSITE_URL], extraAppHosts);
+  if (!onAppHost) {
+    const customResponse = await handleCustomDomain(req, host.toLowerCase().replace(/:\d+$/, ""));
+    if (customResponse) return customResponse;
+  }
+  if (onAppHost && !APP_HOST_PATHS.some((pattern) => pattern.test(url.pathname))) {
+    return NextResponse.next();
+  }
   const reqWithEnrichedHeaders = enrichRequestWithHeaders({ req });
   const requestHeaders = new Headers(reqWithEnrichedHeaders.headers);
 
@@ -163,7 +238,18 @@ function enrichRequestWithHeaders({ req }: { req: NextRequest }) {
 }
 
 export const config = {
-  matcher: ["/auth/login", "/login", "/apps/installed", "/auth/logout", "/:path*/embed", "/availability", "/api/auth/signup"],
+  // Page paths are matched broadly so custom domains can be routed; app-host requests outside the
+  // original list (APP_HOST_PATHS) return immediately.
+  matcher: [
+    "/auth/login",
+    "/login",
+    "/apps/installed",
+    "/auth/logout",
+    "/:path*/embed",
+    "/availability",
+    "/api/auth/signup",
+    "/((?!_next/|api/|.*\\..*).*)",
+  ],
 };
 
 export default proxy;

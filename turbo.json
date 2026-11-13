@@ -1,6 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["yarn.lock"],
+  "globalDependencies": [
+    "yarn.lock"
+  ],
   "globalEnv": [
     "ALLOWED_HOSTNAMES",
     "ANALYZE",
@@ -308,44 +310,75 @@
     "B2_APPLICATION_KEY_ID",
     "B2_APPLICATION_KEY",
     "B2_BUCKET_ID",
-    "B2_BUCKET_NAME"
+    "B2_BUCKET_NAME",
+    "VERCEL_DOMAINS_API_TOKEN",
+    "VERCEL_DOMAINS_PROJECT_ID",
+    "VERCEL_DOMAINS_TEAM_ID",
+    "CUSTOM_DOMAIN_CNAME_TARGET",
+    "APP_EXTRA_HOSTS"
   ],
   "tasks": {
     "@calcom/web#copy-app-store-static": {
-      "inputs": ["../../packages/app-store/**/static/**/*"],
+      "inputs": [
+        "../../packages/app-store/**/static/**/*"
+      ],
       "outputLogs": "new-only",
-      "outputs": ["public/app-store/**"]
+      "outputs": [
+        "public/app-store/**"
+      ]
     },
     "@calcom/prisma#build": {
       "cache": false,
-      "dependsOn": ["post-install"]
+      "dependsOn": [
+        "post-install"
+      ]
     },
     "@calcom/prisma#db-migrate": {
       "cache": false,
-      "dependsOn": ["@calcom/prisma#db-up"],
-      "inputs": ["./schema.prisma", "./migrations/**/*.sql"]
+      "dependsOn": [
+        "@calcom/prisma#db-up"
+      ],
+      "inputs": [
+        "./schema.prisma",
+        "./migrations/**/*.sql"
+      ]
     },
     "@calcom/prisma#db-seed": {
       "cache": false,
-      "dependsOn": ["@calcom/prisma#db-deploy"]
+      "dependsOn": [
+        "@calcom/prisma#db-deploy"
+      ]
     },
     "@calcom/prisma#db-up": {
       "cache": false
     },
     "@calcom/prisma#dx": {
       "cache": false,
-      "dependsOn": ["@calcom/prisma#db-up"]
+      "dependsOn": [
+        "@calcom/prisma#db-up"
+      ]
     },
     "@calcom/app-store#build:types": {
-      "outputs": ["types/**"]
+      "outputs": [
+        "types/**"
+      ]
     },
     "@calcom/trpc#build": {
-      "dependsOn": ["@calcom/prisma#post-install"],
-      "outputs": ["./types"]
+      "dependsOn": [
+        "@calcom/prisma#post-install"
+      ],
+      "outputs": [
+        "./types"
+      ]
     },
     "@calcom/web#build": {
-      "dependsOn": ["^build", "copy-app-store-static"],
-      "outputs": [".next/**"],
+      "dependsOn": [
+        "^build",
+        "copy-app-store-static"
+      ],
+      "outputs": [
+        ".next/**"
+      ],
       "env": [
         "NEXT_PUBLIC_AVAILABILITY_SCHEDULE_INTERVAL",
         "NEXT_PUBLIC_BOOKER_NUMBER_OF_DAYS_TO_LOAD",
@@ -386,22 +419,34 @@
         "NEXT_PUBLIC_API_HITPAY_SANDBOX",
         "TRIGGER_VERSION"
       ],
-      "inputs": ["$TURBO_DEFAULT$", ".env.production"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.production"
+      ]
     },
     "@calcom/web#dx": {
       "cache": false,
-      "dependsOn": ["@calcom/prisma#dx"]
+      "dependsOn": [
+        "@calcom/prisma#dx"
+      ]
     },
     "@calcom/web#start": {
       "cache": false,
       "dependsOn": []
     },
     "@calcom/atoms#build-npm": {
-      "outputs": ["dist/**", "globals.min.css"]
+      "outputs": [
+        "dist/**",
+        "globals.min.css"
+      ]
     },
     "@calcom/api-v2#build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ],
       "env": [
         "NODE_ENV",
         "API_PORT",
@@ -414,7 +459,10 @@
         "REDIS_URL",
         "TRIGGER_VERSION"
       ],
-      "inputs": ["$TURBO_DEFAULT$", ".env.production"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env.production"
+      ]
     },
     "@calcom/ai#build": {
       "env": [
@@ -431,8 +479,12 @@
       ]
     },
     "@calcom/website#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**"],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        ".next/**"
+      ],
       "env": [
         "CSP_POLICY",
         "DATABASE_URL",
@@ -458,37 +510,62 @@
       ]
     },
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
     },
     "db-deploy": {
       "cache": false,
-      "inputs": ["./migrations/**/*.sql", "./prisma/migrations/**/*.sql"]
+      "inputs": [
+        "./migrations/**/*.sql",
+        "./prisma/migrations/**/*.sql"
+      ]
     },
     "db-seed": {},
     "deploy": {
       "cache": false,
-      "dependsOn": ["@calcom/web#build"]
+      "dependsOn": [
+        "@calcom/web#build"
+      ]
     },
     "clean": {
       "cache": false,
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "@calcom/web#dev": {
-      "dependsOn": ["//#env-check:common", "//#env-check:app-store"],
+      "dependsOn": [
+        "//#env-check:common",
+        "//#env-check:app-store"
+      ],
       "cache": false
     },
     "dev": {
-      "dependsOn": ["//#env-check:common", "//#env-check:app-store"],
+      "dependsOn": [
+        "//#env-check:common",
+        "//#env-check:app-store"
+      ],
       "cache": false
     },
     "dev:trigger": {
-      "inputs": ["./.env"],
-      "env": ["TRIGGER_DEV_PROJECT_REF"],
+      "inputs": [
+        "./.env"
+      ],
+      "env": [
+        "TRIGGER_DEV_PROJECT_REF"
+      ],
       "cache": false
     },
     "deploy:trigger:prod": {
-      "inputs": ["./.env"],
+      "inputs": [
+        "./.env"
+      ],
       "env": [
         "TRIGGER_DEV_PROJECT_REF",
         "TRIGGER_API_URL",
@@ -500,7 +577,9 @@
       "cache": false
     },
     "deploy:trigger:staging": {
-      "inputs": ["./.env"],
+      "inputs": [
+        "./.env"
+      ],
       "env": [
         "TRIGGER_DEV_PROJECT_REF",
         "TRIGGER_API_URL",
@@ -512,50 +591,84 @@
       "cache": false
     },
     "dx": {
-      "dependsOn": ["//#env-check:common", "//#env-check:app-store"],
+      "dependsOn": [
+        "//#env-check:common",
+        "//#env-check:app-store"
+      ],
       "cache": false
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "lint:fix": {
       "cache": false
     },
     "lint:report": {
-      "outputs": ["lint-results"]
+      "outputs": [
+        "lint-results"
+      ]
     },
     "post-install": {
       "dependsOn": [],
-      "outputs": ["../../node_modules/@prisma/client/**", "../../node_modules/@prisma/admin-client/**"],
-      "inputs": ["./schema.prisma", "./prisma/schema.prisma"],
-      "env": ["PRISMA_GENERATE_DATAPROXY"]
+      "outputs": [
+        "../../node_modules/@prisma/client/**",
+        "../../node_modules/@prisma/admin-client/**"
+      ],
+      "inputs": [
+        "./schema.prisma",
+        "./prisma/schema.prisma"
+      ],
+      "env": [
+        "PRISMA_GENERATE_DATAPROXY"
+      ]
     },
     "@calcom/prisma#post-install": {
       "cache": false,
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "start": {
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "embed-tests": {
       "cache": false,
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "embed-tests-quick": {
       "cache": false,
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "type-check": {
       "cache": false,
-      "dependsOn": ["@calcom/trpc#build"]
+      "dependsOn": [
+        "@calcom/trpc#build"
+      ]
     },
     "type-check:ci": {
       "cache": false,
-      "dependsOn": ["@calcom/trpc#build"]
+      "dependsOn": [
+        "@calcom/trpc#build"
+      ]
     },
     "@calcom/prisma#db-reset": {
       "cache": false,
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "@calcom/app-store-cli#build": {
       "inputs": [
@@ -567,15 +680,26 @@
         "../../packages/app-store/**/pages/**",
         "../../packages/app-store-cli/src/**"
       ],
-      "outputs": ["../../packages/app-store/*.generated.ts", "../../packages/app-store/*.generated.tsx"]
+      "outputs": [
+        "../../packages/app-store/*.generated.ts",
+        "../../packages/app-store/*.generated.tsx"
+      ]
     },
     "@calcom/embed-react#type-check": {
-      "dependsOn": ["@calcom/embed-core#build", "@calcom/embed-snippet#build"],
-      "outputs": ["dist/**", "build/**"]
+      "dependsOn": [
+        "@calcom/embed-core#build",
+        "@calcom/embed-snippet#build"
+      ],
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "@calcom/embed-core#build": {
       "cache": false,
-      "outputs": ["../../../apps/web/public/embed/**"],
+      "outputs": [
+        "../../../apps/web/public/embed/**"
+      ],
       "env": [
         "EMBED_PUBLIC_VERCEL_URL",
         "EMBED_PUBLIC_WEBAPP_URL",
@@ -591,17 +715,30 @@
         "^build",
         "^embed-tests-update-snapshots:ci"
       ],
-      "outputs": ["dist/**", "build/**"]
+      "outputs": [
+        "dist/**",
+        "build/**"
+      ]
     },
     "//#env-check:common": {
       "cache": false,
-      "inputs": ["./.env.example", "./.env"],
-      "outputs": ["./.env"]
+      "inputs": [
+        "./.env.example",
+        "./.env"
+      ],
+      "outputs": [
+        "./.env"
+      ]
     },
     "//#env-check:app-store": {
       "cache": false,
-      "inputs": ["./.env.appStore.example", "./.env.appStore"],
-      "outputs": ["./.env.appStore"]
+      "inputs": [
+        "./.env.appStore.example",
+        "./.env.appStore"
+      ],
+      "outputs": [
+        "./.env.appStore"
+      ]
     },
     "//#test": {
       "cache": false

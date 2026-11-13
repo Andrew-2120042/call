@@ -16,6 +16,8 @@ const CLIENT_OR_EDGE_FILES = [
   "apps/web/modules/bookings/components/AvailableTimeSlots.tsx",
   "apps/web/modules/settings/my-account/appearance-view.tsx",
   "apps/web/lib/csp.ts",
+  "apps/web/lib/customDomainRouting.ts",
+  "apps/web/modules/settings/domain/custom-domain-view.tsx",
   "apps/web/modules/bookings/components/UnconfirmedBookingBadge.tsx",
   "apps/web/modules/data-table/components/DataTable.tsx",
   "apps/web/modules/settings/billing/billing-view.tsx",

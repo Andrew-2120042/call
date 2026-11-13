@@ -32,6 +32,7 @@ export const ENDPOINTS = [
   "waitlist",
   "requestInsights",
   "bookingRules",
+  "customDomain",
   "webhook",
   "googleWorkspace",
   "oAuth",

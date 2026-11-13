@@ -71,6 +71,10 @@ const getTabs = (
           href: "/settings/billing",
         },
         {
+          name: "custom_domain_page_title",
+          href: "/settings/domain",
+        },
+        {
           name: "out_of_office",
           href: "/settings/my-account/out-of-office",
           trackingMetadata: { section: "my_account", page: "out_of_office" },

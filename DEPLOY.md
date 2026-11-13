@@ -49,6 +49,19 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
 3. Add a webhook to `https://<app>/api/billing/polar/webhook` with the `subscription.*` events, then copy its secret into `POLAR_WEBHOOK_SECRET`.
 4. Test in sandbox first (`POLAR_ENVIRONMENT=sandbox`) with a test card, and confirm `/settings/billing` shows Pro.
 
+## 5b. Custom domains (Pro)
+- Owners connect a domain in **Settings → Custom domain**. They add:
+  - a TXT record `_slotwise-verify.<domain>` with their token (proves ownership)
+  - a CNAME to `CUSTOM_DOMAIN_CNAME_TARGET` (on Vercel: `cname.vercel-dns.com`)
+- **On Vercel:** set `VERCEL_DOMAINS_API_TOKEN` and `VERCEL_DOMAINS_PROJECT_ID` (plus `VERCEL_DOMAINS_TEAM_ID` for a team). The domain is then added to the project automatically and Vercel issues its TLS certificate. Without them, add domains to the project by hand.
+- **Elsewhere:** put a reverse proxy in front that issues certificates on demand (for example Caddy with `on_demand_tls`) and forwards the `Host` header.
+- **Routing:** `apps/web/proxy.ts` sends requests on unknown hosts to `/api/custom-domains/resolve` (cached for 60 s).
+  - `/` → `/<username>`, and `/<slug>` → `/<username>/<slug>`.
+  - Booking, waitlist and confirm pages work as-is on the domain.
+  - Owner pages (settings, login and so on) redirect to the app.
+  - If the owner's plan lapses, visitors are redirected to the regular app URL.
+- If the app is served on other hostnames, list them in `APP_EXTRA_HOSTS`.
+
 ## 6. Security notes for the Slotwise endpoints
 - **Public endpoints are rate-limited and validated with zod:**
   - `/api/waitlist/join`, `/api/waitlist/options`, `/api/waitlist/claim`, `/api/attendance/confirm`.
@@ -65,6 +78,7 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
   - The waitlist, confirmations and AI check the host's plan at runtime.
   - With no billing configured, everyone is on Free.
 - **Owner tRPC endpoints** (`waitlist.*`, `requestInsights.get`, `bookingRules.get`) are authenticated and scoped to the host's own data.
+- **Custom domains** count only after DNS TXT verification. A domain can't be claimed twice, and the app's own hosts and `*.vercel.app` are reserved. Removing the TXT record un-verifies the domain on the next check.
 - **AI prompts** fence requester text as data. Output is structured (a zod schema) and advisory only.
 
 ## 7. Before launch checklist

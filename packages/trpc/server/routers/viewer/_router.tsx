@@ -26,6 +26,7 @@ import { slotsRouter } from "./slots/_router";
 import { travelSchedulesRouter } from "./travelSchedules/_router";
 import { userAdminRouter } from "./users/_router";
 import { bookingRulesRouter } from "./bookingRules/_router";
+import { customDomainRouter } from "./customDomain/_router";
 import { requestInsightsRouter } from "./requestInsights/_router";
 import { waitlistRouter } from "./waitlist/_router";
 import { webhookRouter } from "./webhook/_router";
@@ -41,6 +42,7 @@ export const viewerRouter = router({
   waitlist: waitlistRouter,
   requestInsights: requestInsightsRouter,
   bookingRules: bookingRulesRouter,
+  customDomain: customDomainRouter,
   calendars: calendarsRouter,
   calVideo: calVideoRouter,
   credentials: credentialsRouter,
