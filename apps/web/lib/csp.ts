@@ -1,6 +1,4 @@
-import { IS_PRODUCTION } from "@calcom/lib/constants";
-import { WEBAPP_URL } from "@calcom/lib/constants";
-
+import { IS_PRODUCTION, WEBAPP_URL } from "@calcom/lib/constants";
 import { buildNonce } from "./buildNonce";
 
 function getCspPolicy(nonce: string) {
@@ -25,10 +23,8 @@ function getCspPolicy(nonce: string) {
     };
     object-src 'none';
     base-uri 'none';
-	  child-src app.cal.com;
-	  style-src 'self' ${
-      IS_PRODUCTION ? (useNonStrictPolicy ? "'unsafe-inline'" : "") : "'unsafe-inline'"
-    } app.cal.com;
+	  child-src 'self';
+	  style-src 'self' ${IS_PRODUCTION ? (useNonStrictPolicy ? "'unsafe-inline'" : "") : "'unsafe-inline'"};
 	  font-src 'self';
 	  img-src 'self' ${WEBAPP_URL} https://img.youtube.com https://eu.ui-avatars.com/api/ data:;
     connect-src 'self'

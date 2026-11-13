@@ -1,8 +1,6 @@
 import { authedAdminProcedure } from "../../../procedures/authedProcedure";
 import { router } from "../../../trpc";
 import { ZAdminAssignFeatureToTeamSchema } from "./assignFeatureToTeam.schema";
-import { ZCreateCouponSchema } from "./createCoupon.schema";
-import { ZCreateSelfHostedLicenseSchema } from "./createSelfHostedLicenseKey.schema";
 import { ZAdminGetTeamsForFeatureSchema } from "./getTeamsForFeature.schema";
 import { ZListMembersSchema } from "./listPaginated.schema";
 import { ZAdminLockUserAccountSchema } from "./lockUserAccount.schema";
@@ -41,16 +39,6 @@ export const adminRouter = router({
   }),
   setSMSLockState: authedAdminProcedure.input(ZSetSMSLockState).mutation(async (opts) => {
     const { default: handler } = await import("./setSMSLockState.handler");
-    return handler(opts);
-  }),
-  createSelfHostedLicense: authedAdminProcedure
-    .input(ZCreateSelfHostedLicenseSchema)
-    .mutation(async (opts) => {
-      const { default: handler } = await import("./createSelfHostedLicenseKey.handler");
-      return handler(opts);
-    }),
-  createCoupon: authedAdminProcedure.input(ZCreateCouponSchema).mutation(async (opts) => {
-    const { default: handler } = await import("./createCoupon.handler");
     return handler(opts);
   }),
   getTeamsForFeature: authedAdminProcedure.input(ZAdminGetTeamsForFeatureSchema).query(async (opts) => {
