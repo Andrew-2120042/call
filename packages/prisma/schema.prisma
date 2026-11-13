@@ -341,13 +341,13 @@ model Credential {
   delegationCredential      DelegationCredential?      @relation(fields: [delegationCredentialId], references: [id], onDelete: Cascade)
   integrationAttributeSyncs IntegrationAttributeSync[]
   hostLocations             HostLocation[]
+  calendarHealth            CalendarConnectionHealth?
 
   @@index([appId])
   @@index([subscriptionId])
   @@index([invalid])
   @@index([userId, delegationCredentialId])
   @@index([teamId])
-  calendarHealth            CalendarConnectionHealth?
 }
 
 enum IdentityProvider {
@@ -520,9 +520,9 @@ model User {
   autoOptInFeatures Boolean           @default(false)
   planSubscription  PlanSubscription?
   /// Public booking page colour theme (see packages/features/booking-page-theme)
-  pageTheme         String            @default("paper")
+  pageTheme         String            @default("fog")
   /// Public booking page button shape: pill | rounded | square
-  pageButtonShape   String            @default("pill")
+  pageButtonShape   String            @default("rounded")
   customDomain      CustomDomain?
 
   @@unique([email])

@@ -1,59 +1,83 @@
-/* Slotwise owner dashboard look (Linktree-style admin). Marked elements only, via data-sw-* attributes
-   on the shell, so Cal's components stay untouched and this file is the whole switch. */
-
-html:not(.dark) {
-  --sw-dash-side: #efeeec;
-  --sw-dash-main: #f8f6f4;
-  --sw-dash-hover: #e9e9e6;
-  --sw-dash-active: #e2e1de;
-  --sw-dash-purple: #6a22d6;
-  --cal-border-subtle: #ebebe8;
-  --cal-border-muted: #ebebe8;
-}
-
-html.dark {
-  --sw-dash-side: #141414;
-  --sw-dash-main: #0f0f0f;
-  --sw-dash-hover: #1f1f1f;
-  --sw-dash-active: #262626;
-  --sw-dash-purple: #b48cff;
-}
+/* Owner dashboard: indigo sidebar with a coral marker on the current page, lavender-grey work area.
+   Applied through data-sw-* attributes on the shell so Cal's components stay untouched. */
 
 [data-sw-sidebar] {
-  background: var(--sw-dash-side) !important;
+  background: #1b1a3a !important;
   border-color: transparent !important;
+  color: #e9e7ff;
+  --cal-text: #cfcce8;
+  --cal-text-emphasis: #ffffff;
+  --cal-text-subtle: #9f9cc4;
+  --cal-text-muted: #7c79a3;
+  --cal-bg-subtle: #2a2850;
+  --cal-bg-emphasis: #2f2d58;
+  --cal-border-subtle: #2c2a52;
+}
+
+.dark [data-sw-sidebar] {
+  background: #0d0c1f !important;
 }
 
 [data-sw-sidebar] nav a,
 [data-sw-sidebar] nav button {
-  border-radius: 10px !important;
+  border-radius: 12px !important;
+  position: relative;
 }
 
 @media (min-width: 1024px) {
   [data-sw-sidebar] nav a,
   [data-sw-sidebar] nav button {
     font-size: 15px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 9px;
+    padding-bottom: 9px;
   }
 }
 
 [data-sw-sidebar] nav a:hover,
 [data-sw-sidebar] nav button:hover {
-  background: var(--sw-dash-hover) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
 }
 
 [data-sw-sidebar] nav a[aria-current="page"] {
-  background: var(--sw-dash-active) !important;
-  color: var(--sw-dash-purple) !important;
+  background: rgba(255, 90, 54, 0.14) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* The coral tab marker: the one bold accent in the shell. */
+[data-sw-sidebar] nav a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--sw-coral);
+}
+
+[data-sw-sidebar] nav a[aria-current="page"] svg {
+  color: var(--sw-coral) !important;
 }
 
 [data-sw-main] {
-  background: var(--sw-dash-main) !important;
+  background: var(--cal-bg-muted) !important;
 }
 
-/* Public booking pages keep the Usuals typeface. */
-.sw-page,
-.sw-booker {
-  font-family: var(--font-inter);
+[data-sw-main] h1,
+[data-sw-main] h2,
+[data-sw-main] h3 {
+  letter-spacing: -0.02em;
+}
+
+/* The owner's brand colour styles their booking pages; the dashboard always uses ours. */
+[data-sw-main],
+[data-sw-sidebar] {
+  --cal-brand: #ff5a36;
+  --cal-brand-emphasis: #e0401d;
+  --cal-brand-text: #ffffff;
+  --cal-brand-accent: #ffffff;
+  --primary: #ff5a36;
+  --primary-foreground: #ffffff;
 }

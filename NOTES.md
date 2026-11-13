@@ -181,13 +181,17 @@ How it works:
 - The dashboard banner ("X stopped syncing… Reconnect") reuses Cal's `calendarCredentialBanner` slot. It shows only for confirmed outages.
 - Code: `packages/features/calendar-health`. Table: `CalendarConnectionHealth` (deleted along with the credential).
 
-## Design system (applied 2026-11-14)
-- **Owner dashboard:** Albert Sans app-wide (`--font-sans`/`--font-cal` in `app/layout.tsx`). The Linktree look comes from `apps/web/styles/dashboard-theme.css`, which targets `[data-sw-sidebar]` and `[data-sw-main]` on the shell. Delete that file to revert.
-- **Home** (`/home`, first nav item): greeting, booking page card (custom domain if verified), and stats (bookings this week vs last, waiting approval, waitlist), plus what's coming up. Data: tRPC `home.get`.
-- **Public pages:** Usuals look in `apps/web/styles/booking-theme.css` (`.sw-booker`) and `users-public-view.tsx` (`.sw-page`), in Inter.
-  - Theme tokens live in `packages/features/booking-page-theme/themes.ts`.
-  - The owner picks colour and shape in Appearance (tRPC `pageLook`), stored on `User.pageTheme` and `User.pageButtonShape`.
-- **Not yet:** the in-dashboard page editor with a phone preview from the prototype (the Appearance card covers colour and shape for now), and the onboarding checklist.
+## Design system: Slotwise identity (2026-11-14, replaces the Linktree/Usuals look)
+- **Type:** Schibsted Grotesk everywhere (`--font-sans`/`--font-cal` in `app/layout.tsx`).
+- **Colour:** indigo ink `#1b1a3a`, lavender-grey surfaces, coral `#ff5a36` for actions and selection. Tokens live in `apps/web/styles/brand-tokens.css`, which overrides Cal's `--cal-*`.
+- **Dashboard:** `dashboard-theme.css` adds the indigo sidebar with a coral marker on the current page. It forces the coral brand inside the shell, since the owner's brand colour applies to their booking pages only.
+- **Booking pages:** the shared component `apps/web/modules/booking-page/BookingPageProfile.tsx` is used by the public page and the editor preview.
+  - Services show a duration bar and "Instant booking" / "Needs approval".
+  - The calendar is styled in `booking-theme.css`, with coral selection.
+- **Page themes** (`packages/features/booking-page-theme/themes.ts`): fog, coral, sky, butter, pine, ink. Shapes: pill, rounded (default), square. Migration `slotwise_own_page_themes` remaps the old ids.
+- **Booking page editor** (`/page-editor`): name, bio, look and services (show/hide, reorder), with a live phone preview. Data: tRPC `pageLook.editor`.
+- **Home:** setup checklist (photo, bio, service, hours, calendar, first booking), hidden once done.
+- **Wording:** in English, "event type" → "service" in the copy (values only; the keys are unchanged).
 
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.

@@ -18,7 +18,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
     await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
-        select: { name: true, username: true, avatarUrl: true },
+        select: { name: true, username: true, avatarUrl: true, bio: true, defaultScheduleId: true },
       }),
       prisma.customDomain.findUnique({ where: { userId }, select: { domain: true, verifiedAt: true } }),
       prisma.booking.count({
@@ -52,6 +52,19 @@ export const getHandler = async ({ ctx }: Ctx) => {
       }),
     ]);
 
+  const [calendarCount, everBooked] = await Promise.all([
+    prisma.credential.count({ where: { userId, type: { endsWith: "_calendar" } } }),
+    prisma.booking.count({ where: { userId } }),
+  ]);
+  const setup = [
+    { id: "photo", done: !!user?.avatarUrl, href: "/settings/my-account/profile" },
+    { id: "bio", done: !!user?.bio?.trim(), href: "/page-editor" },
+    { id: "service", done: serviceCount > 0, href: "/event-types" },
+    { id: "hours", done: !!user?.defaultScheduleId, href: "/availability" },
+    { id: "calendar", done: calendarCount > 0, href: "/apps/categories/calendar" },
+    { id: "first_booking", done: everBooked > 0, href: "/page-editor" },
+  ] as const;
+
   const pageUrl = domain?.verifiedAt ? `https://${domain.domain}` : `${WEBAPP_URL}/${user?.username ?? ""}`;
 
   return {
@@ -59,6 +72,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
     avatarUrl: user?.avatarUrl ?? null,
     pageUrl,
     serviceCount,
+    setup,
     bookingsThisWeek: thisWeek,
     bookingsLastWeek: lastWeek,
     waitingApproval,

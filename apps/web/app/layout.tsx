@@ -3,9 +3,8 @@ import { loadTranslations } from "@calcom/i18n/server";
 import { IconSprites } from "@calcom/ui/components/icon";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { dir } from "i18next";
-import { Albert_Sans, Inter } from "next/font/google";
+import { Schibsted_Grotesk } from "next/font/google";
 import { cookies, headers } from "next/headers";
-import Script from "next/script";
 import type React from "react";
 
 import "../styles/globals.css";
@@ -13,10 +12,11 @@ import { AppRouterI18nProvider } from "./AppRouterI18nProvider";
 import { Providers } from "./providers";
 import { SpeculationRules } from "./SpeculationRules";
 
-const interFont = Inter({ subsets: ["latin"], variable: "--font-inter", preload: true, display: "swap" });
-const albertFont = Albert_Sans({
+// One family everywhere (dashboard and booking pages); weight and tracking carry the hierarchy.
+const brandFont = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-albert",
+  variable: "--font-brand",
+  weight: ["400", "500", "600", "700", "800", "900"],
   preload: true,
   display: "swap",
 });
@@ -114,19 +114,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head nonce={nonce}>
         <style>{`
           :root {
-            --font-sans: ${albertFont.style.fontFamily.replace(/'/g, "")}, system-ui;
-            --font-cal: ${albertFont.style.fontFamily.replace(/'/g, "")}, system-ui;
-            --font-inter: ${interFont.style.fontFamily.replace(/'/g, "")}, system-ui;
+            --font-sans: ${brandFont.style.fontFamily.replace(/'/g, "")}, system-ui;
+            --font-cal: ${brandFont.style.fontFamily.replace(/'/g, "")}, system-ui;
           }
         `}</style>
-        {process.env.NODE_ENV === "development" && (
-          <Script
-            src="//unpkg.com/react-grab/dist/index.global.js"
-            crossOrigin="anonymous"
-            strategy="beforeInteractive"
-            data-options='{"activationKey":"Meta+c"}'
-          />
-        )}
       </head>
       <body
         className="dark:bg-default bg-subtle antialiased"

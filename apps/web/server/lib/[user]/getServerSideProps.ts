@@ -218,8 +218,8 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
       themeBasis: user.username,
       markdownStrippedBio,
       isOrgSEOIndexable: org?.organizationSettings?.allowSEOIndexing ?? false,
-      pageTheme: pageLook?.pageTheme ?? "paper",
-      pageButtonShape: pageLook?.pageButtonShape ?? "pill",
+      pageTheme: pageLook?.pageTheme ?? "fog",
+      pageButtonShape: pageLook?.pageButtonShape ?? "rounded",
       isBrandingHidden: !!pageLook?.hideBranding && canRemoveBranding,
     },
   };

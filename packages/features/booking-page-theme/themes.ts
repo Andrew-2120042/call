@@ -1,7 +1,7 @@
 // Booking page looks the owner can pick (free). Kept framework-free so pages, emails and the
 // settings preview share one source of truth.
 
-export type PageThemeId = "paper" | "lilac" | "mint" | "sun" | "plum" | "blue";
+export type PageThemeId = "fog" | "coral" | "sky" | "butter" | "pine" | "ink";
 export type ButtonShape = "pill" | "rounded" | "square";
 
 export type PageTheme = {
@@ -15,26 +15,29 @@ export type PageTheme = {
   soft: string;
 };
 
+export const DEFAULT_PAGE_THEME: PageThemeId = "fog";
+export const DEFAULT_BUTTON_SHAPE: ButtonShape = "rounded";
+
 export const PAGE_THEMES: Record<PageThemeId, PageTheme> = {
-  paper: { id: "paper", label: "Paper", bg: "#f4f2ee", fg: "#121212", soft: "#6f6a64" },
-  lilac: { id: "lilac", label: "Lilac", bg: "#e9d7ff", fg: "#2a0f6b", soft: "#5a3f99" },
-  mint: { id: "mint", label: "Mint", bg: "#bdf2d5", fg: "#0f4d3a", soft: "#2f6b55" },
-  sun: { id: "sun", label: "Sun", bg: "#ffd43b", fg: "#121212", soft: "#5c4a00" },
-  plum: { id: "plum", label: "Plum", bg: "#5b0e2d", fg: "#ffffff", soft: "#f2c9d8" },
-  blue: { id: "blue", label: "Blue", bg: "#3b30d9", fg: "#ffffff", soft: "#d7d4ff" },
+  fog: { id: "fog", label: "Fog", bg: "#f2f1f8", fg: "#1b1a3a", soft: "#6b6890" },
+  coral: { id: "coral", label: "Coral", bg: "#ffe1d6", fg: "#3a1408", soft: "#8a4a36" },
+  sky: { id: "sky", label: "Sky", bg: "#d6ebff", fg: "#0e2a4a", soft: "#4a6a8c" },
+  butter: { id: "butter", label: "Butter", bg: "#ffe9a8", fg: "#3a2e00", soft: "#7a6420" },
+  pine: { id: "pine", label: "Pine", bg: "#0f3d35", fg: "#f1fff9", soft: "#9cc9bc" },
+  ink: { id: "ink", label: "Ink", bg: "#1b1a3a", fg: "#ffffff", soft: "#b7b4d9" },
 };
 
-export const BUTTON_RADII: Record<ButtonShape, string> = { pill: "999px", rounded: "16px", square: "6px" };
+export const BUTTON_RADII: Record<ButtonShape, string> = { pill: "999px", rounded: "18px", square: "6px" };
 
 export const PAGE_THEME_IDS = Object.keys(PAGE_THEMES) as PageThemeId[];
 export const BUTTON_SHAPES = Object.keys(BUTTON_RADII) as ButtonShape[];
 
 export function resolvePageTheme(id: string | null | undefined): PageTheme {
-  return PAGE_THEMES[(id ?? "paper") as PageThemeId] ?? PAGE_THEMES.paper;
+  return PAGE_THEMES[(id ?? DEFAULT_PAGE_THEME) as PageThemeId] ?? PAGE_THEMES[DEFAULT_PAGE_THEME];
 }
 
 export function resolveButtonShape(shape: string | null | undefined): ButtonShape {
-  return BUTTON_SHAPES.includes(shape as ButtonShape) ? (shape as ButtonShape) : "pill";
+  return BUTTON_SHAPES.includes(shape as ButtonShape) ? (shape as ButtonShape) : DEFAULT_BUTTON_SHAPE;
 }
 
 /** CSS custom properties consumed by the booking page styles (sw-* classes). */

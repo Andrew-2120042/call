@@ -7,6 +7,10 @@ export const pageLookRouter = router({
     const { getHandler } = await import("./pageLook.handler");
     return getHandler({ ctx });
   }),
+  editor: authedProcedure.query(async ({ ctx }) => {
+    const { editorHandler } = await import("./pageLook.handler");
+    return editorHandler({ ctx });
+  }),
   update: authedProcedure.input(ZUpdatePageLookInputSchema).mutation(async ({ ctx, input }) => {
     const { updateHandler } = await import("./pageLook.handler");
     return updateHandler({ ctx, input });

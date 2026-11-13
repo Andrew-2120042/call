@@ -1,0 +1,49 @@
+/* Slotwise identity: indigo ink, lavender-grey surfaces, coral for action. Loaded after Cal's tokens,
+   so every component that uses the --cal-* tokens picks it up. */
+
+:root {
+  --sw-ink: #1b1a3a;
+  --sw-coral: #ff5a36;
+  --sw-coral-ink: #e0401d;
+  --sw-coral-soft: #ffe1d6;
+  --sw-fog: #f2f1f8;
+  --sw-butter: #ffe9a8;
+  --sw-sky: #d6ebff;
+  --sw-pine: #0f3d35;
+
+  --cal-bg: #ffffff;
+  --cal-bg-muted: #f6f5fb;
+  --cal-bg-subtle: #eceaf5;
+  --cal-bg-emphasis: #e2e0ee;
+  --cal-border: #d9d6e8;
+  --cal-border-subtle: #e6e4f0;
+  --cal-border-muted: #eeedf5;
+  --cal-border-emphasis: #a9a5c4;
+  --cal-text-emphasis: #1b1a3a;
+  --cal-text: #33315a;
+  --cal-text-subtle: #6b6890;
+  --cal-text-muted: #9b98b8;
+
+  --cal-brand: #ff5a36;
+  --cal-brand-emphasis: #e0401d;
+  --cal-brand-text: #ffffff;
+}
+
+.dark {
+  --cal-bg: #15142b;
+  --cal-bg-muted: #110f24;
+  --cal-bg-subtle: #1e1c3a;
+  --cal-bg-emphasis: #29274a;
+  --cal-border: #3a3760;
+  --cal-border-subtle: #2a2849;
+  --cal-border-muted: #211f3d;
+  --cal-border-emphasis: #57548a;
+  --cal-text-emphasis: #f5f4ff;
+  --cal-text: #dcdaf2;
+  --cal-text-subtle: #a6a3c8;
+  --cal-text-muted: #77749c;
+
+  --cal-brand: #ff6e4d;
+  --cal-brand-emphasis: #ff8a6d;
+  --cal-brand-text: #ffffff;
+}

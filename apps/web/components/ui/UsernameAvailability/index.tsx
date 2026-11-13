@@ -41,7 +41,15 @@ export const UsernameAvailability = (props: ICustomUsernameProps) => {
   return <UsernameAvailabilityComponent {...componentProps} />;
 };
 
-export const UsernameAvailabilityField = ({
+// The field reads the user with a suspense query. Waiting for a normal (browser-only) query first keeps
+// that suspense query off the server render, where it has no session and failed with UNAUTHORIZED.
+export const UsernameAvailabilityField = (props: UsernameAvailabilityFieldProps) => {
+  const { data: user } = trpc.viewer.me.get.useQuery();
+  if (!user) return <div className="bg-subtle h-[62px] animate-pulse rounded-md" aria-hidden />;
+  return <UsernameAvailabilityFieldLoaded {...props} />;
+};
+
+const UsernameAvailabilityFieldLoaded = ({
   onSuccessMutation,
   onErrorMutation,
   disabled,

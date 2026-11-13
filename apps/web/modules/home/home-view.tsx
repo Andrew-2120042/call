@@ -34,6 +34,8 @@ export default function HomeView() {
         {t(greetingKey(new Date().getHours()), { name: firstName })}
       </h1>
 
+      <SetupChecklist steps={data.setup} />
+
       <section className="bg-default border-subtle mt-6 flex flex-wrap items-center gap-4 rounded-3xl border p-5">
         <div className="min-w-0 flex-1">
           <p className="text-subtle text-sm">{t("home_your_page")}</p>
@@ -51,7 +53,7 @@ export default function HomeView() {
           <Button color="secondary" onClick={copyLink}>
             {t("home_copy_link")}
           </Button>
-          <Link href="/settings/my-account/appearance">
+          <Link href="/page-editor">
             <Button color="secondary">{t("home_edit_look")}</Button>
           </Link>
           <a href={data.pageUrl} target="_blank" rel="noreferrer">
@@ -117,8 +119,8 @@ export default function HomeView() {
                   <span
                     className={
                       booking.isRequest
-                        ? "rounded-full bg-[#ede3ff] px-2.5 py-1 text-[11px] font-medium text-[#6a22d6]"
-                        : "rounded-full bg-[#bdf2d5] px-2.5 py-1 text-[11px] font-medium text-[#0c5a37]"
+                        ? "rounded-full bg-[#ffe1d6] px-2.5 py-1 text-[11px] font-semibold text-[#b8350f]"
+                        : "rounded-full bg-[#dff3ea] px-2.5 py-1 text-[11px] font-semibold text-[#14694f]"
                     }>
                     {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
                   </span>
@@ -146,5 +148,54 @@ function Stat(props: { label: string; value: number; note: string; href?: string
     </Link>
   ) : (
     body
+  );
+}
+
+function SetupChecklist(props: { steps: readonly { id: string; done: boolean; href: string }[] }) {
+  const { t } = useLocale();
+  const done = props.steps.filter((step) => step.done).length;
+  if (done === props.steps.length) return null;
+  const percent = Math.round((done / props.steps.length) * 100);
+  return (
+    <section className="bg-default border-subtle mt-6 rounded-3xl border p-5" data-testid="setup-checklist">
+      <div className="flex items-center gap-4">
+        <div
+          className="grid h-14 w-14 flex-none place-items-center rounded-full"
+          style={{ background: `conic-gradient(#ff5a36 ${percent * 3.6}deg, var(--cal-bg-emphasis) 0)` }}
+          aria-hidden>
+          <div className="bg-default text-emphasis grid h-11 w-11 place-items-center rounded-full text-sm font-bold">
+            {percent}%
+          </div>
+        </div>
+        <div>
+          <h2 className="text-emphasis font-semibold">{t("setup_title")}</h2>
+          <p className="text-subtle text-sm">{t("setup_progress", { done, total: props.steps.length })}</p>
+        </div>
+      </div>
+      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+        {props.steps.map((step) => (
+          <li key={step.id}>
+            <Link
+              href={step.href}
+              className={
+                step.done
+                  ? "text-subtle flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm line-through"
+                  : "text-emphasis hover:bg-subtle flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium"
+              }
+              data-testid={`setup-step-${step.id}`}>
+              <span
+                className={
+                  step.done
+                    ? "grid h-5 w-5 flex-none place-items-center rounded-full bg-[#ff5a36] text-[11px] text-white"
+                    : "border-emphasis h-5 w-5 flex-none rounded-full border-2"
+                }>
+                {step.done ? "✓" : null}
+              </span>
+              {t(`setup_step_${step.id}`)}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

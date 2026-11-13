@@ -33,5 +33,12 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 16a. Design, public side: Usuals-style profile page, themed booking calendar, owner picks page colour + button shape (Settings → Appearance), free
 - [x] 16b. Design, owner side: Linktree-style dashboard shell (Albert Sans, sidebar, home with page card + stats) per design/dashboard-prototype.html
 
+## Round 3 (requested 2026-11-14)
+- [x] 17. Clear remaining errors: test mocks + locale-pinned tests (3219 pass), removed external dev script, fixed profile page SSR UNAUTHORIZED
+- [x] 18. Own identity: Schibsted Grotesk, indigo/coral palette, indigo sidebar, own page themes, service duration bars, "Services" wording
+- [x] 19. Booking page editor with live phone preview (/page-editor)
+- [x] 20. Setup checklist on Home
+- [ ] Later: Team plan (round robin, team pages) after solo launch
+
 ## Log
 - 2026-11-13: all items 0–10 done. Round 2 (11–16) done 2026-11-14. Remaining work needs the user: real name/logo, Anthropic key, Polar products/token, hosting + email domain, UI redesign (Linktree-style dashboard + Usuals-style booking page).

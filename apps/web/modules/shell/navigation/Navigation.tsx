@@ -18,6 +18,11 @@ const getNavigationItems = (): NavigationItemType[] => [
     icon: "layout-dashboard",
   },
   {
+    name: "page_editor_title",
+    href: "/page-editor",
+    icon: "user",
+  },
+  {
     name: "event_types_page_title",
     href: "/event-types",
     icon: "link",
