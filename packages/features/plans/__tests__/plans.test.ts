@@ -123,6 +123,7 @@ describe("PlanService", () => {
         stored = subscription;
       },
       userExists: async (userId) => userId === 4,
+      clearBrandingRemoval: vi.fn().mockResolvedValue(undefined),
     };
     const polar = opts.polar
       ? {
@@ -140,6 +141,7 @@ describe("PlanService", () => {
     return {
       service,
       polar,
+      repository,
       get stored() {
         return stored;
       },
@@ -188,6 +190,16 @@ describe("PlanService", () => {
       event({ status: "revoked", modified_at: "2026-11-13T11:00:00.000Z" }, "subscription.revoked")
     );
     expect(await ctx.service.getEffectivePlan(4)).toBe(SlotwisePlan.FREE);
+  });
+
+  it("switches branding removal back off on downgrade but not while paid", async () => {
+    const ctx = setup();
+    await ctx.service.applySubscriptionEvent(event());
+    expect(ctx.repository.clearBrandingRemoval).not.toHaveBeenCalled();
+    await ctx.service.applySubscriptionEvent(
+      event({ status: "revoked", modified_at: "2026-11-13T11:00:00.000Z" }, "subscription.revoked")
+    );
+    expect(ctx.repository.clearBrandingRemoval).toHaveBeenCalledWith(4);
   });
 
   it("ignores unknown products, unknown users and non-subscription events", async () => {

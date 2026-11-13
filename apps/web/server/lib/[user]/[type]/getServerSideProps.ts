@@ -4,6 +4,7 @@ import { getBookingForReschedule, getBookingForSeatedEvent } from "@calcom/featu
 import { getUsernameList } from "@calcom/features/eventtypes/lib/defaultEvents";
 import type { getPublicEvent } from "@calcom/features/eventtypes/lib/getPublicEvent";
 import { EventRepository } from "@calcom/features/eventtypes/repositories/EventRepository";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { shouldHideBrandingForUserEvent } from "@calcom/features/profile/lib/hideBranding";
 import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import slugify from "@calcom/lib/slugify";
@@ -268,10 +269,9 @@ async function getUserPageProps(context: GetServerSidePropsContext) {
     eventData: eventData,
     user: username,
     slug,
-    isBrandingHidden: shouldHideBrandingForUserEvent({
-      eventTypeId: eventData.id,
-      owner: user,
-    }),
+    isBrandingHidden:
+      shouldHideBrandingForUserEvent({ eventTypeId: eventData.id, owner: user }) &&
+      (await getPlanService().hasFeature(user.id, "removeBranding")),
     isSEOIndexable: allowSEOIndexing,
     themeBasis: username,
     bookingUid: bookingUid ? `${bookingUid}` : null,

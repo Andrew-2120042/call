@@ -1,13 +1,14 @@
 import { getPremiumMonthlyPlanPriceId } from "@calcom/app-store/stripepayment/lib/utils";
 import { sendChangeOfEmailVerification } from "@calcom/features/auth/lib/verifyEmail";
 import { FeaturesRepository } from "@calcom/features/flags/features.repository";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { checkUsername } from "@calcom/features/profile/lib/checkUsername";
 import { ScheduleRepository } from "@calcom/features/schedules/repositories/ScheduleRepository";
+import { getTranslation } from "@calcom/i18n/server";
 import hasKeyInMetadata from "@calcom/lib/hasKeyInMetadata";
 import { HttpError } from "@calcom/lib/http-error";
 import logger from "@calcom/lib/logger";
 import { uploadAvatar } from "@calcom/lib/server/avatar";
-import { getTranslation } from "@calcom/i18n/server";
 import { resizeBase64Image } from "@calcom/lib/server/resizeBase64Image";
 import slugify from "@calcom/lib/slugify";
 import { validateBookerLayouts } from "@calcom/lib/validateBookerLayouts";
@@ -24,7 +25,9 @@ import { type TUpdateProfileInputSchema, updateUserMetadataAllowedKeys } from ".
 const getBillingProviderService = async (..._args: unknown[]) => ({
   createCustomer: async (..._a: unknown[]) => null,
   getCustomer: async (..._a: unknown[]) => null,
-  getSubscriptions: async (..._a: unknown[]): Promise<{ items: { data: { price: { id: string } }[] }; status: string }[]> => [],
+  getSubscriptions: async (
+    ..._a: unknown[]
+  ): Promise<{ items: { data: { price: { id: string } }[] }; status: string }[]> => [],
   updateCustomer: async (..._a: unknown[]) => null,
 });
 const updateNewTeamMemberEventTypes = async (..._args: unknown[]) => {};
@@ -41,6 +44,12 @@ type UpdateProfileOptions = {
 export const updateProfileHandler = async ({ ctx, input }: UpdateProfileOptions) => {
   const { user } = ctx;
   const billingService = await getBillingProviderService();
+  if (input.hideBranding === true) {
+    const canRemoveBranding = await getPlanService().hasFeature(user.id, "removeBranding");
+    if (!canRemoveBranding) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "Removing branding is part of the Pro plan" });
+    }
+  }
   const userMetadata = handleUserMetadata({ ctx, input });
   const locale = input.locale || user.locale;
   const featuresRepository = new FeaturesRepository(prisma);

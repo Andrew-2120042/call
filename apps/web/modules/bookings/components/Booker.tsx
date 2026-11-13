@@ -20,11 +20,14 @@ import { BookerSection } from "@calcom/features/bookings/components/Section";
 import { Dialog } from "@calcom/features/components/controlled-dialog";
 import { scrollIntoViewSmooth } from "@calcom/lib/browser/browser.utils";
 import {
+  APP_NAME,
   CLOUDFLARE_SITE_ID,
   CLOUDFLARE_USE_TURNSTILE_IN_BOOKER,
   PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM,
+  WEBSITE_URL,
 } from "@calcom/lib/constants";
 import { useCompatSearchParams } from "@calcom/lib/hooks/useCompatSearchParams";
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
 import classNames from "@calcom/ui/classNames";
 import { DialogContent } from "@calcom/ui/components/dialog";
@@ -89,6 +92,7 @@ const BookerComponent = ({
   hideOrgTeamAvatar,
   showNoAvailabilityDialog,
 }: BookerProps & WrappedBookerProps): JSX.Element | null => {
+  const { t } = useLocale();
   const searchParams = useCompatSearchParams();
   const isPlatformBookerEmbed = useIsPlatformBookerEmbed();
   const [bookerState, setBookerState] = useBookerStoreContext(
@@ -562,7 +566,14 @@ const BookerComponent = ({
               hasDarkBackground ? "dark" : "",
               layout === BookerLayouts.MONTH_VIEW ? "block" : "hidden"
             )}>
-            {null}
+            <a
+              href={`${WEBSITE_URL}/?utm_source=booking_page&utm_medium=badge`}
+              target="_blank"
+              rel="noreferrer"
+              data-testid="booker-branding"
+              className="text-subtle hover:text-emphasis text-xs">
+              {t("booked_with_app", { appName: APP_NAME })}
+            </a>
           </m.span>
         )}
       </div>

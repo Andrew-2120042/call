@@ -29,6 +29,13 @@ export class PlanSubscriptionRepository implements IPlanSubscriptionRepository {
     });
   }
 
+  async clearBrandingRemoval(userId: number) {
+    await this.prismaClient.user.updateMany({
+      where: { id: userId, hideBranding: true },
+      data: { hideBranding: false },
+    });
+  }
+
   async userExists(userId: number) {
     const count = await this.prismaClient.user.count({ where: { id: userId } });
     return count > 0;

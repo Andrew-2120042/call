@@ -23,6 +23,7 @@ export type StoredSubscription = {
 export interface IPlanSubscriptionRepository {
   findByUserId(userId: number): Promise<StoredSubscription | null>;
   upsertForUser(subscription: StoredSubscription): Promise<void>;
+  clearBrandingRemoval(userId: number): Promise<void>;
   userExists(userId: number): Promise<boolean>;
 }
 
@@ -169,6 +170,10 @@ export class PlanService {
       cancelAtPeriodEnd: data.cancel_at_period_end,
       polarModifiedAt: modifiedAt,
     });
+    const effectivePlan = await this.getEffectivePlan(userId);
+    // Pro settings with no ongoing cost to us are switched off on downgrade, so pages show our branding again.
+    if (!planHasFeature(effectivePlan, "removeBranding"))
+      await this.deps.repository.clearBrandingRemoval(userId);
     this.deps.logger?.info("[plans] subscription updated", { userId, plan, status: data.status });
     return "applied";
   }

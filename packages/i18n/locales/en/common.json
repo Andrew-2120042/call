@@ -4839,5 +4839,6 @@
   "booking_rules_reminder_days": "{{count}} days before",
   "booking_rules_reminder_hours": "{{count}} hours before",
   "booking_rules_reminder_minutes": "{{count}} minutes before",
-  "waitlist_booker_link": "Time you want is taken? Join the waitlist"
+  "waitlist_booker_link": "Time you want is taken? Join the waitlist",
+  "booked_with_app": "Booked with {{appName}}"
 }
