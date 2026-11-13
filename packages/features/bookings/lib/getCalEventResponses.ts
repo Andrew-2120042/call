@@ -10,7 +10,11 @@ import type { EventType, Prisma } from "@calcom/prisma/client";
 import { eventTypeBookingFields } from "@calcom/prisma/zod-utils";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 
+import { getOptionDisplayValue } from "./getOptionDisplayValue";
+
 const log = logger.getSubLogger({ prefix: ["[getCalEventResponses]"] });
+
+export { getOptionDisplayValue };
 
 export const getCalEventResponses = ({
   bookingFields,
@@ -76,10 +80,13 @@ export const getCalEventResponses = ({
         backwardCompatibleResponses[field.name] = [];
       }
 
+      const displayValue = getOptionDisplayValue(field, backwardCompatibleResponses[field.name]);
+
       if (field.editable === "user" || field.editable === "user-readonly") {
         calEventUserFieldsResponses[field.name] = {
           label,
           value: backwardCompatibleResponses[field.name],
+          ...(displayValue !== undefined && { displayValue }),
           isHidden: !!field.hidden,
         };
       }
@@ -87,6 +94,7 @@ export const getCalEventResponses = ({
       calEventResponses[field.name] = {
         label,
         value: backwardCompatibleResponses[field.name],
+        ...(displayValue !== undefined && { displayValue }),
         isHidden: !!field.hidden,
       };
     });

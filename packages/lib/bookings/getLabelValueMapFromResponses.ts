@@ -31,7 +31,7 @@ export default function getLabelValueMapFromResponses(
       if (!value.label || (!isOrganizer && value.isHidden)) {
         continue;
       }
-      labelValueMap[value.label] = value.value;
+      labelValueMap[value.label] = value.displayValue ?? value.value;
     }
   } else {
     labelValueMap = customInputs as Record<string, string | string[]>;

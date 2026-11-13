@@ -67,8 +67,21 @@ import CancelBooking from "@calcom/web/components/booking/CancelBooking";
 import EventReservationSchema from "@calcom/web/components/schemas/EventReservationSchema";
 import { timeZone } from "@calcom/web/lib/clock";
 
+import {
+  formatOptionDisplayValue,
+  getOptionDisplayValue,
+} from "@calcom/features/bookings/lib/getOptionDisplayValue";
+
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
 import type { PageProps } from "./bookings-single-view.getServerSideProps";
+
+const formatResponse = (
+  field: Parameters<typeof getOptionDisplayValue>[0],
+  response: { toString(): string }
+): string => {
+  const displayValue = getOptionDisplayValue(field, response);
+  return displayValue === undefined ? response.toString() : formatOptionDisplayValue(displayValue);
+};
 
 const stringToBoolean = z
   .string()
@@ -834,7 +847,7 @@ export default function Success(props: PageProps) {
                                   ? response
                                     ? t("yes")
                                     : t("no")
-                                  : response.toString()}
+                                  : formatResponse(field, response)}
                               </p>
                             </Fragment>
                           );

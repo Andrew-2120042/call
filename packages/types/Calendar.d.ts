@@ -152,6 +152,8 @@ export type CalEventResponses = Record<
   {
     label: string;
     value: z.infer<typeof bookingResponse>;
+    // Human-readable form of `value` for option fields (option labels instead of stored values).
+    displayValue?: string | string[];
     isHidden?: boolean;
   }
 >;
