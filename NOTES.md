@@ -73,4 +73,6 @@ What it removed: Teams, Organizations, Workflows (and with them SMS), SSO and In
 - `.env` is gitignored and holds generated secrets.
 - Yarn is not installed globally, so always run `corepack yarn …`.
 - The Mac must stay cool: run heavy jobs one at a time with `nice -n 15`. Never run builds in parallel.
+- The repo path contains a space ("my projects"). Because of that, the app-store CLI's Biome step logs "internalError/io" and leaves `*.generated.ts` unformatted. That is harmless and matches upstream, which commits those files unformatted.
+  - Do NOT "fix" it: formatting them causes ~700 lines of diff against upstream and merge conflicts.
 - Repo conventions: see `CLAUDE.md` / `AGENTS.md`. Use `select` not `include`, never `as any`, put UI strings in `packages/i18n/locales/en/common.json`, and run Biome and type-checks.
