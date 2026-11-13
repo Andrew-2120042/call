@@ -75,6 +75,10 @@ const getTabs = (
           href: "/settings/domain",
         },
         {
+          name: "calendly_import_page_title",
+          href: "/settings/import",
+        },
+        {
           name: "out_of_office",
           href: "/settings/my-account/out-of-office",
           trackingMetadata: { section: "my_account", page: "out_of_office" },

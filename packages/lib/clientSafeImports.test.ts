@@ -18,6 +18,7 @@ const CLIENT_OR_EDGE_FILES = [
   "apps/web/lib/csp.ts",
   "apps/web/lib/customDomainRouting.ts",
   "apps/web/modules/settings/domain/custom-domain-view.tsx",
+  "apps/web/modules/settings/import/calendly-import-view.tsx",
   "apps/web/modules/bookings/components/UnconfirmedBookingBadge.tsx",
   "apps/web/modules/data-table/components/DataTable.tsx",
   "apps/web/modules/settings/billing/billing-view.tsx",

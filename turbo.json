@@ -315,7 +315,8 @@
     "VERCEL_DOMAINS_PROJECT_ID",
     "VERCEL_DOMAINS_TEAM_ID",
     "CUSTOM_DOMAIN_CNAME_TARGET",
-    "APP_EXTRA_HOSTS"
+    "APP_EXTRA_HOSTS",
+    "CALENDLY_API_BASE_URL"
   ],
   "tasks": {
     "@calcom/web#copy-app-store-static": {

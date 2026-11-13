@@ -161,6 +161,18 @@ How it works:
 - The AI summary panel on `/booking/<uid>` shows for the host only.
 - TODO (UI pass): link to the join page from inside the booker; Linktree-style dashboard per the design prototypes.
 
+## Calendly import (Settings → Import from Calendly)
+- The owner pastes a Calendly personal access token. It's used only for that request and never stored.
+- **Preview:** shows event types (inactive or secret ones become hidden services) and availability schedules (weekly rules only; date overrides are ignored).
+- **Import:**
+  - Creates services with default locations and unique slugs (`30min` → `30min-2`), tagged `metadata.importedFrom = {source: "calendly", uri}`, so re-runs skip them.
+  - Creates the schedule "<name> (from Calendly)", reused by name on re-runs. It's set as the default only if none exists, or if the owner asks.
+- **Local testing:** run `node scripts/dev/fake-calendly.mjs` and set `CALENDLY_API_BASE_URL=http://127.0.0.1:4010`. The token is `fake-calendly-token-for-local-testing-only`. Unset the variable in production.
+
+## Custom domains
+- See DEPLOY.md §5b. Code: `packages/features/custom-domains`, `apps/web/lib/customDomainRouting.ts`, `apps/web/proxy.ts`.
+- Local testing: `curl -H 'Host: book.slotwise-demo.test' localhost:3000/` (mark the domain verified in the DB, since a `.test` domain can't hold a TXT record).
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
