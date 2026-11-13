@@ -29,6 +29,7 @@ import { bookingRulesRouter } from "./bookingRules/_router";
 import { calendlyImportRouter } from "./calendlyImport/_router";
 import { customDomainRouter } from "./customDomain/_router";
 import { pageLookRouter } from "./pageLook/_router";
+import { homeRouter } from "./home/_router";
 import { requestInsightsRouter } from "./requestInsights/_router";
 import { waitlistRouter } from "./waitlist/_router";
 import { webhookRouter } from "./webhook/_router";
@@ -47,6 +48,7 @@ export const viewerRouter = router({
   customDomain: customDomainRouter,
   calendlyImport: calendlyImportRouter,
   pageLook: pageLookRouter,
+  home: homeRouter,
   calendars: calendarsRouter,
   calVideo: calVideoRouter,
   credentials: credentialsRouter,

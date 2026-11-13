@@ -35,6 +35,7 @@ export const ENDPOINTS = [
   "customDomain",
   "calendlyImport",
   "pageLook",
+  "home",
   "webhook",
   "googleWorkspace",
   "oAuth",

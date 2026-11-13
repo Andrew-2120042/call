@@ -1,30 +1,27 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import type { Dispatch, ReactElement, ReactNode, SetStateAction } from "react";
-import type React from "react";
-import { cloneElement } from "react";
-import { Toaster } from "sonner";
-
-import { useFormbricks } from "@calcom/web/modules/formbricks/hooks/useFormbricks";
-import { useRedirectToLoginIfUnauthenticated } from "@calcom/web/modules/auth/hooks/useRedirectToLoginIfUnauthenticated";
-import { useRedirectToOnboardingIfNeeded } from "@calcom/web/modules/auth/hooks/useRedirectToOnboardingIfNeeded";
-
-import TimezoneChangeDialog from "@calcom/web/modules/settings/components/TimezoneChangeDialog";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { Button } from "@calcom/ui/components/button";
 import { ErrorBoundary } from "@calcom/ui/components/errorBoundary";
 import { SkeletonText } from "@calcom/ui/components/skeleton";
-
-import { DynamicModals } from "./DynamicModals";
-import { KBarContent, KBarRoot } from "./Kbar";
-import { SideBarContainer } from "./SideBar";
-import { TopNavContainer } from "./TopNav";
+import { useRedirectToLoginIfUnauthenticated } from "@calcom/web/modules/auth/hooks/useRedirectToLoginIfUnauthenticated";
+import { useRedirectToOnboardingIfNeeded } from "@calcom/web/modules/auth/hooks/useRedirectToOnboardingIfNeeded";
+import { useFormbricks } from "@calcom/web/modules/formbricks/hooks/useFormbricks";
+import TimezoneChangeDialog from "@calcom/web/modules/settings/components/TimezoneChangeDialog";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import type React from "react";
+import type { Dispatch, ReactElement, ReactNode, SetStateAction } from "react";
+import { cloneElement } from "react";
+import { Toaster } from "sonner";
 import { BannerContainer } from "./banners/LayoutBanner";
 import { useBanners } from "./banners/useBanners";
+import { DynamicModals } from "./DynamicModals";
+import { KBarContent, KBarRoot } from "./Kbar";
 import { MobileNavigationContainer } from "./navigation/Navigation";
+import { SideBarContainer } from "./SideBar";
+import { TopNavContainer } from "./TopNav";
 import { useAppTheme } from "./useAppTheme";
 
 const Layout = (props: LayoutProps) => {
@@ -202,7 +199,7 @@ function MainContainer({
   ...props
 }: LayoutProps) {
   return (
-    <main className="bg-default relative z-0 flex-1 focus:outline-none">
+    <main data-sw-main className="bg-default relative z-0 flex-1 focus:outline-none">
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
       <div className="max-w-full p-2 sm:p-4 lg:p-6">

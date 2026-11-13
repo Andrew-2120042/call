@@ -1,0 +1,59 @@
+/* Slotwise owner dashboard look (Linktree-style admin). Marked elements only, via data-sw-* attributes
+   on the shell, so Cal's components stay untouched and this file is the whole switch. */
+
+html:not(.dark) {
+  --sw-dash-side: #efeeec;
+  --sw-dash-main: #f8f6f4;
+  --sw-dash-hover: #e9e9e6;
+  --sw-dash-active: #e2e1de;
+  --sw-dash-purple: #6a22d6;
+  --cal-border-subtle: #ebebe8;
+  --cal-border-muted: #ebebe8;
+}
+
+html.dark {
+  --sw-dash-side: #141414;
+  --sw-dash-main: #0f0f0f;
+  --sw-dash-hover: #1f1f1f;
+  --sw-dash-active: #262626;
+  --sw-dash-purple: #b48cff;
+}
+
+[data-sw-sidebar] {
+  background: var(--sw-dash-side) !important;
+  border-color: transparent !important;
+}
+
+[data-sw-sidebar] nav a,
+[data-sw-sidebar] nav button {
+  border-radius: 10px !important;
+}
+
+@media (min-width: 1024px) {
+  [data-sw-sidebar] nav a,
+  [data-sw-sidebar] nav button {
+    font-size: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+}
+
+[data-sw-sidebar] nav a:hover,
+[data-sw-sidebar] nav button:hover {
+  background: var(--sw-dash-hover) !important;
+}
+
+[data-sw-sidebar] nav a[aria-current="page"] {
+  background: var(--sw-dash-active) !important;
+  color: var(--sw-dash-purple) !important;
+}
+
+[data-sw-main] {
+  background: var(--sw-dash-main) !important;
+}
+
+/* Public booking pages keep the Usuals typeface. */
+.sw-page,
+.sw-booker {
+  font-family: var(--font-inter);
+}
