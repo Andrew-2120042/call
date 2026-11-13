@@ -151,6 +151,16 @@ How it works:
 - Dev: put the local user on Pro with `node scripts/dev/send-polar-webhook.mts subscription.active active <ISO>`.
 - **To go live:** create the Pro ($12) and Team ($49) products in Polar, set the env vars, and register the webhook URL.
 
+## Owner screens (built 2026-11-13; functional, the UI redesign comes later)
+- **Service → Advanced tab → "Booking rules" card** (`BookingRulesCard.tsx`): waitlist toggle plus a shareable join link, confirm-or-release, and reminder chips.
+  - Saves through the guarded update. Data: tRPC `bookingRules.get` (host-scoped).
+- `/settings/billing` (plan, upgrade, manage) and `/waitlist` (list and remove) are in the sidebar.
+- Public join page: `/waitlist/join/<eventTypeId>?date=YYYY-MM-DD`.
+  - Data: `GET /api/waitlist/options` (questions plus taken times only).
+  - Join answers are validated with the booking flow's own responses schema (`validateWaitlistResponses`).
+- The AI summary panel on `/booking/<uid>` shows for the host only.
+- TODO (UI pass): link to the join page from inside the booker; Linktree-style dashboard per the design prototypes.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

@@ -30,6 +30,11 @@ const getNavigationItems = (): NavigationItemType[] => [
     icon: "clock",
   },
   {
+    name: "waitlist_page_title",
+    href: "/waitlist",
+    icon: "users",
+  },
+  {
     name: "apps",
     href: "/apps",
     icon: "grid-3x3",

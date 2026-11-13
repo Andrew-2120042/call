@@ -20,9 +20,9 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 5. Reminders: per-service offsets (default 24h), exactly-once via unique sent log, no stale/late reminders, cron — 8 unit tests + shared cron auth (3 tests), verified live
 - [x] 6. AI request helper: async cron triage (summary/fit/spam/concerns/reply) via Anthropic SDK structured output + fallbacks, injection-fenced, host-scoped read — 8 unit tests; live: no-key no-op, auth 401s, real SDK call with invalid key handled. NEEDS a real ANTHROPIC_API_KEY to see real output.
 - [x] 7. Plans/billing: PlanSubscription via signed Polar webhooks (verifier cross-checked vs official SDK), effective-plan rules w/ grace, settings guard (403) + runtime gating, checkout/portal/plan API — 29+ tests; live: bad sig 403, upgrade→PRO unlocks, duplicate ignored, revoke→FREE→403. Needs real Polar products + token to sell.
-- [ ] 8. Owner-facing pages for new features (functional, not polished): waitlist list, settings toggles per event type
+- [x] 8. Owner screens: booking-rules card (verified save), billing page, waitlist page, public join page (verified join + email), AI panel for host only (verified) — functional; redesign later
 - [ ] 9. Full regression: booking flows, cancel/reschedule, emails, type-check whole repo, unit tests for touched packages
 - [ ] 10. Production readiness: env docs, migrations, cron setup docs, security review of new endpoints
 
 ## Log
-- 2026-11-13: items 0–7 done.
+- 2026-11-13: items 0–8 done.

@@ -1,4 +1,5 @@
 import { getWaitlistService } from "@calcom/features/waitlist/lib/getWaitlistService";
+import { validateWaitlistResponses } from "@calcom/features/waitlist/lib/validateWaitlistResponses";
 import { checkRateLimitAndThrowError } from "@calcom/lib/checkRateLimitAndThrowError";
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
@@ -43,6 +44,9 @@ async function handler(req: NextApiRequest) {
   }
   const { eventTypeId, start, end, timeZone, language, responses } = parsed.data;
 
+  const validated = await validateWaitlistResponses(eventTypeId, responses);
+  if (!validated.ok) throw new ErrorWithCode(ErrorCode.BadRequest, validated.errors.join(", "));
+
   const result = await getWaitlistService().join({
     eventTypeId,
     startTime: new Date(start),
@@ -51,7 +55,7 @@ async function handler(req: NextApiRequest) {
     email: responses.email,
     timeZone,
     language,
-    responses,
+    responses: validated.responses,
   });
 
   return {

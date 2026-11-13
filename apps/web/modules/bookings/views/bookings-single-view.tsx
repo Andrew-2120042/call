@@ -72,6 +72,7 @@ import {
   getOptionDisplayValue,
 } from "@calcom/features/bookings/lib/getOptionDisplayValue";
 
+import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
 import type { PageProps } from "./bookings-single-view.getServerSideProps";
 
@@ -812,6 +813,7 @@ export default function Success(props: PageProps) {
                             </>
                           )}
                       </div>
+                      {isHost && <RequestInsightPanel bookingUid={bookingInfo.uid} />}
                       <div className="text-bookingdark dark:border-darkgray-200 mt-8 text-left dark:text-gray-300">
                         {eventType.bookingFields.map((field) => {
                           if (!field) return null;
