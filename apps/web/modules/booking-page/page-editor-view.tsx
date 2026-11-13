@@ -5,6 +5,7 @@ import {
   BUTTON_SHAPES,
   PAGE_THEME_IDS,
   PAGE_THEMES,
+  resolvePageTheme,
 } from "@calcom/features/booking-page-theme/themes";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -16,6 +17,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BookingPageProfile } from "./BookingPageProfile";
+import { PhoneFrame } from "./PhoneFrame";
 
 const BIO_LIMIT = 300;
 
@@ -252,10 +254,10 @@ export default function PageEditorView() {
             </a>
           )}
         </div>
-        <div
-          className="mx-auto h-[640px] w-[320px] overflow-hidden rounded-[46px] border-[10px] border-[#121212] bg-[#121212]"
-          data-testid="page-editor-preview">
-          <div className="no-scrollbar h-full overflow-y-auto rounded-[36px]">
+        <PhoneFrame
+          screenBg={resolvePageTheme(data.pageTheme).bg}
+          inkColor={resolvePageTheme(data.pageTheme).fg}>
+          <div data-testid="page-editor-preview">
             <BookingPageProfile
               compact
               name={name || data.name}
@@ -270,7 +272,7 @@ export default function PageEditorView() {
               className="min-h-full"
             />
           </div>
-        </div>
+        </PhoneFrame>
       </aside>
     </div>
   );

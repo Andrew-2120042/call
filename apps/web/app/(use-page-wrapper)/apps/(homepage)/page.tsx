@@ -1,20 +1,17 @@
+import { getAppFromSlug } from "@calcom/app-store/utils";
+import { CURATED_APP_GROUPS, CURATED_APP_SLUGS } from "@calcom/features/apps-curation/curatedApps";
+import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import prisma from "@calcom/prisma";
+import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { _generateMetadata } from "app/_utils";
 import { cookies, headers } from "next/headers";
-
-import { getAppRegistry, getAppRegistryWithCredentials } from "@calcom/app-store/_appRegistry";
-import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
-import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
-import prisma from "@calcom/prisma";
-import type { AppCategories } from "@calcom/prisma/enums";
-
-import { buildLegacyRequest } from "@lib/buildLegacyCtx";
-
-import AppsPage from "~/apps/apps-view";
+import { redirect } from "next/navigation";
+import CuratedAppsView, { type CuratedAppCard } from "~/apps/curated-apps-view";
 
 export const generateMetadata = async () => {
   return await _generateMetadata(
-    (t) => t("app_store"),
-    (t) => t("app_store_description"),
+    (t) => t("apps"),
+    (t) => t("apps_page_subtitle"),
     undefined,
     undefined,
     "/apps"
@@ -24,44 +21,60 @@ export const generateMetadata = async () => {
 const ServerPage = async () => {
   const req = buildLegacyRequest(await headers(), await cookies());
   const session = await getServerSession({ req });
-  let appStore, userAdminTeamsIds: number[];
-  if (session?.user?.id) {
-    const userRepo = new UserRepository(prisma);
-    const userAdminTeams = await userRepo.getUserAdminTeams({ userId: session.user.id });
-    userAdminTeamsIds = userAdminTeams?.teams?.map(({ team }) => team.id) ?? [];
-    appStore = await getAppRegistryWithCredentials(session.user.id, userAdminTeamsIds);
-  } else {
-    appStore = await getAppRegistry();
-    userAdminTeamsIds = [];
-  }
+  if (!session?.user?.id) redirect("/auth/login?callbackUrl=/apps");
+  const userId = session.user.id;
 
-  const categoryQuery = appStore.map(({ categories }) => ({
-    categories: categories || [],
+  const [dbApps, credentials] = await Promise.all([
+    prisma.app.findMany({
+      where: { slug: { in: CURATED_APP_SLUGS } },
+      select: { slug: true, enabled: true, categories: true },
+    }),
+    prisma.credential.findMany({
+      where: { userId, appId: { in: CURATED_APP_SLUGS } },
+      select: { appId: true },
+    }),
+  ]);
+  const connected = new Set(credentials.map((credential) => credential.appId));
+  const webhookCount = await prisma.webhook.count({ where: { userId } });
+
+  const groups = CURATED_APP_GROUPS.map((group) => ({
+    id: group.id,
+    titleKey: group.titleKey,
+    subtitleKey: group.subtitleKey,
+    apps: group.apps
+      .map((curated): CuratedAppCard | null => {
+        if (curated.href) {
+          return {
+            slug: curated.slug,
+            name: curated.name ?? curated.slug,
+            logo: null,
+            descriptionKey: curated.descriptionKey,
+            status: webhookCount > 0 ? "connected" : "available",
+            href: curated.href,
+          };
+        }
+        const meta = getAppFromSlug(curated.slug);
+        const db = dbApps.find((app) => app.slug === curated.slug);
+        if (!meta) return null;
+        const category = db?.categories[0] ?? meta.categories?.[0] ?? "other";
+        const isConnected = connected.has(curated.slug);
+        return {
+          slug: curated.slug,
+          name: curated.name ?? meta.name,
+          logo: meta.logo,
+          descriptionKey: curated.descriptionKey,
+          status: isConnected
+            ? "connected"
+            : db?.enabled && !curated.comingSoon
+              ? "available"
+              : "unavailable",
+          href: isConnected ? `/apps/installed/${category}` : `/apps/${curated.slug}`,
+        };
+      })
+      .filter((app): app is CuratedAppCard => app !== null),
   }));
-  const categories = categoryQuery.reduce(
-    (c, app) => {
-      for (const category of app.categories) {
-        c[category] = c[category] ? c[category] + 1 : 1;
-      }
-      return c;
-    },
-    {} as Record<string, number>
-  );
 
-  const props = {
-    categories: Object.entries(categories)
-      .map(([name, count]): { name: AppCategories; count: number } => ({
-        name: name as AppCategories,
-        count,
-      }))
-      .sort(function (a, b) {
-        return b.count - a.count;
-      }),
-    appStore,
-    userAdminTeams: userAdminTeamsIds,
-  };
-
-  return <AppsPage {...props} isAdmin={session?.user?.role === "ADMIN"} />;
+  return <CuratedAppsView groups={groups} />;
 };
 
 export default ServerPage;

@@ -193,6 +193,12 @@ How it works:
 - **Home:** setup checklist (photo, bio, service, hours, calendar, first booking), hidden once done.
 - **Wording:** in English, "event type" → "service" in the copy (values only; the keys are unchanged).
 
+## Apps (curated)
+- `/apps` shows only the short list in `packages/features/apps-curation/curatedApps.ts`: calendars, video, automations (plus webhooks), tracking, and payments (Stripe marked coming soon).
+- Cards show Connected, Connect (goes to the existing `/apps/<slug>` install page), or Not available yet (the app is disabled or has no keys on this server).
+- The nav has a single "Apps" item. The old app store pages still exist but are no longer linked.
+- **Production:** enable the curated apps and add each provider's keys (Google, Microsoft, Zoom, Daily) through the admin apps settings.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
