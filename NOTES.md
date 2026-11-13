@@ -181,10 +181,10 @@ How it works:
 - The dashboard banner ("X stopped syncing… Reconnect") reuses Cal's `calendarCredentialBanner` slot. It shows only for confirmed outages.
 - Code: `packages/features/calendar-health`. Table: `CalendarConnectionHealth` (deleted along with the credential).
 
-## Design system: Slotwise identity (2026-11-14, replaces the Linktree/Usuals look)
-- **Type:** Schibsted Grotesk everywhere (`--font-sans`/`--font-cal` in `app/layout.tsx`).
-- **Colour:** indigo ink `#1b1a3a`, lavender-grey surfaces, coral `#ff5a36` for actions and selection. Tokens live in `apps/web/styles/brand-tokens.css`, which overrides Cal's `--cal-*`.
-- **Dashboard:** `dashboard-theme.css` adds the indigo sidebar with a coral marker on the current page. It forces the coral brand inside the shell, since the owner's brand colour applies to their booking pages only.
+## Design system (2026-11-14, final direction: clean and neutral, modelled on the Linktree admin and Manychat recordings)
+- The user rejected the indigo/coral identity ("so bad"). Don't reintroduce bold brand colours or decorative elements.
+- **Rules:** light-first; off-white canvas `#f7f7f5`; white cards with 24px radius and hairline borders; grey sidebar `#efeeec`; near-black ink `#121212` as the only action colour; pill buttons; Albert Sans.
+- Tokens: `apps/web/styles/brand-tokens.css` (overrides Cal's `--cal-*`), shell in `dashboard-theme.css`. The dashboard defaults to light (`useAppTheme`); owners can still pick dark in Appearance.
 - **Booking pages:** the shared component `apps/web/modules/booking-page/BookingPageProfile.tsx` is used by the public page and the editor preview.
   - Services show a duration bar and "Instant booking" / "Needs approval".
   - The calendar is styled in `booking-theme.css`, with coral selection.

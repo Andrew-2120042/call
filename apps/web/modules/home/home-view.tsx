@@ -30,7 +30,7 @@ export default function HomeView() {
 
   return (
     <div className="mx-auto max-w-3xl" data-testid="home">
-      <h1 className="text-emphasis text-[28px] font-bold tracking-[-0.02em]">
+      <h1 className="text-emphasis text-[26px] font-semibold tracking-[-0.02em]">
         {t(greetingKey(new Date().getHours()), { name: firstName })}
       </h1>
 
@@ -119,8 +119,8 @@ export default function HomeView() {
                   <span
                     className={
                       booking.isRequest
-                        ? "rounded-full bg-[#ffe1d6] px-2.5 py-1 text-[11px] font-semibold text-[#b8350f]"
-                        : "rounded-full bg-[#dff3ea] px-2.5 py-1 text-[11px] font-semibold text-[#14694f]"
+                        ? "bg-subtle text-emphasis rounded-full px-2.5 py-1 text-[11px] font-medium"
+                        : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
                     }>
                     {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
                   </span>
@@ -138,7 +138,9 @@ function Stat(props: { label: string; value: number; note: string; href?: string
   const body = (
     <div className="bg-default border-subtle h-full rounded-3xl border p-5" data-testid={props.testId}>
       <p className="text-subtle text-sm">{props.label}</p>
-      <p className="text-emphasis mt-2 text-[34px] font-bold leading-none">{props.value}</p>
+      <p className="text-emphasis mt-2 text-[32px] font-semibold leading-none tracking-[-0.02em]">
+        {props.value}
+      </p>
       <p className="text-subtle mt-2 text-xs">{props.note}</p>
     </div>
   );
@@ -161,7 +163,9 @@ function SetupChecklist(props: { steps: readonly { id: string; done: boolean; hr
       <div className="flex items-center gap-4">
         <div
           className="grid h-14 w-14 flex-none place-items-center rounded-full"
-          style={{ background: `conic-gradient(#ff5a36 ${percent * 3.6}deg, var(--cal-bg-emphasis) 0)` }}
+          style={{
+            background: `conic-gradient(var(--cal-text-emphasis) ${percent * 3.6}deg, var(--cal-bg-emphasis) 0)`,
+          }}
           aria-hidden>
           <div className="bg-default text-emphasis grid h-11 w-11 place-items-center rounded-full text-sm font-bold">
             {percent}%
@@ -186,7 +190,7 @@ function SetupChecklist(props: { steps: readonly { id: string; done: boolean; hr
               <span
                 className={
                   step.done
-                    ? "grid h-5 w-5 flex-none place-items-center rounded-full bg-[#ff5a36] text-[11px] text-white"
+                    ? "bg-inverted text-inverted grid h-5 w-5 flex-none place-items-center rounded-full text-[11px]"
                     : "border-emphasis h-5 w-5 flex-none rounded-full border-2"
                 }>
                 {step.done ? "✓" : null}

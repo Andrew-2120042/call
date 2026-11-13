@@ -12,5 +12,6 @@ export const useAppTheme = () => {
     darkVal: user?.darkBrandColor,
   });
   useCalcomTheme(brandTheme);
-  useTheme(user?.appTheme);
+  // Light unless the owner picks otherwise in Appearance; the dashboard is designed light-first.
+  useTheme(user?.appTheme ?? "light");
 };

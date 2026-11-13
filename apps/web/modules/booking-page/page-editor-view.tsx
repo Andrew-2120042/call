@@ -172,7 +172,9 @@ export default function PageEditorView() {
         <Panel
           title={t("page_editor_services")}
           action={
-            <Link href="/event-types?dialog=new&eventPage=" className="text-sm font-medium text-[#ff5a36]">
+            <Link
+              href="/event-types?dialog=new&eventPage="
+              className="text-emphasis text-sm font-medium underline">
               {t("page_editor_add_service")}
             </Link>
           }>
@@ -217,7 +219,7 @@ export default function PageEditorView() {
                   {service.hidden ? t("page_editor_hidden") : t("page_editor_shown")}
                   <input
                     type="checkbox"
-                    className="h-4 w-4 accent-[#ff5a36]"
+                    className="h-4 w-4 accent-[#121212]"
                     checked={!service.hidden}
                     aria-label={t("page_editor_show_on_page", { title: service.title })}
                     onChange={(e) => {
@@ -245,13 +247,13 @@ export default function PageEditorView() {
               href={publicUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-sm font-medium text-[#ff5a36]">
+              className="text-emphasis text-sm font-medium underline">
               {t("page_editor_open_live")}
             </a>
           )}
         </div>
         <div
-          className="mx-auto h-[640px] w-[320px] overflow-hidden rounded-[46px] border-[10px] border-[#1b1a3a] bg-[#1b1a3a] shadow-[0_30px_60px_-30px_rgba(27,26,58,.6)]"
+          className="mx-auto h-[640px] w-[320px] overflow-hidden rounded-[46px] border-[10px] border-[#121212] bg-[#121212]"
           data-testid="page-editor-preview">
           <div className="no-scrollbar h-full overflow-y-auto rounded-[36px]">
             <BookingPageProfile

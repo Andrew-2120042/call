@@ -1,64 +1,48 @@
-/* Owner dashboard: indigo sidebar with a coral marker on the current page, lavender-grey work area.
-   Applied through data-sw-* attributes on the shell so Cal's components stay untouched. */
+/* Owner dashboard shell: quiet grey sidebar, off-white canvas, white cards. Applied through data-sw-*
+   attributes on the shell so Cal's components stay untouched. */
 
 [data-sw-sidebar] {
-  background: #1b1a3a !important;
+  background: #efeeec !important;
   border-color: transparent !important;
-  color: #e9e7ff;
-  --cal-text: #cfcce8;
-  --cal-text-emphasis: #ffffff;
-  --cal-text-subtle: #9f9cc4;
-  --cal-text-muted: #7c79a3;
-  --cal-bg-subtle: #2a2850;
-  --cal-bg-emphasis: #2f2d58;
-  --cal-border-subtle: #2c2a52;
 }
 
 .dark [data-sw-sidebar] {
-  background: #0d0c1f !important;
+  background: #0c0c0c !important;
 }
 
 [data-sw-sidebar] nav a,
 [data-sw-sidebar] nav button {
-  border-radius: 12px !important;
-  position: relative;
+  border-radius: 10px !important;
 }
 
 @media (min-width: 1024px) {
   [data-sw-sidebar] nav a,
   [data-sw-sidebar] nav button {
     font-size: 15px;
-    padding-top: 9px;
-    padding-bottom: 9px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
 
 [data-sw-sidebar] nav a:hover,
 [data-sw-sidebar] nav button:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: #ffffff !important;
+  background: rgba(18, 18, 18, 0.05) !important;
 }
 
 [data-sw-sidebar] nav a[aria-current="page"] {
-  background: rgba(255, 90, 54, 0.14) !important;
-  color: #ffffff !important;
+  background: #e2e1de !important;
+  color: #121212 !important;
   font-weight: 600;
 }
 
-/* The coral tab marker: the one bold accent in the shell. */
-[data-sw-sidebar] nav a[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  left: -8px;
-  top: 9px;
-  bottom: 9px;
-  width: 3px;
-  border-radius: 3px;
-  background: var(--sw-coral);
+.dark [data-sw-sidebar] nav a:hover,
+.dark [data-sw-sidebar] nav button:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
-[data-sw-sidebar] nav a[aria-current="page"] svg {
-  color: var(--sw-coral) !important;
+.dark [data-sw-sidebar] nav a[aria-current="page"] {
+  background: #242424 !important;
+  color: #ffffff !important;
 }
 
 [data-sw-main] {
@@ -68,16 +52,22 @@
 [data-sw-main] h1,
 [data-sw-main] h2,
 [data-sw-main] h3 {
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 /* The owner's brand colour styles their booking pages; the dashboard always uses ours. */
 [data-sw-main],
 [data-sw-sidebar] {
-  --cal-brand: #ff5a36;
-  --cal-brand-emphasis: #e0401d;
+  --cal-brand: #121212;
+  --cal-brand-emphasis: #000000;
   --cal-brand-text: #ffffff;
   --cal-brand-accent: #ffffff;
-  --primary: #ff5a36;
-  --primary-foreground: #ffffff;
+}
+
+.dark [data-sw-main],
+.dark [data-sw-sidebar] {
+  --cal-brand: #fafafa;
+  --cal-brand-emphasis: #ffffff;
+  --cal-brand-text: #121212;
+  --cal-brand-accent: #121212;
 }

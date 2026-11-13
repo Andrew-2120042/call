@@ -78,7 +78,7 @@ export function UserPage(props: PageProps) {
               name="badge-check"
               className={classNames(
                 "mx-1 -mt-1 inline h-6 w-6 text-white",
-                isOrg ? "fill-yellow-500" : "fill-[#ff5a36]"
+                isOrg ? "fill-yellow-500" : "fill-blue-500"
               )}
             />
           ) : null
@@ -94,7 +94,7 @@ export function UserPage(props: PageProps) {
         }
         empty={
           isEventListEmpty ? (
-            <div className="mt-8 rounded-[22px] bg-white p-6 text-[#1b1a3a]">
+            <div className="mt-8 rounded-3xl bg-white p-6 text-[#121212]">
               <EmptyPage name={profile.name || "User"} />
             </div>
           ) : null

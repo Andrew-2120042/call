@@ -3,7 +3,7 @@ import { loadTranslations } from "@calcom/i18n/server";
 import { IconSprites } from "@calcom/ui/components/icon";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { dir } from "i18next";
-import { Schibsted_Grotesk } from "next/font/google";
+import { Albert_Sans } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import type React from "react";
 
@@ -13,10 +13,9 @@ import { Providers } from "./providers";
 import { SpeculationRules } from "./SpeculationRules";
 
 // One family everywhere (dashboard and booking pages); weight and tracking carry the hierarchy.
-const brandFont = Schibsted_Grotesk({
+const brandFont = Albert_Sans({
   subsets: ["latin"],
   variable: "--font-brand",
-  weight: ["400", "500", "600", "700", "800", "900"],
   preload: true,
   display: "swap",
 });

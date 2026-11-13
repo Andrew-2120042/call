@@ -58,7 +58,7 @@ export function formatServiceLine(
 export function BookingPageProfile(props: Props) {
   const { t } = useLocale();
   const rowClass =
-    "group relative block overflow-hidden bg-white px-5 pb-4 pt-4 text-left text-[#1b1a3a] shadow-[0_1px_0_rgba(27,26,58,.06),0_10px_26px_-20px_rgba(27,26,58,.7)] transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff5a36]";
+    "group flex items-center justify-between gap-4 border border-black/[0.06] bg-white px-5 py-4 text-left text-[#121212] transition-colors hover:border-black/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
 
   return (
     <div
@@ -75,13 +75,11 @@ export function BookingPageProfile(props: Props) {
       <main className="mx-auto w-full max-w-[420px]">
         {props.banner}
         <header className="flex flex-col items-center text-center">
-          <div className="overflow-hidden rounded-[26px] shadow-[0_14px_34px_-18px_rgba(27,26,58,.55)]">
-            {props.avatar}
-          </div>
+          <div className="overflow-hidden rounded-full ring-4 ring-white">{props.avatar}</div>
           <h1
             className={classNames(
-              "font-extrabold leading-[1.02] tracking-[-0.035em]",
-              props.compact ? "mt-3 text-[22px]" : "mt-5 text-[32px]"
+              "font-bold leading-tight tracking-[-0.02em]",
+              props.compact ? "mt-3 text-[20px]" : "mt-4 text-[28px]"
             )}
             data-testid="name-title">
             {props.name}
@@ -114,34 +112,22 @@ export function BookingPageProfile(props: Props) {
             const link = props.linkFor?.(service);
             const body = (
               <>
-                <span className="flex items-start justify-between gap-3">
-                  <b className="text-[17px] font-bold leading-snug tracking-[-0.01em]">{service.title}</b>
-                  <Icon
-                    name="arrow-up-right"
-                    className="mt-0.5 h-4 w-4 flex-none text-[#9b98b8] transition-colors group-hover:text-[#ff5a36]"
-                  />
-                </span>
-                <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-[#6b6890]">
-                  <span>{formatServiceLine(service, t)}</span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span
-                      className={classNames(
-                        "h-2 w-2 rounded-full",
-                        service.requiresConfirmation ? "bg-[#ff5a36]" : "bg-[#1f9d74]"
-                      )}
-                    />
+                <span className="min-w-0">
+                  <span className="block truncate text-[16px] font-semibold leading-snug">
+                    {service.title}
+                  </span>
+                  <span className="mt-0.5 block text-[13px] text-[#6b6a66]">
+                    {formatServiceLine(service, t)}
+                    {" · "}
                     {service.requiresConfirmation
                       ? t("service_kind_request_long")
                       : t("service_kind_instant_long")}
                   </span>
                 </span>
-                {/* Duration bar: share of a two-hour block, so lengths read at a glance. */}
-                <span className="mt-3 block h-1 w-full rounded-full bg-[#eceaf5]" aria-hidden>
-                  <span
-                    className="block h-1 rounded-full bg-[#1b1a3a]"
-                    style={{ width: `${Math.max(8, Math.min(100, (service.length / 120) * 100))}%` }}
-                  />
-                </span>
+                <Icon
+                  name="chevron-right"
+                  className="h-4 w-4 flex-none text-[#9b9a95] transition-transform group-hover:translate-x-0.5 group-hover:text-[#121212]"
+                />
               </>
             );
             return link ? (
@@ -171,10 +157,9 @@ export function BookingPageProfile(props: Props) {
               href={`${WEBSITE_URL}/?utm_source=profile_page&utm_medium=badge`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[12px] font-medium"
+              className="text-[12px]"
               style={{ color: "var(--sw-soft)" }}
               data-testid="profile-branding">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#ff5a36]" />
               {t("booked_with_app", { appName: APP_NAME })}
             </a>
           </div>

@@ -19,15 +19,15 @@ export const DEFAULT_PAGE_THEME: PageThemeId = "fog";
 export const DEFAULT_BUTTON_SHAPE: ButtonShape = "rounded";
 
 export const PAGE_THEMES: Record<PageThemeId, PageTheme> = {
-  fog: { id: "fog", label: "Fog", bg: "#f2f1f8", fg: "#1b1a3a", soft: "#6b6890" },
-  coral: { id: "coral", label: "Coral", bg: "#ffe1d6", fg: "#3a1408", soft: "#8a4a36" },
-  sky: { id: "sky", label: "Sky", bg: "#d6ebff", fg: "#0e2a4a", soft: "#4a6a8c" },
-  butter: { id: "butter", label: "Butter", bg: "#ffe9a8", fg: "#3a2e00", soft: "#7a6420" },
-  pine: { id: "pine", label: "Pine", bg: "#0f3d35", fg: "#f1fff9", soft: "#9cc9bc" },
-  ink: { id: "ink", label: "Ink", bg: "#1b1a3a", fg: "#ffffff", soft: "#b7b4d9" },
+  fog: { id: "fog", label: "Paper", bg: "#f4f3f0", fg: "#121212", soft: "#6b6a66" },
+  coral: { id: "coral", label: "Blush", bg: "#f6e7e1", fg: "#2a1711", soft: "#7d6259" },
+  sky: { id: "sky", label: "Sky", bg: "#e4edf5", fg: "#10202e", soft: "#566878" },
+  butter: { id: "butter", label: "Butter", bg: "#f5edd2", fg: "#2a2410", soft: "#756b47" },
+  pine: { id: "pine", label: "Sage", bg: "#e3ebe2", fg: "#16241a", soft: "#5c6b5f" },
+  ink: { id: "ink", label: "Ink", bg: "#121212", fg: "#ffffff", soft: "#a3a3a3" },
 };
 
-export const BUTTON_RADII: Record<ButtonShape, string> = { pill: "999px", rounded: "18px", square: "6px" };
+export const BUTTON_RADII: Record<ButtonShape, string> = { pill: "999px", rounded: "16px", square: "6px" };
 
 export const PAGE_THEME_IDS = Object.keys(PAGE_THEMES) as PageThemeId[];
 export const BUTTON_SHAPES = Object.keys(BUTTON_RADII) as ButtonShape[];
