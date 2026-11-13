@@ -6,6 +6,7 @@ import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-util
 import dayjs from "@calcom/dayjs";
 import { getBookingFieldsWithSystemFields } from "@calcom/features/bookings/lib/getBookingFields";
 import { getDefaultEvent, getUsernameList } from "@calcom/features/eventtypes/lib/defaultEvents";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import { getOrgOrTeamAvatar, getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
 import { getUserAvatarUrl } from "@calcom/lib/getAvatarUrl";
@@ -87,6 +88,7 @@ export const getPublicEventSelect = (fetchAllUsers: boolean) => {
     lockTimeZoneToggleOnBookingPage: true,
     lockedTimeZone: true,
     requiresConfirmation: true,
+    waitlistEnabled: true,
     autoTranslateDescriptionEnabled: true,
     fieldTranslations: {
       select: {
@@ -305,8 +307,7 @@ export const getPublicEvent = async (
     // this reason (sortUsersByDynamicList in getLocationValuesForDb.ts) — without the same sort
     // here, the booking page can advertise a different location than the one actually booked.
     const users = [...usersInOrgContext].sort(
-      (a, b) =>
-        usernameList.indexOf(a.username ?? "") - usernameList.indexOf(b.username ?? "")
+      (a, b) => usernameList.indexOf(a.username ?? "") - usernameList.indexOf(b.username ?? "")
     );
 
     const defaultEvent = getDefaultEvent(eventSlug);
@@ -348,6 +349,7 @@ export const getPublicEvent = async (
 
     return {
       ...defaultEvent,
+      waitlistAvailable: false,
       bookingFields: getBookingFieldsWithSystemFields({ ...defaultEvent, disableBookingTitle }),
       // Only return fields consumed by the booker.
       subsetOfUsers: users.map((user) => ({
@@ -563,8 +565,16 @@ export const getPublicEvent = async (
     users = [];
   }
 
+  // Only offered for personal services whose owner's plan includes the waitlist.
+  const waitlistAvailable =
+    !!event.waitlistEnabled &&
+    !event.team &&
+    !!event.owner?.id &&
+    (await getPlanService().hasFeature(event.owner.id, "waitlist"));
+
   return {
     ...eventWithUserProfiles,
+    waitlistAvailable,
     bookerLayouts: bookerLayoutsSchema.parse(eventMetaData?.bookerLayouts || null),
     description: markdownToSafeHTML(eventWithUserProfiles.description),
     metadata: eventMetaData,

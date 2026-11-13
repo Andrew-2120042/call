@@ -4838,5 +4838,6 @@
   "request_insight_reply": "Suggested reply",
   "booking_rules_reminder_days": "{{count}} days before",
   "booking_rules_reminder_hours": "{{count}} hours before",
-  "booking_rules_reminder_minutes": "{{count}} minutes before"
+  "booking_rules_reminder_minutes": "{{count}} minutes before",
+  "waitlist_booker_link": "Time you want is taken? Join the waitlist"
 }

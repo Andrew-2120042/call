@@ -1,24 +1,23 @@
-import { useCallback, useMemo, useRef } from "react";
-
 import dayjs from "@calcom/dayjs";
+import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
+import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import type { BookerEvent } from "@calcom/features/bookings/types";
+import { PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM } from "@calcom/lib/constants";
+import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { localStorage } from "@calcom/lib/webstorage";
+import { BookerLayouts } from "@calcom/prisma/zod-utils";
+import classNames from "@calcom/ui/classNames";
 import {
   AvailableTimes,
   AvailableTimesSkeleton,
 } from "@calcom/web/modules/bookings/components/AvailableTimes";
-import { useBookerStoreContext } from "@calcom/features/bookings/Booker/BookerStoreProvider";
-import type { IUseBookingLoadingStates } from "../hooks/useBookings";
-import type { BookerEvent } from "@calcom/features/bookings/types";
-import type { Slot } from "~/schedules/lib/types";
-import { useNonEmptyScheduleDays } from "@calcom/web/modules/schedules/hooks/useNonEmptyScheduleDays";
-import { useSlotsForAvailableDates } from "@calcom/web/modules/schedules/hooks/useSlotsForDate";
-import { PUBLIC_INVALIDATE_AVAILABLE_SLOTS_ON_BOOKING_FORM } from "@calcom/lib/constants";
-import { localStorage } from "@calcom/lib/webstorage";
-import { BookerLayouts } from "@calcom/prisma/zod-utils";
-import classNames from "@calcom/ui/classNames";
-
 import { AvailableTimesHeader } from "@calcom/web/modules/bookings/components/AvailableTimesHeader";
 import type { useScheduleForEventReturnType } from "@calcom/web/modules/schedules/hooks/useEvent";
-import { getQueryParam } from "@calcom/features/bookings/Booker/utils/query-param";
+import { useNonEmptyScheduleDays } from "@calcom/web/modules/schedules/hooks/useNonEmptyScheduleDays";
+import { useSlotsForAvailableDates } from "@calcom/web/modules/schedules/hooks/useSlotsForDate";
+import { useCallback, useMemo, useRef } from "react";
+import type { Slot } from "~/schedules/lib/types";
+import type { IUseBookingLoadingStates } from "../hooks/useBookings";
 
 type AvailableTimeSlotsProps = {
   extraDays?: number;
@@ -28,7 +27,12 @@ type AvailableTimeSlotsProps = {
   seatsPerTimeSlot?: number | null;
   showAvailableSeatsCount?: boolean | null;
   event: {
-    data?: Pick<BookerEvent, "length" | "bookingFields" | "price" | "currency" | "metadata"> | null;
+    // Platform atoms build events from API v2, which doesn't send waitlistAvailable.
+    data?:
+      | (Pick<BookerEvent, "id" | "length" | "bookingFields" | "price" | "currency" | "metadata"> & {
+          waitlistAvailable?: boolean;
+        })
+      | null;
   };
   customClassNames?: {
     availableTimeSlotsContainer?: string;
@@ -81,6 +85,7 @@ export const AvailableTimeSlots = ({
   hideAvailableTimesHeader = false,
   ...props
 }: AvailableTimeSlotsProps) => {
+  const { t } = useLocale();
   const selectedDate = useBookerStoreContext((state) => state.selectedDate);
 
   const setSeatedEventData = useBookerStoreContext((state) => state.setSeatedEventData);
@@ -257,6 +262,14 @@ export const AvailableTimeSlots = ({
             </div>
           ))}
       </div>
+      {!isLoading && props.event.data?.waitlistAvailable && (
+        <a
+          href={`/waitlist/join/${props.event.data.id}?date=${date}`}
+          className="text-subtle hover:text-emphasis mt-3 block text-center text-sm underline"
+          data-testid="join-waitlist-link">
+          {t("waitlist_booker_link")}
+        </a>
+      )}
     </>
   );
 };

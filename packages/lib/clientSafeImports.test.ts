@@ -13,6 +13,7 @@ const CLIENT_OR_EDGE_FILES = [
   "apps/web/modules/auth/login-view.tsx",
   "apps/web/modules/event-types/components/tabs/advanced/BookingRulesCard.tsx",
   "apps/web/modules/bookings/components/RequestInsightPanel.tsx",
+  "apps/web/modules/bookings/components/AvailableTimeSlots.tsx",
   "apps/web/modules/settings/billing/billing-view.tsx",
   "apps/web/modules/waitlist/waitlist-view.tsx",
   "packages/features/bookings/lib/getOptionDisplayValue.ts",
