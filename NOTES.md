@@ -83,6 +83,19 @@ How it works:
 - The value is injected through i18next `defaultVariables`, from `packages/i18n/brand.js`, in both `next-i18next.config.js` and `server.ts`.
 - The wordmark uses SVG `<text>` with a pinned `textLength`. Replace it with outlined paths once there is a final logotype.
 
+## Waitlist (built 2026-11-13)
+- Service setting: `EventType.waitlistEnabled`.
+- Table: `WaitlistEntry`. Statuses: WAITING → OFFERED → CLAIMED, or EXPIRED / REMOVED. Only the sha256 of the claim token is stored.
+- Code lives in `packages/features/waitlist`, with `WaitlistService` holding all the rules.
+- Public API:
+  - `POST /api/waitlist/join`
+  - `GET|POST /api/waitlist/claim` (GET only reads the offer, so email link scanners can't claim).
+  - Claim page: `/waitlist/claim/<token>`.
+- A slot is offered to the next person automatically after a cancel (`handleCancelBooking`), a reject (`confirm.handler`) or a reschedule (`RegularBookingService`).
+- **Cron (production must schedule this every 5 minutes):** `POST /api/cron/waitlist` with header `authorization: $CRON_API_KEY`. It expires unclaimed offers, offers the slot to the next person, and drops past slots.
+- Env: `WAITLIST_OFFER_WINDOW_MINUTES` (default 120). An offer never outlives the slot start.
+- Owner tRPC: `waitlist.list`, `waitlist.remove`. No UI yet (item 8).
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

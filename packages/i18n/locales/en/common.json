@@ -4748,5 +4748,17 @@
   "user_updated_successfully": "User updated successfully.",
   "error_updating_user": "There was an error updating this user.",
   "please_reschedule": "Please reschedule.",
-  "ADD_NEW_STRINGS_ABOVE_THIS_LINE_TO_PREVENT_MERGE_CONFLICTS": "↑↑↑↑↑↑↑↑↑↑↑↑↑ Add your new strings above here ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑"
+  "ADD_NEW_STRINGS_ABOVE_THIS_LINE_TO_PREVENT_MERGE_CONFLICTS": "↑↑↑↑↑↑↑↑↑↑↑↑↑ Add your new strings above here ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑",
+  "waitlist_joined_subject": "You're on the waitlist for {{eventTitle}}",
+  "waitlist_joined_title": "You're on the waitlist",
+  "waitlist_joined_body": "If {{date}} with {{hostName}} opens up, we'll email you a link to claim it. You're number {{position}} in line.",
+  "waitlist_offer_subject": "A spot opened up: {{eventTitle}} on {{date}}",
+  "waitlist_offer_title": "A spot just opened up",
+  "waitlist_offer_body": "{{date}} with {{hostName}} is now available. Claim it before {{expiresAt}}, after that it goes to the next person in line.",
+  "waitlist_offer_cta": "Claim this time",
+  "waitlist_claim_invalid": "This link isn't valid.",
+  "waitlist_claim_unavailable_title": "This offer is no longer available",
+  "waitlist_claim_before": "Claim it before {{expiresAt}}. After that it goes to the next person in line.",
+  "waitlist_claim_already_claimed": "This time has already been claimed with this link.",
+  "waitlist_claim_expired": "This offer expired and the time was offered to the next person."
 }

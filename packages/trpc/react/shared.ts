@@ -29,6 +29,7 @@ export const ENDPOINTS = [
   "travelSchedules",
   "users",
   "viewer",
+  "waitlist",
   "webhook",
   "googleWorkspace",
   "oAuth",

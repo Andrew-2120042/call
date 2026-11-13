@@ -1,4 +1,5 @@
 import process from "node:process";
+import { offerFreedSlotSafely } from "@calcom/features/waitlist/lib/getWaitlistService";
 import processExternalId from "@calcom/app-store/_utils/calendars/processExternalId";
 import { getPaymentAppData } from "@calcom/app-store/_utils/payments/getPaymentAppData";
 import { metadata as GoogleMeetMetadata } from "@calcom/app-store/googlevideo/_metadata";
@@ -2548,6 +2549,14 @@ async function handler(
         tracingLogger.error("bookingEmailAndSmsTasker error:", err);
       }
     }
+  }
+
+  // Moving a booking frees its old time, which someone on the waitlist may be waiting for.
+  if (originalRescheduledBooking && !isDryRun) {
+    await offerFreedSlotSafely({
+      eventTypeId: originalRescheduledBooking.eventTypeId,
+      startTime: originalRescheduledBooking.startTime,
+    });
   }
 
   // TODO: Refactor better so this booking object is not passed

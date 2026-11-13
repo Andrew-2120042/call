@@ -134,6 +134,7 @@ const BaseEventTypeUpdateInput: z.ZodType<TUpdateInputSchema> = z
     requiresConfirmation: z.boolean().optional(),
     requiresConfirmationWillBlockSlot: z.boolean().optional(),
     requiresConfirmationForFreeEmail: z.boolean().optional(),
+    waitlistEnabled: z.boolean().optional(),
     requiresBookerEmailVerification: z.boolean().optional(),
     canSendCalVideoTranscriptionEmails: z.boolean().optional(),
     autoTranslateDescriptionEnabled: z.boolean().optional(),

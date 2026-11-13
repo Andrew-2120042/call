@@ -181,6 +181,7 @@ model EventType {
   teamId                             Int?
   hashedLink                         HashedLink[]
   bookings                           Booking[]
+  waitlistEntries                    WaitlistEntry[]
   availability                       Availability[]
   webhooks                           Webhook[]
   destinationCalendar                DestinationCalendar?
@@ -205,6 +206,7 @@ model EventType {
   requiresConfirmation               Boolean                @default(false)
   requiresConfirmationWillBlockSlot  Boolean                @default(false)
   requiresConfirmationForFreeEmail   Boolean                @default(false)
+  waitlistEnabled                    Boolean                @default(false)
   requiresBookerEmailVerification    Boolean                @default(false)
   canSendCalVideoTranscriptionEmails Boolean                @default(true)
 
@@ -2848,4 +2850,40 @@ model AttributeSyncFieldMapping {
 
   @@unique([integrationAttributeSyncId, attributeId])
   @@index([integrationAttributeSyncId])
+}
+
+enum WaitlistEntryStatus {
+  WAITING
+  OFFERED
+  CLAIMED
+  EXPIRED
+  REMOVED
+}
+
+/// A person waiting for a specific taken slot of an event type. When the slot frees up the
+/// earliest WAITING entry is offered the slot through a single-use claim token.
+model WaitlistEntry {
+  id               Int                 @id @default(autoincrement())
+  uid              String              @unique @default(uuid())
+  eventTypeId      Int
+  eventType        EventType           @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+  startTime        DateTime
+  endTime          DateTime
+  name             String
+  email            String
+  timeZone         String
+  language         String              @default("en")
+  responses        Json                @default("{}")
+  status           WaitlistEntryStatus @default(WAITING)
+  /// sha256 of the claim token; the raw token only ever exists in the offer email
+  offerTokenHash   String?             @unique
+  offeredAt        DateTime?
+  offerExpiresAt   DateTime?
+  claimedBookingId Int?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  @@unique([eventTypeId, startTime, email])
+  @@index([eventTypeId, startTime, status])
+  @@index([status, offerExpiresAt])
 }

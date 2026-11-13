@@ -1,4 +1,5 @@
 import { DailyLocationType } from "@calcom/app-store/constants";
+import { offerFreedSlotSafely } from "@calcom/features/waitlist/lib/getWaitlistService";
 import { FAKE_DAILY_CREDENTIAL } from "@calcom/app-store/dailyvideo/lib/VideoApiAdapter";
 import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
 import dayjs from "@calcom/dayjs";
@@ -514,6 +515,12 @@ async function handler(input: CancelBookingInput, dependencies?: Dependencies) {
   } catch (error) {
     log.error("Error deleting event", error);
   }
+
+  // Sent after the cancellation emails so the person cancelling is told first, then the slot is re-offered.
+  for (const booking of updatedBookings) {
+    await offerFreedSlotSafely({ eventTypeId: bookingToDelete.eventTypeId, startTime: booking.startTime });
+  }
+
   return {
     success: true,
     message: "Booking successfully cancelled.",

@@ -15,14 +15,7 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 0. Engine running, rebrand, branding leftovers fixed (emails, footer, video name)
 - [x] 1. Booking requests you approve: request → PENDING, owner + client emails, Confirm, Reject with reason (verified in UI + emails)
 - [x] 2. Screening questions: required answers enforced (400 on missing), answers in owner email + booking page, option fields show labels (getOptionDisplayValue) — verified e2e
-- [ ] 3. Waitlist (new):
-  - schema: WaitlistEntry (eventTypeId, desired startTime/endTime, name, email, phone?, status WAITING/OFFERED/CLAIMED/EXPIRED/REMOVED, offerToken, offerExpiresAt, createdAt)
-  - event type setting: waitlist enabled (metadata or column)
-  - public API: join waitlist for a taken slot (validate slot really is taken, dedupe, rate limit)
-  - on booking cancelled/rejected/rescheduled-away → offer slot to next WAITING entry (email with claim link, expiry e.g. 2h), move to next on expiry
-  - claim endpoint: verifies token + slot still free → creates booking via normal booking flow (respects requiresConfirmation) → CLAIMED
-  - owner: list + remove entries (tRPC), email notifications
-  - tests + e2e verification
+- [x] 3. Waitlist: join/offer/expire/claim/remove + emails + cron + owner tRPC + settings toggle — 19 unit tests, verified live (join errors, cancel→offer, claim→booking via normal flow, reuse blocked, cron expiry→next person, auth 401s)
 - [ ] 4. Confirm-or-release (new):
   - event type setting: require attendee confirmation N hours before (+ action on miss: notify owner | release slot)
   - scheduled job (cron endpoint secured by CRON_API_KEY) sends confirm emails, then on deadline marks unconfirmed → notify owner / cancel + offer to waitlist
@@ -36,4 +29,4 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [ ] 10. Production readiness: env docs, migrations, cron setup docs, security review of new endpoints
 
 ## Log
-- 2026-11-13: items 0–2 done.
+- 2026-11-13: items 0–3 done.

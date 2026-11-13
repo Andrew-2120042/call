@@ -1,4 +1,5 @@
 import { getUsersCredentialsIncludeServiceAccountKey } from "@calcom/app-store/delegationCredential";
+import { offerFreedSlotSafely } from "@calcom/features/waitlist/lib/getWaitlistService";
 import type { LocationObject } from "@calcom/app-store/locations";
 import { getLocationValueForDB } from "@calcom/app-store/locations";
 import { sendDeclinedEmailsAndSMS } from "@calcom/emails/email-manager";
@@ -478,6 +479,10 @@ export const confirmHandler = async ({ ctx, input }: ConfirmOptions) => {
     };
     await handleWebhookTrigger({ subscriberOptions, eventTrigger, webhookData, traceContext });
 
+  }
+
+  if (!confirmed) {
+    await offerFreedSlotSafely({ eventTypeId: booking.eventType?.id, startTime: booking.startTime });
   }
 
   const message = confirmed ? "Booking confirmed" : "Booking rejected";
