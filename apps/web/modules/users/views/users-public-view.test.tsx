@@ -55,6 +55,9 @@ function mockedUserPageComponentProps(props: Partial<React.ComponentProps<typeof
     },
     eventTypes: [],
     isOrgSEOIndexable: false,
+    pageTheme: "paper",
+    pageButtonShape: "pill",
+    isBrandingHidden: false,
   } satisfies React.ComponentProps<typeof UserPage>;
 }
 

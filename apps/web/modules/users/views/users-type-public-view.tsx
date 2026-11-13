@@ -1,16 +1,14 @@
 "use client";
 
-import type { EmbedProps } from "app/WithEmbedSSR";
-import { useSearchParams } from "next/navigation";
-
-import { BookerWebWrapper as Booker } from "@calcom/web/modules/bookings/components/BookerWebWrapper";
+import { pageThemeStyle } from "@calcom/features/booking-page-theme/themes";
 import { getBookerWrapperClasses } from "@calcom/features/bookings/Booker/utils/getBookerWrapperClasses";
-
-import type { inferSSRProps } from "@lib/types/inferSSRProps";
-
+import { BookerWebWrapper as Booker } from "@calcom/web/modules/bookings/components/BookerWebWrapper";
 import BookingPageErrorBoundary from "@components/error/BookingPageErrorBoundary";
-
+import type { inferSSRProps } from "@lib/types/inferSSRProps";
 import type { getServerSideProps } from "@server/lib/[user]/[type]/getServerSideProps";
+import type { EmbedProps } from "app/WithEmbedSSR";
+import classNames from "classnames";
+import { useSearchParams } from "next/navigation";
 
 export type PageProps = inferSSRProps<typeof getServerSideProps> & EmbedProps;
 
@@ -24,12 +22,24 @@ export const getMultipleDurationValue = (
   return defaultValue;
 };
 
-function Type({ slug, user, isEmbed, booking, isBrandingHidden, eventData, orgBannerUrl }: PageProps) {
+function Type({
+  slug,
+  user,
+  isEmbed,
+  booking,
+  isBrandingHidden,
+  eventData,
+  orgBannerUrl,
+  pageTheme,
+  pageButtonShape,
+}: PageProps) {
   const searchParams = useSearchParams();
 
   return (
     <BookingPageErrorBoundary>
-      <main className={getBookerWrapperClasses({ isEmbed: !!isEmbed })}>
+      <main
+        className={classNames(getBookerWrapperClasses({ isEmbed: !!isEmbed }), !isEmbed && "sw-booker")}
+        style={isEmbed ? undefined : pageThemeStyle(pageTheme, pageButtonShape)}>
         <Booker
           username={user}
           eventSlug={slug}

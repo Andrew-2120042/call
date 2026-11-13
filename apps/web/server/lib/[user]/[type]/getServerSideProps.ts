@@ -24,6 +24,8 @@ type Props = {
   user: string;
   slug: string;
   isBrandingHidden: boolean;
+  pageTheme: string;
+  pageButtonShape: string;
   isSEOIndexable: boolean | null;
   themeBasis: null | string;
   orgBannerUrl: null;
@@ -177,6 +179,8 @@ async function getDynamicGroupPageProps(context: GetServerSidePropsContext) {
     user: usernames.join("+"),
     slug,
     isBrandingHidden: false,
+    pageTheme: "paper",
+    pageButtonShape: "pill",
     isSEOIndexable: true,
     themeBasis: null,
     bookingUid: bookingUid ? `${bookingUid}` : null,
@@ -265,6 +269,10 @@ async function getUserPageProps(context: GetServerSidePropsContext) {
       : false
     : user?.allowSEOIndexing;
 
+  const pageLook = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { pageTheme: true, pageButtonShape: true },
+  });
   const props: Props = {
     eventData: eventData,
     user: username,
@@ -273,6 +281,8 @@ async function getUserPageProps(context: GetServerSidePropsContext) {
       shouldHideBrandingForUserEvent({ eventTypeId: eventData.id, owner: user }) &&
       (await getPlanService().hasFeature(user.id, "removeBranding")),
     isSEOIndexable: allowSEOIndexing,
+    pageTheme: pageLook?.pageTheme ?? "paper",
+    pageButtonShape: pageLook?.pageButtonShape ?? "pill",
     themeBasis: username,
     bookingUid: bookingUid ? `${bookingUid}` : null,
     rescheduleUid: null,

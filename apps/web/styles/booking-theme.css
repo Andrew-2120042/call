@@ -1,0 +1,55 @@
+/* Slotwise booking page look (Usuals style). Scoped to .sw-booker so the owner dashboard is untouched.
+   Theme colours come from --sw-* variables set from the owner's page theme. */
+
+.sw-booker {
+  background: var(--sw-bg);
+  color: var(--sw-fg);
+  min-height: 100dvh;
+  /* Buttons, the selected day and the confirm button use ink, like the design. */
+  --cal-brand: #121212;
+  --cal-brand-emphasis: #000000;
+  --cal-brand-text: #ffffff;
+}
+
+.sw-booker [data-testid="booker-container"] {
+  background: #ffffff !important;
+  color: #121212;
+  border-color: transparent !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.sw-booker [data-testid="time"] {
+  border-radius: var(--sw-radius) !important;
+  font-weight: 600;
+  border-color: #e4e0d9;
+}
+
+.sw-booker [data-testid="time"]:hover {
+  border-color: #121212;
+}
+
+.sw-booker [data-testid="day"] {
+  border-radius: 14px !important;
+}
+
+.sw-booker [data-testid="booker-container"] button[type="submit"] {
+  border-radius: 12px;
+}
+
+.sw-booker [data-testid="booker-branding"],
+.sw-booker [data-testid="join-waitlist-link"] {
+  color: var(--sw-soft);
+}
+
+.sw-booker [data-testid="join-waitlist-link"] {
+  display: inline-block;
+  margin-top: 0.75rem;
+  border-radius: 16px;
+  background: #e9d7ff;
+  color: #3b1a8f;
+  padding: 0.6rem 0.9rem;
+  text-decoration: none;
+  font-weight: 600;
+}

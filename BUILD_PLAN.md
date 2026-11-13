@@ -30,7 +30,8 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 13. Custom domains (Pro): CustomDomain model, DNS TXT verification, host-based routing middleware (book.yourname.com → owner page), Vercel domain API hook (documented), settings UI
 - [x] 14. Calendly import: owner pastes a Calendly personal access token → import event types (name, duration, description, slug) + weekly availability; idempotent, preview before import; mocked-API tests
 - [x] 15. Calendar sync health check: cron checks every connected calendar, marks broken ones, emails the owner once, shows a status badge + "reconnect" on the calendars page
-- [ ] 16. Design: Usuals-style public booking page + Linktree-style owner dashboard (from design/ prototypes)
+- [x] 16a. Design, public side: Usuals-style profile page, themed booking calendar, owner picks page colour + button shape (Settings → Appearance), free
+- [ ] 16b. Design, owner side: Linktree-style dashboard shell (Albert Sans, sidebar, home with page card + stats) per design/dashboard-prototype.html
 
 ## Log
 - 2026-11-13: all items 0–10 done. Remaining work needs the user: real name/logo, Anthropic key, Polar products/token, hosting + email domain, UI redesign (Linktree-style dashboard + Usuals-style booking page).

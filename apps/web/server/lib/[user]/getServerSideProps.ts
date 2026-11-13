@@ -1,6 +1,7 @@
 import { encode } from "node:querystring";
 import { getUsernameList } from "@calcom/features/eventtypes/lib/defaultEvents";
 import { getEventTypesPublic } from "@calcom/features/eventtypes/lib/getEventTypesPublic";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { getBrandingForUser } from "@calcom/features/profile/lib/getBranding";
 import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import { DEFAULT_DARK_BRAND_COLOR, DEFAULT_LIGHT_BRAND_COLOR } from "@calcom/lib/constants";
@@ -73,6 +74,9 @@ type UserPageProps = {
     | "schedulingType"
   >)[];
   isOrgSEOIndexable: boolean | undefined;
+  pageTheme: string;
+  pageButtonShape: string;
+  isBrandingHidden: boolean;
 } & EmbedProps;
 
 export const getServerSideProps: GetServerSideProps<UserPageProps> = async (context) => {
@@ -180,6 +184,13 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
   }
 
   const safeBio = markdownToSafeHTML(user.bio) || "";
+  const [pageLook, canRemoveBranding] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: user.id },
+      select: { pageTheme: true, pageButtonShape: true, hideBranding: true },
+    }),
+    getPlanService().hasFeature(user.id, "removeBranding"),
+  ]);
 
   const markdownStrippedBio = stripMarkdown(user?.bio || "");
   const org = usersInOrgContext[0].profile.organization;
@@ -207,6 +218,9 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
       themeBasis: user.username,
       markdownStrippedBio,
       isOrgSEOIndexable: org?.organizationSettings?.allowSEOIndexing ?? false,
+      pageTheme: pageLook?.pageTheme ?? "paper",
+      pageButtonShape: pageLook?.pageButtonShape ?? "pill",
+      isBrandingHidden: !!pageLook?.hideBranding && canRemoveBranding,
     },
   };
 };

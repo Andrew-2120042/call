@@ -519,6 +519,10 @@ model User {
 
   autoOptInFeatures Boolean           @default(false)
   planSubscription  PlanSubscription?
+  /// Public booking page colour theme (see packages/features/booking-page-theme)
+  pageTheme         String            @default("paper")
+  /// Public booking page button shape: pill | rounded | square
+  pageButtonShape   String            @default("pill")
   customDomain      CustomDomain?
 
   @@unique([email])
