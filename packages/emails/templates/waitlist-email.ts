@@ -39,7 +39,7 @@ abstract class WaitlistBaseEmail<T extends WaitlistEmailBase> extends BaseEmail 
       to: `${this.data.to.name} <${this.data.to.email}>`,
       from: `${EMAIL_FROM_NAME} <${this.getMailerOptions().from}>`,
       subject,
-      html: await renderEmail("WaitlistEmail", {
+      html: await renderEmail("ActionEmail", {
         subject,
         title,
         body,

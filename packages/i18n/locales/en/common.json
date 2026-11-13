@@ -4760,5 +4760,21 @@
   "waitlist_claim_unavailable_title": "This offer is no longer available",
   "waitlist_claim_before": "Claim it before {{expiresAt}}. After that it goes to the next person in line.",
   "waitlist_claim_already_claimed": "This time has already been claimed with this link.",
-  "waitlist_claim_expired": "This offer expired and the time was offered to the next person."
+  "waitlist_claim_expired": "This offer expired and the time was offered to the next person.",
+  "attendee_confirmation_request_subject": "Please confirm: {{eventTitle}} on {{date}}",
+  "attendee_confirmation_request_title": "Are you still coming?",
+  "attendee_confirmation_request_body": "Please confirm your booking with {{hostName}} on {{date}} by {{deadline}}. If you don't confirm in time, the booking may be released.",
+  "attendee_confirmation_request_cta": "Yes, I'm coming",
+  "host_unconfirmed_subject": "{{attendeeName}} hasn't confirmed {{date}}",
+  "host_unconfirmed_title": "Booking not confirmed",
+  "host_unconfirmed_body": "{{attendeeName}} didn't confirm {{eventTitle}} on {{date}} before the deadline. The booking is still on your calendar.",
+  "host_unconfirmed_released_subject": "Released: {{attendeeName}} didn't confirm {{date}}",
+  "host_unconfirmed_released_title": "Unconfirmed booking released",
+  "host_unconfirmed_released_body": "{{attendeeName}} didn't confirm {{eventTitle}} on {{date}} in time, so the booking was cancelled and the time was offered to your waitlist.",
+  "attendance_confirm_title": "Confirm your booking",
+  "attendance_confirmed_title": "You're confirmed",
+  "attendance_confirmed_body": "Thanks! {{hostName}} knows you're coming.",
+  "attendance_confirm_deadline_passed": "The confirmation deadline has passed.",
+  "attendance_confirm_booking_cancelled": "This booking was cancelled.",
+  "attendance_confirm_invalid": "This link isn't valid."
 }

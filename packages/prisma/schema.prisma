@@ -207,6 +207,10 @@ model EventType {
   requiresConfirmationWillBlockSlot  Boolean                @default(false)
   requiresConfirmationForFreeEmail   Boolean                @default(false)
   waitlistEnabled                    Boolean                @default(false)
+  /// Hours before the start by which the attendee must confirm they are still coming; null turns it off.
+  attendeeConfirmationHours          Int?
+  /// When the attendee misses the confirmation deadline: cancel and free the slot (true) or only alert the host.
+  releaseUnconfirmedBookings         Boolean                @default(false)
   requiresBookerEmailVerification    Boolean                @default(false)
   canSendCalVideoTranscriptionEmails Boolean                @default(true)
 
@@ -916,6 +920,7 @@ model Booking {
   wrongAssignmentReports WrongAssignmentReport[]
 
   // @@partial_index([reassignById])
+  attendeeConfirmation BookingAttendeeConfirmation?
 
   @@index([eventTypeId])
   @@index([userId])
@@ -2886,4 +2891,27 @@ model WaitlistEntry {
   @@unique([eventTypeId, startTime, email])
   @@index([eventTypeId, startTime, status])
   @@index([status, offerExpiresAt])
+}
+
+enum AttendeeConfirmationStatus {
+  REQUESTED
+  CONFIRMED
+  MISSED
+  CANCELLED
+}
+
+/// Tracks the "please confirm you're still coming" request for a booking.
+model BookingAttendeeConfirmation {
+  id          Int                        @id @default(autoincrement())
+  bookingId   Int                        @unique
+  booking     Booking                    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  status      AttendeeConfirmationStatus @default(REQUESTED)
+  /// sha256 of the confirmation token; the raw token only exists in the email
+  tokenHash   String                     @unique
+  deadline    DateTime
+  requestedAt DateTime                   @default(now())
+  confirmedAt DateTime?
+  resolvedAt  DateTime?
+
+  @@index([status, deadline])
 }

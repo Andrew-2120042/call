@@ -43,4 +43,4 @@ export { TeamInviteEmail } from "./TeamInviteEmail";
 export { VerifyAccountEmail } from "./VerifyAccountEmail";
 export { VerifyEmailByCode } from "./VerifyEmailByCode";
 export { VerifyEmailChangeEmail } from "./VerifyEmailChangeEmail";
-export { WaitlistEmail } from "./WaitlistEmail";
+export { ActionEmail } from "./ActionEmail";

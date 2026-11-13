@@ -16,11 +16,7 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 1. Booking requests you approve: request → PENDING, owner + client emails, Confirm, Reject with reason (verified in UI + emails)
 - [x] 2. Screening questions: required answers enforced (400 on missing), answers in owner email + booking page, option fields show labels (getOptionDisplayValue) — verified e2e
 - [x] 3. Waitlist: join/offer/expire/claim/remove + emails + cron + owner tRPC + settings toggle — 19 unit tests, verified live (join errors, cancel→offer, claim→booking via normal flow, reuse blocked, cron expiry→next person, auth 401s)
-- [ ] 4. Confirm-or-release (new):
-  - event type setting: require attendee confirmation N hours before (+ action on miss: notify owner | release slot)
-  - scheduled job (cron endpoint secured by CRON_API_KEY) sends confirm emails, then on deadline marks unconfirmed → notify owner / cancel + offer to waitlist
-  - attendee confirm link endpoint (signed token)
-  - tests + e2e
+- [x] 4. Confirm-or-release: settings (validated 1–168h), request emails via cron, confirm page/API, missed → host alert or release via cancel service → waitlist offer — 10 unit tests, verified live end to end
 - [ ] 5. Reminders: email reminders before booking (24h, 1h configurable) via cron job; no duplicates (sent log); tests + e2e
 - [ ] 6. AI request helper: summary + spam/low-fit flag for pending requests (Anthropic API, model from env, graceful no-op without key); shown to owner in email + booking; tests (mock LLM)
 - [ ] 7. Pro plan: plan field on user, feature gating (approval, screening beyond 1 form, waitlist, confirm-or-release, AI, custom domain, branding removal), Polar checkout + webhook (signature verified) → plan updates; tests
@@ -29,4 +25,4 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [ ] 10. Production readiness: env docs, migrations, cron setup docs, security review of new endpoints
 
 ## Log
-- 2026-11-13: items 0–3 done.
+- 2026-11-13: items 0–4 done.

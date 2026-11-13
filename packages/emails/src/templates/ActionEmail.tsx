@@ -1,6 +1,6 @@
 import { BaseEmailHtml, CallToAction, Info } from "../components";
 
-export type WaitlistEmailProps = {
+export type ActionEmailProps = {
   subject: string;
   title: string;
   body: string;
@@ -11,8 +11,8 @@ export type WaitlistEmailProps = {
   cta?: { label: string; href: string };
 };
 
-export const WaitlistEmail = (
-  props: WaitlistEmailProps & Partial<React.ComponentProps<typeof BaseEmailHtml>>
+export const ActionEmail = (
+  props: ActionEmailProps & Partial<React.ComponentProps<typeof BaseEmailHtml>>
 ) => {
   return (
     <BaseEmailHtml

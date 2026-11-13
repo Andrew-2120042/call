@@ -96,6 +96,17 @@ How it works:
 - Env: `WAITLIST_OFFER_WINDOW_MINUTES` (default 120). An offer never outlives the slot start.
 - Owner tRPC: `waitlist.list`, `waitlist.remove`. No UI yet (item 8).
 
+## Confirm-or-release (built 2026-11-13)
+- Service settings:
+  - `EventType.attendeeConfirmationHours`: 1–168, null = off. This is the deadline before the start.
+  - `releaseUnconfirmedBookings`: cancel the booking and free the slot, or only alert the host.
+- Table: `BookingAttendeeConfirmation`. Statuses: REQUESTED → CONFIRMED, MISSED or CANCELLED. Only the token hash is stored.
+- The request email goes out 24h before the deadline. Bookings made after the deadline are never asked.
+- A release cancels through `BookingCancelService` as the host, so emails, calendars and the **waitlist offer** all fire.
+- Client page: `/attendance/confirm/<token>`. API: `GET|POST /api/attendance/confirm` (GET only reads).
+- **Cron (production must schedule this every 5 minutes):** `POST /api/cron/attendee-confirmations` with header `authorization: $CRON_API_KEY`.
+- Shared email layout: `packages/emails/src/templates/ActionEmail.tsx`.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
