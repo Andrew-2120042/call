@@ -18,6 +18,7 @@ import {
   ENABLE_PROFILE_SWITCHER,
   GOOGLE_CALENDAR_SCOPES,
   GOOGLE_OAUTH_SCOPES,
+  APP_NAME,
   HOSTED_CAL_FEATURES,
   IS_CALCOM,
   IS_TEAM_BILLING_ENABLED,
@@ -289,7 +290,7 @@ export async function authorizeCredentials(
 
 export const CalComCredentialsProvider = CredentialsProvider({
   id: "credentials",
-  name: "Cal.diy",
+  name: APP_NAME,
   type: "credentials",
   credentials: {
     email: { label: "Email Address", type: "email", placeholder: "john.doe@example.com" },

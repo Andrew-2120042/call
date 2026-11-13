@@ -1,0 +1,8 @@
+<svg width="132" height="26" viewBox="0 0 132 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <rect x="1.5" y="3.5" width="23" height="21" rx="5" stroke="#000000" stroke-width="3"/>
+  <path d="M7 1.5V6M19 1.5V6" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+  <path d="M8 15.5L11.5 19L18.5 11.5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="34" y="20" fill="#000000" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="-0.2" textLength="98" lengthAdjust="spacingAndGlyphs">Slotwise</text>
+</svg>

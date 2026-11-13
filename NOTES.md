@@ -68,6 +68,21 @@ What it removed: Teams, Organizations, Workflows (and with them SMS), SSO and In
 5. **Production launch:** hosting, hardening, monitoring, backups, landing page.
 6. **Later:** deposits / no-show fees (US entity), SMS, Team plan, HIPAA tier (parked).
 
+## Brand system (how to rename)
+The name is placeholder until the user picks the real one, which happens before the Instagram page and launch.
+
+To rename:
+1. Set `NEXT_PUBLIC_APP_NAME` in `.env` (and in production env vars).
+2. Optionally set `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` and `EMAIL_FROM_NAME`. Their code defaults in `packages/lib/constants.ts` also say Slotwise.
+3. Replace `apps/web/public/brand/mark.svg` (logo mark, #292929 on transparent) and `brand/app-icon.svg` (512px app icon) if the mark changes.
+4. Run `node scripts/brand/generate-brand-assets.mjs`. It regenerates the wordmarks, every favicon/app icon/mstile, `favicon.ico`, `safari-pinned-tab.svg` and the `site.webmanifest` name.
+5. Restart the app.
+
+How it works:
+- Translations use `{{appName}}` everywhere; all 37 locales were converted from Cal.diy/Cal.com.
+- The value is injected through i18next `defaultVariables`, from `packages/i18n/brand.js`, in both `next-i18next.config.js` and `server.ts`.
+- The wordmark uses SVG `<text>` with a pinned `textLength`. Replace it with outlined paths once there is a final logotype.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

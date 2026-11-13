@@ -1,4 +1,5 @@
 import { auth, Client, webln } from "@getalby/sdk";
+import { APP_NAME } from "@calcom/lib/constants";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useCallback, useEffect } from "react";
@@ -102,7 +103,7 @@ function AlbySetupPage(props: IAlbySetupProps) {
     const webhookEndpoint = await client.createWebhookEndpoint({
       filter_types: ["invoice.incoming.settled"],
       url: `${process.env.NEXT_PUBLIC_WEBAPP_URL}/api/integrations/alby/webhook`,
-      description: "Cal.diy",
+      description: APP_NAME,
     });
 
     saveKeysMutation.mutate({
