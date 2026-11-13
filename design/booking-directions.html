@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking page directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Archivo:wdth,wght@62..125,400;62..125,600;62..125,800;62..125,900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#e9e9ec;color:#111}
+  .switcher{position:sticky;top:0;z-index:10;display:flex;gap:8px;justify-content:center;padding:12px 16px;background:#fff;border-bottom:1px solid #ddd;flex-wrap:wrap}
+  .switcher button{font:600 14px system-ui;padding:9px 16px;border-radius:999px;border:1px solid #ccc;background:#fff;cursor:pointer}
+  .switcher button[aria-pressed="true"]{background:#111;color:#fff;border-color:#111}
+  .switcher button:focus-visible,.dir button:focus-visible{outline:3px solid #6aa0ff;outline-offset:2px}
+  .dir{display:none;min-height:calc(100vh - 62px);padding:40px 16px 64px}
+  .dir.on{display:block}
+  .note{max-width:1040px;margin:0 auto 18px;font:14px/1.5 system-ui;color:#555}
+
+  /* ---------- 1. Calm & trustworthy ---------- */
+  .d1{--bg:#F6F7F9;--ink:#14213D;--muted:#5B6478;--line:#DCE1EA;--accent:#2B59C3;--accent-soft:#E8EEFB;--wait:#9A6A12;--wait-soft:#FBF3E2;background:var(--bg);font-family:"Schibsted Grotesk",system-ui,sans-serif;color:var(--ink)}
+  .d1 .page{max-width:1040px;margin:0 auto;display:grid;grid-template-columns:320px 1fr;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .d1 aside{padding:32px;border-right:1px solid var(--line)}
+  .d1 .who{display:flex;gap:14px;align-items:center;margin-bottom:28px}
+  .d1 .av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3b4f7d,#14213D);color:#fff;display:grid;place-items:center;font-weight:600}
+  .d1 .who b{display:block;font-size:17px}
+  .d1 .who span{color:var(--muted);font-size:14px}
+  .d1 .svc{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;cursor:pointer}
+  .d1 .svc[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+  .d1 .svc b{font-weight:600}
+  .d1 .svc small{display:block;color:var(--muted);margin-top:4px;font-size:13px}
+  .d1 .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:1px}
+  .d1 .tag.i{background:#E6F4EC;color:#1E6B45}
+  .d1 .tag.r{background:var(--accent-soft);color:var(--accent)}
+  .d1 main{padding:32px}
+  .d1 h2{font-size:20px;font-weight:600;margin-bottom:4px}
+  .d1 .sub{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .d1 .days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:22px}
+  .d1 .day{font:inherit;color:inherit;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 0;cursor:pointer;text-align:center}
+  .d1 .day small{display:block;color:var(--muted);font-size:12px}
+  .d1 .day b{font-size:18px;font-weight:600}
+  .d1 .day[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .d1 .day[aria-pressed="true"] small{color:#c9d2e6}
+  .d1 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+  .d1 .slot{font:500 15px "Schibsted Grotesk";color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px;cursor:pointer}
+  .d1 .slot:hover{border-color:var(--accent)}
+  .d1 .slot.full{background:var(--wait-soft);border-color:#EED9AE;color:var(--wait)}
+  .d1 .slot.full small{display:block;font-size:12px}
+  .d1 .panel{margin-top:22px;border-top:1px solid var(--line);padding-top:22px}
+  .d1 .q{margin-bottom:14px}
+  .d1 label{display:block;font-weight:500;font-size:14px;margin-bottom:6px}
+  .d1 input,.d1 textarea{width:100%;font:inherit;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .d1 .cta{font:600 15px "Schibsted Grotesk";background:var(--accent);color:#fff;border:0;border-radius:8px;padding:12px 18px;cursor:pointer}
+  .d1 .fine{color:var(--muted);font-size:13px;margin-top:10px}
+  @media (max-width:760px){.d1 .page{grid-template-columns:1fr}.d1 aside{border-right:0;border-bottom:1px solid var(--line)}}
+
+  /* ---------- 2. Warm & friendly ---------- */
+  .d2{--bg:#FFF6F1;--ink:#2E1F2B;--muted:#7A6573;--plum:#6B2D5C;--blush:#F6D9CF;--sage:#DCE8DD;--sage-ink:#2F5A3A;background:var(--bg);font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--ink)}
+  .d2 .page{max-width:720px;margin:0 auto}
+  .d2 header{text-align:center;margin-bottom:28px}
+  .d2 .av{width:96px;height:96px;border-radius:50%;margin:0 auto 14px;background:radial-gradient(circle at 30% 30%,#E9A98F,#9B4C6E);border:5px solid #fff;box-shadow:0 6px 24px rgba(107,45,92,.18)}
+  .d2 h1{font-size:34px;font-weight:800;letter-spacing:-.02em}
+  .d2 header p{color:var(--muted);font-size:17px;margin-top:4px}
+  .d2 .svcs{display:grid;gap:12px;margin-bottom:28px}
+  .d2 .svc{display:flex;justify-content:space-between;align-items:center;gap:12px;font:inherit;color:inherit;text-align:left;background:#fff;border:2px solid transparent;border-radius:22px;padding:18px 22px;cursor:pointer;box-shadow:0 2px 0 #F0DED6}
+  .d2 .svc[aria-pressed="true"]{border-color:var(--plum)}
+  .d2 .svc b{font-size:19px;font-weight:600;display:block}
+  .d2 .svc small{color:var(--muted);font-size:15px}
+  .d2 .pill{font-size:13px;font-weight:600;border-radius:999px;padding:6px 12px;white-space:nowrap}
+  .d2 .pill.i{background:var(--sage);color:var(--sage-ink)}
+  .d2 .pill.r{background:var(--blush);color:var(--plum)}
+  .d2 .card{background:#fff;border-radius:28px;padding:26px}
+  .d2 h2{font-size:22px;font-weight:600;margin-bottom:16px}
+  .d2 .days{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px}
+  .d2 .day{flex:0 0 72px;font:inherit;color:inherit;background:var(--bg);border:0;border-radius:18px;padding:12px 0;cursor:pointer}
+  .d2 .day small{display:block;color:var(--muted);font-size:13px}
+  .d2 .day b{font-size:22px;font-weight:800}
+  .d2 .day[aria-pressed="true"]{background:var(--plum);color:#fff}
+  .d2 .day[aria-pressed="true"] small{color:#F2D6E8}
+  .d2 .slots{display:flex;flex-wrap:wrap;gap:10px}
+  .d2 .slot{font:600 16px "Bricolage Grotesque";color:var(--ink);background:#fff;border:2px solid #EADCD5;border-radius:999px;padding:10px 18px;cursor:pointer}
+  .d2 .slot:hover{border-color:var(--plum)}
+  .d2 .slot.full{border-style:dashed;color:var(--muted)}
+  .d2 .panel{margin-top:22px;background:var(--bg);border-radius:20px;padding:20px}
+  .d2 label{display:block;font-weight:600;margin-bottom:6px}
+  .d2 input,.d2 textarea{width:100%;font:inherit;font-size:16px;border:2px solid #EADCD5;border-radius:14px;padding:12px 14px;background:#fff;margin-bottom:12px}
+  .d2 .cta{font:800 17px "Bricolage Grotesque";background:var(--plum);color:#fff;border:0;border-radius:999px;padding:14px 26px;cursor:pointer}
+  .d2 .fine{color:var(--muted);font-size:14px;margin-top:10px}
+
+  /* ---------- 3. Bold & modern ---------- */
+  .d3{--ink:#0A0A0A;--paper:#FFFFFF;--ultra:#3D2BFF;--lilac:#E9E6FF;--muted:#6B6B76;--line:#E4E4EA;background:var(--paper);font-family:"Archivo",system-ui,sans-serif;color:var(--ink)}
+  .d3 .page{max-width:1040px;margin:0 auto}
+  .d3 .top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;border-bottom:3px solid var(--ink);padding-bottom:20px;margin-bottom:28px}
+  .d3 h1{font-size:clamp(44px,8vw,92px);font-weight:900;font-stretch:72%;line-height:.88;letter-spacing:-.02em}
+  .d3 .top p{font-size:17px;color:var(--muted);max-width:280px;text-align:right}
+  .d3 .grid{display:grid;grid-template-columns:1fr 1.25fr;gap:32px}
+  .d3 .svc{display:grid;grid-template-columns:1fr auto;gap:4px 12px;width:100%;font:inherit;color:inherit;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:18px 4px;cursor:pointer}
+  .d3 .svc b{font-size:22px;font-weight:800;font-stretch:85%}
+  .d3 .svc small{color:var(--muted);font-size:15px;grid-column:1}
+  .d3 .svc .k{grid-row:1/3;grid-column:2;align-self:center;font-weight:700;font-size:13px;padding:6px 10px;border:2px solid var(--ink);border-radius:6px}
+  .d3 .svc .k.r{background:var(--ultra);border-color:var(--ultra);color:#fff}
+  .d3 .svc[aria-pressed="true"]{background:var(--lilac)}
+  .d3 .big{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+  .d3 .big strong{font-size:84px;font-weight:900;font-stretch:65%;line-height:.9;color:var(--ultra)}
+  .d3 .big span{font-size:20px;font-weight:700}
+  .d3 .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px}
+  .d3 .day{font:700 16px "Archivo";color:var(--ink);background:none;border:2px solid var(--line);border-radius:8px;padding:10px 0;cursor:pointer}
+  .d3 .day small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
+  .d3 .day[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+  .d3 .day[aria-pressed="true"] small{color:#bbb}
+  .d3 .day:disabled{opacity:.35;cursor:default}
+  .d3 .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .d3 .slot{font:700 17px "Archivo";color:var(--ink);background:none;border:2px solid var(--ink);border-radius:8px;padding:13px 0;cursor:pointer}
+  .d3 .slot:hover{background:var(--ink);color:#fff}
+  .d3 .slot.full{border-color:var(--line);color:var(--muted);background:repeating-linear-gradient(135deg,#fff 0 8px,#f3f3f6 8px 16px)}
+  .d3 .panel{margin-top:20px;border:2px solid var(--ink);border-radius:10px;padding:20px}
+  .d3 label{display:block;font-weight:700;margin-bottom:6px}
+  .d3 input,.d3 textarea{width:100%;font:inherit;font-size:16px;border:2px solid var(--line);border-radius:8px;padding:11px 12px;margin-bottom:12px}
+  .d3 .cta{width:100%;font:800 18px "Archivo";font-stretch:90%;background:var(--ultra);color:#fff;border:0;border-radius:8px;padding:16px;cursor:pointer}
+  .d3 .fine{color:var(--muted);font-size:14px;margin-top:10px}
+  @media (max-width:760px){.d3 .grid{grid-template-columns:1fr}.d3 .top{grid-template-columns:1fr}.d3 .top p{text-align:left}}
+
+  @media (prefers-reduced-motion:no-preference){.panel{animation:rise .25s ease-out}@keyframes rise{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<nav class="switcher" aria-label="Design directions">
+  <button aria-pressed="true" data-go="1">1 · Calm &amp; trustworthy</button>
+  <button aria-pressed="false" data-go="2">2 · Warm &amp; friendly</button>
+  <button aria-pressed="false" data-go="3">3 · Bold &amp; modern</button>
+</nav>
+
+<!-- 1 -->
+<section class="dir d1 on" id="d1">
+  <p class="note">For consultants, therapists, advisors. Quiet, precise, nothing to distrust.</p>
+  <div class="page">
+    <aside>
+      <div class="who"><div class="av">JK</div><div><b>Jordan Kim</b><span>Executive coach · Chicago</span></div></div>
+      <button class="svc" data-svc="intro" aria-pressed="false"><b>Intro call</b><span class="tag i">Instant</span><small>20 min · Free · Video</small></button>
+      <button class="svc" data-svc="session" aria-pressed="true"><b>Coaching session</b><span class="tag r">Request</span><small>60 min · $150 · Jordan confirms within 24h</small></button>
+      <button class="svc" data-svc="intensive" aria-pressed="false"><b>Strategy intensive</b><span class="tag r">Request</span><small>3 hours · $900 · Short application first</small></button>
+    </aside>
+    <main>
+      <h2>Pick a time for your coaching session</h2>
+      <p class="sub">Times shown in Central Time. Booked times can be waitlisted.</p>
+      <div class="days">
+        <button class="day" aria-pressed="false"><small>Mon</small><b>16</b></button>
+        <button class="day" aria-pressed="true"><small>Tue</small><b>17</b></button>
+        <button class="day" aria-pressed="false"><small>Wed</small><b>18</b></button>
+        <button class="day" aria-pressed="false"><small>Thu</small><b>19</b></button>
+        <button class="day" aria-pressed="false"><small>Fri</small><b>20</b></button>
+      </div>
+      <div class="slots">
+        <button class="slot full">9:00 AM<small>Join waitlist</small></button>
+        <button class="slot">10:30 AM</button>
+        <button class="slot">1:00 PM</button>
+        <button class="slot full">3:00 PM<small>Join waitlist</small></button>
+        <button class="slot">4:30 PM</button>
+      </div>
+      <div class="panel">
+        <div class="q"><label for="d1a">What do you want to work on?</label><textarea id="d1a" rows="2" placeholder="A sentence or two is plenty"></textarea></div>
+        <div class="q"><label for="d1b">Your email</label><input id="d1b" type="email" placeholder="you@company.com"></div>
+        <button class="cta">Request Tue 17, 10:30 AM</button>
+        <p class="fine">Nothing is charged until Jordan confirms. You'll get an email either way.</p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="dir d2" id="d2">
+  <p class="note">For beauty, wellness, coaching. Soft, personal, feels like texting a friend.</p>
+  <div class="page">
+    <header><div class="av" role="img" aria-label="Photo of Jordan"></div><h1>Book with Jordan</h1><p>Lash artist in Austin. New clients start with a quick consult.</p></header>
+    <div class="svcs">
+      <button class="svc" aria-pressed="false"><span><b>New client consult</b><small>15 min · Free</small></span><span class="pill i">Book instantly</span></button>
+      <button class="svc" aria-pressed="true"><span><b>Classic full set</b><small>2 hours · $140</small></span><span class="pill r">Jordan approves</span></button>
+      <button class="svc" aria-pressed="false"><span><b>Fill</b><small>1 hour · $70 · Returning clients</small></span><span class="pill r">Jordan approves</span></button>
+    </div>
+    <div class="card">
+      <h2>When works for you?</h2>
+      <div class="days">
+        <button class="day" aria-pressed="false"><small>Mon</small><b>16</b></button>
+        <button class="day" aria-pressed="true"><small>Tue</small><b>17</b></button>
+        <button class="day" aria-pressed="false"><small>Wed</small><b>18</b></button>
+        <button class="day" aria-pressed="false"><small>Thu</small><b>19</b></button>
+        <button class="day" aria-pressed="false"><small>Fri</small><b>20</b></button>
+        <button class="day" aria-pressed="false"><small>Sat</small><b>21</b></button>
+      </div>
+      <div class="slots">
+        <button class="slot full">10:00 · waitlist</button>
+        <button class="slot">12:30</button>
+        <button class="slot">3:00</button>
+        <button class="slot full">5:30 · waitlist</button>
+      </div>
+      <div class="panel">
+        <label for="d2a">Any allergies or sensitivities?</label><input id="d2a" placeholder="Glue, latex, anything at all">
+        <label for="d2b">Your phone number</label><input id="d2b" type="tel" placeholder="For a reminder text">
+        <button class="cta">Ask for Tue 17 at 12:30</button>
+        <p class="fine">Jordan usually replies within a few hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="dir d3" id="d3">
+  <p class="note">For creators, freelancers, studios. Loud, confident, unmistakably yours.</p>
+  <div class="page">
+    <div class="top"><h1>Jordan Kim<br>Studio</h1><p>Brand photography for small businesses. Projects start with a short brief.</p></div>
+    <div class="grid">
+      <div>
+        <button class="svc" aria-pressed="false"><b>Discovery call</b><small>20 min · Free</small><span class="k">Instant</span></button>
+        <button class="svc" aria-pressed="true"><b>Half-day shoot</b><small>4 hours · $1,200 · Brief required</small><span class="k r">Request</span></button>
+        <button class="svc" aria-pressed="false"><b>Full-day shoot</b><small>8 hours · $2,200 · Brief required</small><span class="k r">Request</span></button>
+      </div>
+      <div>
+        <div class="big"><strong>17</strong><span>Tuesday, November</span></div>
+        <div class="days">
+          <button class="day" disabled><small>Sun</small>15</button>
+          <button class="day" aria-pressed="false"><small>Mon</small>16</button>
+          <button class="day" aria-pressed="true"><small>Tue</small>17</button>
+          <button class="day" aria-pressed="false"><small>Wed</small>18</button>
+          <button class="day" aria-pressed="false"><small>Thu</small>19</button>
+          <button class="day" aria-pressed="false"><small>Fri</small>20</button>
+          <button class="day" disabled><small>Sat</small>21</button>
+        </div>
+        <div class="slots">
+          <button class="slot">8:00 AM</button>
+          <button class="slot full">12:00 PM · Waitlist</button>
+          <button class="slot">1:00 PM</button>
+        </div>
+        <div class="panel">
+          <label for="d3a">What's the shoot for?</label><textarea id="d3a" rows="2" placeholder="Website refresh, product launch, team headshots"></textarea>
+          <label for="d3b">Budget range</label><input id="d3b" placeholder="$1,000 – $2,000">
+          <button class="cta">Send request for Tue 17, 8:00 AM</button>
+          <p class="fine">Jordan reviews every brief and replies within one business day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const buttons=document.querySelectorAll(".switcher button");
+  buttons.forEach(b=>b.addEventListener("click",()=>{
+    buttons.forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    document.querySelectorAll(".dir").forEach(d=>d.classList.toggle("on",d.id==="d"+b.dataset.go));
+    window.scrollTo({top:0});
+  }));
+  document.querySelectorAll(".dir").forEach(dir=>{
+    for(const group of [".svc",".day"]){
+      dir.querySelectorAll(group).forEach(btn=>btn.addEventListener("click",()=>{
+        if(btn.disabled)return;
+        dir.querySelectorAll(group).forEach(x=>x.setAttribute("aria-pressed",String(x===btn)));
+      }));
+    }
+  });
+</script>
+</body>
+</html>

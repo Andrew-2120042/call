@@ -1,35 +1,38 @@
-/* eslint-disable playwright/missing-playwright-await */
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-
-import Credits from "./Credits";
+import Credits, { getVersionLabel } from "./Credits";
 
 vi.mock("@calcom/lib/constants", async () => {
   const actual = (await vi.importActual("@calcom/lib/constants")) as typeof import("@calcom/lib/constants");
   return {
     ...actual,
-    CALCOM_VERSION: "mockedVersion",
+    COMPANY_NAME: "Slotwise",
+    CALCOM_VERSION: "5.1.0",
   };
 });
 
-describe("Tests for Credits component", () => {
-  test("Should render credits section with links", () => {
-    render(<Credits />);
-
-    const creditsLinkElement = screen.getByRole("link", { name: /Cal\.com, Inc\./i });
-    expect(creditsLinkElement).toBeInTheDocument();
-    expect(creditsLinkElement).toHaveAttribute("href", "https://go.cal.com/credits");
-
-    const versionLinkElement = screen.getByRole("link", { name: /mockedVersion/i });
-    expect(versionLinkElement).toBeInTheDocument();
-    expect(versionLinkElement).toHaveAttribute("href", "https://go.cal.com/releases");
-  });
-
-  test("Should render credits section with correct text", () => {
+describe("Credits", () => {
+  test("renders the copyright with the company name and no external links", () => {
     render(<Credits />);
 
     const currentYear = new Date().getFullYear();
-    const copyrightElement = screen.getByText(`© ${currentYear}`);
-    expect(copyrightElement).toHaveTextContent(`${currentYear}`);
+    expect(screen.getByText(new RegExp(`© ${currentYear} Slotwise`))).toBeInTheDocument();
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  test("renders the version after mount", () => {
+    render(<Credits />);
+
+    expect(screen.getByText("v5.1.0")).toBeInTheDocument();
+  });
+});
+
+describe("getVersionLabel", () => {
+  test("returns null when the version is unknown instead of printing undefined", () => {
+    expect(getVersionLabel(undefined, undefined)).toBeNull();
+  });
+
+  test("appends a short commit hash when one is available", () => {
+    expect(getVersionLabel("5.1.0", "abcdef1234567")).toBe("v5.1.0-abcdef1");
   });
 });

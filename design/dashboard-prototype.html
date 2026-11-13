@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slotwise dashboard prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--side:#efeeec;--main:#f8f6f4;--card:#fff;--line:#ebebe8;--ink:#121212;--muted:#6f6e69;--soft:#9b9a95;--hover:#e9e9e6;--purple:#7b2fe8;--purple-ink:#6a22d6;--mint:#bdf2d5;--lilac:#ede3ff;--amber:#f2a516}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Albert Sans",system-ui,sans-serif;color:var(--ink);background:var(--main);-webkit-font-smoothing:antialiased;font-size:14px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mono{font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.04em}
+.hidden{display:none!important}
+
+/* promo bar */
+.promo{height:34px;background:#1f2328;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font-size:12.5px}
+.promo button{border:1px solid #2fd17a;color:#2fd17a;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;display:inline-flex;gap:4px;align-items:center}
+.promo svg{width:12px;height:12px}
+
+/* ===== dashboard shell ===== */
+.shell{display:grid;grid-template-columns:240px 1fr;height:calc(100% - 34px)}
+.side{background:var(--side);display:flex;flex-direction:column;padding:14px 12px;overflow-y:auto}
+.acct{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 14px}
+.acct .me{display:flex;align-items:center;gap:8px;font-weight:500}
+.av-sm{width:22px;height:22px;border-radius:50%;background:linear-gradient(140deg,#c99a7a,#6b3d2e);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+.nav{display:grid;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border-radius:10px;font-size:15px;color:#2b2b29;text-align:left}
+.nav button:hover{background:var(--hover)}
+.nav button.on{background:#e2e1de;color:var(--purple-ink);font-weight:500}
+.nav .dot{width:7px;height:7px;border-radius:50%;background:var(--purple)}
+.nav .count{margin-left:auto;background:var(--purple);color:#fff;border-radius:999px;font-size:11px;font-weight:600;padding:1px 7px}
+.section{font-size:13px;color:var(--muted);padding:18px 10px 6px}
+.check{margin-top:auto;background:#fff;border-radius:16px;padding:16px}
+.ring{width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--purple) 0 67%,#e6e0f5 67% 100%);display:grid;place-items:center;margin-bottom:10px}
+.ring span{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:13px;color:var(--purple)}
+.check b{display:block;font-weight:600;font-size:15px}
+.check p{color:#3a3a37;margin-top:4px}
+.btn-purple{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--purple);color:#fff;border-radius:999px;padding:11px 18px;font-weight:600;font-size:14px}
+.btn-purple:hover{background:var(--purple-ink)}
+.check .btn-purple{width:100%;margin-top:14px}
+.settings-link{display:flex;align-items:center;gap:10px;padding:14px 10px 4px;font-size:15px}
+
+.main{overflow-y:auto;padding:28px 32px 80px;position:relative}
+.head{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid var(--line)}
+h1{font-size:28px;font-weight:600;letter-spacing:-.02em}
+.urlpill{display:inline-flex;align-items:center;gap:10px;background:#f0efec;border-radius:999px;padding:9px 14px;font-weight:500}
+h2{font-size:21px;font-weight:600;letter-spacing:-.01em;margin:30px 0 16px}
+.pagecard{width:280px;background:#efeeeb;border-radius:22px;padding:14px;position:relative}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--amber)}
+.mini{margin:14px auto 0;width:170px;border-radius:16px;overflow:hidden;background:var(--wall,#f4f2ee);padding:14px 10px 12px;text-align:center;box-shadow:0 10px 24px -18px rgba(0,0,0,.5)}
+.mini .av{width:42px;height:42px;margin:0 auto;border-radius:50%;background:linear-gradient(140deg,#c99a7a,#6b3d2e);box-shadow:0 0 0 3px #fff}
+.mini b{display:block;margin-top:8px;font-size:12px;font-weight:800}
+.mini span{display:block;height:16px;border-radius:999px;background:#fff;margin-top:7px}
+.pagecard .foot{display:flex;align-items:end;justify-content:space-between;margin-top:14px}
+.pagecard .foot b{font-size:18px;font-weight:600;display:block}
+.pagecard .foot small{color:var(--muted);font-size:13px}
+.icon-btn{width:38px;height:38px;border-radius:999px;background:#fff;display:inline-grid;place-items:center}
+.pill-btn{background:#fff;border-radius:999px;padding:9px 16px;font-weight:500}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px}
+.card-top{display:flex;justify-content:space-between;align-items:center}
+.card-top b{font-size:16px;font-weight:600}
+.card-top span{display:inline-flex;align-items:center;gap:4px;color:#2b2b29}
+.bigstat{font-size:40px;font-weight:700;letter-spacing:-.03em;margin-top:14px}
+.muted{color:var(--muted)}
+.spark{display:flex;align-items:end;gap:6px;height:70px;margin-top:14px}
+.spark i{flex:1;background:#ece6fb;border-radius:6px 6px 2px 2px}
+.spark i.hi{background:var(--purple)}
+
+.fab{position:fixed;right:22px;bottom:22px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#ff4fb3,#8a2be2);display:grid;place-items:center;color:#fff;box-shadow:0 12px 30px -10px rgba(138,43,226,.7);z-index:30}
+.fab svg{width:24px;height:24px}
+
+/* bookings inbox */
+.inbox{display:grid;grid-template-columns:340px 1fr;gap:16px;height:calc(100% - 10px)}
+.inbox .list,.inbox .detail{background:#fff;border-radius:22px;border:1px solid var(--line);padding:18px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:#f0efec;border-radius:999px;padding:3px;margin:14px 0}
+.seg button{border-radius:999px;padding:7px 0;font-weight:500}
+.seg button.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.req{display:flex;gap:12px;padding:12px;border-radius:14px;align-items:flex-start;width:100%;text-align:left}
+.req:hover,.req.on{background:#f5f4f1}
+.req .av-sm{width:36px;height:36px;font-size:12px}
+.req b{font-weight:600}
+.req small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.req .when{margin-left:auto;font-size:12px;color:var(--soft);white-space:nowrap}
+.kind{border-radius:999px;padding:3px 8px;font-size:10px}
+.kind.request{background:var(--lilac);color:var(--purple)}
+.kind.wait{background:#fff3d6;color:#8a5a00}
+.kind.instant{background:var(--mint);color:#0c5a37}
+.detail h3{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.ai{margin-top:16px;border-radius:18px;padding:16px;background:linear-gradient(120deg,#fbf6ff,#fff0f8);border:1px solid #efe3fb}
+.ai b{display:flex;align-items:center;gap:6px;color:var(--purple-ink);font-size:13px}
+.ai p{margin-top:6px;line-height:1.5}
+.answers{margin-top:16px;display:grid;gap:12px}
+.answers div{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.answers small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:3px}
+.actions{display:flex;gap:10px;margin-top:18px}
+.btn-black{background:#000;color:#fff;border-radius:999px;padding:11px 20px;font-weight:600}
+.btn-line{border:1px solid var(--line);border-radius:999px;padding:11px 20px;font-weight:500;background:#fff}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.stat b{display:block;font-size:24px;font-weight:700;margin-top:8px}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{font-weight:500;color:var(--muted);text-align:left;font-size:12.5px;padding:10px 8px;border-bottom:1px solid var(--line)}
+td{padding:12px 8px;border-bottom:1px solid #f2f1ee}
+
+/* ===== editor ===== */
+.editor{position:fixed;inset:34px 0 0 0;background:#fff;z-index:20;display:grid;grid-template-rows:auto 1fr}
+.etop{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+.etop .who{display:inline-flex;align-items:center;gap:8px;background:#f0efec;border-radius:999px;padding:7px 12px;font-weight:500}
+.ebody{display:grid;grid-template-columns:76px minmax(420px,620px) 1fr;min-height:0}
+.rail{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:40px}
+.rail button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:#3a3a37;position:relative}
+.rail .ic{width:46px;height:46px;border-radius:50%;background:#f0efec;display:grid;place-items:center}
+.rail button.on .ic{background:#000;color:#fff;box-shadow:0 0 0 3px #fff,0 0 0 5px #000}
+.rail .nd{position:absolute;top:0;right:4px;width:9px;height:9px;border-radius:50%;background:#ff8a00;border:2px solid #fff}
+.rail .gear{margin-top:auto;margin-bottom:20px}
+.panel{background:#fff;border-radius:28px 28px 0 0;box-shadow:0 0 0 1px var(--line),0 20px 60px -30px rgba(0,0,0,.25);margin-top:6px;display:flex;flex-direction:column;min-height:0}
+.phead{display:flex;align-items:center;justify-content:space-between;padding:26px 30px 18px;border-bottom:1px solid var(--line);margin:0 10px}
+.phead h3{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.phead .acts{display:flex;align-items:center;gap:8px}
+.undo{color:#9a9a95}
+.btn-cancel{border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-weight:500}
+.pbody{padding:20px 40px 60px;overflow-y:auto}
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tabs button{padding:10px 2px;font-weight:500;color:var(--muted)}
+.tabs button.on{color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.addrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-grey{background:#e9e9e6;border-radius:999px;padding:12px;font-weight:500;display:flex;gap:8px;justify-content:center;align-items:center}
+.btn-blk{background:#000;color:#fff;border-radius:999px;padding:12px;font-weight:600;display:flex;gap:8px;justify-content:center;align-items:center}
+.tip{margin-top:18px;border-radius:20px;padding:18px 22px;background:linear-gradient(120deg,#fff 30%,#f8eaff 70%,#e6e9ff);box-shadow:0 0 0 1px #eadff8}
+.tip .t{display:flex;justify-content:space-between;font-weight:600;font-size:16px}
+.tip p{margin:10px 0 12px;font-size:15px}
+.tip .item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.75);border:1px solid #eee;border-radius:16px;padding:12px 14px}
+.tip .item .sq{width:34px;height:34px;border-radius:9px;background:#c8f04a;display:grid;place-items:center}
+.tip .item small{display:block;color:var(--muted)}
+.tip .item .yn{margin-left:auto;display:flex;gap:8px}
+.yn button{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1px solid #ddd;background:#fff}
+.yn button.ok{background:#000;color:#fff;border-color:#000}
+.svcrow{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-top:12px;background:#fff}
+.svcrow .sq{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#f3f0ff;color:var(--purple)}
+.svcrow b{font-weight:500;font-size:15px}
+.svcrow small{display:block;color:var(--muted);font-size:13px}
+.svcrow .r{margin-left:auto;display:flex;align-items:center;gap:12px}
+.toggle{width:40px;height:24px;border-radius:999px;background:#2ecc71;position:relative}
+.toggle::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.toggle.off{background:#d8d8d4}.toggle.off::after{right:auto;left:3px}
+.row{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-top:12px;width:100%;text-align:left;background:#fff}
+.row:hover{box-shadow:0 6px 18px -12px rgba(0,0,0,.35)}
+.row .th{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);flex:none}
+.row .lbl{font-size:16px}
+.row .val{margin-left:auto;display:flex;align-items:center;gap:8px;color:#3a3a37}
+.pro{background:#000;color:#fff;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:3px}
+.pro svg{width:11px;height:11px}
+.sub-h{font-weight:600;font-size:15px;margin:22px 0 2px 6px}
+.field{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:start;margin-top:18px}
+.field label{padding-top:10px;font-weight:500}
+.inp{width:100%;border:1px solid #dcdcd8;border-radius:12px;padding:11px 13px;font:inherit;font-size:14px}
+.layouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.layouts button{border:1px solid var(--line);border-radius:14px;padding:12px 6px;font-size:13px;display:grid;gap:8px;justify-items:center}
+.layouts button.on{border:2px solid #000}
+.lay{width:46px;height:46px;border-radius:10px;background:#f0efec;display:grid;place-items:center}
+.lay i{width:18px;height:18px;border-radius:50%;background:#c99a7a}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.swatches button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);position:relative}
+.swatches button.on{box-shadow:0 0 0 2px #000}
+.swatches .pro{position:absolute;top:-8px;right:-8px;padding:1px 5px;font-size:10px}
+
+.stage{display:grid;place-items:center;position:relative}
+.phone{width:280px;height:600px;border-radius:30px;background:var(--wall,#f4f2ee);box-shadow:0 0 0 1px #e5e3df,0 30px 70px -40px rgba(0,0,0,.45);overflow:hidden;position:relative;color:var(--wfg,#121212);transition:background .25s}
+.phone .pt{display:flex;justify-content:space-between;padding:12px}
+.phone .pt span{background:rgba(255,255,255,.85);color:#121212;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:500}
+.phone .ph{text-align:center;padding:4px 18px}
+.phone .pav{width:64px;height:64px;border-radius:50%;margin:0 auto;background:linear-gradient(140deg,#c99a7a,#6b3d2e);box-shadow:0 0 0 3px #fff,0 10px 24px -12px rgba(0,0,0,.5)}
+.phone .ph b{display:block;margin-top:10px;font-size:18px;font-weight:900;letter-spacing:-.02em}
+.phone .ph small{display:block;font-size:11.5px;opacity:.75;margin-top:2px}
+.phone .pl{padding:14px 16px;display:grid;gap:9px}
+.phone .pl div{background:#fff;color:#121212;border-radius:var(--btnr,999px);padding:10px 14px;font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 18px -14px rgba(0,0,0,.6)}
+.phone .pl .k{font-size:8.5px;border-radius:999px;padding:2px 6px}
+.phone .pf{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:10.5px;opacity:.8}
+.phone .pf b{font-weight:800}
+.phone .pf i{font-style:normal;color:#ff3b9a}
+.side-tools{position:absolute;right:calc(50% - 200px);top:50%;transform:translateY(-50%);display:grid;gap:6px;background:#f3f3f1;border-radius:14px;padding:6px}
+.side-tools button{width:34px;height:34px;display:grid;place-items:center}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);display:grid;place-items:center;z-index:50}
+.modal{width:360px;background:#fff;border-radius:22px;padding:22px;text-align:center;position:relative}
+.modal h4{font-size:16px;font-weight:600}
+.modal p{color:#3a3a37;margin:10px 0 16px;line-height:1.45}
+.modal .x{position:absolute;right:14px;top:14px}
+.modal .btn-purple,.modal .btn-red,.modal .btn-plain{width:100%;margin-top:8px;border-radius:999px;padding:11px;font-weight:600}
+.btn-red{border:1px solid #f0a2a2;color:#d12b2b}
+.btn-plain{border:1px solid var(--line)}
+.toast{position:fixed;left:50%;top:50px;transform:translateX(-50%);background:#0f9d58;color:#fff;border-radius:999px;padding:10px 18px;font-weight:600;z-index:60;box-shadow:0 10px 30px -12px rgba(0,0,0,.4)}
+@media (max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}.cards2,.inbox{grid-template-columns:1fr}.ebody{grid-template-columns:64px 1fr}.stage{display:none}}
+</style>
+</head>
+<body>
+<div class="promo">Try Pro free for 7 days, the plan built for busy calendars. <button><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Upgrade</button></div>
+
+<div class="shell" id="dash">
+  <aside class="side">
+    <div class="acct"><span class="me"><span class="av-sm">JK</span>Jordan <svg viewBox="0 0 24 24" style="width:14px"><path d="m6 9 6 6 6-6"/></svg></span><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+    <nav class="nav" id="nav">
+      <button class="on" data-view="home"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>My booking page</button>
+      <button data-view="bookings"><svg viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>Bookings<span class="count">3</span></button>
+      <button data-view="waitlist"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Waitlist</button>
+      <button data-view="availability"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Availability</button>
+      <button data-view="audience"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</button>
+      <button data-view="insights"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg>Insights</button>
+    </nav>
+    <div class="section">Tools</div>
+    <nav class="nav">
+      <button><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 15h3"/></svg>Calendars</button>
+      <button><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/></svg>Reminders</button>
+      <button><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Payments</button>
+      <button><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Embed on your site</button>
+      <button><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="4"/></svg>Apps</button>
+    </nav>
+    <div class="check" style="margin-top:22px">
+      <div class="ring"><span>67%</span></div>
+      <b>Your setup checklist</b>
+      <p>4 of 6 complete</p>
+      <button class="btn-purple">Finish setup</button>
+    </div>
+    <button class="settings-link"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.16V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 3.6 15a1.65 1.65 0 0 0-1.51-1H2a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 3.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+  </aside>
+
+  <main class="main">
+    <!-- HOME -->
+    <section data-v="home">
+      <div class="head"><h1 id="greet">Good evening, Jordan</h1><span class="urlpill"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 13l3 3 5-6"/></svg>slotwise.app/jordan<svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg></span></div>
+      <h2>Your booking page</h2>
+      <div class="pagecard">
+        <span class="badge"><i></i>Unpublished changes</span>
+        <div class="mini" id="homeMini"><div class="av"></div><b>Jordan Kim</b><span></span><span></span><span></span></div>
+        <div class="foot"><div><b>Jordan Kim</b><small>3 services</small></div><div style="display:flex;gap:6px"><button class="icon-btn" aria-label="Share"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg></button><button class="pill-btn" id="openEditor">Edit</button></div></div>
+      </div>
+      <h2>In the last week</h2>
+      <div class="cards2">
+        <div class="card"><div class="card-top"><b>Page visitors</b><span>Last 7 days <svg viewBox="0 0 24 24" style="width:14px"><path d="m9 18 6-6-6-6"/></svg></span></div><div class="bigstat">142</div><p class="muted">31 more than the week before</p><div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i style="height:80%"></i><i class="hi" style="height:96%"></i></div></div>
+        <div class="card"><div class="card-top"><b>Requests and bookings</b><span>Last 7 days <svg viewBox="0 0 24 24" style="width:14px"><path d="m9 18 6-6-6-6"/></svg></span></div><div class="bigstat">9</div><p class="muted">3 waiting for your approval. 2 people on the waitlist.</p><button class="btn-black" style="margin-top:18px" data-go="bookings">Review requests</button></div>
+      </div>
+    </section>
+
+    <!-- BOOKINGS (requests inbox) -->
+    <section data-v="bookings" class="hidden" style="height:100%">
+      <div class="inbox">
+        <div class="list">
+          <div style="display:flex;justify-content:space-between;align-items:center"><h1 style="font-size:24px">Bookings</h1><button class="btn-cancel">Rules <svg viewBox="0 0 24 24" style="width:14px;vertical-align:-2px"><circle cx="12" cy="12" r="3"/></svg></button></div>
+          <div class="seg"><button class="on">Requests</button><button>Upcoming</button></div>
+          <button class="req on" data-req="0"><span class="av-sm" style="background:#7c9cd6">MR</span><span><b>Maya Ruiz</b><small>Coaching session, Tue 17 at 10:30</small><span class="kind request mono">Request</span></span><span class="when">2h</span></button>
+          <button class="req" data-req="1"><span class="av-sm" style="background:#d68a7c">TB</span><span><b>Tom Becker</b><small>Strategy intensive, Thu 19 at 1:00</small><span class="kind request mono">Request</span></span><span class="when">5h</span></button>
+          <button class="req" data-req="2"><span class="av-sm" style="background:#8cc29b">AL</span><span><b>Aisha Lee</b><small>Coaching session, Fri 20 at 9:00</small><span class="kind wait mono">Waitlist</span></span><span class="when">1d</span></button>
+        </div>
+        <div class="detail" id="reqDetail"></div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section data-v="insights" class="hidden">
+      <div class="head" style="border:0"><h1>Insights</h1><span class="urlpill">Last 7 days <svg viewBox="0 0 24 24" style="width:14px"><path d="m6 9 6 6 6-6"/></svg></span></div>
+      <div class="stats3"><div class="stat"><span class="muted">Page views</span><b>142</b></div><div class="stat"><span class="muted">Booking requests</span><b>9</b></div><div class="stat"><span class="muted">Slots saved by waitlist</span><b>2</b></div></div>
+      <div class="card"><div class="card-top"><b>Bookings by service</b></div>
+        <table><tr><th>Service</th><th>Views</th><th>Requests</th><th>Approved</th><th>No-shows</th></tr>
+        <tr><td>Coaching session</td><td>88</td><td>6</td><td>5</td><td>0</td></tr>
+        <tr><td>Intro call</td><td>41</td><td>2</td><td>2</td><td>1</td></tr>
+        <tr><td>Strategy intensive</td><td>13</td><td>1</td><td>0</td><td>0</td></tr></table></div>
+    </section>
+
+    <!-- WAITLIST -->
+    <section data-v="waitlist" class="hidden">
+      <div class="head" style="border:0"><h1>Waitlist</h1><span class="urlpill"><span class="toggle"></span> Auto-offer open slots</span></div>
+      <p class="muted" style="margin-top:6px">When someone cancels, the next person here gets a text and can claim the time.</p>
+      <div class="card" style="margin-top:18px"><table><tr><th>Client</th><th>Wants</th><th>Joined</th><th>Status</th></tr>
+      <tr><td>Aisha Lee</td><td>Coaching session, Fri 20 at 9:00</td><td>Yesterday</td><td><span class="kind wait mono">Waiting</span></td></tr>
+      <tr><td>Sam Ortiz</td><td>Any coaching session this week</td><td>2 days ago</td><td><span class="kind instant mono">Offered</span></td></tr></table></div>
+    </section>
+
+    <section data-v="availability" class="hidden"><div class="head" style="border:0"><h1>Availability</h1></div><div class="card" style="margin-top:14px"><table><tr><th>Day</th><th>Hours</th></tr><tr><td>Monday to Friday</td><td>9:00 AM to 5:00 PM</td></tr><tr><td>Saturday</td><td class="muted">Unavailable</td></tr><tr><td>Sunday</td><td class="muted">Unavailable</td></tr></table></div></section>
+    <section data-v="audience" class="hidden"><div class="head" style="border:0"><h1>Clients</h1></div><div class="stats3"><div class="stat"><span class="muted">Total clients</span><b>48</b></div><div class="stat"><span class="muted">Booked twice or more</span><b>17</b></div><div class="stat"><span class="muted">Last 7 days</span><b>6</b></div></div></section>
+
+    <button class="fab" aria-label="Ask the assistant"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.6L12 16l-1.8-5.4L4.5 9l5.7-1.4z"/><path d="M19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9z"/></svg></button>
+  </main>
+</div>
+
+<!-- ===== EDITOR ===== -->
+<div class="editor hidden" id="editor">
+  <div class="etop">
+    <button class="icon-btn" style="background:#f0efec" id="closeEditor" aria-label="Back to dashboard"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <span class="who"><span class="av-sm">JK</span>Jordan <svg viewBox="0 0 24 24" style="width:14px"><path d="m6 9 6 6 6-6"/></svg></span>
+    <button class="pill-btn" style="background:#f0efec;display:inline-flex;gap:8px;align-items:center"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>Copy link</button>
+  </div>
+  <div class="ebody">
+    <div class="rail">
+      <button class="on" data-tab="content"><span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M4 15h16"/></svg></span>Services</button>
+      <button data-tab="header"><span class="nd"></span><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 19a5 5 0 0 1 10 0"/></svg></span>Header</button>
+      <button data-tab="design"><span class="nd"></span><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 3h14v8H5z"/><path d="M12 11v4M9 21h6l-1-6h-4z"/></svg></span>Design</button>
+      <button data-tab="enhance"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 5.6L19.5 10l-5.7 1.6L12 17l-1.8-5.4L4.5 10l5.7-1.4z"/></svg></span>Enhance</button>
+      <button class="gear"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></span></button>
+    </div>
+
+    <div class="panel">
+      <!-- content -->
+      <div data-tab-panel="content">
+        <div class="phead"><h3>Services</h3><div class="acts"><button class="icon-btn" style="background:#f0efec" aria-label="Reorder"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button><button class="icon-btn" style="background:#f0efec" aria-label="Archive"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></svg></button></div></div>
+        <div class="pbody">
+          <div class="tabs"><button class="on">Services</button><button>+ Questions</button></div>
+          <div class="addrow"><button class="btn-grey"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Add section</button><button class="btn-blk"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add service</button></div>
+          <div class="tip" id="tip"><div class="t">Slotwise tip <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></div><p><b>Fill every cancellation.</b> Let people join a waitlist when a time is taken.</p><div class="item"><span class="sq"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Turn on the waitlist</b><small>For all services</small></span><span class="yn"><button aria-label="Dismiss" onclick="document.getElementById('tip').remove()"><svg viewBox="0 0 24 24" style="width:14px"><path d="M18 6 6 18M6 6l12 12"/></svg></button><button class="ok" aria-label="Turn on" onclick="toast('Waitlist turned on');document.getElementById('tip').remove()"><svg viewBox="0 0 24 24" style="width:14px"><path d="M20 6 9 17l-5-5"/></svg></button></span></div></div>
+          <div id="svcList"></div>
+        </div>
+      </div>
+
+      <!-- header -->
+      <div data-tab-panel="header" class="hidden">
+        <div class="phead"><h3>Header</h3><div class="acts"><button class="undo" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg></button><button class="undo" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h4"/></svg></button><button class="btn-cancel" data-cancel>Cancel</button><button class="btn-purple" data-save><svg viewBox="0 0 24 24" style="width:15px"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Save</button></div></div>
+        <div class="pbody">
+          <b>Layout</b>
+          <div class="layouts"><button class="on"><span class="lay"><i></i></span>Classic</button><button><span class="lay" style="background:#c99a7a"></span>Photo</button><button><span class="lay" style="background:linear-gradient(#c99a7a 50%,#f0efec 50%)"></span>Banner</button></div>
+          <div class="field"><label>Profile image</label><div style="display:flex;justify-content:flex-end"><span class="av-sm" style="width:52px;height:52px;border-radius:12px;font-size:16px">JK</span></div></div>
+          <div class="field"><label for="tName">Name</label><input id="tName" class="inp" value="Jordan Kim"></div>
+          <div class="field"><label for="tBio">Bio</label><textarea id="tBio" class="inp" rows="3">Executive coach in Chicago</textarea></div>
+          <div class="field"><label>Booking note</label><input class="inp" value="New clients start with a free intro call"></div>
+        </div>
+      </div>
+
+      <!-- design -->
+      <div data-tab-panel="design" class="hidden">
+        <div class="phead"><h3>Design</h3><div class="acts"><button class="undo" aria-label="Undo"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg></button><button class="undo" aria-label="Redo"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h4"/></svg></button><button class="btn-cancel" data-cancel>Cancel</button><button class="btn-purple" data-save><svg viewBox="0 0 24 24" style="width:15px"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Save</button></div></div>
+        <div class="pbody" id="designList">
+          <button class="row" data-sub="theme"><span class="th" style="background:linear-gradient(135deg,#f4f2ee,#ddd)"></span><span class="lbl">Theme</span><span class="val">Paper <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <div class="sub-h">Customize</div>
+          <button class="row" data-sub="wall"><span class="th" id="wallThumb" style="background:#f4f2ee"></span><span class="lbl">Wallpaper</span><span class="val" id="wallVal">Paper <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <button class="row" data-sub="buttons"><span class="th" style="background:#fff;border-radius:50%"></span><span class="lbl">Buttons</span><span class="val" id="btnVal">Pill <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <button class="row"><span class="th" style="display:grid;place-items:center;font-weight:500">Aa</span><span class="lbl">Text</span><span class="val"><span class="pro">Pro <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span> Albert Sans <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <button class="row"><span class="th" style="background:linear-gradient(90deg,#fff 50%,#121212 50%)"></span><span class="lbl">Colors</span><span class="val"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <button class="row"><span class="th" style="display:grid;place-items:center">✳︎</span><span class="lbl">Footer</span><span class="val">Booking by slotwise <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></span></button>
+          <div id="wallPicker" class="hidden" style="margin-top:20px"><b>Wallpaper colour</b><div class="swatches" id="walls"></div></div>
+          <div id="btnPicker" class="hidden" style="margin-top:20px"><b>Button shape</b><div class="layouts" id="shapes"><button class="on" data-r="999px">Pill</button><button data-r="14px">Rounded</button><button data-r="4px">Square</button></div></div>
+        </div>
+      </div>
+
+      <div data-tab-panel="enhance" class="hidden"><div class="phead"><h3>Enhance</h3></div><div class="pbody"><p class="muted">Let the assistant suggest better service names, descriptions and screening questions based on pages that get the most bookings.</p><button class="btn-black" style="margin-top:16px">Preview suggestions</button></div></div>
+    </div>
+
+    <div class="stage">
+      <div class="phone" id="phone">
+        <div class="pt"><span>slotwise</span><span>Share</span></div>
+        <div class="ph"><div class="pav"></div><b id="pName">Jordan Kim</b><small id="pBio">Executive coach in Chicago</small></div>
+        <div class="pl" id="pList"></div>
+        <div class="pf">Booking by <b>slotwise<i>.</i></b></div>
+      </div>
+      <div class="side-tools"><button aria-label="Preview"><svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button><button aria-label="Open page"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></button></div>
+    </div>
+  </div>
+</div>
+
+<div class="scrim hidden" id="upgrade"><div class="modal"><button class="x" aria-label="Close" data-close><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button><h4>Upgrade to Pro?</h4><p>Some of the styles you're previewing are part of Slotwise Pro. Start a free trial to keep them.</p><button class="btn-purple"><svg viewBox="0 0 24 24" style="width:15px"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Start 7-day free trial</button><button class="btn-red" data-discard>Discard Pro styles</button><button class="btn-plain" data-close>Decide later</button></div></div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),1800)}
+const h=new Date().getHours();$("#greet").textContent=(h<12?"Good morning":h<18?"Good afternoon":"Good evening")+", Jordan";
+
+// dashboard nav
+const show=(v)=>{$$("[data-v]").forEach(s=>s.classList.toggle("hidden",s.dataset.v!==v));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.view===v))};
+$$("#nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+$$("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
+
+// requests inbox
+const reqs=[
+ {n:"Maya Ruiz",s:"Coaching session",w:"Tuesday, Nov 17 at 10:30 AM",k:"request",ai:"First-time client, mid-level product manager preparing for a promotion in Q1. Good fit for the coaching session. No red flags.",qa:[["What do you want to work on?","Getting ready for a director promotion and leading a bigger team."],["Email","maya.ruiz@example.com"]]},
+ {n:"Tom Becker",s:"Strategy intensive",w:"Thursday, Nov 19 at 1:00 PM",k:"request",ai:"Founder of a 6-person agency wants a full planning day. Budget matches the intensive. Asked about splitting it over two days.",qa:[["What do you want to work on?","2026 plan and hiring my first manager."],["Budget","$900 to $1,200"]]},
+ {n:"Aisha Lee",s:"Coaching session",w:"Friday, Nov 20 at 9:00 AM",k:"wait",ai:"Waiting for the 9:00 AM slot. She'll be offered it automatically if the current booking cancels.",qa:[["Flexible on time?","Any morning that week works."]]}
+];
+const renderReq=(i)=>{const r=reqs[i];$("#reqDetail").innerHTML=`<span class="kind ${r.k} mono">${r.k==="wait"?"Waitlist":"Request"}</span><h3 style="margin-top:10px">${r.n}</h3><p class="muted" style="margin-top:4px">${r.s}, ${r.w}</p><div class="ai"><b><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:14px"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.6L12 16l-1.8-5.4L4.5 9l5.7-1.4z"/></svg>Summary</b><p>${r.ai}</p></div><div class="answers">${r.qa.map(([q,a])=>`<div><small>${q}</small>${a}</div>`).join("")}</div><div class="actions">${r.k==="wait"?'<button class="btn-black">Offer a time now</button><button class="btn-line">Remove</button>':'<button class="btn-black" data-approve>Approve</button><button class="btn-line">Suggest another time</button><button class="btn-line">Decline</button>'}</div>`;
+ const a=$("[data-approve]");a&&a.addEventListener("click",()=>toast(r.n.split(" ")[0]+" is booked. Confirmation sent."))};
+$$(".req").forEach(b=>b.addEventListener("click",()=>{$$(".req").forEach(x=>x.classList.toggle("on",x===b));renderReq(+b.dataset.req)}));
+renderReq(0);
+
+// editor
+const svcs=[{n:"Intro call",m:"20 min, free",k:"instant"},{n:"Coaching session",m:"60 min, $150",k:"request"},{n:"Strategy intensive",m:"3 hours, $900",k:"request"}];
+$("#svcList").innerHTML=svcs.map(s=>`<div class="svcrow"><span class="sq"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span><b>${s.n}</b><small>${s.m}</small></span><span class="r"><span class="kind ${s.k} mono">${s.k}</span><span class="toggle"></span><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></span></div>`).join("");
+$("#pList").innerHTML=svcs.map(s=>`<div>${s.n}<span class="k mono" style="background:${s.k==="instant"?"#bdf2d5":"#ede3ff"};color:${s.k==="instant"?"#0c5a37":"#7b2fe8"}">${s.k}</span></div>`).join("");
+$("#openEditor").addEventListener("click",()=>$("#editor").classList.remove("hidden"));
+$("#closeEditor").addEventListener("click",()=>$("#editor").classList.add("hidden"));
+$$(".rail [data-tab]").forEach(b=>b.addEventListener("click",()=>{$$(".rail [data-tab]").forEach(x=>x.classList.toggle("on",x===b));$$("[data-tab-panel]").forEach(p=>p.classList.toggle("hidden",p.dataset.tabPanel!==b.dataset.tab))}));
+$("#tName").addEventListener("input",e=>{$("#pName").textContent=e.target.value||" "});
+$("#tBio").addEventListener("input",e=>{$("#pBio").textContent=e.target.value});
+
+const walls=[["Paper","#f4f2ee","#121212",0],["Lilac","#e9d7ff","#2a0f6b",0],["Mint","#bdf2d5","#0f4d3a",0],["Sun","#ffd43b","#121212",0],["Plum","#5b0e2d","#ffffff",1],["Blue","#3b30d9","#ffffff",1],["Sunset","linear-gradient(180deg,#ff9a8b,#ff6a88 55%,#ff99ac)","#ffffff",1]];
+let saved={wall:0,r:"999px"},cur={...saved};
+const applyLook=(l)=>{const w=walls[l.wall];const ph=$("#phone");ph.style.setProperty("--wall",w[1]);ph.style.setProperty("--wfg",w[2]);ph.style.setProperty("--btnr",l.r);$("#wallThumb").style.background=w[1];$("#wallVal").firstChild.textContent=w[0]+" ";$("#homeMini").style.setProperty("--wall",walls[saved.wall][1])};
+$("#walls").innerHTML=walls.map((w,i)=>`<button style="background:${w[1]}" data-w="${i}" aria-label="${w[0]}">${w[3]?'<span class="pro">Pro</span>':""}</button>`).join("");
+$$("#walls button").forEach(b=>b.addEventListener("click",()=>{cur.wall=+b.dataset.w;$$("#walls button").forEach(x=>x.classList.toggle("on",x===b));applyLook(cur)}));
+$$("#shapes button").forEach(b=>b.addEventListener("click",()=>{cur.r=b.dataset.r;$$("#shapes button").forEach(x=>x.classList.toggle("on",x===b));$("#btnVal").firstChild.textContent=b.textContent+" ";applyLook(cur)}));
+$$("[data-sub]").forEach(b=>b.addEventListener("click",()=>{$("#wallPicker").classList.toggle("hidden",b.dataset.sub!=="wall");$("#btnPicker").classList.toggle("hidden",b.dataset.sub!=="buttons")}));
+$$("[data-save]").forEach(b=>b.addEventListener("click",()=>{if(walls[cur.wall][3]){$("#upgrade").classList.remove("hidden");return}saved={...cur};applyLook(cur);toast("Saved. Your page is updated.")}));
+$$("[data-cancel]").forEach(b=>b.addEventListener("click",()=>{cur={...saved};applyLook(cur)}));
+$$("[data-close]").forEach(b=>b.addEventListener("click",()=>$("#upgrade").classList.add("hidden")));
+$("[data-discard]").addEventListener("click",()=>{cur.wall=0;applyLook(cur);$("#upgrade").classList.add("hidden");toast("Pro styles removed")});
+applyLook(cur);
+</script>
+</body>
+</html>

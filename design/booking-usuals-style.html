@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book with Jordan Kim · slotwise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Usuals design system tokens (app/src/app/globals.css) */
+  :root{--paper:#f4f2ee;--ink:#121212;--muted:#6f6a64;--line:#e4e0d9;--card:#fff;--pink:#ff3b9a;--violet:#6a2bff;--lilac:#e9d7ff;--mint:#bdf2d5;--sun:#ffd43b;--plum:#5b0e2d;--peach:#ffe2cc}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{overflow-x:clip}
+  body{font-family:Inter,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;cursor:pointer}
+  button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+
+  /* themed page background, like a café's join page */
+  main{min-height:100dvh;padding:24px 16px 40px;background:var(--bg);color:var(--fg);transition:background .25s}
+  .wrap{max-width:384px;margin:0 auto;text-align:center}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#fff;color:var(--ink);padding:5px 12px;font-size:12px;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+
+  .hero{margin-top:22px;display:flex;flex-direction:column;align-items:center}
+  .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(140deg,#c99a7a,#6b3d2e);box-shadow:0 0 0 4px #fff,0 12px 30px -12px rgba(0,0,0,.5);display:grid;place-items:center;color:#fff;font-weight:800;font-size:26px}
+  h1{margin-top:18px;font-size:30px;font-weight:900;letter-spacing:-.025em;line-height:1.05}
+  .sub{margin-top:6px;font-size:14px;color:var(--soft)}
+
+  /* services: Linktree-style pills, two-line */
+  .services{margin-top:22px;display:grid;gap:12px}
+  .svc{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;border:0;border-radius:999px;background:#fff;color:var(--ink);padding:14px 18px 14px 24px;box-shadow:0 10px 24px -16px rgba(0,0,0,.6);transition:transform .15s}
+  .svc:hover{transform:scale(1.01)}
+  .svc b{display:block;font-size:16px;font-weight:600}
+  .svc small{display:block;font-size:13px;color:var(--muted);margin-top:1px}
+  .svc[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink),0 10px 24px -16px rgba(0,0,0,.6)}
+  .kind{flex:none;border-radius:999px;padding:6px 10px;font-size:10.5px;font-weight:500}
+  .kind.instant{background:var(--mint);color:#0c5a37}
+  .kind.request{background:var(--lilac);color:var(--violet)}
+
+  /* the white booking panel, like the join form panel */
+  .panel{margin-top:16px;border-radius:24px;background:#fff;color:var(--ink);padding:18px 16px;text-align:left;box-shadow:0 20px 50px -30px rgba(0,0,0,.5)}
+  .panel h2{font-family:"Bricolage Grotesque",Inter,sans-serif;font-weight:800;font-size:22px;letter-spacing:-.035em;line-height:1.05}
+  .panel .hint{font-size:13px;color:var(--muted);margin-top:4px}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:16px}
+  .day{min-width:0;border:1px solid var(--line);background:#fff;border-radius:14px;padding:8px 0;text-align:center}
+  .day small{display:block;font-size:11px;color:var(--muted)}
+  .day b{font-size:19px;font-weight:700}
+  .day[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .day[aria-pressed="true"] small{color:#bdbdbd}
+  .day:disabled{opacity:.35;cursor:default}
+  .times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .time{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 0;font-size:14px;font-weight:600}
+  .time:hover{border-color:var(--ink)}
+  .time[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .time.full{border:1px dashed #cfc8bf;color:var(--muted);font-weight:500}
+  .time.full[aria-pressed="true"]{background:var(--lilac);border:1px dashed var(--violet);color:var(--violet);font-weight:600}
+  .waitnote{display:none;margin-top:12px;border-radius:16px;background:var(--lilac);color:#3b1a8f;padding:12px 14px;font-size:13px}
+  .waitnote.on{display:block}
+  .waitnote b{font-weight:700}
+
+  .form{margin-top:16px;display:grid;gap:10px}
+  .label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  .input{width:100%;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;font:inherit;font-size:14px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
+  .input:focus{border-color:var(--ink);box-shadow:0 0 0 2px rgba(18,18,18,.05)}
+  textarea.input{resize:vertical;min-height:84px}
+  .cta{margin-top:4px;width:100%;border:0;border-radius:12px;background:#000;color:#fff;padding:14px;font-size:15px;font-weight:600}
+  .fine{font-size:11px;color:var(--muted);text-align:center;margin-top:2px}
+
+  .powered{margin-top:28px;display:inline-block;border-radius:999px;padding:4px 12px;font-size:11px;color:var(--soft)}
+  .powered b{font-weight:800;color:var(--fg)}
+  .powered i{font-style:normal;color:var(--pink)}
+
+  /* theme switcher (free customization) */
+  .themes{position:fixed;right:16px;bottom:16px;display:flex;gap:6px;background:#fff;border-radius:999px;padding:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.35)}
+  .sw{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+  .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+  @media (pointer:coarse){.input{font-size:16px}}
+</style>
+</head>
+<body>
+<main id="page">
+  <div class="wrap">
+    <div class="topbar"><span></span><span class="chip">English</span></div>
+
+    <div class="hero">
+      <div class="avatar" role="img" aria-label="Jordan Kim">JK</div>
+      <h1>Jordan Kim</h1>
+      <p class="sub">Executive coach in Chicago. New clients start with a free intro call.</p>
+    </div>
+
+    <div class="services" role="group" aria-label="Services">
+      <button class="svc" aria-pressed="false" data-kind="instant" data-name="intro call"><span><b>Intro call</b><small>20 min, free, video</small></span><span class="kind instant mono">Instant</span></button>
+      <button class="svc" aria-pressed="true" data-kind="request" data-name="coaching session"><span><b>Coaching session</b><small>60 min, $150</small></span><span class="kind request mono">Request</span></button>
+      <button class="svc" aria-pressed="false" data-kind="request" data-name="strategy intensive"><span><b>Strategy intensive</b><small>3 hours, $900</small></span><span class="kind request mono">Request</span></button>
+    </div>
+
+    <section class="panel" aria-label="Pick a time">
+      <h2 id="ptitle">Pick a time for your coaching session</h2>
+      <p class="hint" id="phint">Jordan confirms requests within 24 hours. Times in Central Time.</p>
+      <div class="days" role="group" aria-label="Day">
+        <button class="day" disabled><small>Sun</small><b>15</b></button>
+        <button class="day" aria-pressed="false"><small>Mon</small><b>16</b></button>
+        <button class="day" aria-pressed="true"><small>Tue</small><b>17</b></button>
+        <button class="day" aria-pressed="false"><small>Wed</small><b>18</b></button>
+        <button class="day" aria-pressed="false"><small>Thu</small><b>19</b></button>
+        <button class="day" aria-pressed="false"><small>Fri</small><b>20</b></button>
+        <button class="day" disabled><small>Sat</small><b>21</b></button>
+      </div>
+      <div class="times" role="group" aria-label="Time">
+        <button class="time full" data-full>9:00 AM</button>
+        <button class="time" aria-pressed="true">10:30 AM</button>
+        <button class="time" aria-pressed="false">1:00 PM</button>
+        <button class="time full" data-full>3:00 PM</button>
+        <button class="time" aria-pressed="false">4:30 PM</button>
+      </div>
+      <p class="waitnote" id="waitnote"><b>This time is taken.</b> Join the waitlist and you'll get a text the moment it opens up.</p>
+
+      <div class="form">
+        <div><label class="label" for="q1">What do you want to work on?</label><textarea id="q1" class="input" placeholder="A sentence or two is plenty"></textarea></div>
+        <input class="input" type="text" placeholder="Your name" aria-label="Your name">
+        <input class="input" type="email" placeholder="Email" aria-label="Email">
+        <button class="cta" id="cta">Request Tue 17 at 10:30 AM</button>
+        <p class="fine" id="fine">Nothing is charged until Jordan confirms.</p>
+      </div>
+    </section>
+
+    <p class="powered">Booking by <b>slotwise<i>.</i></b></p>
+  </div>
+</main>
+
+<div class="themes" role="group" aria-label="Page colour (owner can pick)">
+  <button class="sw" style="background:#f4f2ee" data-bg="#f4f2ee" data-fg="#121212" data-soft="#6f6a64" aria-pressed="true" aria-label="Paper"></button>
+  <button class="sw" style="background:#e9d7ff" data-bg="#e9d7ff" data-fg="#2a0f6b" data-soft="#5a3f99" aria-pressed="false" aria-label="Lilac"></button>
+  <button class="sw" style="background:#bdf2d5" data-bg="#bdf2d5" data-fg="#0f4d3a" data-soft="#2f6b55" aria-pressed="false" aria-label="Mint"></button>
+  <button class="sw" style="background:#ffd43b" data-bg="#ffd43b" data-fg="#121212" data-soft="#5c4a00" aria-pressed="false" aria-label="Sun"></button>
+  <button class="sw" style="background:#5b0e2d" data-bg="#5b0e2d" data-fg="#ffffff" data-soft="#f2c9d8" aria-pressed="false" aria-label="Plum"></button>
+  <button class="sw" style="background:#3b30d9" data-bg="#3b30d9" data-fg="#ffffff" data-soft="#d7d4ff" aria-pressed="false" aria-label="Blue"></button>
+</div>
+
+<script>
+  const page = document.getElementById("page");
+  const setTheme = (b) => { page.style.setProperty("--bg", b.dataset.bg); page.style.setProperty("--fg", b.dataset.fg); page.style.setProperty("--soft", b.dataset.soft); };
+  const swatches = document.querySelectorAll(".sw");
+  swatches.forEach((b) => b.addEventListener("click", () => { swatches.forEach((x) => x.setAttribute("aria-pressed", String(x === b))); setTheme(b); }));
+  setTheme(swatches[0]);
+
+  const pick = (sel, btn) => document.querySelectorAll(sel).forEach((x) => x.setAttribute("aria-pressed", String(x === btn)));
+  let svc = document.querySelector('.svc[aria-pressed="true"]'), day = "Tue 17", time = "10:30 AM", full = false;
+  const render = () => {
+    const req = svc.dataset.kind === "request";
+    document.getElementById("ptitle").textContent = "Pick a time for your " + svc.dataset.name;
+    document.getElementById("phint").textContent = req ? "Jordan confirms requests within 24 hours. Times in Central Time." : "Pick a time and you're booked. Times in Central Time.";
+    document.getElementById("waitnote").classList.toggle("on", full);
+    document.getElementById("cta").textContent = full ? `Join the waitlist for ${day} at ${time}` : `${req ? "Request" : "Book"} ${day} at ${time}`;
+    document.getElementById("fine").textContent = full ? "You'll only be booked if you accept the opening." : req ? "Nothing is charged until Jordan confirms." : "You'll get a confirmation email right away.";
+  };
+  document.querySelectorAll(".svc").forEach((b) => b.addEventListener("click", () => { pick(".svc", b); svc = b; render(); }));
+  document.querySelectorAll(".day").forEach((b) => b.addEventListener("click", () => { if (b.disabled) return; pick(".day", b); day = b.querySelector("small").textContent + " " + b.querySelector("b").textContent; render(); }));
+  document.querySelectorAll(".time").forEach((b) => b.addEventListener("click", () => { pick(".time", b); time = b.textContent; full = b.hasAttribute("data-full"); render(); }));
+  render();
+</script>
+</body>
+</html>
