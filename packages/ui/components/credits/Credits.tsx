@@ -1,6 +1,5 @@
 "use client";
 
-import process from "node:process";
 import { CALCOM_VERSION, COMPANY_NAME } from "@calcom/lib/constants";
 import { useEffect, useState } from "react";
 

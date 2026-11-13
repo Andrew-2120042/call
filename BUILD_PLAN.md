@@ -22,7 +22,7 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 7. Plans/billing: PlanSubscription via signed Polar webhooks (verifier cross-checked vs official SDK), effective-plan rules w/ grace, settings guard (403) + runtime gating, checkout/portal/plan API — 29+ tests; live: bad sig 403, upgrade→PRO unlocks, duplicate ignored, revoke→FREE→403. Needs real Polar products + token to sell.
 - [x] 8. Owner screens: booking-rules card (verified save), billing page, waitlist page, public join page (verified join + email), AI panel for host only (verified) — functional; redesign later
 - [x] 9. Full regression: whole-monorepo type-check clean; 1240 existing unit tests pass (bookings, lib, emails, i18n, event types, trpc); live: instant booking, approve/reject, cancel, reschedule (frees slot → waitlist offer), all emails checked
-- [ ] 10. Production readiness: env docs, migrations, cron setup docs, security review of new endpoints
+- [x] 10. Production readiness: DEPLOY.md (infra, env, migrations, crons, Polar, security notes, launch checklist); production build passes after fixing Biome-added node:process imports in client/edge files (+ guard test); production server smoke-tested (pages, auth redirects, webhook 403, all crons auth'd)
 
 ## Log
-- 2026-11-13: items 0–9 done.
+- 2026-11-13: all items 0–10 done. Remaining work needs the user: real name/logo, Anthropic key, Polar products/token, hosting + email domain, UI redesign (Linktree-style dashboard + Usuals-style booking page).

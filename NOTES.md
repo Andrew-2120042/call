@@ -168,4 +168,7 @@ How it works:
 - The Mac must stay cool: run heavy jobs one at a time with `nice -n 15`. Never run builds in parallel.
 - The repo path contains a space ("my projects"). Because of that, the app-store CLI's Biome step logs "internalError/io" and leaves `*.generated.ts` unformatted. That is harmless and matches upstream, which commits those files unformatted.
   - Do NOT "fix" it: formatting them causes ~700 lines of diff against upstream and merge conflicts.
+- **Biome auto-fix danger:** `biome check --write` adds `import process from "node:process"` to files that use `process.env`.
+  - That breaks the production build for anything loaded in the browser or at the edge (it failed on `/api/social/og/image`), and it stops `NEXT_PUBLIC_*` inlining.
+  - Guarded by `packages/lib/clientSafeImports.test.ts`. Add new client or edge files there.
 - Repo conventions: see `CLAUDE.md` / `AGENTS.md`. Use `select` not `include`, never `as any`, put UI strings in `packages/i18n/locales/en/common.json`, and run Biome and type-checks.
