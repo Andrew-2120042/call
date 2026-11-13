@@ -173,6 +173,14 @@ How it works:
 - See DEPLOY.md §5b. Code: `packages/features/custom-domains`, `apps/web/lib/customDomainRouting.ts`, `apps/web/proxy.ts`.
 - Local testing: `curl -H 'Host: book.slotwise-demo.test' localhost:3000/` (mark the domain verified in the DB, since a `.test` domain can't hold a TXT record).
 
+## Calendar health
+- The cron `/api/cron/calendar-health` (every 10 min) checks up to 25 calendar connections per run, each at most hourly, by listing their calendars.
+- **Alerts:**
+  - Only after 2 failures in a row (so a single network blip is ignored), or immediately when the credential is marked `invalid` (access revoked).
+  - One email per outage. A recovery resets it.
+- The dashboard banner ("X stopped syncing… Reconnect") reuses Cal's `calendarCredentialBanner` slot. It shows only for confirmed outages.
+- Code: `packages/features/calendar-health`. Table: `CalendarConnectionHealth` (deleted along with the credential).
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

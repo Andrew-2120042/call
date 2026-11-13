@@ -39,6 +39,7 @@ corepack yarn workspace @calcom/prisma db-deploy
 | `/api/cron/attendee-confirmations` | every 5 min | Sends "are you still coming?" emails, handles missed deadlines (alert or release) |
 | `/api/cron/attendee-reminders` | every 5 min | Sends reminder emails, exactly once each |
 | `/api/cron/request-insights` | every 1 min | AI summaries for new booking requests (no-op without `ANTHROPIC_API_KEY`) |
+| `/api/cron/calendar-health` | every 10 min | Checks connected calendars (each at most hourly), emails the owner once per outage, powers the reconnect banner |
 | `/api/cron/bookingReminder` | hourly | Upstream: reminds hosts about requests still waiting for approval |
 
 On Vercel, use Vercel Cron with a small proxy or an external scheduler (for example GitHub Actions or cron-job.org) that sends the header. Every job is idempotent, so overlapping runs are safe.

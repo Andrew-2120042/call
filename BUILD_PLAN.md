@@ -29,7 +29,7 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 - [x] 12. Remove branding (Pro): hiding the "Booking by"/powered-by badge is gated to Pro server-side and actually hides it on booking page, emails and embeds
 - [x] 13. Custom domains (Pro): CustomDomain model, DNS TXT verification, host-based routing middleware (book.yourname.com → owner page), Vercel domain API hook (documented), settings UI
 - [x] 14. Calendly import: owner pastes a Calendly personal access token → import event types (name, duration, description, slug) + weekly availability; idempotent, preview before import; mocked-API tests
-- [ ] 15. Calendar sync health check: cron checks every connected calendar, marks broken ones, emails the owner once, shows a status badge + "reconnect" on the calendars page
+- [x] 15. Calendar sync health check: cron checks every connected calendar, marks broken ones, emails the owner once, shows a status badge + "reconnect" on the calendars page
 - [ ] 16. Design: Usuals-style public booking page + Linktree-style owner dashboard (from design/ prototypes)
 
 ## Log

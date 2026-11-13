@@ -347,6 +347,7 @@ model Credential {
   @@index([invalid])
   @@index([userId, delegationCredentialId])
   @@index([teamId])
+  calendarHealth            CalendarConnectionHealth?
 }
 
 enum IdentityProvider {
@@ -2991,4 +2992,22 @@ model CustomDomain {
   lastCheckedAt     DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+}
+
+/// Result of the periodic "is this calendar connection still working?" check (Slotwise calendar health).
+model CalendarConnectionHealth {
+  id                  Int        @id @default(autoincrement())
+  credentialId        Int        @unique
+  credential          Credential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+  userId              Int
+  healthy             Boolean    @default(true)
+  lastError           String?
+  consecutiveFailures Int        @default(0)
+  checkedAt           DateTime
+  brokenSince         DateTime?
+  /// Set when the owner was emailed about this outage, so they're told once per outage
+  alertSentAt         DateTime?
+
+  @@index([userId, healthy])
+  @@index([checkedAt])
 }

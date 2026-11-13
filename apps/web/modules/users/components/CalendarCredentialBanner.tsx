@@ -15,11 +15,11 @@ function CalendarCredentialBanner({ data }: CalendarCredentialBannerProps) {
   return (
     <>
       <TopBanner
-        text={`${t("something_went_wrong")} ${t("calendar_error")}`}
+        text={t("calendar_health_banner", { apps: data })}
         variant="error"
         actions={
           <Link href="/apps/installed/calendar" className="border-b border-b-black">
-            {t("check_here")}
+            {t("calendar_health_banner_action")}
           </Link>
         }
       />

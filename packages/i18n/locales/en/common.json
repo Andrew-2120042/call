@@ -4878,5 +4878,13 @@
   "calendly_import_skipped": "{{title}} was already imported, skipped",
   "calendly_import_schedule_done": "Weekly hours imported as a schedule",
   "calendly_import_view_services": "View services",
-  "calendly_import_view_availability": "View availability"
+  "calendly_import_view_availability": "View availability",
+  "calendar_health_subject": "Your {{appName}} stopped syncing",
+  "calendar_health_title": "{{appName}} isn't syncing",
+  "calendar_health_body": "We can't read this calendar right now, so busy times from it aren't blocking your booking page and new bookings aren't being added to it. Reconnect it to avoid double bookings.",
+  "calendar_health_cta": "Reconnect calendar",
+  "calendar_health_calendar_label": "Calendar",
+  "calendar_health_problem_label": "Problem",
+  "calendar_health_banner": "{{apps}} stopped syncing, so you could get double-booked.",
+  "calendar_health_banner_action": "Reconnect"
 }
