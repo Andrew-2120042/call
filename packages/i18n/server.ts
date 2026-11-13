@@ -2,6 +2,7 @@ import { createInstance } from "i18next";
 import type { i18n as I18nInstance } from "i18next";
 
 const { i18n } = require("@calcom/i18n/next-i18next.config");
+const { APP_NAME_FOR_I18N } = require("./brand");
 
 const englishTranslations: Record<string, string> = require("@calcom/i18n/locales/en/common.json");
 
@@ -73,6 +74,9 @@ export const getTranslation = async (locale: string, ns: string) => {
       },
     },
     fallbackLng: "en",
+    interpolation: {
+      defaultVariables: { appName: APP_NAME_FOR_I18N },
+    },
   });
 
   // Cache the i18n instance
