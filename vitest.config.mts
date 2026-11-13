@@ -21,6 +21,11 @@ const isTimezoneMode = vitestMode === "timezone" || process.argv.includes("--tim
 // This is needed because getBookingFields.ts checks for this env var to allow imports
 process.env.INTEGRATION_TEST_MODE = "true";
 
+// Pin the locale for test workers (they inherit this env): date-format assertions assume US English,
+// so a machine set to another locale (e.g. en-IN, "13 November") must not fail them.
+process.env.LC_ALL = "en_US.UTF-8";
+process.env.LANG = "en_US.UTF-8";
+
 if (isTimezoneMode && !process.env.TZ) {
   throw new Error("TZ environment variable is not set for timezone tests");
 }
