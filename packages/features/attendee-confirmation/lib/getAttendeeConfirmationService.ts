@@ -3,6 +3,7 @@ import {
   HostUnconfirmedBookingEmail,
 } from "@calcom/emails/templates/attendee-confirmation-email";
 import { getTranslation } from "@calcom/i18n/server";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
@@ -78,6 +79,7 @@ export function getAttendeeConfirmationService(): AttendeeConfirmationService {
     releaseBooking,
     webappUrl: WEBAPP_URL,
     logger: log,
+    isHostEntitled: (userId) => getPlanService().hasFeature(userId, "confirmOrRelease"),
   });
   return service;
 }

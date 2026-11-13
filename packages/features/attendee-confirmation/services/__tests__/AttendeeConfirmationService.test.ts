@@ -108,6 +108,18 @@ describe("AttendeeConfirmationService", () => {
     service = build();
   });
 
+  it("does not ask hosts whose plan no longer includes confirm-or-release", async () => {
+    service = new AttendeeConfirmationService({
+      repository: fake.repo,
+      notifier,
+      releaseBooking,
+      webappUrl: "https://app.test",
+      now: () => now,
+      isHostEntitled: async () => false,
+    });
+    expect(await service.sendDueRequests()).toEqual({ requestsSent: 0 });
+  });
+
   it("does not ask before the request window opens", async () => {
     now = new Date(START.getTime() - 49 * HOUR);
     service = build();

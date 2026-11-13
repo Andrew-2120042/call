@@ -15,6 +15,7 @@ import {
 const pending = (overrides: Partial<PendingRequest> = {}): PendingRequest => ({
   id: 7,
   uid: "req-7",
+  userId: 4,
   title: "Coaching between Jordan and Maya",
   startTime: new Date("2026-11-20T15:00:00.000Z"),
   responses: {
@@ -102,6 +103,14 @@ describe("BookingRequestInsightService", () => {
     });
     expect(await service.analysePendingRequests()).toEqual({ analysed: 0, skipped: null });
     expect(generate).toHaveBeenCalledTimes(1);
+  });
+
+  it("skips hosts whose plan doesn't include AI insights", async () => {
+    const { repository } = makeRepo([pending()]);
+    const generate: GenerateInsight = vi.fn();
+    const service = new BookingRequestInsightService({ repository, generate, isHostEntitled: async () => false });
+    expect(await service.analysePendingRequests()).toEqual({ analysed: 0, skipped: null });
+    expect(generate).not.toHaveBeenCalled();
   });
 
   it("skips declined requests and keeps going after a failure", async () => {

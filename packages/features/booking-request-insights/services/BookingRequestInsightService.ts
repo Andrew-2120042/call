@@ -33,6 +33,8 @@ export interface IBookingRequestInsightServiceDeps {
   generate: GenerateInsight | null;
   now?: () => Date;
   logger?: { error: (...args: unknown[]) => void };
+  /** Whether the host's plan currently includes AI insights; omitted means always allowed. */
+  isHostEntitled?: (userId: number) => Promise<boolean>;
 }
 
 const MAX_PER_RUN = 20;
@@ -112,6 +114,7 @@ export class BookingRequestInsightService {
 
     let analysed = 0;
     for (const booking of pending) {
+      if (booking.userId && this.deps.isHostEntitled && !(await this.deps.isHostEntitled(booking.userId))) continue;
       try {
         const result = await this.deps.generate(buildRequestForAnalysis(booking));
         if (!result) continue;

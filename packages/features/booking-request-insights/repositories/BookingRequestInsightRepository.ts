@@ -5,6 +5,7 @@ import { type BookingRequestFit, BookingStatus } from "@calcom/prisma/enums";
 const pendingSelect = {
   id: true,
   uid: true,
+  userId: true,
   title: true,
   startTime: true,
   responses: true,

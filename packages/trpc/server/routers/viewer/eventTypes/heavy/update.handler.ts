@@ -1,4 +1,5 @@
 import type { appDataSchemas } from "@calcom/app-store/apps.schemas.generated";
+import { getEventTypeUpdatePlanViolations } from "@calcom/features/plans/lib/getEventTypeUpdatePlanViolations";
 import { DailyLocationType } from "@calcom/app-store/constants";
 import { eventTypeAppMetadataOptionalSchema } from "@calcom/app-store/zod-utils";
 import { CalVideoSettingsRepository } from "@calcom/features/calVideoSettings/repositories/CalVideoSettingsRepository";
@@ -94,6 +95,25 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     enablePerHostLocations,
     ...rest
   } = input;
+
+  const planViolations = await getEventTypeUpdatePlanViolations({
+    userId: ctx.user.id,
+    eventTypeId: id,
+    update: {
+      requiresConfirmation: rest.requiresConfirmation,
+      waitlistEnabled: rest.waitlistEnabled,
+      attendeeConfirmationHours: rest.attendeeConfirmationHours,
+      attendeeReminderMinutes: rest.attendeeReminderMinutes,
+      bookingFields,
+    },
+  });
+  if (planViolations.length) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: planViolations.map((violation) => violation.message).join(". "),
+      cause: { reason: "upgrade_required", fields: planViolations.map((violation) => violation.field) },
+    });
+  }
 
   const eventType = await ctx.prisma.eventType.findUniqueOrThrow({
     where: { id },

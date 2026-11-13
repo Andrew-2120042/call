@@ -207,6 +207,23 @@ describe("WaitlistService", () => {
       expect(rejoined.position).toBe(2);
     });
 
+    it("refuses joins and offers when the host's plan no longer includes the waitlist", async () => {
+      const entitled = { value: true };
+      service = new WaitlistService({
+        repository: fake.repo,
+        notifier,
+        createBooking,
+        webappUrl: "https://app.test",
+        now: () => now,
+        isHostEntitled: async () => entitled.value,
+      });
+      await service.join(joinInput("a@example.com"));
+      entitled.value = false;
+      await expect(service.join(joinInput("b@example.com"))).rejects.toThrow(/doesn't have a waitlist/);
+      fake.state.slotTaken = false;
+      expect(await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START })).toBeNull();
+    });
+
     it("still succeeds when the confirmation email fails", async () => {
       notifier.sendJoined.mockRejectedValueOnce(new Error("smtp down"));
       await expect(service.join(joinInput("a@example.com"))).resolves.toMatchObject({ position: 1 });

@@ -54,6 +54,8 @@ export interface IWaitlistServiceDeps {
   webappUrl: string;
   now?: () => Date;
   offerWindowMinutes?: number;
+  /** Whether the host's plan currently includes the waitlist; omitted means always allowed. */
+  isHostEntitled?: (userId: number) => Promise<boolean>;
   logger?: { error: (...args: unknown[]) => void; info: (...args: unknown[]) => void };
 }
 
@@ -72,7 +74,7 @@ export class WaitlistService {
 
   async join(input: WaitlistJoinInput) {
     const eventType = await this.deps.repository.findEventTypeById(input.eventTypeId);
-    if (!eventType || !eventType.waitlistEnabled || !eventType.userId) {
+    if (!eventType || !eventType.waitlistEnabled || !eventType.userId || !(await this.hostEntitled(eventType.userId))) {
       throw new ErrorWithCode(ErrorCode.BadRequest, "This service doesn't have a waitlist");
     }
 
@@ -146,6 +148,7 @@ export class WaitlistService {
 
     const eventType = await this.deps.repository.findEventTypeById(params.eventTypeId);
     if (!eventType || !eventType.waitlistEnabled || !eventType.userId) return null;
+    if (!(await this.hostEntitled(eventType.userId))) return null;
 
     const activeOffer = await this.deps.repository.findActiveOfferForSlot({
       eventTypeId: params.eventTypeId,
@@ -311,6 +314,10 @@ export class WaitlistService {
       }
     }
     return { removed: false };
+  }
+
+  private async hostEntitled(userId: number) {
+    return this.deps.isHostEntitled ? this.deps.isHostEntitled(userId) : true;
   }
 
   private async positionOf(entry: WaitlistEntryRecord) {

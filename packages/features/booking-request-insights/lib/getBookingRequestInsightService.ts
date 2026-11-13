@@ -1,5 +1,6 @@
 import process from "node:process";
 import Anthropic from "@anthropic-ai/sdk";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
 import { BookingRequestInsightRepository } from "../repositories/BookingRequestInsightRepository";
@@ -21,6 +22,7 @@ export function getBookingRequestInsightService(): BookingRequestInsightService 
         })
       : null,
     logger: logger.getSubLogger({ prefix: ["[request-insights]"] }),
+    isHostEntitled: (userId) => getPlanService().hasFeature(userId, "aiRequestInsights"),
   });
   return service;
 }

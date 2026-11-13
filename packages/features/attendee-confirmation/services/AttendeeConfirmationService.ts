@@ -29,6 +29,8 @@ export interface IAttendeeConfirmationServiceDeps {
   webappUrl: string;
   now?: () => Date;
   logger?: { error: (...args: unknown[]) => void };
+  /** Whether the host's plan currently includes confirm-or-release; omitted means always allowed. */
+  isHostEntitled?: (userId: number) => Promise<boolean>;
 }
 
 export type ConfirmResult =
@@ -54,6 +56,7 @@ export class AttendeeConfirmationService {
     for (const booking of candidates) {
       const hours = booking.eventType?.attendeeConfirmationHours;
       if (!hours || !booking.attendees[0]) continue;
+      if (booking.userId && this.deps.isHostEntitled && !(await this.deps.isHostEntitled(booking.userId))) continue;
       const deadline = getConfirmationDeadline(booking.startTime, hours);
       const opensAt = new Date(deadline.getTime() - REQUEST_LEAD_HOURS * HOUR_MS);
       // Bookings made after the deadline were just confirmed by the act of booking.

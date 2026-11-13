@@ -1,5 +1,6 @@
 import process from "node:process";
 import type { CreateRegularBookingData } from "@calcom/features/bookings/lib/dto/types";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
@@ -46,6 +47,7 @@ export function getWaitlistService(): WaitlistService {
     webappUrl: WEBAPP_URL,
     offerWindowMinutes: Number.isFinite(offerWindow) && offerWindow > 0 ? offerWindow : undefined,
     logger: log,
+    isHostEntitled: (userId) => getPlanService().hasFeature(userId, "waitlist"),
   });
   return service;
 }

@@ -516,7 +516,8 @@ model User {
   oAuthClients                   OAuthClient[]
   holidaySettings                UserHolidaySettings?
 
-  autoOptInFeatures Boolean @default(false)
+  autoOptInFeatures Boolean           @default(false)
+  planSubscription  PlanSubscription?
 
   @@unique([email])
   @@unique([email, username])
@@ -2949,4 +2950,29 @@ model BookingRequestInsight {
   suggestedReply String
   model          String
   createdAt      DateTime          @default(now())
+}
+
+enum SlotwisePlan {
+  FREE
+  PRO
+  TEAM
+}
+
+/// The user's paid plan as last reported by Polar (merchant of record). Written only by verified webhooks.
+model PlanSubscription {
+  id                  Int          @id @default(autoincrement())
+  userId              Int          @unique
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                SlotwisePlan
+  /// Polar subscription status (active, trialing, past_due, canceled, revoked, ...)
+  status              String
+  polarSubscriptionId String       @unique
+  polarCustomerId     String
+  polarProductId      String
+  currentPeriodEnd    DateTime?
+  cancelAtPeriodEnd   Boolean      @default(false)
+  /// Polar's modified_at of the last applied event, so out-of-order webhooks never overwrite newer state.
+  polarModifiedAt     DateTime
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 }

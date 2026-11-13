@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@calcom/testing": "workspace:*",
+    "@polar-sh/sdk": "^1.1.0",
     "@testing-library/react-hooks": "8.0.1",
     "@types/deasync": "^0",
     "@types/web-push": "3.6.3",

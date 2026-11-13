@@ -2527,6 +2527,7 @@ __metadata:
     "@calcom/ui": "workspace:*"
     "@coss/ui": "workspace:*"
     "@evyweb/ioctopus": "npm:1.2.0"
+    "@polar-sh/sdk": "npm:^1.1.0"
     "@tanstack/react-table": "npm:8.20.6"
     "@tanstack/react-virtual": "npm:3.10.9"
     "@testing-library/react-hooks": "npm:8.0.1"
@@ -10371,6 +10372,33 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 10/07f5ba4841b2db1dea70d821004c5156b692488e13523c096ce3487d30f95f34ccf30ba6467ece60c86faac27ae382213b7eacab48a695550981b2e811e5e579
+  languageName: node
+  linkType: hard
+
+"@polar-sh/sdk@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@polar-sh/sdk@npm:1.1.0"
+  peerDependencies:
+    "@opentelemetry/api": ^1.9.1
+    "@opentelemetry/otlp-transformer": ^0.223.0
+    "@opentelemetry/resources": ^2.12.0
+    "@opentelemetry/sdk-metrics": ^2.12.0
+    "@opentelemetry/sdk-trace": ^2.12.0
+    ioredis: ^5.11.0
+  peerDependenciesMeta:
+    "@opentelemetry/api":
+      optional: true
+    "@opentelemetry/otlp-transformer":
+      optional: true
+    "@opentelemetry/resources":
+      optional: true
+    "@opentelemetry/sdk-metrics":
+      optional: true
+    "@opentelemetry/sdk-trace":
+      optional: true
+    ioredis:
+      optional: true
+  checksum: 10/7ad5b1cbd3244be8a92521f2f0bf98b53918ce089769a99ba123a2660e1e9fbe248f27a0f0ed97648b20b0e1fc7a55e763fbc5edfc0f82c8c7dbcc2d02d427a3
   languageName: node
   linkType: hard
 

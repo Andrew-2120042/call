@@ -127,6 +127,30 @@ How it works:
 - **Cron (every minute):** `POST /api/cron/request-insights`. Owner read: tRPC `requestInsights.get({ bookingUid })`, scoped to the host.
 - Gotcha: new env vars must be added to `turbo.json` `globalEnv`, or Turbo strips them.
 
+## Plans and billing (built 2026-11-13)
+- `PlanSubscription` (one per user) is written **only** by verified Polar webhooks (`POST /api/billing/polar/webhook`).
+  - Stale and out-of-order deliveries are ignored, using `polarModifiedAt`.
+  - A late event about an old subscription never replaces a current paid one.
+- Effective plan (`packages/features/plans/lib/entitlements.ts`):
+  - active or trialing → that plan.
+  - canceled or past_due → still paid until `currentPeriodEnd`.
+  - Otherwise FREE.
+- **Enforced even when billing isn't configured** (everyone is Free), so a production misconfiguration can't hand out Pro.
+- Feature matrix:
+  - FREE: no approval, waitlist, confirm-or-release or AI; 2 screening questions per service; 1 reminder.
+  - PRO: all of those, plus branding removal and custom domain (both still to build).
+  - TEAM: PRO plus team scheduling.
+- Enforcement:
+  1. Event type update (tRPC FORBIDDEN, only when *turning on* or growing past a limit, so downgraded users can still save).
+  2. Runtime: waitlist join/offer, confirmation requests and AI insights check the host's plan.
+- Polar:
+  - REST via `polarGateway.ts` (checkout `/v1/checkouts/`, portal `/v1/customer-sessions/`).
+  - Webhook verifier `polarWebhook.ts` (Standard Webhooks, both key schemes, 5 min window), cross-tested against the official `@polar-sh/sdk`, which is a devDependency only. Its versioned subpaths don't resolve under this repo's `moduleResolution: node`.
+- API: `GET /api/billing/plan`, `POST /api/billing/checkout {plan}`, `POST /api/billing/portal`.
+- Env: `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_ENVIRONMENT` (sandbox by default), `POLAR_PRO_PRODUCT_ID`, `POLAR_TEAM_PRODUCT_ID`.
+- Dev: put the local user on Pro with `node scripts/dev/send-polar-webhook.mts subscription.active active <ISO>`.
+- **To go live:** create the Pro ($12) and Team ($49) products in Polar, set the env vars, and register the webhook URL.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
