@@ -13,9 +13,8 @@ export type UpdateAppCredentialsOptions = {
   input: TUpdateAppCredentialsInputSchema;
 };
 
-const validators = {
-  paypal: () => import("@calcom/paypal/lib/updateAppCredentials.validator"),
-};
+// App-specific key validators, keyed by app id. None of the remaining apps need one.
+const validators: Record<string, () => Promise<{ default: (args: { input: TUpdateAppCredentialsInputSchema }) => Promise<Prisma.InputJsonValue> }>> = {};
 
 export const handleCustomValidations = async ({
   input,

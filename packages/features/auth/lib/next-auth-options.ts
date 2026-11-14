@@ -20,7 +20,6 @@ import {
   GOOGLE_OAUTH_SCOPES,
   APP_NAME,
   HOSTED_CAL_FEATURES,
-  IS_CALCOM,
   IS_TEAM_BILLING_ENABLED,
   MICROSOFT_CALENDAR_SCOPES,
   WEBAPP_URL,
@@ -40,7 +39,6 @@ import { CreationSource, IdentityProvider, MembershipRole, UserPermissionRole } 
 import { teamMetadataSchema, userMetadata } from "@calcom/prisma/zod-utils";
 import type { UserProfile } from "@calcom/types/UserProfile";
 import { calendar_v3 } from "@googleapis/calendar";
-import { waitUntil } from "@vercel/functions";
 import { OAuth2Client } from "googleapis-common";
 import type { Account, AuthOptions, Profile, Session, User } from "next-auth";
 import type { JWT } from "next-auth/jwt";
@@ -51,7 +49,6 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import type { Provider } from "next-auth/providers/index";
 import { getOrgUsernameFromEmail } from "../signup/utils/getOrgUsernameFromEmail";
-import { dub } from "./dub";
 import { ErrorCode } from "./ErrorCode";
 import CalComAdapter from "./next-auth-custom-adapter";
 import { verifyPassword } from "./verifyPassword";
@@ -373,11 +370,8 @@ function isNumber(n: string) {
 const calcomAdapter = CalComAdapter(prisma);
 
 export const getOptions = ({
-  getDubId,
   getTrackingData,
 }: {
-  /** so we can extract the Dub cookie in both pages and app routers */
-  getDubId: () => string | undefined;
   /** Ad tracking data for Stripe customer metadata */
   getTrackingData: () => TrackingData;
 }): AuthOptions => ({
@@ -1169,44 +1163,6 @@ export const getOptions = ({
       // Allows callback URLs on the same domain
       else if (new URL(url).hostname === new URL(WEBAPP_URL).hostname) return url;
       return baseUrl;
-    },
-  },
-  events: {
-    async signIn(message) {
-      /* only run this code if:
-         - it's a hosted cal account
-         - DUB_API_KEY is configured
-         - it's a new user
-      */
-      const user = message.user as User & {
-        username: string;
-        createdDate: string;
-      };
-      // check if the user was created in the last 10 minutes
-      // this is a workaround – in the future once we move to use the Account model in the DB
-      // we should use NextAuth's isNewUser flag instead: https://next-auth.js.org/configuration/events#signin
-      const isNewUser = new Date(user.createdDate) > new Date(Date.now() - 10 * 60 * 1000);
-      if ((isENVDev || IS_CALCOM) && isNewUser) {
-        if (process.env.DUB_API_KEY) {
-          const clickId = getDubId();
-          // check if there's a clickId (dub_id) cookie set by @dub/analytics
-          if (clickId) {
-            // here we use waitUntil – meaning this code will run async to not block the main thread
-            waitUntil(
-              // if so, send a lead event to Dub
-              // @see https://d.to/conversions/next-auth
-              dub.track.lead({
-                clickId,
-                eventName: "Sign Up",
-                externalId: user.id.toString(),
-                customerName: user.name,
-                customerEmail: user.email,
-                customerAvatar: user.image,
-              })
-            );
-          }
-        }
-      }
     },
   },
 });

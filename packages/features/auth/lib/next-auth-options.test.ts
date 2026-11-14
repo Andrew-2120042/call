@@ -503,7 +503,7 @@ describe("Azure AD signIn callback", () => {
 
     const authModule = await import("./next-auth-options");
     getOptions = authModule.getOptions;
-    const options = getOptions({ getDubId: () => undefined, getTrackingData: () => ({}) as any });
+    const options = getOptions({ getTrackingData: () => ({}) as any });
     signInCallback = options.callbacks!.signIn! as any;
   });
 
@@ -913,7 +913,7 @@ describe("Azure AD JWT callback", () => {
 
     const authModule = await import("./next-auth-options");
     getOptions = authModule.getOptions;
-    const options = getOptions({ getDubId: () => undefined, getTrackingData: () => ({}) as any });
+    const options = getOptions({ getTrackingData: () => ({}) as any });
     jwtCallback = options.callbacks!.jwt! as any;
   });
 

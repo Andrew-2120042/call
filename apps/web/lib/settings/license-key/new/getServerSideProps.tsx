@@ -8,7 +8,6 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   const session = await getServerSession({
     req: context.req,
     authOptions: getOptions({
-      getDubId: () => context.req.cookies.dub_id || context.req.cookies.dclid,
       getTrackingData: () => getTrackingFromCookies(context.req.cookies),
     }),
   });

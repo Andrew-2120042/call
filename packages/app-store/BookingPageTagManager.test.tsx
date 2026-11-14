@@ -31,31 +31,6 @@ afterEach(() => {
 });
 
 describe("BookingPageTagManager", () => {
-  it("GTM App when enabled should have its scripts added with appropriate trackingID and $pushEvent replacement", () => {
-    const GTM_CONFIG = {
-      enabled: true,
-      trackingId: "GTM-123",
-    };
-    render(
-      <BookingPageTagManager
-        eventType={{
-          metadata: {
-            apps: {
-              gtm: GTM_CONFIG,
-            },
-          },
-          price: 0,
-          currency: "USD",
-        }}
-      />
-    );
-    const scripts = screen.getAllByTestId("cal-analytics-app-gtm");
-    const trackingScript = scripts[0];
-    const pushEventScript = scripts[1];
-    expect(trackingScript.innerHTML).toContain(GTM_CONFIG.trackingId);
-    expect(pushEventScript.innerHTML).toContain("cal_analytics_app__gtm");
-  });
-
   it("GTM App when disabled should not have its scripts added", () => {
     const GTM_CONFIG = {
       enabled: false,

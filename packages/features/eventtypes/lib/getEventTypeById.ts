@@ -1,7 +1,6 @@
 //import "server-only";
 import type { LocationObject } from "@calcom/app-store/locations";
 import { getLocationGroupedOptions } from "@calcom/app-store/server";
-import { getEventTypeAppData } from "@calcom/app-store/utils";
 import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
 import { getBookingFieldsWithSystemFields } from "@calcom/features/bookings/lib/getBookingFields";
 import { EventTypeRepository } from "@calcom/features/eventtypes/repositories/eventTypeRepository";
@@ -108,10 +107,7 @@ export const getEventTypeById = async ({
     );
   }
 
-  newMetadata.apps = {
-    ...apps,
-    giphy: getEventTypeAppData(eventTypeWithParsedMetadata, "giphy", true) ?? undefined,
-  };
+  newMetadata.apps = apps;
 
   const parsedMetaData = newMetadata;
 

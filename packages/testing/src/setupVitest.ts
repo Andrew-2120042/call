@@ -148,22 +148,6 @@ vi.mock("@calcom/app-store/stripepayment/index", () => ({
   BuildPaymentService: createMockPaymentService,
 }));
 
-vi.mock("@calcom/app-store/paypal/index", () => ({
-  BuildPaymentService: createMockPaymentService,
-}));
-
-vi.mock("@calcom/app-store/alby/index", () => ({
-  BuildPaymentService: createMockPaymentService,
-}));
-
-vi.mock("@calcom/app-store/hitpay/index", () => ({
-  BuildPaymentService: createMockPaymentService,
-}));
-
-vi.mock("@calcom/app-store/btcpayserver/index", () => ({
-  BuildPaymentService: createMockPaymentService,
-}));
-
 vi.mock("@calcom/app-store/mock-payment-app/index", () => ({
   BuildPaymentService: createMockPaymentService,
 }));
@@ -171,10 +155,6 @@ vi.mock("@calcom/app-store/mock-payment-app/index", () => ({
 vi.mock("@calcom/app-store/payment.services.generated", () => ({
   PaymentServiceMap: {
     stripepayment: Promise.resolve({ BuildPaymentService: createMockPaymentService }),
-    paypal: Promise.resolve({ BuildPaymentService: createMockPaymentService }),
-    alby: Promise.resolve({ BuildPaymentService: createMockPaymentService }),
-    hitpay: Promise.resolve({ BuildPaymentService: createMockPaymentService }),
-    btcpayserver: Promise.resolve({ BuildPaymentService: createMockPaymentService }),
     "mock-payment-app": Promise.resolve({ BuildPaymentService: createMockPaymentService }),
   },
 }));

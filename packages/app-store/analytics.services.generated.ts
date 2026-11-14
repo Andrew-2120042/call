@@ -3,5 +3,4 @@
     Don't modify this file manually.
 **/
 export const AnalyticsServiceMap = process.env.NEXT_PUBLIC_IS_E2E === '1' ? {} : {
-"dub": import("./dub/lib/AnalyticsService"),
 };

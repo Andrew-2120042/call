@@ -99,37 +99,19 @@ describe("shouldEnableApp", () => {
 
   describe("Apps with multiple required fields", () => {
     it("should return false when any required field is missing", () => {
-      // vital requires mode, region, api_key, and webhook_secret
-      const result = shouldEnableApp("vital", {
-        mode: "sandbox",
-        region: "us",
-        api_key: "test-key",
-        // Missing webhook_secret
-      });
-      expect(result).toBe(false);
+      // zoomvideo requires client_id and client_secret
+      expect(shouldEnableApp("zoomvideo", { client_id: "id" })).toBe(false);
     });
 
     it("should return true when all required fields are present", () => {
-      const result = shouldEnableApp("vital", {
-        mode: "sandbox",
-        region: "us",
-        api_key: "test-key",
-        webhook_secret: "test-secret",
-      });
-      expect(result).toBe(true);
+      expect(shouldEnableApp("zoomvideo", { client_id: "id", client_secret: "secret" })).toBe(true);
     });
 
     it("should return false when any required field is empty", () => {
-      const result = shouldEnableApp("vital", {
-        mode: "",
-        region: "us",
-        api_key: "test-key",
-        webhook_secret: "test-secret",
-      });
-      expect(result).toBe(false);
+      expect(shouldEnableApp("zoomvideo", { client_id: "", client_secret: "secret" })).toBe(false);
     });
   });
-  
+
   describe("Apps with empty key schemas (user-configured apps like PayPal, GTM)", () => {
     // These apps have `appKeysSchema = z.object({})` - they don't need server-side keys
     // Users configure them after installation, so they should always be enabled
