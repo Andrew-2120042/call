@@ -6,6 +6,7 @@ import { trpc } from "@calcom/trpc/react";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
+import { HomeSkeleton } from "~/shell/skeletons";
 
 const greetingKey = (hour: number) =>
   hour < 12 ? "home_good_morning" : hour < 18 ? "home_good_afternoon" : "home_good_evening";
@@ -13,7 +14,7 @@ const greetingKey = (hour: number) =>
 export default function HomeView() {
   const { t } = useLocale();
   const { data } = trpc.viewer.home.get.useQuery();
-  if (!data) return null;
+  if (!data) return <HomeSkeleton />;
 
   const firstName = data.name.split(" ")[0];
   const delta = data.bookingsThisWeek - data.bookingsLastWeek;
@@ -45,9 +46,7 @@ export default function HomeView() {
         </button>
       </header>
 
-      <h2 className="text-emphasis mt-10 text-lg font-medium">
-        {t("home_last_week")}
-      </h2>
+      <h2 className="text-emphasis mt-10 text-lg font-medium">{t("home_last_week")}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <Stat
           label={t("home_bookings_week")}
@@ -124,9 +123,7 @@ function Stat(props: { label: string; value: number; note: string; href?: string
   const body = (
     <div className="bg-default border-subtle h-full rounded-2xl border p-5" data-testid={props.testId}>
       <p className="text-subtle text-sm">{props.label}</p>
-      <p className="text-emphasis mt-2 text-3xl font-normal leading-none">
-        {props.value}
-      </p>
+      <p className="text-emphasis mt-2 text-3xl font-normal leading-none">{props.value}</p>
       <p className="text-subtle mt-2 text-xs">{props.note}</p>
     </div>
   );

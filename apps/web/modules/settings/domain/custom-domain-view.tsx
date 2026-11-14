@@ -7,6 +7,7 @@ import { Button } from "@calcom/ui/components/button";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
 import { useState } from "react";
+import { SettingsCardSkeleton } from "~/shell/skeletons";
 
 export default function CustomDomainView() {
   const { t } = useLocale();
@@ -35,7 +36,7 @@ export default function CustomDomainView() {
   });
   const remove = trpc.viewer.customDomain.remove.useMutation({ onSuccess: refresh, onError });
 
-  if (query.isPending || !query.data) return null;
+  if (query.isPending || !query.data) return <SettingsCardSkeleton rows={1} />;
   const { domain, entitled } = query.data;
 
   if (!entitled && !domain) {

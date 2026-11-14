@@ -7,6 +7,7 @@ import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { PlansSkeleton } from "~/shell/skeletons";
 
 type PlanSummary = {
   plan: "FREE" | "PRO" | "TEAM";
@@ -55,7 +56,7 @@ export default function BillingView() {
     }
   };
 
-  if (!summary) return <p className="text-subtle">{t("loading")}</p>;
+  if (!summary) return <PlansSkeleton />;
 
   const current = summary.plan;
   const isPaid = current !== "FREE";

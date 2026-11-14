@@ -23,7 +23,10 @@ const Page = async () => {
   if (!session?.user?.id) redirect("/auth/login");
   const t = await getTranslate();
   return (
-    <SettingsHeader title={t("billing_page_title")} description={t("billing_page_description")} borderInShellHeader>
+    <SettingsHeader
+      title={t("billing_page_title")}
+      description={t("billing_page_description")}
+      borderInShellHeader>
       <BillingView />
     </SettingsHeader>
   );

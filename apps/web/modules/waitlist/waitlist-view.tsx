@@ -5,6 +5,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
 import { showToast } from "@calcom/ui/components/toast";
+import { ListSkeleton } from "~/shell/skeletons";
 
 export default function WaitlistView() {
   const { t } = useLocale();
@@ -18,7 +19,7 @@ export default function WaitlistView() {
     onError: (error) => showToast(error.message, "error"),
   });
 
-  if (list.isPending) return <p className="text-subtle">{t("loading")}</p>;
+  if (list.isPending) return <ListSkeleton rows={4} />;
   if (!list.data?.length) {
     return (
       <div className="border-subtle rounded-lg border p-10 text-center">

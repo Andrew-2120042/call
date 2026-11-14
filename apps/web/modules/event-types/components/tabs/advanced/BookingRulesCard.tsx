@@ -6,6 +6,7 @@ import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
 import { showToast } from "@calcom/ui/components/toast";
 import { useEffect, useState } from "react";
+import { SettingsCardSkeleton } from "~/shell/skeletons";
 
 const REMINDER_CHOICES = [
   { minutes: 10080, key: "booking_rules_reminder_week" },
@@ -52,7 +53,13 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
     onError: (error) => showToast(error.message, "error"),
   });
 
-  if (query.isPending || !draft || !query.data) return null;
+  if (query.isPending || !draft || !query.data) {
+    return (
+      <div className="mt-6">
+        <SettingsCardSkeleton rows={3} />
+      </div>
+    );
+  }
   const { features, limits } = query.data;
 
   const toggleReminder = (minutes: number) =>
