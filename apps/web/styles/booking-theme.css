@@ -14,10 +14,6 @@
 .sw-booker [data-testid="booker-container"] {
   background: var(--sw-cal-panel, #ffffff) !important;
   color: var(--sw-cal-text, #121212);
-  border: 1px solid var(--sw-cal-border, rgba(18, 18, 18, 0.06)) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.04);
-  overflow: hidden;
   --cal-text-emphasis: var(--sw-cal-text, #121212);
   --cal-text: var(--sw-cal-text-soft, #2b2b29);
   --cal-text-subtle: var(--sw-cal-subtle, #6b6a66);
@@ -33,6 +29,16 @@
   /* Unavailable hours in week/column view are drawn as stripes from these two. */
   --disabled-gradient-background: var(--sw-cal-panel, #ffffff);
   --disabled-gradient-foreground: var(--sw-cal-muted, #f1f0ee);
+}
+
+/* Month view is a floating card. Week and column views fill the screen like upstream; they must not clip,
+   because scrolling to "now" would otherwise shift the clipped content sideways and hide the details panel. */
+.sw-booker [data-testid="booker-container"][data-layout="month_view"],
+.sw-booker [data-testid="booker-container"][data-layout="mobile"] {
+  border: 1px solid var(--sw-cal-border, rgba(18, 18, 18, 0.06)) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.04);
+  overflow: clip;
 }
 
 .sw-booker [data-testid="time"] {

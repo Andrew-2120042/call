@@ -352,6 +352,7 @@ const BookerComponent = ({
         <div
           ref={animationScope}
           data-testid="booker-container"
+          data-layout={layout}
           className={classNames(
             ...getBookerSizeClassNames(layout, bookerState, hideEventTypeDetails),
             `bg-default dark:bg-cal-muted grid max-w-full items-start dark:scheme-dark sm:transition-[width] sm:duration-300 sm:motion-reduce:transition-none md:flex-row`,

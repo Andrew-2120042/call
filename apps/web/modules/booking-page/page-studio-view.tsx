@@ -92,7 +92,6 @@ export default function PageStudio() {
   const [copied, setCopied] = useState(false);
   const [dragId, setDragId] = useState<number | null>(null);
   const [dragOrder, setDragOrder] = useState<number[] | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [calendarScope, setCalendarScope] = useState<number | null>(null);
   const [screen, setScreen] = useState<Screen>(null);
   const [previewServiceId, setPreviewServiceId] = useState<number | null>(null);
@@ -330,7 +329,7 @@ export default function PageStudio() {
     <div className="fixed inset-0 z-[60] flex flex-col bg-[#f6f5f2] text-[#121212]" data-testid="page-editor">
       {/* The studio renders outside Shell, which is where the app's Toaster normally lives. */}
       <Toaster position="bottom-center" />
-      {/* Top bar: menu · page pill · Share */}
+      {/* Top bar: back to Home · Share */}
       <div
         className="relative z-[70] flex shrink-0 items-center justify-between px-4 md:px-6"
         style={{ paddingTop: 22, paddingBottom: 10 }}>
@@ -340,36 +339,6 @@ export default function PageStudio() {
           className="grid h-10 w-10 place-items-center rounded-full bg-[#ecebe8] hover:bg-[#e3e2de]">
           <Icon name="menu" className="h-[18px] w-[18px]" />
         </Link>
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            className="flex items-center gap-2 rounded-full bg-[#ecebe8] py-1 pl-1 pr-3 text-[13.5px] font-semibold hover:bg-[#e3e2de]">
-            <Avatar size="sm" imageSrc={data.avatarUrl} alt={data.name} />
-            <span className="max-w-[200px] truncate">{draft.name || data.name}</span>
-            <Icon name="chevron-down" className="h-3.5 w-3.5" />
-          </button>
-          {menuOpen && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} aria-hidden />
-              <div className="absolute left-1/2 z-50 mt-2 w-56 -translate-x-1/2 rounded-2xl bg-white p-1.5 shadow-[0_18px_50px_-12px_rgba(0,0,0,.3)]">
-                {[
-                  { href: "/home", label: t("home_page_title") },
-                  { href: "/event-types", label: t("event_types_page_title") },
-                  { href: "/bookings/upcoming", label: t("bookings") },
-                  { href: "/settings/my-account/profile", label: t("settings") },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block rounded-xl px-3 py-2 text-[13px] hover:bg-[#f6f5f2]">
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
         <button
           type="button"
           onClick={share}

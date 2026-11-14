@@ -452,6 +452,12 @@ export const createBookerStore = () =>
       if (!get().isPlatform || get().allowUpdatingUrlParams) {
         updateQueryParam("layout", layout);
       }
+      // Switching views while the booking form is open would leave that form floating over the new view,
+      // so a real switch goes back to picking a time.
+      if (layout !== get().layout && get().state === "booking") {
+        get().setSelectedTimeslot(null);
+        return set({ layout, state: "selecting_time" });
+      }
       return set({ layout });
     },
     selectedDate: getQueryParam("date") || null,
