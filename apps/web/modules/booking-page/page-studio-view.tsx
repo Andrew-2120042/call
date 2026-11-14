@@ -92,6 +92,8 @@ export default function PageStudio() {
   const [saving, setSaving] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [dragId, setDragId] = useState<number | null>(null);
+  const [dragOrder, setDragOrder] = useState<number[] | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Fill the draft once; later refetches must not wipe unsaved edits.
@@ -151,6 +153,7 @@ export default function PageStudio() {
   const data = query.data;
   const serviceById = new Map(data.services.map((s) => [s.id, s]));
   const orderedServices = draft.order.map((id) => serviceById.get(id)).filter((s) => !!s);
+  const listServices = (dragOrder ?? draft.order).map((id) => serviceById.get(id)).filter((s) => !!s);
   const visibleServices = orderedServices.filter((s) => !draft.hidden[s.id]);
   const look = resolvePageLook(draft.pageTheme, draft.pageButtonShape, draft.style);
   const publicUrl = data.username ? `/${data.username}` : null;
@@ -236,6 +239,20 @@ export default function PageStudio() {
   const go = (next: Tab) => {
     setTab(next);
     setSub(null);
+  };
+
+  // Drag order is kept apart from the draft so one drag is one undo step, not one per row crossed.
+  const dragOver = (overId: number) => {
+    if (dragId === null || overId === dragId || !dragOrder) return;
+    const order = dragOrder.filter((id) => id !== dragId);
+    order.splice(dragOrder.indexOf(overId), 0, dragId);
+    setDragOrder(order);
+  };
+
+  const finishDrag = () => {
+    if (dragOrder && dragOrder.join(",") !== draft.order.join(",")) update({ order: dragOrder });
+    setDragId(null);
+    setDragOrder(null);
   };
 
   const move = (index: number, direction: -1 | 1) => {
@@ -358,7 +375,7 @@ export default function PageStudio() {
                   <Icon name="chevron-left" className="h-4 w-4" />
                 </button>
               )}
-              <h2 className="truncate text-[20px] font-bold tracking-tight md:text-[24px]">{panelTitle}</h2>
+              <h2 className="truncate text-[20px] font-bold tracking-tight md:text-[22px]">{panelTitle}</h2>
             </div>
             <div className="flex flex-none items-center gap-1.5">
               {dirty ? (
@@ -406,86 +423,105 @@ export default function PageStudio() {
           <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-12 pt-1 text-[14px] md:px-10">
             {tab === "content" && (
               <>
-                <div className="flex items-start gap-5">
-                  <Avatar size="xl" imageSrc={data.avatarUrl} alt={data.name} />
-                  <div className="min-w-0 flex-1 pt-2">
-                    <div className="truncate text-[17px] font-semibold">
+                <div className="flex items-center gap-4">
+                  <Avatar size="lg" imageSrc={data.avatarUrl} alt={data.name} />
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[16px] font-semibold">
                       {draft.name || t("studio_add_name")}
                     </div>
-                    <div className="mt-1 line-clamp-2 text-[14px] leading-snug text-[#6b6a66]">
+                    <div className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-[#6b6a66]">
                       {draft.bio || t("studio_add_bio")}
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => go("header")}
-                    className="mt-2 flex shrink-0 items-center gap-1.5 rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]">
+                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]">
                     <Icon name="pencil" className="h-3.5 w-3.5" />
                     {t("edit")}
                   </button>
                 </div>
 
-                <div className="mt-8 flex gap-6 border-b border-[#efeeeb]">
-                  <span className="-mb-px border-b-[3px] border-[#121212] px-1 pb-3 text-[15px] font-semibold">
+                <div className="mt-7 flex gap-6 border-b border-[#efeeeb]">
+                  <span className="-mb-px border-b-[3px] border-[#121212] px-1 pb-2.5 text-[14px] font-semibold">
                     {t("event_types_page_title")}
                   </span>
                 </div>
 
-                <div className="mt-7 grid grid-cols-2 gap-3">
+                <div className="mt-6 grid grid-cols-2 gap-2.5">
                   <Link
                     href="/assistant"
-                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 text-[15px] font-semibold hover:bg-[#e3e2de]">
+                    className="flex h-11 items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 text-[14px] font-semibold hover:bg-[#e3e2de]">
                     <Icon name="message-circle" className="h-4 w-4" />
                     {t("studio_ask_assistant")}
                   </Link>
                   <Link
                     href="/event-types?dialog=new&eventPage="
-                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#121212] px-4 text-[15px] font-semibold text-white hover:opacity-90">
+                    className="flex h-11 items-center justify-center gap-2 rounded-full bg-[#121212] px-4 text-[14px] font-semibold text-white hover:opacity-90">
                     <Icon name="plus" className="h-4 w-4" />
                     {t("studio_add_service")}
                   </Link>
                 </div>
 
-                <ul className="mt-7 flex flex-col gap-3.5" data-testid="page-editor-services">
-                  {orderedServices.length === 0 && (
+                <ul
+                  className="mt-6 flex flex-col"
+                  style={{ rowGap: 12 }}
+                  data-testid="page-editor-services"
+                  onDragOver={(e) => dragId !== null && e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    finishDrag();
+                  }}>
+                  {listServices.length === 0 && (
                     <li className="rounded-2xl border border-dashed border-[#e4e3df] p-6 text-center text-[13px] text-[#6b6a66]">
                       {t("page_editor_no_services")}
                     </li>
                   )}
-                  {orderedServices.map((service, index) => {
+                  {listServices.map((service, index) => {
                     const hidden = !!draft.hidden[service.id];
                     return (
                       <li
                         key={service.id}
-                        className="group relative flex min-h-[80px] items-center gap-4 rounded-[24px] border border-[#ebeae6] bg-white py-4 pl-6 pr-4 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]"
-                        style={{ borderRadius: 24 }}>
-                        <div className="absolute left-1 top-1/2 flex -translate-y-1/2 flex-col text-[#9b9a95] opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
-                          <button
-                            type="button"
-                            aria-label={t("page_editor_move_up", { title: service.title })}
-                            disabled={index === 0}
-                            onClick={() => move(index, -1)}
-                            className="disabled:opacity-20">
-                            <Icon name="chevron-up" className="h-3.5 w-3.5" />
-                          </button>
-                          <button
-                            type="button"
-                            aria-label={t("page_editor_move_down", { title: service.title })}
-                            disabled={index === orderedServices.length - 1}
-                            onClick={() => move(index, 1)}
-                            className="disabled:opacity-20">
-                            <Icon name="chevron-down" className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
+                        draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.effectAllowed = "move";
+                          e.dataTransfer.setData("text/plain", String(service.id));
+                          setDragId(service.id);
+                          setDragOrder(draft.order);
+                        }}
+                        onDragEnter={() => dragOver(service.id)}
+                        onDragEnd={finishDrag}
+                        className={classNames(
+                          "group flex min-h-[72px] items-center gap-3.5 border border-[#ebeae6] bg-white py-3.5 pl-2 pr-3 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]",
+                          dragId === service.id && "opacity-50"
+                        )}
+                        style={{ borderRadius: 22 }}>
+                        <button
+                          type="button"
+                          aria-label={t("page_editor_drag_to_reorder", { title: service.title })}
+                          title={t("page_editor_drag_to_reorder", { title: service.title })}
+                          onKeyDown={(e) => {
+                            if (e.key === "ArrowUp") {
+                              e.preventDefault();
+                              move(index, -1);
+                            }
+                            if (e.key === "ArrowDown") {
+                              e.preventDefault();
+                              move(index, 1);
+                            }
+                          }}
+                          className="grid h-10 w-6 flex-none cursor-grab place-items-center rounded-lg text-[#a3a29d] hover:bg-[#f6f5f2] hover:text-[#121212] active:cursor-grabbing">
+                          <GripDots />
+                        </button>
                         <span
-                          className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[#f3f2ef]"
-                          style={{ background: "#f3f2ef", borderRadius: 16 }}>
-                          <Icon name="clock" className="h-[18px] w-[18px]" />
+                          className="grid flex-none place-items-center"
+                          style={{ width: 40, height: 40, background: "#f3f2ef", borderRadius: 14 }}>
+                          <Icon name="clock" className="h-[17px] w-[17px]" />
                         </span>
                         <div
                           className={classNames("min-w-0 flex-1 transition-opacity", hidden && "opacity-45")}>
-                          <div className="truncate text-[15px] font-semibold">{service.title}</div>
-                          <div className="mt-0.5 truncate text-[13px] text-[#6b6a66]">
+                          <div className="truncate text-[14.5px] font-semibold">{service.title}</div>
+                          <div className="mt-0.5 truncate text-[12.5px] text-[#6b6a66]">
                             {t("service_minutes", { count: service.length })} ·{" "}
                             {service.requiresConfirmation
                               ? t("service_kind_request_long")
@@ -500,6 +536,7 @@ export default function PageStudio() {
                         <Link
                           href={`/event-types/${service.id}?tabName=setup`}
                           aria-label={t("edit")}
+                          draggable={false}
                           className="grid h-8 w-8 flex-none place-items-center rounded-full hover:bg-[#f1f0ed]">
                           <Icon name="ellipsis-vertical" className="h-4 w-4" />
                         </Link>
@@ -942,6 +979,16 @@ async function toSquareJpeg(file: File): Promise<string> {
   return canvas.toDataURL("image/jpeg", 0.9);
 }
 
+function GripDots() {
+  return (
+    <span className="grid grid-cols-2" style={{ gap: 3 }} aria-hidden>
+      {[0, 1, 2, 3, 4, 5].map((dot) => (
+        <span key={dot} className="block rounded-full bg-current" style={{ width: 4, height: 4 }} />
+      ))}
+    </span>
+  );
+}
+
 function RowCard(props: { icon: ReactNode; label: string; value: string; onClick: () => void }) {
   return (
     <button
@@ -1066,10 +1113,9 @@ function Toggle(props: { on: boolean; label: string; onChange: (on: boolean) => 
         props.on ? "bg-[#121212]" : "bg-[#dcdbd7]"
       )}>
       <span
-        className={classNames(
-          "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
-          props.on && "translate-x-4"
-        )}
+        className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform"
+        // Inline transform so the knob position survives a stale dev stylesheet in Safari.
+        style={{ transform: props.on ? "translateX(16px)" : "translateX(0)" }}
       />
     </button>
   );

@@ -4938,6 +4938,7 @@
   "page_editor_add_service": "Add service",
   "page_editor_no_services": "No services yet. Add one so people can book you.",
   "page_editor_move_up": "Move {{title}} up",
+  "page_editor_drag_to_reorder": "Drag to reorder {{title}} (or use the arrow keys)",
   "page_editor_move_down": "Move {{title}} down",
   "page_editor_hidden": "Hidden",
   "page_editor_shown": "Shown",
