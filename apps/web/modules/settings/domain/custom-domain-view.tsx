@@ -40,7 +40,7 @@ export default function CustomDomainView() {
 
   if (!entitled && !domain) {
     return (
-      <div className="border-subtle rounded-lg border p-6" data-testid="custom-domain-upgrade">
+      <div className="bg-default border-subtle rounded-[22px] border p-6" data-testid="custom-domain-upgrade">
         <p className="text-default text-sm">{t("custom_domain_pro_only")}</p>
         <Link href="/settings/billing" className="mt-4 inline-block">
           <Button type="button">{t("custom_domain_upgrade")}</Button>
@@ -52,7 +52,7 @@ export default function CustomDomainView() {
   if (!domain) {
     return (
       <form
-        className="border-subtle rounded-lg border p-6"
+        className="bg-default border-subtle rounded-[22px] border p-6"
         data-testid="custom-domain-add"
         onSubmit={(e) => {
           e.preventDefault();
@@ -78,55 +78,112 @@ export default function CustomDomainView() {
     );
   }
 
+  const copy = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      showToast(t("custom_domain_copied"), "success");
+    } catch {
+      showToast(value, "warning");
+    }
+  };
+
   return (
-    <div className="border-subtle rounded-lg border p-6" data-testid="custom-domain-status">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-emphasis font-semibold">{domain.domain}</p>
-          <p className="text-subtle text-sm" data-testid="custom-domain-state">
-            {domain.verified
-              ? t("custom_domain_live", { url: `https://${domain.domain}` })
-              : t("custom_domain_waiting")}
+    <div className="space-y-4" data-testid="custom-domain-status">
+      <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2.5">
+            <p className="text-emphasis truncate text-lg font-semibold">{domain.domain}</p>
+            <span
+              className={
+                domain.verified
+                  ? "inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700"
+                  : "inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700"
+              }
+              data-testid="custom-domain-state">
+              <span
+                className={
+                  domain.verified
+                    ? "h-1.5 w-1.5 rounded-full bg-emerald-500"
+                    : "h-1.5 w-1.5 rounded-full bg-amber-500"
+                }
+              />
+              {domain.verified ? t("custom_domain_status_live") : t("custom_domain_status_waiting")}
+            </span>
+          </div>
+          <p className="text-subtle mt-1 text-sm">
+            {domain.verified ? t("custom_domain_live_hint") : t("custom_domain_waiting")}
           </p>
           {!entitled && <p className="text-error mt-1 text-sm">{t("custom_domain_paused")}</p>}
         </div>
         <div className="flex gap-2">
-          <Button type="button" color="secondary" loading={verify.isPending} onClick={() => verify.mutate()}>
-            {t("custom_domain_check")}
-          </Button>
-          <Button
-            type="button"
-            color="destructive"
-            loading={remove.isPending}
-            onClick={() => remove.mutate()}>
+          {domain.verified && (
+            <a href={`https://${domain.domain}`} target="_blank" rel="noreferrer">
+              <Button color="secondary">{t("custom_domain_open")}</Button>
+            </a>
+          )}
+          <Button color="minimal" loading={remove.isPending} onClick={() => remove.mutate()}>
             {t("custom_domain_remove")}
           </Button>
         </div>
       </div>
 
-      <p className="text-default mt-6 text-sm font-medium">{t("custom_domain_dns_intro")}</p>
-      <table className="mt-2 w-full text-left text-sm">
-        <thead className="text-subtle">
-          <tr>
-            <th className="py-1 pr-4 font-normal">{t("custom_domain_type")}</th>
-            <th className="py-1 pr-4 font-normal">{t("custom_domain_name")}</th>
-            <th className="py-1 font-normal">{t("custom_domain_value")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {domain.records.map((record) => (
-            <tr key={record.type} className="border-subtle border-t">
-              <td className="py-2 pr-4 font-mono">{record.type}</td>
-              <td className="break-all py-2 pr-4 font-mono">{record.name}</td>
-              <td className="break-all py-2 font-mono">{record.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {domain.lastCheckedAt && (
-        <p className="text-subtle mt-3 text-xs">
-          {t("custom_domain_last_checked", { time: dayjs(domain.lastCheckedAt).format("MMM D, h:mma") })}
-        </p>
+      {!domain.verified && (
+        <div className="bg-default border-subtle rounded-[22px] border p-6">
+          <p className="text-emphasis font-semibold">
+            <span className="text-subtle mr-2">1</span>
+            {t("custom_domain_step_records")}
+          </p>
+          <p className="text-subtle mt-1 text-sm">{t("custom_domain_dns_intro")}</p>
+          <div className="mt-4 space-y-3">
+            {domain.records.map((record) => (
+              <div key={record.type} className="border-subtle rounded-2xl border p-4">
+                <span className="bg-subtle text-emphasis rounded-md px-2 py-0.5 text-xs font-semibold">
+                  {record.type}
+                </span>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {[
+                    { label: t("custom_domain_name"), value: record.name },
+                    { label: t("custom_domain_value"), value: record.value },
+                  ].map((field) => (
+                    <div key={field.label} className="min-w-0">
+                      <p className="text-subtle text-xs">{field.label}</p>
+                      <div className="bg-muted mt-1 flex items-center gap-2 rounded-xl px-3 py-2">
+                        <span className="text-emphasis min-w-0 flex-1 break-all text-sm">{field.value}</span>
+                        <button
+                          type="button"
+                          onClick={() => copy(field.value)}
+                          className="text-emphasis flex-none text-xs font-semibold hover:underline">
+                          {t("custom_domain_copy")}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!domain.verified && (
+        <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
+          <div>
+            <p className="text-emphasis font-semibold">
+              <span className="text-subtle mr-2">2</span>
+              {t("custom_domain_step_check")}
+            </p>
+            <p className="text-subtle mt-1 text-sm">
+              {domain.lastCheckedAt
+                ? t("custom_domain_last_checked", {
+                    time: dayjs(domain.lastCheckedAt).format("MMM D, h:mma"),
+                  })
+                : t("custom_domain_not_checked")}
+            </p>
+          </div>
+          <Button loading={verify.isPending} onClick={() => verify.mutate()}>
+            {t("custom_domain_check")}
+          </Button>
+        </div>
       )}
     </div>
   );

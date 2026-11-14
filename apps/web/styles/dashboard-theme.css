@@ -138,7 +138,7 @@
 }
 
 /* Bookings and other data lists: one rounded card instead of a framed square table. */
-[data-sw-main] [data-testid$="-bookings"] {
+[data-sw-main] div.grid[data-testid$="-bookings"] {
   background: var(--cal-bg) !important;
   border: 1px solid var(--cal-border-subtle);
   border-radius: 22px !important;
@@ -146,17 +146,17 @@
   overflow: hidden;
 }
 
-[data-sw-main] [data-testid$="-bookings"] > div {
+[data-sw-main] div.grid[data-testid$="-bookings"] > div {
   border-radius: 0 !important;
 }
 
-[data-sw-main] [data-testid$="-bookings"] tr:last-child,
-[data-sw-main] [data-testid$="-bookings"] tr:last-child > td {
+[data-sw-main] div.grid[data-testid$="-bookings"] tr:last-child,
+[data-sw-main] div.grid[data-testid$="-bookings"] tr:last-child > td {
   border-bottom: 0 !important;
 }
 
 /* Section headings ("Today", "Next") sit on a soft band. */
-[data-sw-main] [data-testid$="-bookings"] tr:has(> td > div.font-semibold) {
+[data-sw-main] div.grid[data-testid$="-bookings"] tr:has(> td > div.font-semibold) {
   background: var(--cal-bg-muted);
 }
 
@@ -200,29 +200,61 @@
   color: var(--cal-text-muted) !important;
 }
 
-/* Settings content: one rounded card; inner side borders from Cal's forms are dropped. */
+/* Settings content: Cal's own boxes become our rounded white cards (no card-in-card). */
 .sw-settings-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* A form section's body (Cal draws it with side borders under a header) */
+.sw-settings-card .border-x {
   background: var(--cal-bg);
-  border: 1px solid var(--cal-border-subtle);
-  border-radius: 22px;
-  overflow: hidden;
-}
-
-.sw-settings-card .border-x,
-.sw-settings-card [class*="border-x"] {
-  border-left-width: 0 !important;
-  border-right-width: 0 !important;
-}
-
-.sw-settings-card > :last-child,
-.sw-settings-card > form > :last-child,
-.sw-settings-card .rounded-b-lg {
+  border: 1px solid var(--cal-border-subtle) !important;
   border-bottom-width: 0 !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+  border-radius: 22px 22px 0 0;
 }
 
-.sw-settings-card > :first-child,
-.sw-settings-card > form > :first-child {
-  border-top-width: 0 !important;
+/* The action strip under a section ("Update", "Delete account") */
+.sw-settings-card .rounded-b-lg,
+.sw-settings-card [class*="rounded-b-"] {
+  background: var(--cal-bg) !important;
+  border: 1px solid var(--cal-border-subtle) !important;
+  border-top-color: var(--cal-border-muted) !important;
+  border-radius: 0 0 22px 22px !important;
+  margin-top: 0 !important;
+}
+
+.sw-settings-card .rounded-t-lg {
+  background: var(--cal-bg);
+  border-radius: 22px 22px 0 0 !important;
+  border-bottom-width: 0 !important;
+}
+
+/* Stand-alone boxes (toggles, danger zone, lists) */
+.sw-settings-card .rounded-lg.border,
+.sw-settings-card .rounded-md.border {
+  background: var(--cal-bg);
+  border-radius: 22px !important;
+}
+
+/* Cal spaces these with margins; the flex gap handles spacing now. */
+.sw-settings-card > * {
+  margin-top: 0 !important;
+}
+
+
+/* A section header followed by its action strip reads as one card. */
+.sw-settings-card .rounded-t-lg + .rounded-b-lg,
+.sw-settings-card .rounded-t-lg + [class*="rounded-b-"] {
+  margin-top: -16px !important;
+}
+
+/* Header boxes Cal draws as rounded-lg with a flat bottom */
+.sw-settings-card .rounded-lg.border.rounded-b-none {
+  border-radius: 22px 22px 0 0 !important;
+}
+.sw-settings-card .rounded-b-none + [class*="rounded-b-"],
+.sw-settings-card .rounded-b-none + form > [class*="rounded-b-"]:first-child {
+  margin-top: -16px !important;
 }

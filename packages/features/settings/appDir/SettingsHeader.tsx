@@ -46,7 +46,7 @@ export default function Header({
         className={classNames(
           "border-subtle mx-auto flex justify-between",
           borderInShellHeader && "pb-6",
-          borderInShellHeader === undefined && "mb-8 border-b pb-8"
+          borderInShellHeader === undefined && "pb-6"
         )}>
         <div className="flex w-full items-center justify-between gap-2">
           <div className="flex items-center">
@@ -80,7 +80,7 @@ export default function Header({
         </div>
       </header>
       <Suspense fallback={<LoaderIcon className="mx-auto my-5 animate-spin" />}>
-        {borderInShellHeader ? <div className="sw-settings-card">{children}</div> : children}
+        <div className="sw-settings-card">{children}</div>
       </Suspense>
     </div>
   );

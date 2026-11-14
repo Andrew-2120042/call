@@ -107,7 +107,7 @@ export default function HomeView() {
                   count: Math.abs(delta),
                 })
           }
-          testId="home-stat-bookings"
+          testId="home-stat-week"
         />
         <Stat
           label={t("home_waiting_approval")}

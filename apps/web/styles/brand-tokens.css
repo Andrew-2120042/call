@@ -39,7 +39,11 @@
   --cal-brand-text: #121212;
 }
 
-/* Slightly smaller type across the product (everything in rem scales from this). */
-html {
-  font-size: 15px;
+/* Slightly smaller text across the product. Only the font-size scale changes; spacing stays as is. */
+:root {
+  --text-xs: 0.71875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.1875rem;
 }

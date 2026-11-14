@@ -23,7 +23,6 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { BookerLayoutSelector } from "~/settings/components/BookerLayoutSelector";
-import { BookingPageLookCard } from "./components/BookingPageLookCard";
 
 const useBrandColors = (
   currentTheme: string | null,
@@ -150,115 +149,66 @@ const AppearanceView = ({
     },
   });
 
+  const currentAppTheme = (userAppThemeFormMethods.watch("appTheme") ?? "system") as string;
+  const pickAppTheme = (value: "system" | "light" | "dark") => {
+    userAppThemeFormMethods.setValue("appTheme", value);
+    mutation.mutate({ appTheme: value === "system" ? null : value });
+  };
+
   return (
     <SettingsHeader title={t("appearance")} description={t("appearance_description")}>
-      <div className="border-subtle mt-6 flex items-center rounded-t-lg border p-6 text-sm">
-        <div>
-          <p className="text-default text-base font-semibold">{t("app_theme")}</p>
-          <p className="text-default">{t("app_theme_applies_note")}</p>
+      <section className="bg-default border-subtle rounded-[22px] border p-6" data-testid="app-theme-picker">
+        <p className="text-emphasis font-semibold">{t("app_theme")}</p>
+        <p className="text-subtle mt-1 text-sm">{t("sw_app_theme_hint")}</p>
+        <div className="mt-5 grid grid-cols-3 gap-3" role="radiogroup" aria-label={t("app_theme")}>
+          {(
+            [
+              {
+                id: "system",
+                label: t("theme_system"),
+                bg: "linear-gradient(90deg,#f6f5f3 50%,#161616 50%)",
+              },
+              { id: "light", label: t("light"), bg: "#f6f5f3" },
+              { id: "dark", label: t("dark"), bg: "#161616" },
+            ] as const
+          ).map((option) => {
+            const active = currentAppTheme === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                data-testid={`app-theme-${option.id}`}
+                onClick={() => pickAppTheme(option.id)}
+                className={
+                  active
+                    ? "border-emphasis rounded-2xl border-2 p-2 text-left"
+                    : "border-subtle hover:border-emphasis rounded-2xl border-2 p-2 text-left transition"
+                }>
+                <span
+                  className="border-subtle block h-20 rounded-xl border"
+                  style={{ background: option.bg }}
+                  aria-hidden
+                />
+                <span className="text-emphasis mt-2 block px-1 text-sm font-medium">{option.label}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
-      <Form
-        form={userAppThemeFormMethods}
-        handleSubmit={({ appTheme }) => {
-          if (appTheme === "system") appTheme = null;
-          mutation.mutate({
-            appTheme,
-          });
-        }}>
-        <div className="border-subtle flex flex-col justify-between border-x px-6 py-8 sm:flex-row">
-          <ThemeLabel
-            variant="system"
-            value="system"
-            label={t("theme_system")}
-            defaultChecked={user.appTheme === null}
-            register={userAppThemeFormMethods.register}
-            fieldName="appTheme"
-          />
-          <ThemeLabel
-            variant="light"
-            value="light"
-            label={t("light")}
-            defaultChecked={user.appTheme === "light"}
-            register={userAppThemeFormMethods.register}
-            fieldName="appTheme"
-          />
-          <ThemeLabel
-            variant="dark"
-            value="dark"
-            label={t("dark")}
-            defaultChecked={user.appTheme === "dark"}
-            register={userAppThemeFormMethods.register}
-            fieldName="appTheme"
-          />
-        </div>
-        <SectionBottomActions className="mb-6" align="end">
-          <Button
-            loading={mutation.isPending}
-            disabled={isUserAppThemeSubmitting || !isUserAppThemeDirty}
-            type="submit"
-            data-testid="update-app-theme-btn"
-            color="primary">
-            {t("update")}
-          </Button>
-        </SectionBottomActions>
-      </Form>
+      </section>
 
       {isApartOfOrganization ? null : (
         <>
-          <div className="border-subtle mt-6 flex items-center rounded-t-lg border p-6 text-sm">
+          <section className="bg-default border-subtle mt-4 flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
             <div>
-              <p className="text-default text-base font-semibold">{t("theme")}</p>
-              <p className="text-default">{t("theme_applies_note")}</p>
+              <p className="text-emphasis font-semibold">{t("sw_booking_page_look")}</p>
+              <p className="text-subtle mt-1 text-sm">{t("sw_booking_page_look_hint")}</p>
             </div>
-          </div>
-          <Form
-            form={userThemeFormMethods}
-            handleSubmit={({ theme }) => {
-              if (theme === "light" || theme === "dark") {
-                mutation.mutate({
-                  theme,
-                });
-                return;
-              }
-              mutation.mutate({
-                theme: null,
-              });
-            }}>
-            <div className="border-subtle flex flex-col justify-between border-x px-6 py-8 sm:flex-row">
-              <ThemeLabel
-                variant="system"
-                value="system"
-                label={t("theme_system")}
-                defaultChecked={user.theme === null}
-                register={userThemeFormMethods.register}
-              />
-              <ThemeLabel
-                variant="light"
-                value="light"
-                label={t("light")}
-                defaultChecked={user.theme === "light"}
-                register={userThemeFormMethods.register}
-              />
-              <ThemeLabel
-                variant="dark"
-                value="dark"
-                label={t("dark")}
-                defaultChecked={user.theme === "dark"}
-                register={userThemeFormMethods.register}
-              />
-            </div>
-            <SectionBottomActions className="mb-6" align="end">
-              <Button
-                loading={mutation.isPending}
-                disabled={isUserThemeSubmitting || !isUserThemeDirty}
-                type="submit"
-                data-testid="update-theme-btn"
-                color="primary">
-                {t("update")}
-              </Button>
-            </SectionBottomActions>
-          </Form>
+            <a href="/page-editor?tab=design">
+              <Button color="secondary">{t("sw_open_design")}</Button>
+            </a>
+          </section>
 
           <Form
             form={bookerLayoutFormMethods}
@@ -267,9 +217,8 @@ const AppearanceView = ({
               if (layoutError) {
                 showToast(t(layoutError), "error");
                 return;
-              } else {
-                mutation.mutate(values);
               }
+              mutation.mutate(values);
             }}>
             <BookerLayoutSelector
               isDark={selectedThemeIsDark}
@@ -282,110 +231,6 @@ const AppearanceView = ({
             />
           </Form>
 
-          <Form
-            form={brandColorsFormMethods}
-            handleSubmit={(values) => {
-              mutation.mutate(values);
-            }}>
-            <div className="mt-6">
-              <SettingsToggle
-                toggleSwitchAtTheEnd={true}
-                title={t("custom_brand_colors")}
-                description={t("customize_your_brand_colors")}
-                checked={isCustomBrandColorChecked}
-                onCheckedChange={(checked) => {
-                  setIsCustomBranColorChecked(checked);
-                  if (!checked) {
-                    mutation.mutate({
-                      brandColor: DEFAULT_LIGHT_BRAND_COLOR,
-                      darkBrandColor: DEFAULT_DARK_BRAND_COLOR,
-                    });
-                  }
-                }}
-                childrenClassName="lg:ml-0">
-                <div className="border-subtle flex flex-col gap-6 border-x p-6">
-                  <Controller
-                    name="brandColor"
-                    control={brandColorsFormMethods.control}
-                    defaultValue={DEFAULT_BRAND_COLOURS.light}
-                    render={() => (
-                      <div>
-                        <p className="text-default mb-2 block text-sm font-medium">
-                          {t("light_brand_color")}
-                        </p>
-                        <ColorPicker
-                          defaultValue={DEFAULT_BRAND_COLOURS.light}
-                          resetDefaultValue={DEFAULT_LIGHT_BRAND_COLOR}
-                          onChange={(value) => {
-                            if (checkWCAGContrastColor("#ffffff", value)) {
-                              setLightModeError(false);
-                            } else {
-                              setLightModeError(true);
-                            }
-                            brandColorsFormMethods.setValue("brandColor", value, { shouldDirty: true });
-                          }}
-                        />
-                        {lightModeError ? (
-                          <div className="mt-4">
-                            <Alert severity="warning" message={t("light_theme_contrast_error")} />
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-                  />
-
-                  <Controller
-                    name="darkBrandColor"
-                    control={brandColorsFormMethods.control}
-                    defaultValue={DEFAULT_BRAND_COLOURS.dark}
-                    render={() => (
-                      <div className="mt-6 sm:mt-0">
-                        <p className="text-default mb-2 block text-sm font-medium">{t("dark_brand_color")}</p>
-                        <ColorPicker
-                          defaultValue={DEFAULT_BRAND_COLOURS.dark}
-                          resetDefaultValue={DEFAULT_DARK_BRAND_COLOR}
-                          onChange={(value) => {
-                            if (checkWCAGContrastColor("#101010", value)) {
-                              setDarkModeError(false);
-                            } else {
-                              setDarkModeError(true);
-                            }
-                            brandColorsFormMethods.setValue("darkBrandColor", value, { shouldDirty: true });
-                          }}
-                        />
-                        {darkModeError ? (
-                          <div className="mt-4">
-                            <Alert severity="warning" message={t("dark_theme_contrast_error")} />
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-                  />
-                </div>
-                <SectionBottomActions align="end">
-                  <Button
-                    loading={mutation.isPending}
-                    disabled={isBrandColorsFormSubmitting || !isBrandColorsFormDirty}
-                    color="primary"
-                    type="submit">
-                    {t("update")}
-                  </Button>
-                </SectionBottomActions>
-              </SettingsToggle>
-            </div>
-          </Form>
-
-          {/* TODO future PR to preview brandColors */}
-          {/* <Button
-        color="secondary"
-        EndIcon="external-link"
-        className="mt-6"
-        onClick={() => window.open(`${WEBAPP_URL}/${user.username}/${user.eventTypes[0].title}`, "_blank")}>
-        Preview
-      </Button> */}
-
-          <BookingPageLookCard />
-
           <SettingsToggle
             toggleSwitchAtTheEnd={true}
             title={t("disable_cal_branding", { appName: APP_NAME })}
@@ -397,7 +242,7 @@ const AppearanceView = ({
               setHideBrandingValue(checked);
               mutation.mutate({ hideBranding: checked });
             }}
-            switchContainerClassName="mt-6"
+            switchContainerClassName="mt-4"
           />
         </>
       )}

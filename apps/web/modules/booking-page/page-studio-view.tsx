@@ -78,6 +78,11 @@ export default function PageStudio() {
   const query = trpc.viewer.pageLook.editor.useQuery();
 
   const [tab, setTab] = useState<Tab>("content");
+  // Read after mount so the server render and the first client render match.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("tab");
+    if (requested === "header" || requested === "design" || requested === "enhance") setTab(requested);
+  }, []);
   const [sub, setSub] = useState<Sub>(null);
   const [base, setBase] = useState<Draft | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
