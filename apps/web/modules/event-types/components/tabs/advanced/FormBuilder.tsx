@@ -455,7 +455,7 @@ function Options({
   label = "Options",
   value,
 
-  onChange = () => { },
+  onChange = () => {},
   className = "",
   readOnly = false,
   showPrice = false,
@@ -699,7 +699,14 @@ function FieldEditDialog({
                         <CheckboxFieldLabel fieldForm={fieldForm} />
                       ) : (
                         <InputField
-                          {...fieldForm.register("label")}
+                          {...fieldForm.register("label", {
+                            // New questions get their identifier from the label until the owner types one,
+                            // so non-technical owners never get stuck on a blank required "Identifier".
+                            onChange: (e) => {
+                              if (isFieldEditMode || fieldForm.getFieldState("name").isDirty) return;
+                              fieldForm.setValue("name", getFieldIdentifier(e.target.value || ""));
+                            },
+                          })}
                           // System fields have a defaultLabel, so there a label is not required
                           required={
                             !["system", "system-but-optional"].includes(fieldForm.getValues("editable") || "")
@@ -1030,7 +1037,7 @@ function VariantFields({
           const rhfVariantFieldPrefix = `variantsConfig.variants.${variantName}.fields.${index}` as const;
           const fieldTypeConfigVariants =
             fieldTypeConfigVariantsConfig.variants[
-            variantName as keyof typeof fieldTypeConfigVariantsConfig.variants
+              variantName as keyof typeof fieldTypeConfigVariantsConfig.variants
             ];
           const appUiFieldConfig =
             fieldTypeConfigVariants.fieldsMap[f.name as keyof typeof fieldTypeConfigVariants.fieldsMap];
