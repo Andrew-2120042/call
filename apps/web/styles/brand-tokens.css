@@ -28,37 +28,36 @@
 }
 
 .dark {
-  --cal-bg: #151517;
-  --cal-bg-muted: #0f0f11;
-  --cal-bg-subtle: #1c1c1f;
-  --cal-bg-emphasis: #27272b;
-  --cal-bg-inverted: #fafafa;
-  --cal-border: #2c2c31;
-  --cal-border-subtle: #1f1f23;
-  --cal-border-muted: #19191c;
-  --cal-border-emphasis: #4a4a52;
-  --cal-text-emphasis: #fafafa;
-  --cal-text: #d7d7dc;
-  --cal-text-subtle: #8a8a94;
-  --cal-text-muted: #5e5e68;
-  --cal-text-inverted: #0b0b0c;
+  /* Neutral greys matched to the reference dashboard: canvas 3.5%, panel 6.5%, cards 9.5%, lines 13%. */
+  --cal-bg: hsl(0, 0%, 9.5%);
+  --cal-bg-muted: hsl(0, 0%, 6.5%);
+  --cal-bg-subtle: hsl(0, 0%, 13%);
+  --cal-bg-emphasis: hsl(0, 0%, 16%);
+  --cal-bg-inverted: #ffffff;
+  --cal-border: hsl(0, 0%, 16%);
+  --cal-border-subtle: hsl(0, 0%, 13%);
+  --cal-border-muted: hsl(0, 0%, 9.5%);
+  --cal-border-emphasis: hsl(0, 0%, 30%);
+  --cal-text-emphasis: #ffffff;
+  --cal-text: hsl(0, 0%, 85%);
+  --cal-text-subtle: hsl(0, 0%, 52%);
+  --cal-text-muted: hsl(0, 0%, 46%);
+  --cal-text-inverted: #000000;
 
-  --cal-brand: #fafafa;
-  --cal-brand-emphasis: #ffffff;
-  --cal-brand-text: #0b0b0c;
+  --cal-brand: #ffffff;
+  --cal-brand-emphasis: hsl(0, 0%, 90%);
+  --cal-brand-text: #000000;
 
-  --sw-canvas: #070708;
-  --sw-nav-hover: rgba(255, 255, 255, 0.05);
-  --sw-nav-active: #1a1a1d;
-  --sw-nav-text: #8a8a94;
-  --sw-accent: #3b66ff;
+  --sw-canvas: hsl(0, 0%, 3.5%);
+  --sw-nav-hover: hsl(0, 0%, 9.5%);
+  --sw-nav-active: hsl(0, 0%, 11%);
+  --sw-nav-text: hsl(0, 0%, 52%);
+  --sw-accent: #2563eb;
 }
 
-/* Slightly smaller text across the product. Only the font-size scale changes; spacing stays as is. */
-:root {
-  --text-xs: 0.71875rem;
-  --text-sm: 0.8125rem;
-  --text-base: 0.9375rem;
-  --text-lg: 1.0625rem;
-  --text-xl: 1.1875rem;
+/* Type: the standard size scale, set a touch heavier and more open than default. */
+body {
+  font-weight: 450;
+  letter-spacing: 0.015em;
+  text-rendering: optimizeLegibility;
 }

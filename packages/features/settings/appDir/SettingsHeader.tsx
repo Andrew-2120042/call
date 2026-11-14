@@ -63,7 +63,7 @@ export default function Header({
             )}
             <div>
               {title ? (
-                <h1 className="text-emphasis mb-1 text-[26px] font-semibold leading-tight tracking-[-0.02em]">
+                <h1 className="text-emphasis mb-1 text-2xl font-medium">
                   {title}
                 </h1>
               ) : (

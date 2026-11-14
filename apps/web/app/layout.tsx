@@ -3,7 +3,7 @@ import { loadTranslations } from "@calcom/i18n/server";
 import { IconSprites } from "@calcom/ui/components/icon";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { dir } from "i18next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import type React from "react";
 
@@ -13,7 +13,7 @@ import { Providers } from "./providers";
 import { SpeculationRules } from "./SpeculationRules";
 
 // One family everywhere (dashboard and booking pages); weight and tracking carry the hierarchy.
-const brandFont = Geist({
+const brandFont = Inter({
   subsets: ["latin"],
   variable: "--font-brand",
   preload: true,

@@ -31,7 +31,7 @@ export default function HomeView() {
   return (
     <div className="mx-auto max-w-5xl" data-testid="home">
       <header className="border-subtle flex flex-wrap items-center justify-between gap-4 border-b pb-6">
-        <h1 className="text-emphasis text-[30px] font-semibold tracking-[-0.025em]">
+        <h1 className="text-emphasis text-2xl font-medium">
           {t(greetingKey(new Date().getHours()), { name: firstName })}
         </h1>
         <button
@@ -45,7 +45,7 @@ export default function HomeView() {
         </button>
       </header>
 
-      <h2 className="text-emphasis mt-10 text-[22px] font-semibold tracking-[-0.02em]">
+      <h2 className="text-emphasis mt-10 text-lg font-medium">
         {t("home_last_week")}
       </h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -77,7 +77,7 @@ export default function HomeView() {
         />
       </div>
 
-      <section className="bg-default border-subtle mt-4 rounded-3xl border p-5">
+      <section className="bg-default border-subtle mt-4 rounded-2xl border p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
           <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
@@ -122,9 +122,9 @@ export default function HomeView() {
 
 function Stat(props: { label: string; value: number; note: string; href?: string; testId: string }) {
   const body = (
-    <div className="bg-default border-subtle h-full rounded-3xl border p-5" data-testid={props.testId}>
+    <div className="bg-default border-subtle h-full rounded-2xl border p-5" data-testid={props.testId}>
       <p className="text-subtle text-sm">{props.label}</p>
-      <p className="text-emphasis mt-2 text-[32px] font-semibold leading-none tracking-[-0.02em]">
+      <p className="text-emphasis mt-2 text-3xl font-normal leading-none">
         {props.value}
       </p>
       <p className="text-subtle mt-2 text-xs">{props.note}</p>
