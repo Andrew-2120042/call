@@ -17,5 +17,6 @@ export const useBrandColors = ({
   });
 
   useCalcomTheme(brandTheme);
-  useTheme(theme);
+  // Booking pages are dark unless the owner picks light or system in Appearance (null = not chosen).
+  useTheme(theme === null ? "dark" : theme);
 };

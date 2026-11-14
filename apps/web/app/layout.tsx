@@ -3,7 +3,7 @@ import { loadTranslations } from "@calcom/i18n/server";
 import { IconSprites } from "@calcom/ui/components/icon";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { dir } from "i18next";
-import { Albert_Sans } from "next/font/google";
+import { Geist } from "next/font/google";
 import { cookies, headers } from "next/headers";
 import type React from "react";
 
@@ -13,7 +13,7 @@ import { Providers } from "./providers";
 import { SpeculationRules } from "./SpeculationRules";
 
 // One family everywhere (dashboard and booking pages); weight and tracking carry the hierarchy.
-const brandFont = Albert_Sans({
+const brandFont = Geist({
   subsets: ["latin"],
   variable: "--font-brand",
   preload: true,
@@ -119,7 +119,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         `}</style>
       </head>
       <body
-        className="dark:bg-default bg-subtle antialiased"
+        className="bg-cal-muted antialiased"
         style={
           isEmbed
             ? {

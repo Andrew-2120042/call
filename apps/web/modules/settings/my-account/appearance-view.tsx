@@ -56,11 +56,13 @@ function ThemeTiles(props: {
   label: string;
   testIdPrefix: string;
   labels: Record<ThemeChoice, string>;
+  options?: readonly ThemeChoice[];
   onPick: (value: ThemeChoice) => void;
 }) {
+  const options = props.options ?? (["system", "light", "dark"] as const);
   return (
-    <div className="mt-5 grid grid-cols-3 gap-3" role="radiogroup" aria-label={props.label}>
-      {(["system", "light", "dark"] as const).map((id) => {
+    <div className="mt-5 grid max-w-[520px] grid-cols-3 gap-3" role="radiogroup" aria-label={props.label}>
+      {options.map((id) => {
         const active = props.value === id;
         return (
           <button
@@ -105,8 +107,8 @@ const AppearanceView = ({
     user?.brandColor !== DEFAULT_LIGHT_BRAND_COLOR || user?.darkBrandColor !== DEFAULT_DARK_BRAND_COLOR
   );
   const [hideBrandingValue, setHideBrandingValue] = useState(user?.hideBranding ?? false);
-  useTheme(user?.appTheme);
-  useBrandColors(user?.appTheme ?? null, {
+  useTheme(user?.appTheme ?? "dark");
+  useBrandColors(user?.appTheme ?? "dark", {
     brandColor: user?.brandColor,
     darkBrandColor: user?.darkBrandColor,
   });
@@ -193,16 +195,19 @@ const AppearanceView = ({
     },
   });
 
-  const currentBookingTheme = (userThemeFormMethods.watch("theme") || "system") as ThemeChoice;
+  // Booking pages are dark until the owner chooses; "system" is stored explicitly.
+  const currentBookingTheme = (userThemeFormMethods.watch("theme") || "dark") as ThemeChoice;
   const pickBookingTheme = (value: ThemeChoice) => {
-    userThemeFormMethods.setValue("theme", value === "system" ? null : value);
-    mutation.mutate({ theme: value === "system" ? null : value });
+    userThemeFormMethods.setValue("theme", value);
+    mutation.mutate({ theme: value });
   };
 
-  const currentAppTheme = (userAppThemeFormMethods.watch("appTheme") ?? "system") as ThemeChoice;
+  // The dashboard is dark unless the owner picks light; an unset value means dark.
+  const currentAppTheme: ThemeChoice =
+    userAppThemeFormMethods.watch("appTheme") === "light" ? "light" : "dark";
   const pickAppTheme = (value: ThemeChoice) => {
     userAppThemeFormMethods.setValue("appTheme", value);
-    mutation.mutate({ appTheme: value === "system" ? null : value });
+    mutation.mutate({ appTheme: value });
   };
 
   return (
@@ -214,6 +219,7 @@ const AppearanceView = ({
           value={currentAppTheme}
           label={t("app_theme")}
           testIdPrefix="app-theme"
+          options={["dark", "light"]}
           onPick={pickAppTheme}
           labels={{ system: t("theme_system"), light: t("light"), dark: t("dark") }}
         />
@@ -230,6 +236,7 @@ const AppearanceView = ({
               value={currentBookingTheme}
               label={t("theme")}
               testIdPrefix="booking-theme"
+              options={["dark", "light", "system"]}
               onPick={pickBookingTheme}
               labels={{ system: t("theme_system"), light: t("light"), dark: t("dark") }}
             />

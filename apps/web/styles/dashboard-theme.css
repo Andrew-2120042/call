@@ -1,23 +1,31 @@
-/* Owner dashboard shell: quiet grey sidebar, off-white canvas, white cards. Applied through data-sw-*
-   attributes on the shell so Cal's components stay untouched. */
+/* Owner dashboard shell: a quiet rail on the canvas and a rounded work panel beside it. Applied through
+   data-sw-* attributes on the shell so the engine's components stay untouched. Colours come from
+   brand-tokens.css. */
+
+body:has([data-sw-main]),
+body:has([data-sw-settings-nav]) {
+  background: var(--sw-canvas) !important;
+}
 
 [data-sw-sidebar] {
-  background: #efeeec !important;
+  background: transparent !important;
   border-color: transparent !important;
 }
 
-.dark [data-sw-sidebar] {
-  background: #0c0c0c !important;
-}
-
 [data-sw-sidebar] nav a,
-[data-sw-sidebar] nav button {
-  border-radius: 999px !important;
+[data-sw-sidebar] nav button,
+[data-sw-sidebar] > div:last-child a,
+[data-sw-sidebar] > div:last-child button {
+  border-radius: 10px !important;
+  color: var(--sw-nav-text);
+  font-weight: 500;
 }
 
 @media (min-width: 1024px) {
   [data-sw-sidebar] nav a,
-  [data-sw-sidebar] nav button {
+  [data-sw-sidebar] nav button,
+  [data-sw-sidebar] > div:last-child a,
+  [data-sw-sidebar] > div:last-child button {
     font-size: 13.5px;
     padding: 7px 12px !important;
   }
@@ -29,52 +37,30 @@
 }
 
 [data-sw-sidebar] nav a:hover,
-[data-sw-sidebar] nav button:hover {
-  background: rgba(18, 18, 18, 0.05) !important;
+[data-sw-sidebar] nav button:hover,
+[data-sw-sidebar] > div:last-child a:hover,
+[data-sw-sidebar] > div:last-child button:hover {
+  background: var(--sw-nav-hover) !important;
+  color: var(--cal-text-emphasis);
 }
 
 [data-sw-sidebar] nav a[aria-current="page"] {
-  background: #ffffff !important;
-  color: #121212 !important;
-  font-weight: 600;
-  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.06);
-}
-
-.dark [data-sw-sidebar] nav a:hover,
-.dark [data-sw-sidebar] nav button:hover {
-  background: rgba(255, 255, 255, 0.06) !important;
-}
-
-.dark [data-sw-sidebar] nav a[aria-current="page"] {
-  background: #242424 !important;
-  color: #ffffff !important;
+  background: var(--sw-nav-active) !important;
+  color: var(--cal-text-emphasis) !important;
 }
 
 [data-sw-main] {
   background: var(--cal-bg-muted) !important;
 }
 
-/* Curves: the work area is a rounded panel sitting beside the sidebar. */
+/* The work area is a rounded panel sitting beside the rail. */
 @media (min-width: 768px) {
-  body:has([data-sw-main]) {
-    background: #efeeec !important;
-  }
-
-  .dark body:has([data-sw-main]),
-  body.dark:has([data-sw-main]) {
-    background: #0c0c0c !important;
-  }
-
   [data-sw-main] {
     margin: 10px 10px 10px 0;
-    border: 1px solid rgba(18, 18, 18, 0.06);
-    border-radius: 22px;
+    border: 1px solid var(--cal-border-subtle);
+    border-radius: 24px;
     min-height: calc(100dvh - 20px);
     overflow: clip;
-  }
-
-  .dark [data-sw-main] {
-    border-color: rgba(255, 255, 255, 0.07);
   }
 }
 
@@ -87,7 +73,7 @@
 /* The owner's brand colour styles their booking pages; the dashboard always uses ours. */
 [data-sw-main],
 [data-sw-sidebar] {
-  --cal-brand: #121212;
+  --cal-brand: #0b0b0c;
   --cal-brand-emphasis: #000000;
   --cal-brand-text: #ffffff;
   --cal-brand-accent: #ffffff;
@@ -97,8 +83,19 @@
 .dark [data-sw-sidebar] {
   --cal-brand: #fafafa;
   --cal-brand-emphasis: #ffffff;
-  --cal-brand-text: #121212;
-  --cal-brand-accent: #121212;
+  --cal-brand-text: #0b0b0c;
+  --cal-brand-accent: #0b0b0c;
+}
+
+/* Switches use the accent when on, like the rest of the controls' "selected" state. */
+[data-sw-main] button[role="switch"][data-state="checked"],
+[data-sw-main] button[role="switch"][aria-checked="true"] {
+  background-color: var(--sw-accent) !important;
+}
+
+[data-sw-main] button[role="switch"][data-state="checked"] > span,
+[data-sw-main] button[role="switch"][aria-checked="true"] > span {
+  background-color: #ffffff !important;
 }
 
 /* Page headers sit on the same colour as the work area (no band behind titles). */
@@ -128,15 +125,6 @@
   }
 }
 
-/* Bottom sidebar links match the main menu. */
-@media (min-width: 1024px) {
-  [data-sw-sidebar] > div:last-child a,
-  [data-sw-sidebar] > div:last-child button {
-    font-size: 13.5px;
-    border-radius: 999px !important;
-  }
-}
-
 /* Bookings and other data lists: one rounded card instead of a framed square table. */
 [data-sw-main] div.grid[data-testid$="-bookings"] {
   background: var(--cal-bg) !important;
@@ -160,38 +148,30 @@
   background: var(--cal-bg-muted);
 }
 
-/* Settings menu: same look as the main sidebar. */
+/* Settings menu: same look as the main rail. */
 [data-sw-settings-nav] {
-  background: #efeeec !important;
+  background: transparent !important;
   padding-left: 12px !important;
   padding-right: 12px !important;
 }
 
-.dark [data-sw-settings-nav] {
-  background: #0c0c0c !important;
-}
-
 [data-sw-settings-nav] a {
   width: 100% !important;
-  border-radius: 999px !important;
+  border-radius: 10px !important;
   padding: 7px 12px !important;
   font-size: 13.5px !important;
+  color: var(--sw-nav-text);
 }
 
 [data-sw-settings-nav] a:hover {
-  background: rgba(18, 18, 18, 0.05) !important;
+  background: var(--sw-nav-hover) !important;
+  color: var(--cal-text-emphasis);
 }
 
 [data-sw-settings-nav] a[aria-current="page"] {
-  background: #ffffff !important;
-  color: #121212 !important;
-  font-weight: 600 !important;
-  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.06);
-}
-
-.dark [data-sw-settings-nav] a[aria-current="page"] {
-  background: #242424 !important;
-  color: #ffffff !important;
+  background: var(--sw-nav-active) !important;
+  color: var(--cal-text-emphasis) !important;
+  font-weight: 500 !important;
 }
 
 [data-sw-settings-nav] > div > div > p,
@@ -257,4 +237,16 @@
 .sw-settings-card .rounded-b-none + [class*="rounded-b-"],
 .sw-settings-card .rounded-b-none + form > [class*="rounded-b-"]:first-child {
   margin-top: -16px !important;
+}
+
+/* The setup card's action is a real button, not a rail link. */
+[data-sw-sidebar] [data-testid="sidebar-setup"] {
+  border: 1px solid var(--cal-border-subtle);
+}
+
+[data-sw-sidebar] [data-testid="sidebar-setup"] a {
+  background: var(--cal-bg-inverted) !important;
+  color: var(--cal-text-inverted) !important;
+  border-radius: 999px !important;
+  padding: 8px 16px !important;
 }

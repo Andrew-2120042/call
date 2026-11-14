@@ -1,42 +1,57 @@
-/* Slotwise surface system: neutral, light-first. Near-black ink on white cards over a warm off-white
-   canvas; black is the only action colour. Loaded after Cal's tokens so every component picks it up. */
+/* Slotwise surface system. Dark-first: a near-black canvas, a slightly lifted work panel, soft dark cards
+   and white pill actions. Light keeps the same structure on neutral greys. Loaded after the engine's
+   tokens so every component picks it up. */
 
 :root {
   --cal-bg: #ffffff;
-  --cal-bg-muted: #f7f7f5;
-  --cal-bg-subtle: #f1f0ee;
-  --cal-bg-emphasis: #e6e5e2;
-  --cal-border: #dddcd8;
-  --cal-border-subtle: #ebeae7;
-  --cal-border-muted: #f1f0ee;
-  --cal-border-emphasis: #a8a7a2;
-  --cal-text-emphasis: #121212;
-  --cal-text: #2b2b29;
-  --cal-text-subtle: #6b6a66;
-  --cal-text-muted: #9b9a95;
+  --cal-bg-muted: #f7f7f8;
+  --cal-bg-subtle: #f0f0f2;
+  --cal-bg-emphasis: #e4e4e7;
+  --cal-border: #d9d9de;
+  --cal-border-subtle: #e9e9ec;
+  --cal-border-muted: #f0f0f2;
+  --cal-border-emphasis: #a1a1aa;
+  --cal-text-emphasis: #0b0b0c;
+  --cal-text: #27272a;
+  --cal-text-subtle: #6b6b76;
+  --cal-text-muted: #9a9aa5;
 
-  --cal-brand: #121212;
+  --cal-brand: #0b0b0c;
   --cal-brand-emphasis: #000000;
   --cal-brand-text: #ffffff;
+
+  --sw-canvas: #ececef;
+  --sw-nav-hover: rgba(11, 11, 12, 0.05);
+  --sw-nav-active: #ffffff;
+  --sw-nav-text: #5f5f6a;
+  --sw-accent: #2f5bff;
 }
 
 .dark {
-  --cal-bg: #171717;
-  --cal-bg-muted: #101010;
-  --cal-bg-subtle: #1f1f1f;
-  --cal-bg-emphasis: #2a2a2a;
-  --cal-border: #3a3a3a;
-  --cal-border-subtle: #262626;
-  --cal-border-muted: #1f1f1f;
-  --cal-border-emphasis: #5a5a5a;
+  --cal-bg: #151517;
+  --cal-bg-muted: #0f0f11;
+  --cal-bg-subtle: #1c1c1f;
+  --cal-bg-emphasis: #27272b;
+  --cal-bg-inverted: #fafafa;
+  --cal-border: #2c2c31;
+  --cal-border-subtle: #1f1f23;
+  --cal-border-muted: #19191c;
+  --cal-border-emphasis: #4a4a52;
   --cal-text-emphasis: #fafafa;
-  --cal-text: #e5e5e5;
-  --cal-text-subtle: #a3a3a3;
-  --cal-text-muted: #737373;
+  --cal-text: #d7d7dc;
+  --cal-text-subtle: #8a8a94;
+  --cal-text-muted: #5e5e68;
+  --cal-text-inverted: #0b0b0c;
 
   --cal-brand: #fafafa;
   --cal-brand-emphasis: #ffffff;
-  --cal-brand-text: #121212;
+  --cal-brand-text: #0b0b0c;
+
+  --sw-canvas: #070708;
+  --sw-nav-hover: rgba(255, 255, 255, 0.05);
+  --sw-nav-active: #1a1a1d;
+  --sw-nav-text: #8a8a94;
+  --sw-accent: #3b66ff;
 }
 
 /* Slightly smaller text across the product. Only the font-size scale changes; spacing stays as is. */

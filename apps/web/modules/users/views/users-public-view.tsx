@@ -27,7 +27,7 @@ export function UserPage(props: PageProps) {
   const { t } = useLocale();
 
   const [user] = users; //To be used when we only have a single user, not dynamic group
-  useTheme(profile.theme);
+  useTheme(profile.theme ?? "dark");
 
   const isBioEmpty = !user.bio || !user.bio.replace("<p><br></p>", "").length;
 
@@ -57,7 +57,7 @@ export function UserPage(props: PageProps) {
   return (
     <div
       className={classNames(
-        "bg-muted text-default min-h-[100dvh] px-4 pb-14 pt-12",
+        "bg-cal-muted text-default min-h-[100dvh] px-4 pb-14 pt-12",
         isEmbed && "min-h-0 rounded-md",
         !shouldAlignCentrally && "[&_main]:ml-0"
       )}>

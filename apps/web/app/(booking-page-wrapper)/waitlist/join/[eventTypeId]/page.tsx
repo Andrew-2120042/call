@@ -132,7 +132,7 @@ export default function JoinWaitlistPage() {
           </select>
           <Icon
             name="chevron-down"
-            className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6b6a66]"
+            className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle"
           />
         </div>
       );
@@ -142,7 +142,7 @@ export default function JoinWaitlistPage() {
         <input
           id={id}
           type="checkbox"
-          className="h-5 w-5 rounded border-[#bdbcb7] accent-[#121212]"
+          className="h-5 w-5 rounded border-emphasis accent-[var(--cal-text-emphasis)]"
           checked={!!value}
           onChange={(e) => set(e.target.checked)}
         />
@@ -222,7 +222,7 @@ export default function JoinWaitlistPage() {
         title={t("waitlist_join_title", { title: options.title, ...RAW })}
         subtitle={
           <>
-            {options.hostName && <span className="block font-medium text-[#121212]">{options.hostName}</span>}
+            {options.hostName && <span className="block font-medium text-emphasis">{options.hostName}</span>}
             {t("waitlist_join_help")}
           </>
         }
@@ -231,7 +231,7 @@ export default function JoinWaitlistPage() {
       <section className="mt-7">
         <div className="mb-2.5 flex items-baseline justify-between">
           <span className="text-[14px] font-semibold">{t("date")}</span>
-          <span className="text-[12.5px] text-[#9b9a95]">{dayjs(date).format("MMMM YYYY")}</span>
+          <span className="text-[12.5px] text-muted">{dayjs(date).format("MMMM YYYY")}</span>
         </div>
         <div className="no-scrollbar -mx-1 flex overflow-x-auto px-1 pb-1" style={{ columnGap: 8 }}>
           {days.map((day) => {
@@ -247,13 +247,12 @@ export default function JoinWaitlistPage() {
                 className={classNames(
                   "flex flex-none flex-col items-center border transition",
                   active
-                    ? "border-[#121212] bg-[#121212] text-white"
-                    : "border-[#e4e3df] hover:border-[#bdbcb7]"
+                    ? "border-emphasis bg-inverted text-inverted"
+                    : "border-default hover:border-emphasis"
                 )}
                 style={{ width: 56, padding: "9px 0 10px", borderRadius: 16 }}
                 data-testid="waitlist-day">
-                <span
-                  className={classNames("text-[11px] font-semibold uppercase", !active && "text-[#9b9a95]")}>
+                <span className={classNames("text-[11px] font-semibold uppercase", !active && "text-muted")}>
                   {day.format("ddd")}
                 </span>
                 <span className="mt-0.5 text-[17px] font-bold">{day.format("D")}</span>
@@ -266,7 +265,7 @@ export default function JoinWaitlistPage() {
       <section className="mt-6">
         <div className="mb-2.5 text-[14px] font-semibold">{t("waitlist_join_pick_time")}</div>
         {options.takenTimes.length === 0 ? (
-          <p className="bg-[#f6f5f2] px-4 py-3.5 text-[13.5px] text-[#6b6a66]" style={{ borderRadius: 14 }}>
+          <p className="bg-cal-muted px-4 py-3.5 text-[13.5px] text-subtle" style={{ borderRadius: 14 }}>
             {t("waitlist_join_no_taken")}
           </p>
         ) : (
@@ -282,8 +281,8 @@ export default function JoinWaitlistPage() {
                   className={classNames(
                     "border text-[14px] font-semibold transition",
                     active
-                      ? "border-[#121212] bg-[#121212] text-white"
-                      : "border-[#e4e3df] hover:border-[#bdbcb7]"
+                      ? "border-emphasis bg-inverted text-inverted"
+                      : "border-default hover:border-emphasis"
                   )}
                   style={{
                     height: 42,
@@ -301,14 +300,14 @@ export default function JoinWaitlistPage() {
 
       {selected && (
         <form
-          className="mt-7 flex flex-col border-t border-[#efeeeb] pt-6"
+          className="mt-7 flex flex-col border-t border-subtle pt-6"
           style={{ rowGap: 18 }}
           onSubmit={submit}>
           {options.fields.map((field) => (
             <div key={field.name}>
               <label htmlFor={`wl-${field.name}`} className="mb-1.5 block text-[14px] font-semibold">
                 {t(field.label)}
-                {!field.required && <span className="font-normal text-[#9b9a95]"> ({t("optional")})</span>}
+                {!field.required && <span className="font-normal text-muted"> ({t("optional")})</span>}
               </label>
               {fieldInput(field)}
             </div>
