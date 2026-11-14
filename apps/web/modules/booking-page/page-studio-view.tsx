@@ -285,17 +285,17 @@ export default function PageStudio() {
 
       <div className="relative flex min-h-0 flex-1 pb-[64px] md:pb-0">
         {/* Rail: round buttons with labels (a bottom tab bar on phones) */}
-        <nav className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[76px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-4 md:border-0 md:bg-transparent md:p-0">
+        <nav className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[112px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-6 md:border-0 md:bg-transparent md:p-0">
           {RAIL.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => go(item.id)}
               aria-current={tab === item.id ? "page" : undefined}
-              className="flex flex-col items-center gap-1 text-[11px] font-medium">
+              className="flex flex-col items-center gap-1.5 text-[11px] font-medium md:text-[12.5px]">
               <span
                 className={classNames(
-                  "grid h-10 w-10 place-items-center rounded-full transition md:h-11 md:w-11",
+                  "grid h-10 w-10 place-items-center rounded-full transition md:h-12 md:w-12",
                   tab === item.id
                     ? "bg-[#121212] text-white ring-2 ring-[#121212] ring-offset-2 ring-offset-[#f6f5f2]"
                     : "bg-[#ecebe8] text-[#121212] hover:bg-[#e3e2de]"
@@ -309,16 +309,16 @@ export default function PageStudio() {
 
         {/* Floating panel */}
         <div
-          className="flex min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white md:mt-3"
+          className="flex min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white md:mt-5"
           // Inline so the panel keeps its size even if a browser holds an older stylesheet during dev reloads.
           style={{
-            maxWidth: 540,
-            borderTopLeftRadius: 26,
-            borderTopRightRadius: 26,
+            maxWidth: 600,
+            borderTopLeftRadius: 28,
+            borderTopRightRadius: 28,
             boxShadow: "0 0 0 1px rgba(0,0,0,.04), 0 10px 40px -20px rgba(0,0,0,.25)",
           }}>
           {/* Title and actions share one fixed row, so editing never shifts the content below. */}
-          <div className="flex h-[68px] flex-none items-center justify-between gap-3 border-b border-[#efeeeb] px-5 md:px-8">
+          <div className="flex h-[72px] flex-none items-center justify-between gap-3 px-5 md:h-[92px] md:px-10 md:pt-3">
             <div className="flex min-w-0 items-center gap-2.5">
               {sub && (
                 <button
@@ -329,7 +329,7 @@ export default function PageStudio() {
                   <Icon name="chevron-left" className="h-4 w-4" />
                 </button>
               )}
-              <h2 className="truncate text-[20px] font-bold tracking-tight">{panelTitle}</h2>
+              <h2 className="truncate text-[20px] font-bold tracking-tight md:text-[24px]">{panelTitle}</h2>
             </div>
             <div className="flex flex-none items-center gap-1.5">
               {dirty ? (
@@ -374,50 +374,50 @@ export default function PageStudio() {
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-10 pt-5 text-[14px] md:px-8">
+          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-12 pt-1 text-[14px] md:px-10">
             {tab === "content" && (
               <>
-                <div className="flex items-center gap-3.5">
-                  <Avatar size="lg" imageSrc={data.avatarUrl} alt={data.name} />
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-[15px] font-semibold">
+                <div className="flex items-start gap-5">
+                  <Avatar size="xl" imageSrc={data.avatarUrl} alt={data.name} />
+                  <div className="min-w-0 flex-1 pt-2">
+                    <div className="truncate text-[17px] font-semibold">
                       {draft.name || t("studio_add_name")}
                     </div>
-                    <div className="truncate text-[13px] text-[#6b6a66]">
+                    <div className="mt-1 line-clamp-2 text-[14px] leading-snug text-[#6b6a66]">
                       {draft.bio || t("studio_add_bio")}
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => go("header")}
-                    className="flex shrink-0 items-center gap-1.5 rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]">
+                    className="mt-2 flex shrink-0 items-center gap-1.5 rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]">
                     <Icon name="pencil" className="h-3.5 w-3.5" />
                     {t("edit")}
                   </button>
                 </div>
 
-                <div className="mt-6 flex gap-6 border-b border-[#efeeeb]">
-                  <span className="-mb-px border-b-2 border-[#121212] pb-2.5 text-[14px] font-semibold">
+                <div className="mt-8 flex gap-6 border-b border-[#efeeeb]">
+                  <span className="-mb-px border-b-[3px] border-[#121212] px-1 pb-3 text-[15px] font-semibold">
                     {t("event_types_page_title")}
                   </span>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-2.5">
+                <div className="mt-7 grid grid-cols-2 gap-3">
                   <Link
                     href="/assistant"
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 py-2.5 text-[13.5px] font-semibold hover:bg-[#e3e2de]">
+                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 text-[15px] font-semibold hover:bg-[#e3e2de]">
                     <Icon name="message-circle" className="h-4 w-4" />
                     {t("studio_ask_assistant")}
                   </Link>
                   <Link
                     href="/event-types?dialog=new&eventPage="
-                    className="flex items-center justify-center gap-2 rounded-full bg-[#121212] px-4 py-2.5 text-[13.5px] font-semibold text-white hover:opacity-90">
+                    className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#121212] px-4 text-[15px] font-semibold text-white hover:opacity-90">
                     <Icon name="plus" className="h-4 w-4" />
                     {t("studio_add_service")}
                   </Link>
                 </div>
 
-                <ul className="mt-4 space-y-2.5" data-testid="page-editor-services">
+                <ul className="mt-7 flex flex-col gap-3.5" data-testid="page-editor-services">
                   {orderedServices.length === 0 && (
                     <li className="rounded-2xl border border-dashed border-[#e4e3df] p-6 text-center text-[13px] text-[#6b6a66]">
                       {t("page_editor_no_services")}
@@ -428,8 +428,8 @@ export default function PageStudio() {
                     return (
                       <li
                         key={service.id}
-                        className="group flex h-[64px] items-center gap-3 rounded-2xl border border-[#efeeeb] bg-white px-3 shadow-[0_1px_2px_rgba(0,0,0,.03)]">
-                        <div className="flex w-4 flex-col opacity-40 transition group-hover:opacity-100">
+                        className="group relative flex min-h-[80px] items-center gap-4 rounded-[24px] border border-[#ebeae6] bg-white py-4 pl-6 pr-4 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]">
+                        <div className="absolute left-1 top-1/2 flex -translate-y-1/2 flex-col text-[#9b9a95] opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
                           <button
                             type="button"
                             aria-label={t("page_editor_move_up", { title: service.title })}
@@ -447,13 +447,13 @@ export default function PageStudio() {
                             <Icon name="chevron-down" className="h-3.5 w-3.5" />
                           </button>
                         </div>
-                        <span className="grid h-9 w-9 flex-none place-items-center rounded-xl border border-[#efeeeb] bg-[#f6f5f2]">
-                          <Icon name="clock" className="h-4 w-4" />
+                        <span className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[#f3f2ef]">
+                          <Icon name="clock" className="h-[18px] w-[18px]" />
                         </span>
                         <div
                           className={classNames("min-w-0 flex-1 transition-opacity", hidden && "opacity-45")}>
-                          <div className="truncate text-[14px] font-medium">{service.title}</div>
-                          <div className="truncate text-[12px] text-[#6b6a66]">
+                          <div className="truncate text-[15px] font-semibold">{service.title}</div>
+                          <div className="mt-0.5 truncate text-[13px] text-[#6b6a66]">
                             {t("service_minutes", { count: service.length })} ·{" "}
                             {service.requiresConfirmation
                               ? t("service_kind_request_long")
