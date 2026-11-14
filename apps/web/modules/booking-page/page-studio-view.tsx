@@ -308,7 +308,15 @@ export default function PageStudio() {
         </nav>
 
         {/* Floating panel */}
-        <div className="flex min-h-0 w-full min-w-0 max-w-[540px] flex-col overflow-hidden rounded-t-[26px] bg-white shadow-[0_0_0_1px_rgba(0,0,0,.04),0_10px_40px_-20px_rgba(0,0,0,.25)] md:mt-3">
+        <div
+          className="flex min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white md:mt-3"
+          // Inline so the panel keeps its size even if a browser holds an older stylesheet during dev reloads.
+          style={{
+            maxWidth: 540,
+            borderTopLeftRadius: 26,
+            borderTopRightRadius: 26,
+            boxShadow: "0 0 0 1px rgba(0,0,0,.04), 0 10px 40px -20px rgba(0,0,0,.25)",
+          }}>
           {/* Title and actions share one fixed row, so editing never shifts the content below. */}
           <div className="flex h-[68px] flex-none items-center justify-between gap-3 border-b border-[#efeeeb] px-5 md:px-8">
             <div className="flex min-w-0 items-center gap-2.5">
