@@ -3,6 +3,8 @@ import type { TFunction, i18n } from "i18next";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
+import { APP_NAME } from "@calcom/lib/constants";
+
 import { useAtomsContext } from "@calcom/atoms/hooks/useAtomsContext";
 import { AppRouterI18nContext } from "@calcom/web/app/AppRouterI18nProvider";
 import { CustomI18nContext } from "@calcom/web/app/CustomI18nProvider";
@@ -50,6 +52,8 @@ export const useLocale = (): useLocaleReturnType => {
             [ns]: translations,
           },
         },
+        // Same as the server instance: translations say {{appName}} instead of the product name.
+        interpolation: { defaultVariables: { appName: APP_NAME } },
       });
 
       serverI18nInstances.set(instanceKey, {
