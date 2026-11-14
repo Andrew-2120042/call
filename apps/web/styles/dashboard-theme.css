@@ -12,15 +12,19 @@
 
 [data-sw-sidebar] nav a,
 [data-sw-sidebar] nav button {
-  border-radius: 10px !important;
+  border-radius: 999px !important;
 }
 
 @media (min-width: 1024px) {
   [data-sw-sidebar] nav a,
   [data-sw-sidebar] nav button {
-    font-size: 15px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    font-size: 13.5px;
+    padding: 7px 12px !important;
+  }
+
+  [data-sw-sidebar] nav svg {
+    width: 16px !important;
+    height: 16px !important;
   }
 }
 
@@ -30,9 +34,10 @@
 }
 
 [data-sw-sidebar] nav a[aria-current="page"] {
-  background: #e2e1de !important;
+  background: #ffffff !important;
   color: #121212 !important;
   font-weight: 600;
+  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.06);
 }
 
 .dark [data-sw-sidebar] nav a:hover,
@@ -47,6 +52,30 @@
 
 [data-sw-main] {
   background: var(--cal-bg-muted) !important;
+}
+
+/* Curves: the work area is a rounded panel sitting beside the sidebar. */
+@media (min-width: 768px) {
+  body:has([data-sw-main]) {
+    background: #efeeec !important;
+  }
+
+  .dark body:has([data-sw-main]),
+  body.dark:has([data-sw-main]) {
+    background: #0c0c0c !important;
+  }
+
+  [data-sw-main] {
+    margin: 10px 10px 10px 0;
+    border: 1px solid rgba(18, 18, 18, 0.06);
+    border-radius: 22px;
+    min-height: calc(100dvh - 20px);
+    overflow: clip;
+  }
+
+  .dark [data-sw-main] {
+    border-color: rgba(255, 255, 255, 0.07);
+  }
 }
 
 [data-sw-main] h1,
@@ -96,5 +125,14 @@
 @media (prefers-reduced-motion: reduce) {
   .sw-tab-enter {
     animation: none;
+  }
+}
+
+/* Bottom sidebar links match the main menu. */
+@media (min-width: 1024px) {
+  [data-sw-sidebar] > div:last-child a,
+  [data-sw-sidebar] > div:last-child button {
+    font-size: 13.5px;
+    border-radius: 999px !important;
   }
 }
