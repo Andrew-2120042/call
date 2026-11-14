@@ -2,7 +2,14 @@
 
 import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button } from "@calcom/ui/components/button";
+import {
+  BookingSummary,
+  ClientHeader,
+  ClientPageShell,
+  LoadingCard,
+  Notice,
+  PrimaryButton,
+} from "@calcom/web/modules/client-pages/ClientPage";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -21,9 +28,6 @@ type State =
   | { kind: "error"; message: string }
   | { kind: "ready"; data: Confirmation }
   | { kind: "confirmed"; data: Confirmation };
-
-const formatInZone = (iso: string, timeZone: string) =>
-  `${dayjs(iso).tz(timeZone).format("dddd, MMMM D, YYYY h:mma")} (${timeZone})`;
 
 // React escapes text itself; i18next escaping on top would print entities like "&#x2F;".
 const RAW = { interpolation: { escapeValue: false } };
@@ -81,44 +85,64 @@ export default function ConfirmAttendancePage() {
       ? t("attendance_confirm_booking_cancelled")
       : t("attendance_confirm_deadline_passed");
 
+  if (state.kind === "loading") {
+    return (
+      <ClientPageShell testId="attendance-confirm-page">
+        <LoadingCard />
+      </ClientPageShell>
+    );
+  }
+
+  if (state.kind === "error") {
+    return (
+      <ClientPageShell testId="attendance-confirm-page">
+        <ClientHeader
+          icon="circle-alert"
+          tone="warning"
+          title={t("attendance_confirm_title")}
+          subtitle={state.message}
+        />
+      </ClientPageShell>
+    );
+  }
+
+  const { data } = state;
+  const confirmed = state.kind === "confirmed";
+  const canConfirm = !confirmed && data.status === "REQUESTED" && new Date(data.deadline) > new Date();
   return (
-    <main className="flex min-h-screen items-center justify-center bg-subtle px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-subtle bg-default p-8 text-center shadow-sm">
-        {state.kind === "loading" && <p className="text-subtle">{t("loading")}</p>}
-        {state.kind === "error" && (
-          <>
-            <h1 className="text-emphasis text-xl font-semibold">{t("attendance_confirm_title")}</h1>
-            <p className="text-subtle mt-2">{state.message}</p>
-          </>
-        )}
-        {(state.kind === "ready" || state.kind === "confirmed") && (
-          <>
-            <h1 className="text-emphasis text-xl font-semibold">
-              {state.kind === "confirmed"
-                ? t("attendance_confirmed_title")
-                : t("attendee_confirmation_request_title")}
-            </h1>
-            <p className="text-emphasis mt-4 font-medium">{state.data.eventTitle}</p>
-            {state.data.hostName && <p className="text-subtle">{state.data.hostName}</p>}
-            <p className="text-default mt-2">{formatInZone(state.data.startTime, state.data.timeZone)}</p>
-            {state.kind === "confirmed" ? (
-              <p className="text-subtle mt-4">
-                {t("attendance_confirmed_body", { hostName: state.data.hostName ?? "", ...RAW })}
-              </p>
-            ) : state.data.status === "REQUESTED" && new Date(state.data.deadline) > new Date() ? (
-              <Button
-                className="mt-6 w-full justify-center"
-                loading={submitting}
-                onClick={() => confirm(state.data)}>
-                {t("attendee_confirmation_request_cta")}
-              </Button>
-            ) : (
-              <p className="text-subtle mt-4">{unavailableMessage(state.data)}</p>
-            )}
-            {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-          </>
-        )}
-      </div>
-    </main>
+    <ClientPageShell testId="attendance-confirm-page">
+      <ClientHeader
+        icon={confirmed ? "check" : canConfirm ? "calendar" : "circle-alert"}
+        tone={confirmed ? "success" : canConfirm ? "neutral" : "warning"}
+        title={confirmed ? t("attendance_confirmed_title") : t("attendee_confirmation_request_title")}
+        subtitle={
+          confirmed
+            ? t("attendance_confirmed_body", { hostName: data.hostName ?? "", ...RAW })
+            : canConfirm
+              ? t("attendance_confirm_by", {
+                  deadline: dayjs(data.deadline).tz(data.timeZone).format("ddd, MMM D, h:mma"),
+                  ...RAW,
+                })
+              : unavailableMessage(data)
+        }
+      />
+      <BookingSummary
+        title={data.eventTitle}
+        hostName={data.hostName}
+        startTime={data.startTime}
+        timeZone={data.timeZone}
+      />
+      {canConfirm && (
+        <div className="mt-6">
+          <PrimaryButton
+            onClick={() => confirm(data)}
+            loading={submitting}
+            testId="attendance-confirm-button">
+            {t("attendee_confirmation_request_cta")}
+          </PrimaryButton>
+        </div>
+      )}
+      {error && <Notice tone="error">{error}</Notice>}
+    </ClientPageShell>
   );
 }
