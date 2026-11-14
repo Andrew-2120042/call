@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  calendarBackgroundCss,
   calendarCssVars,
   DEFAULT_CALENDAR,
   parseCalendarOverrides,
@@ -80,5 +81,27 @@ describe("parsePageStyle", () => {
       calendar: { layout: "column_view" },
       calendarByService: { "5": { hide: ["avatar"] } },
     });
+  });
+});
+
+describe("calendar background and colours", () => {
+  it("keeps the page wallpaper unless the owner picks a background", () => {
+    expect(calendarBackgroundCss(undefined)).toBeUndefined();
+    expect(calendarBackgroundCss({ kind: "page", color: "#000000" })).toBeUndefined();
+    expect(calendarCssVars(resolveCalendar(undefined, undefined))["--sw-cal-page-bg"]).toBeUndefined();
+  });
+
+  it("builds solid and gradient backgrounds", () => {
+    expect(calendarBackgroundCss({ kind: "solid", color: "#2f3b52" })).toBe("#2f3b52");
+    expect(calendarBackgroundCss({ kind: "gradient", color: "#2f3b52", color2: "#7a3b2e" })).toBe(
+      "linear-gradient(180deg, #2f3b52 0%, #7a3b2e 100%)"
+    );
+  });
+
+  it("drops an invalid background and applies day and slot colours", () => {
+    expect(parseCalendarStyle({ background: { kind: "video" } })).toBeUndefined();
+    const vars = calendarCssVars(resolveCalendar({ dayColor: "#f5edd2", slotColor: "#3d5a40" }, undefined));
+    expect(vars["--sw-cal-emphasis"]).toBe("#f5edd2");
+    expect(vars["--sw-cal-slot-bg"]).toBe("#3d5a40");
   });
 });

@@ -1,4 +1,5 @@
 import type {
+  CalendarBackgroundKind,
   CalendarLayout,
   CalendarMode,
   CalendarStyle,
@@ -7,7 +8,9 @@ import type {
   SlotShape,
 } from "@calcom/features/booking-page-theme/calendar";
 import {
+  CALENDAR_BACKGROUND_KINDS,
   CALENDAR_LAYOUTS,
+  calendarCssVars,
   CALENDAR_MODES,
   CALENDAR_TIME_FORMATS,
   resolveCalendar,
@@ -42,6 +45,8 @@ export function CalendarPanel({ style, services, scope, onScopeChange, onChange 
   const { t } = useLocale();
   const override = scope === null ? undefined : style.calendarByService?.[String(scope)];
   const calendar = resolveCalendar(style.calendar, override);
+  const vars = calendarCssVars(calendar);
+  const background = calendar.background ?? { kind: "page" as const };
 
   const setCalendar = (patch: CalendarStyle) => {
     if (scope === null) {
@@ -122,6 +127,36 @@ export function CalendarPanel({ style, services, scope, onScopeChange, onChange 
         />
       </Section>
 
+      <Section title={t("studio_calendar_background")} hint={t("studio_calendar_background_hint")}>
+        <Segmented
+          value={background.kind}
+          options={CALENDAR_BACKGROUND_KINDS.map((kind: CalendarBackgroundKind) => ({
+            value: kind,
+            label: t(`studio_calendar_background_${kind}`),
+          }))}
+          onChange={(kind) => setCalendar({ background: { ...background, kind } })}
+        />
+        {background.kind !== "page" && (
+          <FieldRow
+            label={
+              background.kind === "gradient" ? t("studio_top_colour") : t("studio_calendar_background_colour")
+            }>
+            <ColourInput
+              value={background.color ?? "#f4f3f0"}
+              onChange={(color) => setCalendar({ background: { ...background, color } })}
+            />
+          </FieldRow>
+        )}
+        {background.kind === "gradient" && (
+          <FieldRow label={t("studio_bottom_colour")}>
+            <ColourInput
+              value={background.color2 ?? "#ffffff"}
+              onChange={(color2) => setCalendar({ background: { ...background, color2 } })}
+            />
+          </FieldRow>
+        )}
+      </Section>
+
       <Section title={t("studio_calendar_colours")}>
         <Segmented
           value={calendar.mode}
@@ -130,17 +165,44 @@ export function CalendarPanel({ style, services, scope, onScopeChange, onChange 
             label: t(`studio_calendar_${mode}`),
           }))}
           onChange={(mode) =>
-            setCalendar({ mode, panelColor: undefined, accent: undefined, accentText: undefined })
+            setCalendar({
+              mode,
+              panelColor: undefined,
+              accent: undefined,
+              accentText: undefined,
+              textColor: undefined,
+              dayColor: undefined,
+              slotColor: undefined,
+              slotText: undefined,
+            })
           }
         />
         <FieldRow label={t("studio_calendar_panel_colour")} hint={t("studio_calendar_panel_colour_hint")}>
           <ColourInput value={calendar.panelColor} onChange={(panelColor) => setCalendar({ panelColor })} />
+        </FieldRow>
+        <FieldRow label={t("studio_calendar_text_colour")}>
+          <ColourInput value={vars["--sw-cal-text"]} onChange={(textColor) => setCalendar({ textColor })} />
         </FieldRow>
         <FieldRow label={t("studio_calendar_accent")} hint={t("studio_calendar_accent_hint")}>
           <ColourInput value={calendar.accent} onChange={(accent) => setCalendar({ accent })} />
         </FieldRow>
         <FieldRow label={t("studio_calendar_accent_text")}>
           <ColourInput value={calendar.accentText} onChange={(accentText) => setCalendar({ accentText })} />
+        </FieldRow>
+        <FieldRow label={t("studio_calendar_day_colour")} hint={t("studio_calendar_day_colour_hint")}>
+          <ColourInput value={vars["--sw-cal-emphasis"]} onChange={(dayColor) => setCalendar({ dayColor })} />
+        </FieldRow>
+        <FieldRow label={t("studio_calendar_slot_colour")} hint={t("studio_calendar_slot_colour_hint")}>
+          <ColourInput
+            value={calendar.slotColor ?? calendar.panelColor}
+            onChange={(slotColor) => setCalendar({ slotColor })}
+          />
+        </FieldRow>
+        <FieldRow label={t("studio_calendar_slot_text")}>
+          <ColourInput
+            value={vars["--sw-cal-slot-text"]}
+            onChange={(slotText) => setCalendar({ slotText })}
+          />
         </FieldRow>
       </Section>
 

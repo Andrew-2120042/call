@@ -6,6 +6,9 @@ export type CalendarMode = "light" | "dark";
 export type SlotShape = "pill" | "rounded" | "square";
 export type CalendarTimeFormat = "auto" | "12h" | "24h";
 export type CalendarVisibilityKey = "avatar" | "description" | "duration" | "location" | "timezone";
+/** "page" keeps the profile page's wallpaper behind the calendar. */
+export type CalendarBackgroundKind = "page" | "solid" | "gradient";
+export type CalendarBackground = { kind: CalendarBackgroundKind; color?: string; color2?: string };
 
 export type CalendarStyle = {
   layout?: CalendarLayout;
@@ -14,14 +17,25 @@ export type CalendarStyle = {
   panelColor?: string;
   accent?: string;
   accentText?: string;
+  /** Behind the calendar card. */
+  background?: CalendarBackground;
+  textColor?: string;
+  /** Days that have free times. */
+  dayColor?: string;
+  slotColor?: string;
+  slotText?: string;
   slotShape?: SlotShape;
   timeFormat?: CalendarTimeFormat;
   /** Keys listed here are hidden on the calendar page. */
   hide?: CalendarVisibilityKey[];
 };
 
-export type ResolvedCalendar = Required<Omit<CalendarStyle, "panelColor">> & { panelColor: string };
+type OptionalColours = "background" | "textColor" | "dayColor" | "slotColor" | "slotText";
 
+export type ResolvedCalendar = Required<Omit<CalendarStyle, OptionalColours>> &
+  Pick<CalendarStyle, OptionalColours>;
+
+export const CALENDAR_BACKGROUND_KINDS: CalendarBackgroundKind[] = ["page", "solid", "gradient"];
 export const CALENDAR_LAYOUTS: CalendarLayout[] = ["month_view", "week_view", "column_view"];
 export const CALENDAR_MODES: CalendarMode[] = ["light", "dark"];
 export const SLOT_SHAPES: SlotShape[] = ["pill", "rounded", "square"];
@@ -66,6 +80,11 @@ export function parseCalendarStyle(input: unknown): CalendarStyle | undefined {
     panelColor: hex(raw.panelColor),
     accent: hex(raw.accent),
     accentText: hex(raw.accentText),
+    background: parseBackground(raw.background),
+    textColor: hex(raw.textColor),
+    dayColor: hex(raw.dayColor),
+    slotColor: hex(raw.slotColor),
+    slotText: hex(raw.slotText),
     slotShape: oneOf(SLOT_SHAPES, raw.slotShape),
     timeFormat: oneOf(CALENDAR_TIME_FORMATS, raw.timeFormat),
     hide: Array.isArray(raw.hide)
@@ -76,6 +95,14 @@ export function parseCalendarStyle(input: unknown): CalendarStyle | undefined {
     if (style[key] === undefined) delete style[key];
   }
   return Object.keys(style).length ? style : undefined;
+}
+
+function parseBackground(input: unknown): CalendarBackground | undefined {
+  if (!input || typeof input !== "object") return undefined;
+  const raw = input as Record<string, unknown>;
+  const kind = oneOf(CALENDAR_BACKGROUND_KINDS, raw.kind);
+  if (!kind) return undefined;
+  return { kind, color: hex(raw.color), color2: hex(raw.color2) };
 }
 
 export function parseCalendarOverrides(input: unknown): Record<string, CalendarStyle> | undefined {
@@ -108,20 +135,42 @@ export function resolveCalendar(
   };
 }
 
+/** Text colour plus a translucent version for secondary text (e.g. "#121212" → "#121212a6"). */
+const soften = (colour: string, alpha: string) => `${colour}${alpha}`;
+
+/** What sits behind the calendar card, or undefined to keep the profile page's wallpaper. */
+export function calendarBackgroundCss(background: CalendarBackground | undefined): string | undefined {
+  if (!background || background.kind === "page") return undefined;
+  const top = background.color ?? "#f4f3f0";
+  if (background.kind === "solid") return top;
+  return `linear-gradient(180deg, ${top} 0%, ${background.color2 ?? "#ffffff"} 100%)`;
+}
+
 /** CSS variables read by `.sw-booker` in booking-theme.css. */
 export function calendarCssVars(calendar: ResolvedCalendar): Record<string, string> {
   const dark = calendar.mode === "dark";
-  return {
+  const text = calendar.textColor ?? (dark ? "#f4f4f2" : "#121212");
+  const vars: Record<string, string> = {
     "--sw-cal-panel": calendar.panelColor,
-    "--sw-cal-text": dark ? "#f4f4f2" : "#121212",
-    "--sw-cal-text-soft": dark ? "#d6d5d1" : "#2b2b29",
-    "--sw-cal-subtle": dark ? "#a3a29d" : "#6b6a66",
+    "--sw-cal-text": text,
+    "--sw-cal-text-soft": calendar.textColor
+      ? soften(calendar.textColor, "e6")
+      : dark
+        ? "#d6d5d1"
+        : "#2b2b29",
+    "--sw-cal-subtle": calendar.textColor ? soften(calendar.textColor, "99") : dark ? "#a3a29d" : "#6b6a66",
     "--sw-cal-muted": dark ? "#262626" : "#f1f0ee",
-    "--sw-cal-emphasis": dark ? "#333333" : "#e6e5e2",
+    "--sw-cal-emphasis": calendar.dayColor ?? (dark ? "#333333" : "#e6e5e2"),
+    "--sw-cal-day-text": text,
     "--sw-cal-border": dark ? "#2e2e2e" : "#ebeae7",
-    "--sw-cal-slot-border": dark ? "#3a3a3a" : "#dddcd8",
+    "--sw-cal-slot-border": calendar.slotColor ?? (dark ? "#3a3a3a" : "#dddcd8"),
+    "--sw-cal-slot-bg": calendar.slotColor ?? "transparent",
+    "--sw-cal-slot-text": calendar.slotText ?? text,
     "--sw-cal-accent": calendar.accent,
     "--sw-cal-accent-text": calendar.accentText,
     "--sw-slot-radius": SLOT_RADII[calendar.slotShape],
   };
+  const background = calendarBackgroundCss(calendar.background);
+  if (background) vars["--sw-cal-page-bg"] = background;
+  return vars;
 }

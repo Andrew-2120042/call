@@ -2,7 +2,7 @@
    (--sw-*), the panel stays white, and ink marks every choice. */
 
 .sw-booker {
-  background: var(--sw-bg);
+  background: var(--sw-cal-page-bg, var(--sw-bg));
   color: var(--sw-fg);
   min-height: 100dvh;
   --cal-brand: var(--sw-cal-accent, #121212);
@@ -39,6 +39,8 @@
   border-radius: var(--sw-slot-radius, var(--sw-radius)) !important;
   font-weight: 500;
   border-color: var(--sw-cal-slot-border, #dddcd8);
+  background: var(--sw-cal-slot-bg, transparent) !important;
+  color: var(--sw-cal-slot-text, inherit) !important;
   font-variant-numeric: tabular-nums;
 }
 
@@ -171,4 +173,11 @@ html.sw-studio-preview * {
 
 html.sw-studio-preview ::-webkit-scrollbar {
   display: none;
+}
+
+/* On phones the calendar floats as a card so the background behind it shows, like on desktop. */
+@media (max-width: 768px) {
+  .sw-booker {
+    padding: 14px 10px 28px;
+  }
 }
