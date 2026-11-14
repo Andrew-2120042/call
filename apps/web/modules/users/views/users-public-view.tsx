@@ -71,6 +71,7 @@ export function UserPage(props: PageProps) {
         services={eventTypes}
         themeId={props.pageTheme}
         buttonShape={props.pageButtonShape}
+        pageStyle={props.pageStyle}
         brandingHidden={props.isBrandingHidden}
         verifiedBadge={
           user.verified ? (

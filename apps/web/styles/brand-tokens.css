@@ -38,3 +38,8 @@
   --cal-brand-emphasis: #ffffff;
   --cal-brand-text: #121212;
 }
+
+/* Slightly smaller type across the product (everything in rem scales from this). */
+html {
+  font-size: 15px;
+}

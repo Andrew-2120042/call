@@ -523,6 +523,8 @@ model User {
   pageTheme         String            @default("fog")
   /// Public booking page button shape: pill | rounded | square
   pageButtonShape   String            @default("rounded")
+  /// Owner overrides on top of the theme: wallpaper, buttons, font, colours (see booking-page-theme)
+  pageStyle         Json?
   customDomain      CustomDomain?
 
   @@unique([email])

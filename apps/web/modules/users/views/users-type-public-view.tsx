@@ -1,6 +1,6 @@
 "use client";
 
-import { pageThemeStyle } from "@calcom/features/booking-page-theme/themes";
+import { pageLookStyle } from "@calcom/features/booking-page-theme/themes";
 import { getBookerWrapperClasses } from "@calcom/features/bookings/Booker/utils/getBookerWrapperClasses";
 import { BookerWebWrapper as Booker } from "@calcom/web/modules/bookings/components/BookerWebWrapper";
 import BookingPageErrorBoundary from "@components/error/BookingPageErrorBoundary";
@@ -32,6 +32,7 @@ function Type({
   orgBannerUrl,
   pageTheme,
   pageButtonShape,
+  pageStyle,
 }: PageProps) {
   const searchParams = useSearchParams();
 
@@ -39,7 +40,7 @@ function Type({
     <BookingPageErrorBoundary>
       <main
         className={classNames(getBookerWrapperClasses({ isEmbed: !!isEmbed }), !isEmbed && "sw-booker")}
-        style={isEmbed ? undefined : pageThemeStyle(pageTheme, pageButtonShape)}>
+        style={isEmbed ? undefined : pageLookStyle(pageTheme, pageButtonShape, pageStyle)}>
         <Booker
           username={user}
           eventSlug={slug}

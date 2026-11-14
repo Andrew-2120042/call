@@ -1,5 +1,7 @@
+import { parsePageStyle } from "@calcom/features/booking-page-theme/themes";
 import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { prisma } from "@calcom/prisma";
+import type { Prisma } from "@calcom/prisma/client";
 import type { TrpcSessionUser } from "@calcom/trpc/server/types";
 import type { TUpdatePageLookInputSchema } from "./pageLook.schema";
 
@@ -20,7 +22,11 @@ export const getHandler = async ({ ctx }: Ctx) => {
 export const updateHandler = async ({ ctx, input }: Ctx & { input: TUpdatePageLookInputSchema }) => {
   const user = await prisma.user.update({
     where: { id: ctx.user.id },
-    data: { pageTheme: input.pageTheme, pageButtonShape: input.pageButtonShape },
+    data: {
+      pageTheme: input.pageTheme,
+      pageButtonShape: input.pageButtonShape,
+      ...(input.pageStyle ? { pageStyle: parsePageStyle(input.pageStyle) as Prisma.InputJsonValue } : {}),
+    },
     select: { pageTheme: true, pageButtonShape: true },
   });
   return user;
@@ -39,6 +45,7 @@ export const editorHandler = async ({ ctx }: Ctx) => {
         avatarUrl: true,
         pageTheme: true,
         pageButtonShape: true,
+        pageStyle: true,
         hideBranding: true,
       },
     }),
@@ -65,6 +72,7 @@ export const editorHandler = async ({ ctx }: Ctx) => {
     avatarUrl: user?.avatarUrl ?? null,
     pageTheme: user?.pageTheme ?? "fog",
     pageButtonShape: user?.pageButtonShape ?? "rounded",
+    pageStyle: parsePageStyle(user?.pageStyle),
     brandingHidden: !!user?.hideBranding && canRemoveBranding,
     services,
   };

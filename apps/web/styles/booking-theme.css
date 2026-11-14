@@ -140,3 +140,8 @@
 .sw-confirm [role="dialog"] a.border {
   border-radius: 14px;
 }
+
+.sw-booker,
+.sw-confirm {
+  font-family: var(--sw-font, var(--font-sans));
+}

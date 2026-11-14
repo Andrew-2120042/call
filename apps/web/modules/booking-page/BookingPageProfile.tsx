@@ -1,6 +1,6 @@
 "use client";
 
-import { pageThemeStyle } from "@calcom/features/booking-page-theme/themes";
+import { pageLookStyle } from "@calcom/features/booking-page-theme/themes";
 import { APP_NAME, WEBSITE_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
@@ -25,6 +25,7 @@ type Props = {
   services: BookingPageService[];
   themeId: string | null | undefined;
   buttonShape: string | null | undefined;
+  pageStyle?: unknown;
   brandingHidden: boolean;
   verifiedBadge?: ReactNode;
   banner?: ReactNode;
@@ -54,11 +55,18 @@ export function formatServiceLine(
   return parts.join(", ");
 }
 
+const ROW_STYLE = {
+  borderRadius: "var(--sw-radius)",
+  background: "var(--sw-btn-bg)",
+  color: "var(--sw-btn-fg)",
+  borderColor: "var(--sw-btn-border)",
+} as const;
+
 /** The public booking page body, shared by the live page and the editor's phone preview. */
 export function BookingPageProfile(props: Props) {
   const { t } = useLocale();
   const rowClass =
-    "group flex items-center justify-between gap-4 border border-black/[0.06] bg-white px-5 py-4 text-left text-[#121212] transition-colors hover:border-black/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
+    "group flex items-center justify-between gap-4 border px-5 py-4 text-left transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#121212]";
 
   return (
     <div
@@ -68,7 +76,8 @@ export function BookingPageProfile(props: Props) {
         props.className
       )}
       style={{
-        ...pageThemeStyle(props.themeId, props.buttonShape),
+        ...pageLookStyle(props.themeId, props.buttonShape, props.pageStyle),
+        fontFamily: "var(--sw-font)",
         background: "var(--sw-bg)",
         color: "var(--sw-fg)",
       }}>
@@ -81,6 +90,7 @@ export function BookingPageProfile(props: Props) {
               "font-bold leading-tight tracking-[-0.02em]",
               props.compact ? "mt-3 text-[20px]" : "mt-4 text-[28px]"
             )}
+            style={{ color: "var(--sw-title)" }}
             data-testid="name-title">
             {props.name}
             {props.verifiedBadge}
@@ -116,7 +126,7 @@ export function BookingPageProfile(props: Props) {
                   <span className="block truncate text-[16px] font-semibold leading-snug">
                     {service.title}
                   </span>
-                  <span className="mt-0.5 block text-[13px] text-[#6b6a66]">
+                  <span className="mt-0.5 block text-[13px] opacity-70">
                     {formatServiceLine(service, t)}
                     {" · "}
                     {service.requiresConfirmation
@@ -126,7 +136,7 @@ export function BookingPageProfile(props: Props) {
                 </span>
                 <Icon
                   name="chevron-right"
-                  className="h-4 w-4 flex-none text-[#9b9a95] transition-transform group-hover:translate-x-0.5 group-hover:text-[#121212]"
+                  className="h-4 w-4 flex-none opacity-50 transition-transform group-hover:translate-x-0.5"
                 />
               </>
             );
@@ -136,13 +146,13 @@ export function BookingPageProfile(props: Props) {
                 href={link.href}
                 prefetch={false}
                 onClick={link.onClick}
-                style={{ ...link.style, borderRadius: "var(--sw-radius)" }}
+                style={{ ...link.style, ...ROW_STYLE }}
                 className={rowClass}
                 data-testid="event-type-link">
                 {body}
               </Link>
             ) : (
-              <div key={service.id} style={{ borderRadius: "var(--sw-radius)" }} className={rowClass}>
+              <div key={service.id} style={ROW_STYLE} className={rowClass}>
                 {body}
               </div>
             );

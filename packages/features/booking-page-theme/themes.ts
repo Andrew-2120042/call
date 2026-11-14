@@ -50,3 +50,105 @@ export function pageThemeStyle(themeId: string | null | undefined, shape: string
     "--sw-radius": BUTTON_RADII[resolveButtonShape(shape)],
   } as Record<string, string>;
 }
+
+// ---------------------------------------------------------------------------------------------------
+// Owner customisation on top of a theme (all optional; anything unset follows the theme).
+
+export type PageFont = "albert" | "inter" | "serif" | "mono";
+export type ButtonFill = "solid" | "outline" | "soft";
+
+export type PageStyle = {
+  wallpaper?: { kind: "solid" | "gradient"; color?: string; color2?: string };
+  button?: { fill?: ButtonFill; color?: string; text?: string };
+  font?: PageFont;
+  textColor?: string;
+  titleColor?: string;
+};
+
+export const PAGE_FONTS: Record<PageFont, { label: string; stack: string }> = {
+  albert: { label: "Albert Sans", stack: "var(--font-sans), system-ui, sans-serif" },
+  inter: { label: "System", stack: "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif" },
+  serif: { label: "Serif", stack: "Georgia, 'Iowan Old Style', 'Times New Roman', serif" },
+  mono: { label: "Mono", stack: "ui-monospace, 'SF Mono', Menlo, monospace" },
+};
+export const PAGE_FONT_IDS = Object.keys(PAGE_FONTS) as PageFont[];
+export const BUTTON_FILLS: ButtonFill[] = ["solid", "outline", "soft"];
+
+const HEX = /^#[0-9a-fA-F]{6}$/;
+const hex = (value: unknown) => (typeof value === "string" && HEX.test(value) ? value : undefined);
+
+/** Accepts whatever is stored and returns only valid fields, so a bad value never breaks a public page. */
+export function parsePageStyle(input: unknown): PageStyle {
+  if (!input || typeof input !== "object") return {};
+  const raw = input as Record<string, unknown>;
+  const style: PageStyle = {};
+  const wallpaper = raw.wallpaper as Record<string, unknown> | undefined;
+  if (wallpaper && (wallpaper.kind === "solid" || wallpaper.kind === "gradient")) {
+    style.wallpaper = { kind: wallpaper.kind, color: hex(wallpaper.color), color2: hex(wallpaper.color2) };
+  }
+  const button = raw.button as Record<string, unknown> | undefined;
+  if (button) {
+    style.button = {
+      fill: BUTTON_FILLS.includes(button.fill as ButtonFill) ? (button.fill as ButtonFill) : undefined,
+      color: hex(button.color),
+      text: hex(button.text),
+    };
+  }
+  if (PAGE_FONT_IDS.includes(raw.font as PageFont)) style.font = raw.font as PageFont;
+  style.textColor = hex(raw.textColor);
+  style.titleColor = hex(raw.titleColor);
+  return style;
+}
+
+/** Final colours/fonts for a page: theme first, then the owner's overrides. */
+export function resolvePageLook(
+  themeId: string | null | undefined,
+  shape: string | null | undefined,
+  styleInput?: unknown
+) {
+  const theme = resolvePageTheme(themeId);
+  const style = parsePageStyle(styleInput);
+  const base = style.wallpaper?.color ?? theme.bg;
+  const background =
+    style.wallpaper?.kind === "gradient"
+      ? `linear-gradient(180deg, ${base} 0%, ${style.wallpaper.color2 ?? theme.bg} 100%)`
+      : base;
+  const fg = style.textColor ?? theme.fg;
+  const fill = style.button?.fill ?? "solid";
+  const buttonColor = style.button?.color ?? "#ffffff";
+  const buttonText = style.button?.text ?? "#121212";
+  return {
+    theme,
+    style,
+    background,
+    screenBg: base,
+    fg,
+    soft: style.textColor ? `${style.textColor}b3` : theme.soft,
+    title: style.titleColor ?? fg,
+    font: PAGE_FONTS[style.font ?? "albert"].stack,
+    radius: BUTTON_RADII[resolveButtonShape(shape)],
+    buttonBg: fill === "solid" ? buttonColor : fill === "soft" ? `${buttonColor}cc` : "transparent",
+    buttonFg: fill === "outline" ? (style.button?.color ? buttonColor : fg) : buttonText,
+    buttonBorder: fill === "outline" ? (style.button?.color ?? fg) : "transparent",
+  };
+}
+
+/** CSS variables for a page including the owner's overrides. */
+export function pageLookStyle(
+  themeId: string | null | undefined,
+  shape: string | null | undefined,
+  styleInput?: unknown
+) {
+  const look = resolvePageLook(themeId, shape, styleInput);
+  return {
+    "--sw-bg": look.background,
+    "--sw-fg": look.fg,
+    "--sw-soft": look.soft,
+    "--sw-title": look.title,
+    "--sw-font": look.font,
+    "--sw-radius": look.radius,
+    "--sw-btn-bg": look.buttonBg,
+    "--sw-btn-fg": look.buttonFg,
+    "--sw-btn-border": look.buttonBorder,
+  } as Record<string, string>;
+}
