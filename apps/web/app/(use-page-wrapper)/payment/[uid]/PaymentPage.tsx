@@ -12,6 +12,7 @@ import useTheme from "@calcom/lib/hooks/useTheme";
 import { getIs24hClockFromLocalStorage, isBrowserLocale24h } from "@calcom/lib/timeFormat";
 import { CURRENT_TIMEZONE } from "@calcom/lib/timezoneConstants";
 import { localStorage } from "@calcom/lib/webstorage";
+import { StripePaymentComponent } from "@calcom/web/components/apps/stripepayment/StripePaymentComponent";
 import classNames from "classnames";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
@@ -150,8 +151,17 @@ const PaymentPage: FC<PaymentPageProps> = (props) => {
                   {props.payment.success && !props.payment.refunded && (
                     <div className="mt-4 text-center text-default dark:text-gray-300">{t("paid")}</div>
                   )}
-                  {props.payment.appId === "stripe" && !props.payment.success && (
-                    <div>{/* StripePaymentComponent removed */}</div>
+                  {props.payment.appId === "stripe" && !props.payment.success && props.clientSecret && (
+                    <StripePaymentComponent
+                      clientSecret={props.clientSecret}
+                      publishableKey={
+                        typeof props.payment.data.stripe_publishable_key === "string"
+                          ? props.payment.data.stripe_publishable_key
+                          : undefined
+                      }
+                      bookingUid={props.booking.uid}
+                      paymentOption={props.payment.paymentOption}
+                    />
                   )}
                   {props.payment.refunded && (
                     <div className="mt-4 text-center text-default dark:text-gray-300">{t("refunded")}</div>
