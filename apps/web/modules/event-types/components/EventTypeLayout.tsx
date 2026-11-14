@@ -16,7 +16,6 @@ import {
 } from "@calcom/ui/components/dropdown";
 import { Label, Switch } from "@calcom/ui/components/form";
 import type { VerticalTabItemProps } from "@calcom/ui/components/navigation";
-import { HorizontalTabs, VerticalTabs } from "@calcom/ui/components/navigation";
 import { Skeleton } from "@calcom/ui/components/skeleton";
 import { showToast } from "@calcom/ui/components/toast";
 import { Tooltip } from "@calcom/ui/components/tooltip";
@@ -30,6 +29,7 @@ import { Suspense, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Shell as PlatformShell } from "../../../../../packages/platform/atoms/src/components/ui/shell";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
+import { ServicePhonePreview, ServiceTabs } from "./ServiceEditorChrome";
 
 type Props = {
   children: React.ReactNode;
@@ -79,7 +79,11 @@ function EventTypeSingleLayout({
 
   const isManagedEventType = false;
   const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string) => ({ disabled: false, LockedIcon: false as const, isLocked: false });
+  const shouldLockDisableProps = (_field: string) => ({
+    disabled: false,
+    LockedIcon: false as const,
+    isLocked: false,
+  });
   const shouldLockIndicator = (_field: string) => false;
   const EventTypeTabs = tabsNavigation;
   const permalink = `${bookerUrl}/${
@@ -289,29 +293,22 @@ function EventTypeSingleLayout({
             <LoaderIcon className="h-5 w-5 animate-spin" />
           </div>
         }>
-        <div className="flex flex-col xl:flex-row xl:space-x-6">
-          <div className="hidden xl:block">
-            <VerticalTabs
-              className="primary-navigation w-64"
-              tabs={EventTypeTabs}
-              sticky
-              stickyOffset="var(--navbar-height, 64px)"
-              linkShallow
-              itemClassname="items-start"
-            />
-          </div>
-          <div className="p-2 md:mx-0 md:p-0 xl:hidden">
-            <HorizontalTabs tabs={EventTypeTabs} linkShallow />
-          </div>
-          <div className="w-full ltr:mr-2 rtl:ml-2">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+          <div className="min-w-0 flex-1">
+            <ServiceTabs tabs={EventTypeTabs} />
             <div
               className={classNames(
-                "mt-4 rounded-md border-subtle bg-default sm:mx-0 xl:mt-0",
-                disableBorder ? "border-0" : "p-2 md:border md:p-6"
+                "mt-5 sm:mx-0",
+                disableBorder ? "border-0" : "border-subtle bg-default rounded-md p-2 md:border md:p-6"
               )}>
               {children}
             </div>
           </div>
+          {!isPlatform && (
+            <aside className="sticky top-6 hidden flex-none lg:block">
+              <ServicePhonePreview url={permalink} saving={!!isUpdateMutationLoading} />
+            </aside>
+          )}
         </div>
       </Suspense>
       <DeleteDialog

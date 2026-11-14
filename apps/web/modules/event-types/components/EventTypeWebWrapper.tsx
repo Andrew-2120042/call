@@ -18,7 +18,7 @@ import { revalidateEventTypeEditPage } from "@calcom/web/app/(use-page-wrapper)/
 import { TRPCClientError } from "@trpc/react-query";
 import dynamic from "next/dynamic";
 import { useRouter as useAppRouter, usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { EventType as EventTypeComponent } from "./EventType";
 
@@ -61,6 +61,15 @@ const EventWebhooksTab = dynamic(() =>
   import("./tabs/webhooks/EventWebhooksTab").then((mod) => mod.EventWebhooksTab)
 );
 
+const HIDDEN_SERVICE_TABS = new Set(["apps", "webhooks"]);
+
+const TAB_PRELOADS = [
+  () => import("./tabs/setup/EventSetupTabWebWrapper"),
+  () => import("./tabs/availability/EventAvailabilityTabWebWrapper"),
+  () => import("./tabs/limits/EventLimitsTabWebWrapper"),
+  () => import("./tabs/advanced/EventAdvancedWebWrapper"),
+  () => import("./tabs/recurring/EventRecurringWebWrapper"),
+];
 
 export type EventTypeWebWrapperProps = {
   id: number;
@@ -278,16 +287,7 @@ const EventTypeWeb = ({
 
   const querySchema = z.object({
     tabName: z
-      .enum([
-        "setup",
-        "availability",
-        "team",
-        "limits",
-        "advanced",
-        "recurring",
-        "apps",
-        "webhooks",
-      ])
+      .enum(["setup", "availability", "team", "limits", "advanced", "recurring", "apps", "webhooks"])
       .optional()
       .default("setup"),
   });
@@ -320,12 +320,29 @@ const EventTypeWeb = ({
     },
   });
 
-  const { tabsNavigation } = useTabsNavigations({
+  const { tabsNavigation: allTabs } = useTabsNavigations({
     formMethods: form,
     eventType,
     team,
     eventTypeApps,
   });
+  // Apps and webhooks live in the Apps page and Settings; a service only needs its own settings.
+  // Tabs switch in the browser (history API) instead of a server navigation, so clicks are instant.
+  const tabsNavigation = useMemo(
+    () =>
+      allTabs
+        .filter((tab) => !HIDDEN_SERVICE_TABS.has(String(tab["data-testid"])))
+        .map((tab) => ({
+          ...tab,
+          onClick: () => window.history.pushState(null, "", tab.href),
+        })),
+    [allTabs]
+  );
+
+  // Load every tab's code up front so switching never waits on a chunk download.
+  useEffect(() => {
+    void Promise.all(TAB_PRELOADS.map((load) => load()));
+  }, []);
 
   return (
     <EventTypeComponent

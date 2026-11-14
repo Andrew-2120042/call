@@ -1,10 +1,9 @@
-import { ENABLE_PROFILE_SWITCHER, IS_VISUAL_REGRESSION_TESTING, WEBAPP_URL } from "@calcom/lib/constants";
+import { ENABLE_PROFILE_SWITCHER, WEBAPP_URL } from "@calcom/lib/constants";
 import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
 import { useIsStandalone } from "@calcom/lib/hooks/useIsStandalone";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { Avatar } from "@calcom/ui/components/avatar";
-import { Credits } from "@calcom/ui/components/credits";
 import { ButtonOrLink } from "@calcom/ui/components/dropdown";
 import { Icon } from "@calcom/ui/components/icon";
 import { Logo } from "@calcom/ui/components/logo";
@@ -61,11 +60,14 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
         data-sw-sidebar
         style={sidebarStylingAttributes}
         className={classNames(
-          "fixed left-0 hidden h-full w-14 flex-col overflow-y-auto overflow-x-hidden border-muted border-r bg-cal-muted md:sticky md:flex lg:w-56 lg:px-3",
+          "fixed left-0 hidden h-full w-16 flex-col overflow-y-auto overflow-x-hidden md:sticky md:flex",
           "max-h-screen"
         )}>
-        <div className="flex h-full flex-col justify-between py-3 lg:pt-4">
-          <header className="todesktop:-mt-3 todesktop:flex-col-reverse items-center justify-between todesktop:[-webkit-app-region:drag] md:hidden lg:flex">
+        <div className="flex h-full flex-col py-4">
+          <Link href="/home" className="mb-4 mt-1 flex justify-center" aria-label="Home">
+            <Logo small icon />
+          </Link>
+          <header className="todesktop:-mt-3 todesktop:[-webkit-app-region:drag] hidden flex-col items-center gap-3 md:flex">
             {user?.org ? (
               !ENABLE_PROFILE_SWITCHER ? (
                 <Link href="/settings/organizations/profile" className="w-full px-1.5">
@@ -85,15 +87,12 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
               )
             ) : (
               <div data-testid="user-dropdown-trigger" className="todesktop:mt-4 w-full">
-                <span className="hidden lg:inline">
-                  <UserDropdown />
-                </span>
-                <span className="hidden md:inline lg:hidden">
+                <span className="flex justify-center">
                   <UserDropdown small />
                 </span>
               </div>
             )}
-            <div className="flex w-full justify-end rtl:space-x-reverse">
+            <div className="flex w-full flex-col items-center rtl:space-x-reverse">
               <button
                 color="minimal"
                 onClick={() => window.history.back()}
@@ -114,16 +113,12 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
               <KBarTrigger />
             </div>
           </header>
-          {/* logo icon for tablet */}
-          <Link href="/event-types" className="text-center md:inline lg:hidden">
-            <Logo small icon />
-          </Link>
           <Navigation />
         </div>
 
-        <div className="md:px-2 md:pb-4 lg:p-0">
+        <div className="md:px-2 md:pb-4 ">
           {bottomNavItems.map((item, index) => (
-            <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
+            <Tooltip side="right" content={t(item.name)} className="" key={item.name}>
               <ButtonOrLink
                 id={item.name}
                 href={item.href || undefined}
@@ -142,14 +137,14 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
                     name={item.isLoading ? "rotate-cw" : item.icon}
                     className={classNames(
                       "h-4 w-4 shrink-0 aria-[aria-current='page']:text-inherit",
-                      "ml-3 md:mx-auto lg:ltr:mr-2 lg:rtl:ml-2",
+                      "ml-3 md:mx-auto ",
                       item.isLoading && "animate-spin"
                     )}
                     aria-hidden="true"
                   />
                 )}
                 {isLocaleReady ? (
-                  <span className="hidden w-full justify-between lg:flex">
+                  <span className="hidden w-full justify-between ">
                     <div className="flex">{t(item.name)}</div>
                   </span>
                 ) : (
@@ -158,7 +153,6 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
               </ButtonOrLink>
             </Tooltip>
           ))}
-          {!IS_VISUAL_REGRESSION_TESTING && <Credits />}
         </div>
       </aside>
     </div>

@@ -129,7 +129,7 @@ export function ShellMain(props: LayoutProps) {
       {(props.heading || !!props.backPath) && (
         <div
           className={classNames(
-            "bg-muted mb-0 flex items-center md:mb-6 md:mt-0",
+            "mb-0 flex items-center bg-[var(--sw-panel)] md:mb-6 md:mt-0",
             props.smallHeading ? "lg:mb-7" : "lg:mb-8",
             !props.disableSticky && "sticky top-0 z-10"
           )}>

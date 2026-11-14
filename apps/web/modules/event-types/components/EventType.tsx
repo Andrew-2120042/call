@@ -12,10 +12,8 @@ import type { RouterOutputs } from "@calcom/trpc/react";
 import { Form } from "@calcom/ui/components/form";
 import type { VerticalTabItemProps } from "@calcom/ui/components/navigation";
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import type { UseFormReturn } from "react-hook-form";
 import { EventTypeSingleLayout } from "./EventTypeLayout";
-
 
 export type Host = {
   isFixed: boolean;
@@ -80,8 +78,6 @@ export const EventType = ({
   allowDelete = true,
   saveButtonRef,
 }: EventTypeComponentProps) => {
-  const [animationParentRef] = useAutoAnimate<HTMLDivElement>();
-
   return (
     <>
       <EventTypeSingleLayout
@@ -100,7 +96,10 @@ export const EventType = ({
         tabsNavigation={tabsNavigation}
         saveButtonRef={saveButtonRef}>
         <Form form={formMethods} id="event-type-form" handleSubmit={handleSubmit}>
-          <div ref={animationParentRef}>{tabMap[tabName]}</div>
+          {/* Keyed so each tab mounts fresh with a short fade instead of morphing the previous tab's height. */}
+          <div key={tabName} className="sw-tab-enter">
+            {tabMap[tabName]}
+          </div>
         </Form>
       </EventTypeSingleLayout>
       {children}

@@ -6,13 +6,15 @@ type Props = {
   /** Colour of the status bar icons and home indicator (the page's text colour). */
   inkColor: string;
   children: ReactNode;
+  /** Children fill the screen below the status bar without our scroll container (e.g. an iframe). */
+  fill?: boolean;
 };
 
 /**
  * A modern phone (metal band, side buttons, pill camera cutout, status bar, home indicator) drawn in
  * CSS so the editor preview reads as a real device at any resolution.
  */
-export function PhoneFrame({ screenBg, inkColor, children }: Props) {
+export function PhoneFrame({ screenBg, inkColor, children, fill }: Props) {
   return (
     <div className="relative mx-auto h-[652px] w-[320px] select-none" data-testid="phone-frame">
       {/* Side buttons sit behind the band so only their edges show. */}
@@ -34,7 +36,11 @@ export function PhoneFrame({ screenBg, inkColor, children }: Props) {
             <div className="absolute left-1/2 top-[11px] z-20 h-[28px] w-[86px] -translate-x-1/2 rounded-full bg-black">
               <span className="absolute right-[10px] top-1/2 h-[9px] w-[9px] -translate-y-1/2 rounded-full bg-[#141428] shadow-[inset_0_0_0_2px_#0b0b0b]" />
             </div>
-            <div className="no-scrollbar absolute inset-0 overflow-y-auto pb-8 pt-[50px]">{children}</div>
+            {fill ? (
+              <div className="absolute inset-x-0 bottom-0 top-[50px]">{children}</div>
+            ) : (
+              <div className="no-scrollbar absolute inset-0 overflow-y-auto pb-8 pt-[50px]">{children}</div>
+            )}
             {/* Home indicator */}
             <span
               className="absolute bottom-[8px] left-1/2 z-20 h-[5px] w-[118px] -translate-x-1/2 rounded-full opacity-90"
