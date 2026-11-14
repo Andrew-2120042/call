@@ -470,10 +470,10 @@
   "needs_to_be_confirmed_or_rejected_recurring": "Your recurring meeting still needs to be confirmed or rejected.",
   "user_needs_to_confirm_or_reject_booking": "{{user}} still needs to confirm or reject the booking.",
   "user_needs_to_confirm_or_reject_booking_recurring": "{{user}} still needs to confirm or reject each booking of the recurring meeting.",
-  "meeting_is_scheduled": "This meeting is scheduled",
-  "meeting_is_scheduled_recurring": "The recurring events are scheduled",
-  "booking_submitted": "Your booking has been submitted",
-  "booking_submitted_recurring": "Your recurring meeting has been submitted",
+  "meeting_is_scheduled": "You're booked",
+  "meeting_is_scheduled_recurring": "You're booked for every session",
+  "booking_submitted": "Request sent",
+  "booking_submitted_recurring": "Request sent for every session",
   "booking_confirmed": "Your booking has been confirmed",
   "booking_confirmed_recurring": "Your recurring meeting has been confirmed",
   "warning_recurring_event_payment": "Payments are not supported with recurring events yet",
@@ -5009,5 +5009,6 @@
   "assistant_ex_bio_title": "Write my bio",
   "assistant_ex_bio_prompt": "Write me a short, professional bio",
   "assistant_ex_look_title": "Change the look",
-  "assistant_ex_look_prompt": "Make my page feel calm and minimal"
+  "assistant_ex_look_prompt": "Make my page feel calm and minimal",
+  "page_editor_saved_short": "Saved"
 }

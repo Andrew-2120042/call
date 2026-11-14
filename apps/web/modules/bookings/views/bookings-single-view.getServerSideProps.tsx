@@ -240,6 +240,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       : previousBooking;
 
   const isPlatformBooking = eventType.users[0]?.isPlatformManaged || eventType.team?.createdByOAuthClientId;
+  const pageOwnerId = eventType.users[0]?.id ?? bookingInfo.user?.id;
+  const pageLook = pageOwnerId
+    ? await prisma.user.findUnique({
+        where: { id: pageOwnerId },
+        select: { pageTheme: true, pageButtonShape: true },
+      })
+    : null;
 
   return {
     props: {
@@ -267,6 +274,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       isLoggedInUserHost,
       canViewHiddenData,
       internalNotePresets: internalNotes,
+      pageTheme: pageLook?.pageTheme ?? "fog",
+      pageButtonShape: pageLook?.pageButtonShape ?? "rounded",
     },
   };
 }

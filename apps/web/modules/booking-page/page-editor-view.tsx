@@ -79,7 +79,9 @@ export default function PageEditorView() {
         <Panel title={t("page_editor_profile")}>
           <div className="flex items-center gap-4">
             <Avatar size="lg" imageSrc={data.avatarUrl} alt={data.name} />
-            <Link href="/settings/my-account/profile" className="text-subtle text-sm underline">
+            <Link
+              href="/settings/my-account/profile"
+              className="border-default text-emphasis hover:border-emphasis rounded-full border px-4 py-2 text-sm font-medium transition-colors">
               {t("page_editor_change_photo")}
             </Link>
           </div>
@@ -107,6 +109,12 @@ export default function PageEditorView() {
           <div className="mt-3 flex items-center justify-between">
             <span className="text-subtle text-xs">
               {bio.length}/{BIO_LIMIT}
+              {saveProfile.isSuccess && !profileDirty && (
+                <span className="text-emphasis ml-3 inline-flex items-center gap-1">
+                  <Icon name="check" className="h-3.5 w-3.5" />
+                  {t("page_editor_saved_short")}
+                </span>
+              )}
             </span>
             <Button
               disabled={!profileDirty || !name.trim()}
@@ -217,31 +225,42 @@ export default function PageEditorView() {
                       : t("service_kind_instant_long")}
                   </p>
                 </div>
-                <label className="text-subtle flex items-center gap-2 text-xs">
-                  {service.hidden ? t("page_editor_hidden") : t("page_editor_shown")}
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-[#121212]"
-                    checked={!service.hidden}
+                <div className="flex items-center gap-2.5">
+                  <span className="text-subtle w-12 text-right text-xs">
+                    {service.hidden ? t("page_editor_hidden") : t("page_editor_shown")}
+                  </span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={!service.hidden}
                     aria-label={t("page_editor_show_on_page", { title: service.title })}
-                    onChange={(e) => {
+                    onClick={() => {
+                      const hidden = !service.hidden;
                       utils.viewer.pageLook.editor.setData(undefined, {
                         ...data,
-                        services: data.services.map((s) =>
-                          s.id === service.id ? { ...s, hidden: !e.target.checked } : s
-                        ),
+                        services: data.services.map((s) => (s.id === service.id ? { ...s, hidden } : s)),
                       });
-                      updateService.mutate({ id: service.id, hidden: !e.target.checked });
+                      updateService.mutate({ id: service.id, hidden });
                     }}
-                  />
-                </label>
+                    className={classNames(
+                      "relative h-6 w-10 flex-none rounded-full transition-colors",
+                      service.hidden ? "bg-emphasis" : "bg-inverted"
+                    )}>
+                    <span
+                      className={classNames(
+                        "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
+                        service.hidden ? "left-0.5" : "left-0.5 translate-x-4"
+                      )}
+                    />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         </Panel>
       </div>
 
-      <aside className="flex-none lg:sticky lg:top-6">
+      <aside className="flex-none lg:sticky lg:top-4 lg:self-start">
         <div className="flex items-center justify-between pb-3">
           <p className="text-subtle text-sm">{t("page_editor_preview")}</p>
           {publicUrl && (

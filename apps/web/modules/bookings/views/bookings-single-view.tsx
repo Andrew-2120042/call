@@ -1,14 +1,5 @@
 "use client";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
-import classNames from "classnames";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
-import { Toaster } from "sonner";
-import { z } from "zod";
-
 import BookingPageTagManager from "@calcom/app-store/BookingPageTagManager";
 import type { getEventLocationValue } from "@calcom/app-store/locations";
 import { getSuccessPageLocationMessage, guessEventLocationType } from "@calcom/app-store/locations";
@@ -21,8 +12,13 @@ import {
   useIsBackgroundTransparent,
   useIsEmbed,
 } from "@calcom/embed-core/embed-iframe";
+import { pageThemeStyle } from "@calcom/features/booking-page-theme/themes";
 import { Price } from "@calcom/features/bookings/components/event-meta/Price";
-import { getCalendarLinks, CalendarLinkType } from "@calcom/features/bookings/lib/getCalendarLinks";
+import { CalendarLinkType, getCalendarLinks } from "@calcom/features/bookings/lib/getCalendarLinks";
+import {
+  formatOptionDisplayValue,
+  getOptionDisplayValue,
+} from "@calcom/features/bookings/lib/getOptionDisplayValue";
 import { RATING_OPTIONS, validateRating } from "@calcom/features/bookings/lib/rating";
 import { isWithinMinimumRescheduleNotice as isWithinMinimumRescheduleNoticeUtil } from "@calcom/features/bookings/lib/reschedule/isWithinMinimumRescheduleNotice";
 import type { nameObjectSchema } from "@calcom/features/eventtypes/lib/eventNaming";
@@ -39,12 +35,10 @@ import isSmsCalEmail from "@calcom/lib/isSmsCalEmail";
 import { markdownToSafeHTML } from "@calcom/lib/markdownToSafeHTML";
 import { getEveryFreqFor } from "@calcom/lib/recurringStrings";
 import { getIs24hClockFromLocalStorage, isBrowserLocale24h } from "@calcom/lib/timeFormat";
-import { getTimeShiftFlags, getFirstShiftFlags } from "@calcom/lib/timeShift";
+import { getFirstShiftFlags, getTimeShiftFlags } from "@calcom/lib/timeShift";
 import { CURRENT_TIMEZONE } from "@calcom/lib/timezoneConstants";
 import { localStorage } from "@calcom/lib/webstorage";
-import { AssignmentReasonEnum, BookingStatus, SchedulingType } from "@calcom/prisma/enums";
-
-import assignmentReasonBadgeTitleMap from "@calcom/web/lib/booking/assignmentReasonBadgeTitleMap";
+import { type AssignmentReasonEnum, BookingStatus, SchedulingType } from "@calcom/prisma/enums";
 import { bookingMetadataSchema } from "@calcom/prisma/zod-utils";
 import { trpc } from "@calcom/trpc/react";
 import { Alert } from "@calcom/ui/components/alert";
@@ -54,24 +48,21 @@ import { Button } from "@calcom/ui/components/button";
 import { EmptyScreen } from "@calcom/ui/components/empty-screen";
 import { EmailInput, TextArea } from "@calcom/ui/components/form";
 import { Icon } from "@calcom/ui/components/icon";
-import {
-  CalendarIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  ExternalLinkIcon,
-  XIcon,
-} from "@coss/ui/icons";
 import { showToast } from "@calcom/ui/components/toast";
 import { useCalcomTheme } from "@calcom/ui/styles";
 import CancelBooking from "@calcom/web/components/booking/CancelBooking";
 import EventReservationSchema from "@calcom/web/components/schemas/EventReservationSchema";
+import assignmentReasonBadgeTitleMap from "@calcom/web/lib/booking/assignmentReasonBadgeTitleMap";
 import { timeZone } from "@calcom/web/lib/clock";
-
-import {
-  formatOptionDisplayValue,
-  getOptionDisplayValue,
-} from "@calcom/features/bookings/lib/getOptionDisplayValue";
-
+import { CalendarIcon, CheckIcon, ChevronLeftIcon, ExternalLinkIcon, XIcon } from "@coss/ui/icons";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import classNames from "classnames";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Fragment, useEffect, useState } from "react";
+import { Toaster } from "sonner";
+import { z } from "zod";
 import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
 import type { PageProps } from "./bookings-single-view.getServerSideProps";
@@ -475,7 +466,10 @@ export default function Success(props: PageProps) {
   })();
 
   return (
-    <div className={isEmbed ? "" : "h-screen"} data-testid="success-page">
+    <div
+      className={isEmbed ? "" : "sw-confirm min-h-screen"}
+      style={isEmbed ? undefined : pageThemeStyle(props.pageTheme, props.pageButtonShape)}
+      data-testid="success-page">
       {!isEmbed && !isFeedbackMode && (
         <EventReservationSchema
           reservationId={bookingInfo.uid}
@@ -555,7 +549,7 @@ export default function Success(props: PageProps) {
                           isCancelled ? "bg-error" : ""
                         )}>
                         {!giphyImage && !needsConfirmation && !isAwaitingPayment && isReschedulable && (
-                          <CheckIcon className="h-5 w-5 text-green-600 dark:text-green-400" />
+                          <CheckIcon className="h-5 w-5 text-white" />
                         )}
                         {(needsConfirmation || isAwaitingPayment) && isReschedulable && (
                           <CalendarIcon className="text-emphasis h-5 w-5" />
@@ -657,7 +651,7 @@ export default function Success(props: PageProps) {
                                     <span data-testid="booking-host-name" className="mr-2">
                                       {bookingInfo.user.name}
                                     </span>
-                                    <Badge variant="blue">{t("Host")}</Badge>
+                                    <Badge variant="gray">{t("Host")}</Badge>
                                   </div>
                                   {!bookingInfo.eventType?.hideOrganizerEmail && (
                                     <p className="text-default" data-testid="booking-host-email">
@@ -794,10 +788,7 @@ export default function Success(props: PageProps) {
                             <>
                               <div className="mt-9 font-medium">{t("assignment_reason")}</div>
                               <div className="col-span-2 mb-2 mt-9">
-                                <Badge
-                                  variant="gray"
-                                  className="mb-2 cursor-pointer hover:opacity-80"
->
+                                <Badge variant="gray" className="mb-2 cursor-pointer hover:opacity-80">
                                   {t(
                                     assignmentReasonBadgeTitleMap(
                                       bookingInfo.assignmentReason[0].reasonEnum as AssignmentReasonEnum
