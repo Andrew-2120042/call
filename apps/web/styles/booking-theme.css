@@ -162,3 +162,13 @@
 .sw-confirm {
   font-family: var(--sw-font, var(--font-sans));
 }
+
+/* Inside the editor's preview frames the page should look like a phone/desktop screen, without scrollbars. */
+html.sw-studio-preview,
+html.sw-studio-preview * {
+  scrollbar-width: none;
+}
+
+html.sw-studio-preview ::-webkit-scrollbar {
+  display: none;
+}
