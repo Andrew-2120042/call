@@ -4,7 +4,6 @@
 @import "../../../packages/coss-ui/src/styles/globals.css";
 @import "./raqb.css";
 @import "./brand-tokens.css";
-@import "./booking-theme.css";
 @import "./dashboard-theme.css";
 
 ::-moz-selection {

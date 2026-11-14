@@ -1,5 +1,4 @@
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
-import { type PageStyle, parsePageStyle } from "@calcom/features/booking-page-theme/themes";
 import type { GetBookingType } from "@calcom/features/bookings/lib/get-booking";
 import { getBookingForReschedule, getBookingForSeatedEvent } from "@calcom/features/bookings/lib/get-booking";
 import { getUsernameList } from "@calcom/features/eventtypes/lib/defaultEvents";
@@ -25,9 +24,6 @@ type Props = {
   user: string;
   slug: string;
   isBrandingHidden: boolean;
-  pageTheme: string;
-  pageButtonShape: string;
-  pageStyle: PageStyle;
   isSEOIndexable: boolean | null;
   themeBasis: null | string;
   orgBannerUrl: null;
@@ -181,9 +177,6 @@ async function getDynamicGroupPageProps(context: GetServerSidePropsContext) {
     user: usernames.join("+"),
     slug,
     isBrandingHidden: false,
-    pageTheme: "fog",
-    pageButtonShape: "rounded",
-    pageStyle: {},
     isSEOIndexable: true,
     themeBasis: null,
     bookingUid: bookingUid ? `${bookingUid}` : null,
@@ -272,10 +265,6 @@ async function getUserPageProps(context: GetServerSidePropsContext) {
       : false
     : user?.allowSEOIndexing;
 
-  const pageLook = await prisma.user.findUnique({
-    where: { id: user.id },
-    select: { pageTheme: true, pageButtonShape: true, pageStyle: true },
-  });
   const props: Props = {
     eventData: eventData,
     user: username,
@@ -284,9 +273,6 @@ async function getUserPageProps(context: GetServerSidePropsContext) {
       shouldHideBrandingForUserEvent({ eventTypeId: eventData.id, owner: user }) &&
       (await getPlanService().hasFeature(user.id, "removeBranding")),
     isSEOIndexable: allowSEOIndexing,
-    pageTheme: pageLook?.pageTheme ?? "fog",
-    pageButtonShape: pageLook?.pageButtonShape ?? "rounded",
-    pageStyle: parsePageStyle(pageLook?.pageStyle),
     themeBasis: username,
     bookingUid: bookingUid ? `${bookingUid}` : null,
     rescheduleUid: null,

@@ -27,7 +27,6 @@ import { shallow } from "zustand/shallow";
 import { useBookings } from "../hooks/useBookings";
 import { getLastVisibleDate, useCalendars } from "../hooks/useCalendars";
 import { useSlots } from "../hooks/useSlots";
-import type { BookerLayoutSettings } from "@calcom/prisma/zod-utils";
 import { useVerifyCode } from "../hooks/useVerifyCode";
 import { useVerifyEmail } from "../hooks/useVerifyEmail";
 import type { OverlaySocialLoginProvider } from "../types";
@@ -37,8 +36,6 @@ const OVERLAY_SOCIAL_LOGIN_PROVIDERS: OverlaySocialLoginProvider[] = ["google", 
 
 export type BookerWebWrapperAtomProps = BookerProps & {
   eventData?: NonNullable<Awaited<ReturnType<typeof getPublicEvent>>>;
-  /** Layout settings from the owner's booking page editor; wins over the event's own when set. */
-  bookerLayoutsOverride?: BookerLayoutSettings;
 };
 
 const BookerWebWrapperComponent = (props: BookerWebWrapperAtomProps): JSX.Element => {
@@ -58,7 +55,7 @@ const BookerWebWrapperComponent = (props: BookerWebWrapperAtomProps): JSX.Elemen
       }
     : clientFetchedEvent;
 
-  const bookerLayout = useBookerLayout(props.bookerLayoutsOverride ?? event.data?.profile?.bookerLayouts);
+  const bookerLayout = useBookerLayout(event.data?.profile?.bookerLayouts);
   const selectedDate = useBookerStoreContext((state) => state.selectedDate);
   const isRedirect = searchParams?.get("redirected") === "true" || false;
   const fromUserNameRedirected = searchParams?.get("username") || "";

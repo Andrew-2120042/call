@@ -1,7 +1,6 @@
 import slugify from "@calcom/lib/slugify";
 import type { PrismaClient } from "@calcom/prisma";
 import type { Prisma } from "@calcom/prisma/client";
-import { resolvePageTheme } from "../../booking-page-theme/themes";
 import { uniqueSlug } from "../../calendly-import/lib/mapCalendly";
 import type {
   AssistantPageSnapshot,
@@ -58,7 +57,7 @@ export class AssistantActionsRepository implements IAssistantActions {
     const [user, services] = await Promise.all([
       this.prismaClient.user.findUnique({
         where: { id: userId },
-        select: { name: true, bio: true, pageTheme: true, pageButtonShape: true },
+        select: { name: true, bio: true },
       }),
       this.prismaClient.eventType.findMany({
         where: { userId, teamId: null, parentId: null },
@@ -69,8 +68,6 @@ export class AssistantActionsRepository implements IAssistantActions {
     return {
       name: user?.name ?? "",
       bio: user?.bio ?? "",
-      theme: resolvePageTheme(user?.pageTheme).label,
-      buttonShape: user?.pageButtonShape ?? "rounded",
       services: services.map((row) => this.toSummary(row)),
     };
   }
@@ -123,12 +120,5 @@ export class AssistantActionsRepository implements IAssistantActions {
 
   async updateProfile(userId: number, patch: { name?: string; bio?: string }) {
     await this.prismaClient.user.update({ where: { id: userId }, data: patch });
-  }
-
-  async setLook(userId: number, patch: { theme?: string; buttonShape?: string }) {
-    await this.prismaClient.user.update({
-      where: { id: userId },
-      data: { pageTheme: patch.theme, pageButtonShape: patch.buttonShape },
-    });
   }
 }

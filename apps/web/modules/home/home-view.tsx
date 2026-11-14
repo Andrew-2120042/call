@@ -1,10 +1,8 @@
 "use client";
 
 import dayjs from "@calcom/dayjs";
-import { resolvePageTheme } from "@calcom/features/booking-page-theme/themes";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
-import { Button } from "@calcom/ui/components/button";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
@@ -30,8 +28,6 @@ export default function HomeView() {
     }
   };
 
-  const theme = resolvePageTheme(data.pageTheme);
-
   return (
     <div className="mx-auto max-w-5xl" data-testid="home">
       <header className="border-subtle flex flex-wrap items-center justify-between gap-4 border-b pb-6">
@@ -48,50 +44,6 @@ export default function HomeView() {
           <Icon name="share-2" className="h-4 w-4 flex-none" />
         </button>
       </header>
-
-      <h2 className="text-emphasis mt-8 text-[22px] font-semibold tracking-[-0.02em]">
-        {t("home_your_page")}
-      </h2>
-      <div
-        className="mt-4 flex w-[280px] flex-col rounded-3xl p-4"
-        style={{ background: theme.bg, color: theme.fg }}
-        data-testid="home-page-card">
-        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-xs font-medium text-[#121212]">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          {t("home_live")}
-        </span>
-        <div className="mx-auto mt-4 h-[148px] w-[148px] overflow-hidden rounded-full bg-white/60">
-          {data.avatarUrl ? (
-            // biome-ignore lint/performance/noImgElement: user avatar from our own storage
-            <img src={data.avatarUrl} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <div className="grid h-full w-full place-items-center text-4xl font-semibold opacity-60">
-              {(data.name || "?").slice(0, 1).toUpperCase()}
-            </div>
-          )}
-        </div>
-        <div className="mt-5 flex items-end justify-between gap-2">
-          <div className="min-w-0">
-            <p className="truncate text-lg font-semibold">{data.name}</p>
-            <p className="text-sm opacity-60">{t("home_service_count", { count: data.serviceCount })}</p>
-          </div>
-          <div className="flex flex-none gap-1.5">
-            <a
-              href={data.pageUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={t("home_open_page")}
-              className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#121212]">
-              <Icon name="external-link" className="h-4 w-4" />
-            </a>
-            <Link
-              href="/page-editor"
-              className="grid h-10 place-items-center rounded-full bg-white px-4 text-sm font-medium text-[#121212]">
-              {t("edit")}
-            </Link>
-          </div>
-        </div>
-      </div>
 
       <h2 className="text-emphasis mt-10 text-[22px] font-semibold tracking-[-0.02em]">
         {t("home_last_week")}

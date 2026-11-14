@@ -24,8 +24,6 @@ function fakeActions(): IAssistantActions & { calls: string[] } {
     getPage: vi.fn(async () => ({
       name: "Sam",
       bio: "",
-      theme: "fog",
-      buttonShape: "rounded",
       services: [],
     })),
     createService: vi.fn(async (userId, input) => {
@@ -54,7 +52,6 @@ function fakeActions(): IAssistantActions & { calls: string[] } {
         : null
     ),
     updateProfile: vi.fn(async () => undefined),
-    setLook: vi.fn(async () => undefined),
   };
 }
 
@@ -66,7 +63,6 @@ describe("runAssistant", () => {
         { tool: "get_page", input: {} },
         { tool: "create_service", input: { title: "Intro call", minutes: 20, needsApproval: false } },
         { tool: "update_profile", input: { bio: "I help new managers lead." } },
-        { tool: "set_page_look", input: { theme: "sky" } },
       ],
       "Added an intro call and wrote your bio."
     );
@@ -86,7 +82,6 @@ describe("runAssistant", () => {
     expect(result.actions).toEqual([
       { type: "service_created", title: "Intro call", minutes: 20, url: "http://x/sam/intro" },
       { type: "profile_updated", fields: ["bio"] },
-      { type: "look_updated", theme: "sky" },
     ]);
   });
 

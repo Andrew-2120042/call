@@ -1,5 +1,4 @@
 import { encode } from "node:querystring";
-import { type PageStyle, parsePageStyle } from "@calcom/features/booking-page-theme/themes";
 import { getUsernameList } from "@calcom/features/eventtypes/lib/defaultEvents";
 import { getEventTypesPublic } from "@calcom/features/eventtypes/lib/getEventTypesPublic";
 import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
@@ -75,9 +74,6 @@ type UserPageProps = {
     | "schedulingType"
   >)[];
   isOrgSEOIndexable: boolean | undefined;
-  pageTheme: string;
-  pageButtonShape: string;
-  pageStyle: PageStyle;
   isBrandingHidden: boolean;
 } & EmbedProps;
 
@@ -186,10 +182,10 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
   }
 
   const safeBio = markdownToSafeHTML(user.bio) || "";
-  const [pageLook, canRemoveBranding] = await Promise.all([
+  const [brandingPreference, canRemoveBranding] = await Promise.all([
     prisma.user.findUnique({
       where: { id: user.id },
-      select: { pageTheme: true, pageButtonShape: true, pageStyle: true, hideBranding: true },
+      select: { hideBranding: true },
     }),
     getPlanService().hasFeature(user.id, "removeBranding"),
   ]);
@@ -220,10 +216,7 @@ export const getServerSideProps: GetServerSideProps<UserPageProps> = async (cont
       themeBasis: user.username,
       markdownStrippedBio,
       isOrgSEOIndexable: org?.organizationSettings?.allowSEOIndexing ?? false,
-      pageTheme: pageLook?.pageTheme ?? "fog",
-      pageButtonShape: pageLook?.pageButtonShape ?? "rounded",
-      pageStyle: parsePageStyle(pageLook?.pageStyle),
-      isBrandingHidden: !!pageLook?.hideBranding && canRemoveBranding,
+      isBrandingHidden: !!brandingPreference?.hideBranding && canRemoveBranding,
     },
   };
 };

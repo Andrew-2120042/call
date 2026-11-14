@@ -1,7 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import * as z from "zod/v4";
-import { BUTTON_SHAPES, PAGE_THEME_IDS, PAGE_THEMES } from "../../booking-page-theme/themes";
 import type { AssistantAction, ChatMessage, IAssistantActions } from "./types";
 
 export const DEFAULT_ASSISTANT_MODEL = "claude-haiku-5-5";
@@ -9,7 +8,7 @@ const MAX_TOOL_ROUNDS = 8;
 
 const SYSTEM_PROMPT = `You are the setup assistant inside Slotwise, a booking page for coaches, creators, consultants and other solo service providers. You set things up for the owner instead of explaining how to.
 
-What you can do with tools: read their page, create services, edit services (title, length, description, needs-approval, hide/show), update their display name and bio, and change the page colour and button shape.
+What you can do with tools: read their page, create services, edit services (title, length, description, needs-approval, hide/show), and update their display name and bio.
 
 How to work:
 - Call get_page first when you need to know what exists, so you don't create duplicates.
@@ -18,14 +17,10 @@ How to work:
 - Use needsApproval=true for high-value, long or first-time sessions where the owner would want to screen people; false for quick intro calls.
 - Bios are one or two sentences in the first person, specific about who they help. No hashtags, no emoji unless they use them.
 - Prices: payments aren't available yet. If they mention a price, put it in the service description ("$150 per session") and say payments come later.
-- You can't change availability, calendars or billing. Point them to Availability, Apps or Billing in one sentence.
+- You can't change availability, calendars, billing or how the page looks. Point them to Availability, Apps or Billing in one sentence.
 - Keep replies short and concrete. Ask at most one question, and only when you truly can't make a reasonable choice.
 - Write plain sentences. No markdown: no asterisks, no bullet characters, no headings.
-- Only say you checked or confirmed something after you actually called get_page in this turn.
-- Page colours have a display name and an id. Talk to the owner using the display name only.`;
-
-const themeEnum = z.enum(PAGE_THEME_IDS as [string, ...string[]]);
-const shapeEnum = z.enum(BUTTON_SHAPES as [string, ...string[]]);
+- Only say you checked or confirmed something after you actually called get_page in this turn.`;
 
 export async function runAssistant(options: {
   client: Anthropic;
@@ -40,8 +35,7 @@ export async function runAssistant(options: {
   const tools = [
     betaZodTool({
       name: "get_page",
-      description:
-        "Read the owner's booking page: name, bio, page look and all services (including hidden ones).",
+      description: "Read the owner's booking page: name, bio and all services (including hidden ones).",
       inputSchema: z.object({}),
       run: async () => JSON.stringify(await actions.getPage(userId)),
     }),
@@ -93,19 +87,6 @@ export async function runAssistant(options: {
       run: async (patch) => {
         await actions.updateProfile(userId, patch);
         performed.push({ type: "profile_updated", fields: Object.keys(patch) });
-        return "Saved.";
-      },
-    }),
-    betaZodTool({
-      name: "set_page_look",
-      description: `Change the booking page colour and/or button shape. Colours as id (display name): ${PAGE_THEME_IDS.map(
-        (id) => `${id} (${PAGE_THEMES[id].label})`
-      ).join(", ")}. Button shapes: ${BUTTON_SHAPES.join(", ")}.`,
-      inputSchema: z.object({ theme: themeEnum.optional(), buttonShape: shapeEnum.optional() }),
-      run: async (patch) => {
-        await actions.setLook(userId, patch as Parameters<IAssistantActions["setLook"]>[1]);
-        if (!performed.some((action) => action.type === "look_updated"))
-          performed.push({ type: "look_updated", ...patch });
         return "Saved.";
       },
     }),

@@ -1,5 +1,3 @@
-import type { ButtonShape, PageThemeId } from "../../booking-page-theme/themes";
-
 export type AssistantServiceSummary = {
   id: number;
   title: string;
@@ -13,8 +11,6 @@ export type AssistantServiceSummary = {
 export type AssistantPageSnapshot = {
   name: string;
   bio: string;
-  theme: string;
-  buttonShape: string;
   services: AssistantServiceSummary[];
 };
 
@@ -31,14 +27,12 @@ export interface IAssistantActions {
     patch: ServicePatch
   ): Promise<AssistantServiceSummary | null>;
   updateProfile(userId: number, patch: { name?: string; bio?: string }): Promise<void>;
-  setLook(userId: number, patch: { theme?: PageThemeId; buttonShape?: ButtonShape }): Promise<void>;
 }
 
 /** What the assistant did, shown to the owner as confirmations under its reply. */
 export type AssistantAction =
   | { type: "service_created"; title: string; minutes: number; url: string }
   | { type: "service_updated"; title: string }
-  | { type: "profile_updated"; fields: string[] }
-  | { type: "look_updated"; theme?: string; buttonShape?: string };
+  | { type: "profile_updated"; fields: string[] };
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };

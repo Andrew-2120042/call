@@ -11,7 +11,6 @@ import {
   useIsBackgroundTransparent,
   useIsEmbed,
 } from "@calcom/embed-core/embed-iframe";
-import { pageLookStyle } from "@calcom/features/booking-page-theme/themes";
 import { Price } from "@calcom/features/bookings/components/event-meta/Price";
 import { CalendarLinkType, getCalendarLinks } from "@calcom/features/bookings/lib/getCalendarLinks";
 import {
@@ -458,8 +457,7 @@ export default function Success(props: PageProps) {
 
   return (
     <div
-      className={isEmbed ? "" : "sw-confirm min-h-screen"}
-      style={isEmbed ? undefined : pageLookStyle(props.pageTheme, props.pageButtonShape, props.pageStyle)}
+      className={isEmbed ? "" : "min-h-screen"}
       data-testid="success-page">
       {!isEmbed && !isFeedbackMode && (
         <EventReservationSchema

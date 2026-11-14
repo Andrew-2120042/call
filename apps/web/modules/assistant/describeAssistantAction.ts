@@ -1,8 +1,7 @@
 export type AssistantAction =
   | { type: "service_created"; title: string; minutes: number; url: string }
   | { type: "service_updated"; title: string }
-  | { type: "profile_updated"; fields: string[] }
-  | { type: "look_updated"; theme?: string; buttonShape?: string };
+  | { type: "profile_updated"; fields: string[] };
 
 export function describeAssistantAction(
   action: AssistantAction,
@@ -19,7 +18,5 @@ export function describeAssistantAction(
         : action.fields.includes("name")
           ? t("assistant_did_name")
           : t("assistant_did_bio");
-    case "look_updated":
-      return t("assistant_did_look");
   }
 }

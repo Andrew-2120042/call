@@ -15,10 +15,9 @@ const EXAMPLES: { icon: IconName; titleKey: string; promptKey: string }[] = [
   { icon: "zap", titleKey: "assistant_ex_setup_title", promptKey: "assistant_ex_setup_prompt" },
   { icon: "plus", titleKey: "assistant_ex_service_title", promptKey: "assistant_ex_service_prompt" },
   { icon: "pencil", titleKey: "assistant_ex_bio_title", promptKey: "assistant_ex_bio_prompt" },
-  { icon: "paintbrush", titleKey: "assistant_ex_look_title", promptKey: "assistant_ex_look_prompt" },
 ];
 
-/** Assistant page: owners describe what they want and it sets it up (services, bio, look). */
+/** Assistant page: owners describe what they want and it sets it up (services, bio). */
 export default function AssistantView() {
   const { t } = useLocale();
   const utils = trpc.useUtils();
@@ -36,7 +35,7 @@ export default function AssistantView() {
         { role: "assistant", content: result.reply, actions: result.actions },
       ]);
       if (result.actions.length) {
-        await Promise.all([utils.viewer.home.get.invalidate(), utils.viewer.pageLook.editor.invalidate()]);
+        await utils.viewer.home.get.invalidate();
       }
     },
     onError: (error) => setTurns((current) => [...current, { role: "assistant", content: error.message }]),

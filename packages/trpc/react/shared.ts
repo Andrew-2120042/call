@@ -34,7 +34,6 @@ export const ENDPOINTS = [
   "bookingRules",
   "customDomain",
   "calendlyImport",
-  "pageLook",
   "home",
   "assistant",
   "webhook",

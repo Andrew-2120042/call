@@ -1,7 +1,7 @@
 "use client";
 
 import type { VerticalTabItemProps } from "@calcom/ui/components/navigation";
-import { PhoneFrame } from "@calcom/web/modules/booking-page/PhoneFrame";
+import { PhoneFrame } from "./PhoneFrame";
 import classNames from "classnames";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

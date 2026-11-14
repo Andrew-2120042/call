@@ -24,7 +24,6 @@ export const getHandler = async ({ ctx }: Ctx) => {
           avatarUrl: true,
           bio: true,
           defaultScheduleId: true,
-          pageTheme: true,
         },
       }),
       prisma.customDomain.findUnique({ where: { userId }, select: { domain: true, verifiedAt: true } }),
@@ -65,11 +64,11 @@ export const getHandler = async ({ ctx }: Ctx) => {
   ]);
   const setup = [
     { id: "photo", done: !!user?.avatarUrl, href: "/settings/my-account/profile" },
-    { id: "bio", done: !!user?.bio?.trim(), href: "/page-editor" },
+    { id: "bio", done: !!user?.bio?.trim(), href: "/settings/my-account/profile" },
     { id: "service", done: serviceCount > 0, href: "/event-types" },
     { id: "hours", done: !!user?.defaultScheduleId, href: "/availability" },
     { id: "calendar", done: calendarCount > 0, href: "/apps/categories/calendar" },
-    { id: "first_booking", done: everBooked > 0, href: "/page-editor" },
+    { id: "first_booking", done: everBooked > 0, href: "/event-types" },
   ] as const;
 
   const pageUrl = domain?.verifiedAt ? `https://${domain.domain}` : `${WEBAPP_URL}/${user?.username ?? ""}`;
@@ -77,7 +76,6 @@ export const getHandler = async ({ ctx }: Ctx) => {
   return {
     name: user?.name ?? user?.username ?? "",
     avatarUrl: user?.avatarUrl ?? null,
-    pageTheme: user?.pageTheme ?? "fog",
     pageUrl,
     serviceCount,
     setup,

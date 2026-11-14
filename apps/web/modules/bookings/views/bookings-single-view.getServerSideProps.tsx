@@ -1,6 +1,5 @@
 import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
-import { parsePageStyle } from "@calcom/features/booking-page-theme/themes";
 import getBookingInfo from "@calcom/features/bookings/lib/getBookingInfo";
 import { BookingRepository } from "@calcom/features/bookings/repositories/BookingRepository";
 import { getDefaultEvent } from "@calcom/features/eventtypes/lib/defaultEvents";
@@ -241,14 +240,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       : previousBooking;
 
   const isPlatformBooking = eventType.users[0]?.isPlatformManaged || eventType.team?.createdByOAuthClientId;
-  const pageOwnerId = eventType.users[0]?.id ?? bookingInfo.user?.id;
-  const pageLook = pageOwnerId
-    ? await prisma.user.findUnique({
-        where: { id: pageOwnerId },
-        select: { pageTheme: true, pageButtonShape: true, pageStyle: true },
-      })
-    : null;
-
   return {
     props: {
       orgSlug: currentOrgDomain,
@@ -275,9 +266,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       isLoggedInUserHost,
       canViewHiddenData,
       internalNotePresets: internalNotes,
-      pageTheme: pageLook?.pageTheme ?? "fog",
-      pageButtonShape: pageLook?.pageButtonShape ?? "rounded",
-      pageStyle: parsePageStyle(pageLook?.pageStyle),
     },
   };
 }
