@@ -32,6 +32,7 @@ import { CalendarPanel } from "./CalendarPanel";
 import { PhoneFrame } from "./PhoneFrame";
 import { BrowserFrame, LivePageFrame } from "./PreviewFrames";
 import { ServiceForm } from "./ServiceForm";
+import { ServiceMenu } from "./ServiceMenu";
 import { StudioAssistant } from "./StudioAssistant";
 import { ColourInput, FieldRow, OptionTile, Segmented, Toggle } from "./studio-controls";
 
@@ -247,10 +248,27 @@ export default function PageStudio() {
       setDraft(next);
       return;
     }
+    const stillThere = (id: number) => next.order.includes(id);
     const added = next.order.filter((id) => !base.order.includes(id));
     const addedHidden = Object.fromEntries(added.map((id) => [id, next.hidden[id]]));
-    setBase({ ...base, order: [...base.order, ...added], hidden: { ...base.hidden, ...addedHidden } });
-    setDraft({ ...draft, order: [...draft.order, ...added], hidden: { ...draft.hidden, ...addedHidden } });
+    setBase({
+      ...base,
+      order: [...base.order.filter(stillThere), ...added],
+      hidden: { ...base.hidden, ...addedHidden },
+    });
+    setDraft({
+      ...draft,
+      order: [...draft.order.filter(stillThere), ...added],
+      hidden: { ...draft.hidden, ...addedHidden },
+    });
+    if (previewServiceId !== null && !stillThere(previewServiceId)) setPreviewServiceId(null);
+  };
+
+  const moveToTop = (index: number) => {
+    if (index <= 0) return;
+    const order = [...draft.order];
+    const [moved] = order.splice(index, 1);
+    update({ order: [moved, ...order] });
   };
 
   // Drag order is kept apart from the draft so one drag is one undo step, not one per row crossed.
@@ -573,13 +591,17 @@ export default function PageStudio() {
                           label={t("page_editor_show_on_page", { title: service.title })}
                           onChange={(on) => update({ hidden: { ...draft.hidden, [service.id]: !on } })}
                         />
-                        <button
-                          type="button"
-                          onClick={() => setScreen({ kind: "service", id: service.id })}
-                          aria-label={t("studio_edit_service_named", { title: service.title })}
-                          className="grid h-8 w-8 flex-none place-items-center rounded-full hover:bg-[#f1f0ed]">
-                          <Icon name="ellipsis-vertical" className="h-4 w-4" />
-                        </button>
+                        <ServiceMenu
+                          service={service}
+                          isFirst={index === 0}
+                          isLast={index === listServices.length - 1}
+                          onEdit={() => setScreen({ kind: "service", id: service.id })}
+                          onPreview={() => setPreviewServiceId(service.id)}
+                          onMove={(to) =>
+                            to === "top" ? moveToTop(index) : move(index, to === "up" ? -1 : 1)
+                          }
+                          onChanged={refreshFromServer}
+                        />
                       </li>
                     );
                   })}
