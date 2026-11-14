@@ -19,7 +19,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { IconName } from "@calcom/ui/components/icon";
 import { Icon } from "@calcom/ui/components/icon";
 import type { ReactNode } from "react";
-import { ColourInput, FieldRow, OptionTile, Segmented, Toggle } from "./studio-controls";
+import { ColourInput, FieldRow, OptionTile, Segmented, Select, Toggle } from "./studio-controls";
 
 const LAYOUT_ICONS: Record<CalendarLayout, IconName> = {
   month_view: "calendar-days",
@@ -67,21 +67,23 @@ export function CalendarPanel({ style, services, scope, onScopeChange, onChange 
   return (
     <div className="space-y-7">
       <div>
-        <label htmlFor="calendar-scope" className="text-[14px] font-semibold">
-          {t("studio_calendar_applies_to")}
-        </label>
-        <select
-          id="calendar-scope"
+        <div className="mb-1.5 text-[14px] font-semibold">{t("studio_calendar_applies_to")}</div>
+        <Select
+          label={t("studio_calendar_applies_to")}
+          testId="calendar-scope"
           value={scope === null ? "all" : String(scope)}
-          onChange={(e) => onScopeChange(e.target.value === "all" ? null : Number(e.target.value))}
-          className="mt-1.5 w-full rounded-xl border border-[#e4e3df] bg-white px-3 py-2.5 text-[14px] focus:border-[#121212] focus:outline-none">
-          <option value="all">{t("studio_calendar_all_services")}</option>
-          {services.map((service) => (
-            <option key={service.id} value={service.id}>
-              {service.title}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onScopeChange(value === "all" ? null : Number(value))}
+          options={[
+            { value: "all", label: t("studio_calendar_all_services") },
+            ...services.map((service) => ({
+              value: String(service.id),
+              label: service.title,
+              hint: style.calendarByService?.[String(service.id)]
+                ? t("studio_calendar_own_settings")
+                : undefined,
+            })),
+          ]}
+        />
         <p className="mt-1.5 text-[12px] text-[#6b6a66]">
           {scope === null
             ? t("studio_calendar_scope_all_hint")

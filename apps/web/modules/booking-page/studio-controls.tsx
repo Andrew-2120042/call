@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { Icon } from "@calcom/ui/components/icon";
+import { useEffect, useId, useRef, useState } from "react";
 
 const SWATCHES = [
   "#ffffff",
@@ -133,5 +134,127 @@ export function Toggle(props: { on: boolean; label: string; onChange: (on: boole
         style={{ transform: props.on ? "translateX(16px)" : "translateX(0)" }}
       />
     </button>
+  );
+}
+
+type SelectOption<T extends string> = { value: T; label: string; hint?: string };
+
+/** The editor's own dropdown, so it matches the rest of the panel instead of the browser's native menu. */
+export function Select<T extends string>(props: {
+  value: T;
+  options: SelectOption<T>[];
+  onChange: (value: T) => void;
+  label: string;
+  testId?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
+  const selected = props.options.find((option) => option.value === props.value) ?? props.options[0];
+
+  useEffect(() => {
+    if (!open) return;
+    setActive(
+      Math.max(
+        0,
+        props.options.findIndex((option) => option.value === props.value)
+      )
+    );
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open, props.options, props.value]);
+
+  const choose = (value: T) => {
+    props.onChange(value);
+    setOpen(false);
+  };
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-label={props.label}
+        data-testid={props.testId}
+        onClick={() => setOpen((current) => !current)}
+        onKeyDown={(event) => {
+          if (!open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+            event.preventDefault();
+            setOpen(true);
+            return;
+          }
+          if (!open) return;
+          if (event.key === "Escape") {
+            event.preventDefault();
+            setOpen(false);
+          } else if (event.key === "ArrowDown") {
+            event.preventDefault();
+            setActive((index) => Math.min(index + 1, props.options.length - 1));
+          } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            setActive((index) => Math.max(index - 1, 0));
+          } else if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            choose(props.options[active].value);
+          }
+        }}
+        className={classNames(
+          "flex w-full items-center justify-between gap-3 border bg-white px-4 text-left text-[14px] font-medium transition",
+          open ? "border-[#121212]" : "border-[#e4e3df] hover:border-[#bdbcb7]"
+        )}
+        style={{ height: 46, borderRadius: 14 }}>
+        <span className="truncate">{selected?.label}</span>
+        <Icon
+          name="chevron-down"
+          className={classNames(
+            "h-4 w-4 flex-none text-[#6b6a66] transition-transform",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={props.label}
+          className="no-scrollbar absolute inset-x-0 z-30 mt-1.5 overflow-y-auto bg-white p-1.5"
+          style={{
+            maxHeight: 280,
+            borderRadius: 16,
+            boxShadow: "0 0 0 1px rgba(0,0,0,.06), 0 18px 40px -16px rgba(0,0,0,.28)",
+          }}>
+          {props.options.map((option, index) => {
+            const isSelected = option.value === props.value;
+            return (
+              <li
+                key={option.value}
+                role="option"
+                aria-selected={isSelected}
+                onPointerEnter={() => setActive(index)}
+                onClick={() => choose(option.value)}
+                className={classNames(
+                  "flex cursor-pointer items-center justify-between gap-3 px-3 py-2.5 text-[14px]",
+                  index === active && "bg-[#f3f2ef]"
+                )}
+                style={{ borderRadius: 10 }}>
+                <span className="min-w-0">
+                  <span className={classNames("block truncate", isSelected && "font-semibold")}>
+                    {option.label}
+                  </span>
+                  {option.hint && <span className="block text-[12px] text-[#6b6a66]">{option.hint}</span>}
+                </span>
+                {isSelected && <Icon name="check" className="h-4 w-4 flex-none" />}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }

@@ -15,8 +15,8 @@ import {
   type PageThemeId,
   resolvePageLook,
 } from "@calcom/features/booking-page-theme/themes";
-import { resolveCalendar } from "@calcom/features/booking-page-theme/calendar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import type { RouterOutputs } from "@calcom/trpc/react";
 import { trpc } from "@calcom/trpc/react";
 import { Avatar } from "@calcom/ui/components/avatar";
 import type { IconName } from "@calcom/ui/components/icon";
@@ -29,12 +29,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { BookingPageProfile } from "./BookingPageProfile";
 import { CalendarPanel } from "./CalendarPanel";
-import { CalendarPreview } from "./CalendarPreview";
 import { PhoneFrame } from "./PhoneFrame";
+import { BrowserFrame, LivePageFrame } from "./PreviewFrames";
+import { ServiceForm } from "./ServiceForm";
+import { StudioAssistant } from "./StudioAssistant";
 import { ColourInput, FieldRow, OptionTile, Segmented, Toggle } from "./studio-controls";
 
 type Tab = "content" | "calendar" | "header" | "design" | "enhance";
 type Sub = null | "theme" | "wallpaper" | "buttons" | "text" | "colours" | "footer";
+/** Screens that open inside the panel instead of sending the owner to another page. */
+type Screen = null | { kind: "assistant"; prompt?: string } | { kind: "service"; id?: number };
+type PreviewDevice = "mobile" | "web";
 
 type Draft = {
   name: string;
@@ -88,19 +93,14 @@ export default function PageStudio() {
   const [dragOrder, setDragOrder] = useState<number[] | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [calendarScope, setCalendarScope] = useState<number | null>(null);
+  const [screen, setScreen] = useState<Screen>(null);
+  const [previewServiceId, setPreviewServiceId] = useState<number | null>(null);
+  const [device, setDevice] = useState<PreviewDevice>("mobile");
 
   // Fill the draft once; later refetches must not wipe unsaved edits.
   useEffect(() => {
     if (!query.data || base) return;
-    const initial: Draft = {
-      name: query.data.name,
-      bio: query.data.bio,
-      pageTheme: query.data.pageTheme,
-      pageButtonShape: query.data.pageButtonShape,
-      style: query.data.pageStyle,
-      order: query.data.services.map((s) => s.id),
-      hidden: Object.fromEntries(query.data.services.map((s) => [s.id, s.hidden])),
-    };
+    const initial = draftFrom(query.data);
     setBase(initial);
     setDraft(initial);
   }, [query.data, base]);
@@ -232,6 +232,25 @@ export default function PageStudio() {
   const go = (next: Tab) => {
     setTab(next);
     setSub(null);
+    setScreen(null);
+  };
+
+  // Services and the assistant save straight to the server. Unsaved panel edits are kept; new services are
+  // added to both the saved and draft order so they don't show up as an unsaved reorder.
+  const refreshFromServer = async () => {
+    await utils.viewer.pageLook.editor.invalidate();
+    const fresh = utils.viewer.pageLook.editor.getData();
+    if (!fresh) return;
+    const next = draftFrom(fresh);
+    if (!dirty) {
+      setBase(next);
+      setDraft(next);
+      return;
+    }
+    const added = next.order.filter((id) => !base.order.includes(id));
+    const addedHidden = Object.fromEntries(added.map((id) => [id, next.hidden[id]]));
+    setBase({ ...base, order: [...base.order, ...added], hidden: { ...base.hidden, ...addedHidden } });
+    setDraft({ ...draft, order: [...draft.order, ...added], hidden: { ...draft.hidden, ...addedHidden } });
   };
 
   // Drag order is kept apart from the draft so one drag is one undo step, not one per row crossed.
@@ -264,7 +283,30 @@ export default function PageStudio() {
     colours: t("studio_colours"),
     footer: t("studio_footer_title"),
   };
-  const panelTitle = sub ? SUB_TITLES[sub] : t(RAIL.find((r) => r.id === tab)?.labelKey ?? "studio_content");
+  const editingService = screen?.kind === "service" && screen.id ? serviceById.get(screen.id) : undefined;
+  const panelTitle =
+    screen?.kind === "assistant"
+      ? t("studio_ask_assistant")
+      : screen?.kind === "service"
+        ? editingService
+          ? t("studio_edit_service")
+          : t("studio_add_service")
+        : sub
+          ? SUB_TITLES[sub]
+          : t(RAIL.find((r) => r.id === tab)?.labelKey ?? "studio_content");
+  const back = screen ? () => setScreen(null) : sub ? () => setSub(null) : null;
+
+  const previewCalendarId =
+    tab === "calendar" && !screen
+      ? (calendarScope ?? visibleServices[0]?.id ?? orderedServices[0]?.id ?? null)
+      : previewServiceId;
+  const previewCalendar = previewCalendarId ? serviceById.get(previewCalendarId) : undefined;
+  const previewPath = data.username && previewCalendar ? `/${data.username}/${previewCalendar.slug}` : null;
+  const studioLook = {
+    pageTheme: draft.pageTheme,
+    pageButtonShape: draft.pageButtonShape,
+    pageStyle: draft.style,
+  };
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-[#f6f5f2] text-[#121212]" data-testid="page-editor">
@@ -360,10 +402,10 @@ export default function PageStudio() {
           {/* Title and actions share one fixed row, so editing never shifts the content below. */}
           <div className="flex h-[72px] flex-none items-center justify-between gap-3 px-5 md:h-[92px] md:px-10 md:pt-3">
             <div className="flex min-w-0 items-center gap-2.5">
-              {sub && (
+              {back && (
                 <button
                   type="button"
-                  onClick={() => setSub(null)}
+                  onClick={back}
                   aria-label={t("back")}
                   className="grid h-8 w-8 flex-none place-items-center rounded-full border border-[#e4e3df] hover:bg-[#f6f5f2]">
                   <Icon name="chevron-left" className="h-4 w-4" />
@@ -414,8 +456,8 @@ export default function PageStudio() {
             </div>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-12 pt-1 text-[14px] md:px-10">
-            {tab === "content" && (
+          <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pb-12 pt-1 text-[14px] md:px-10">
+            {!screen && tab === "content" && (
               <>
                 <div className="flex items-center gap-4">
                   <Avatar size="lg" imageSrc={data.avatarUrl} alt={data.name} />
@@ -443,18 +485,22 @@ export default function PageStudio() {
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-2.5">
-                  <Link
-                    href="/assistant"
+                  <button
+                    type="button"
+                    onClick={() => setScreen({ kind: "assistant" })}
+                    data-testid="studio-open-assistant"
                     className="flex h-11 items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 text-[14px] font-semibold hover:bg-[#e3e2de]">
                     <Icon name="message-circle" className="h-4 w-4" />
                     {t("studio_ask_assistant")}
-                  </Link>
-                  <Link
-                    href="/event-types?dialog=new&eventPage="
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setScreen({ kind: "service" })}
+                    data-testid="studio-add-service"
                     className="flex h-11 items-center justify-center gap-2 rounded-full bg-[#121212] px-4 text-[14px] font-semibold text-white hover:opacity-90">
                     <Icon name="plus" className="h-4 w-4" />
                     {t("studio_add_service")}
-                  </Link>
+                  </button>
                 </div>
 
                 <ul
@@ -527,13 +573,13 @@ export default function PageStudio() {
                           label={t("page_editor_show_on_page", { title: service.title })}
                           onChange={(on) => update({ hidden: { ...draft.hidden, [service.id]: !on } })}
                         />
-                        <Link
-                          href={`/event-types/${service.id}?tabName=setup`}
-                          aria-label={t("edit")}
-                          draggable={false}
+                        <button
+                          type="button"
+                          onClick={() => setScreen({ kind: "service", id: service.id })}
+                          aria-label={t("studio_edit_service_named", { title: service.title })}
                           className="grid h-8 w-8 flex-none place-items-center rounded-full hover:bg-[#f1f0ed]">
                           <Icon name="ellipsis-vertical" className="h-4 w-4" />
-                        </Link>
+                        </button>
                       </li>
                     );
                   })}
@@ -541,7 +587,7 @@ export default function PageStudio() {
               </>
             )}
 
-            {tab === "header" && (
+            {!screen && tab === "header" && (
               <div className="space-y-6">
                 <FieldRow label={t("studio_profile_image")} hint={t("studio_profile_image_hint")}>
                   <div className="flex items-center gap-3">
@@ -606,7 +652,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "design" && !sub && (
+            {!screen && tab === "design" && !sub && (
               <>
                 <RowCard
                   onClick={() => setSub("theme")}
@@ -684,7 +730,7 @@ export default function PageStudio() {
               </>
             )}
 
-            {tab === "design" && sub === "theme" && (
+            {!screen && tab === "design" && sub === "theme" && (
               <>
                 <p className="text-[13px] text-[#6b6a66]">{t("studio_theme_hint")}</p>
                 <div className="mt-4 grid grid-cols-3 gap-3">
@@ -719,7 +765,7 @@ export default function PageStudio() {
               </>
             )}
 
-            {tab === "design" && sub === "wallpaper" && (
+            {!screen && tab === "design" && sub === "wallpaper" && (
               <div className="space-y-5">
                 <Segmented
                   value={draft.style.wallpaper?.kind ?? "solid"}
@@ -767,7 +813,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "design" && sub === "buttons" && (
+            {!screen && tab === "design" && sub === "buttons" && (
               <div className="space-y-6">
                 <div>
                   <div className="text-[14px] font-semibold">{t("studio_button_style")}</div>
@@ -823,7 +869,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "design" && sub === "text" && (
+            {!screen && tab === "design" && sub === "text" && (
               <div className="grid grid-cols-2 gap-2.5">
                 {PAGE_FONT_IDS.map((font: PageFont) => (
                   <OptionTile
@@ -841,7 +887,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "design" && sub === "colours" && (
+            {!screen && tab === "design" && sub === "colours" && (
               <div className="space-y-5">
                 <FieldRow label={t("studio_page_text_colour")} hint={t("studio_page_text_colour_hint")}>
                   <ColourInput
@@ -864,7 +910,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "design" && sub === "footer" && (
+            {!screen && tab === "design" && sub === "footer" && (
               <div className="flex items-center justify-between gap-4 rounded-2xl border border-[#efeeeb] px-4 py-3.5">
                 <div>
                   <div className="text-[14px] font-semibold">{t("studio_footer")}</div>
@@ -878,7 +924,7 @@ export default function PageStudio() {
               </div>
             )}
 
-            {tab === "calendar" && (
+            {!screen && tab === "calendar" && (
               <CalendarPanel
                 style={draft.style}
                 services={orderedServices}
@@ -888,65 +934,152 @@ export default function PageStudio() {
               />
             )}
 
-            {tab === "enhance" && (
+            {!screen && tab === "enhance" && (
               <>
                 <p className="text-[13px] text-[#6b6a66]">{t("studio_enhance_intro_text")}</p>
                 <div className="mt-4 space-y-2.5">
                   {ENHANCE_PROMPTS.map((key) => (
-                    <Link
+                    <button
                       key={key}
-                      href={`/assistant?prompt=${encodeURIComponent(t(key))}`}
-                      className="flex items-center gap-3.5 rounded-2xl border border-[#efeeeb] bg-white px-4 py-3.5 transition hover:border-[#dcdad5]">
+                      type="button"
+                      onClick={() => setScreen({ kind: "assistant", prompt: t(key) })}
+                      className="flex w-full items-center gap-3.5 rounded-2xl border border-[#efeeeb] bg-white px-4 py-3.5 text-left transition hover:border-[#dcdad5]">
                       <span className="grid h-9 w-9 flex-none place-items-center rounded-xl bg-[#121212] text-white">
                         <Icon name="message-circle" className="h-4 w-4" />
                       </span>
                       <span className="flex-1 text-[14px] font-medium">{t(key)}</span>
                       <Icon name="chevron-right" className="h-4 w-4 text-[#9b9a95]" />
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </>
             )}
+
+            {screen?.kind === "assistant" && (
+              <StudioAssistant initialPrompt={screen.prompt} onChanged={() => void refreshFromServer()} />
+            )}
+
+            {screen?.kind === "service" && (
+              <ServiceForm
+                key={screen.id ?? "new"}
+                serviceId={screen.id}
+                initial={
+                  editingService
+                    ? {
+                        title: editingService.title,
+                        length: editingService.length,
+                        description: editingService.description ?? "",
+                        requiresConfirmation: editingService.requiresConfirmation,
+                      }
+                    : undefined
+                }
+                onCancel={() => setScreen(null)}
+                onDone={async (id) => {
+                  await refreshFromServer();
+                  showToast(screen.id ? t("studio_service_saved") : t("studio_service_created"), "success");
+                  setScreen(null);
+                  setPreviewServiceId(id);
+                }}
+              />
+            )}
           </div>
         </div>
 
-        {/* Phone, with plenty of room */}
-        <div className="relative hidden min-w-0 flex-1 items-center justify-center py-5 lg:flex">
-          <div className="flex items-center gap-4">
-            <PhoneFrame variant="bare" screenBg={look.screenBg} inkColor={look.fg} maxWidth={320}>
-              {tab === "calendar" ? (
-                <CalendarPreview
-                  calendar={resolveCalendar(
-                    draft.style.calendar,
-                    calendarScope === null
-                      ? undefined
-                      : draft.style.calendarByService?.[String(calendarScope)]
-                  )}
-                  background={look.background}
-                  ownerName={draft.name || data.name}
-                  avatar={<Avatar size="sm" imageSrc={data.avatarUrl} alt={data.name} />}
-                  service={
-                    (calendarScope === null ? orderedServices[0] : serviceById.get(calendarScope)) ?? null
-                  }
-                />
-              ) : (
-                <div data-testid="page-editor-preview">
-                  <BookingPageProfile
-                    name={draft.name || data.name}
-                    avatar={
-                      <Avatar size="xl" imageSrc={data.avatarUrl} alt={data.name} className="rounded-none!" />
-                    }
-                    bio={draft.bio.trim() ? { text: draft.bio } : null}
-                    services={visibleServices}
-                    themeId={draft.pageTheme}
-                    buttonShape={draft.pageButtonShape}
-                    pageStyle={draft.style}
-                    brandingHidden={data.brandingHidden}
-                    className="min-h-full"
+        {/* Preview, with plenty of room */}
+        <div className="relative hidden min-w-0 flex-1 flex-col items-center justify-center gap-4 py-5 lg:flex">
+          <div className="flex items-center gap-2.5">
+            {previewServiceId !== null && tab !== "calendar" && (
+              <button
+                type="button"
+                onClick={() => setPreviewServiceId(null)}
+                className="flex items-center gap-1.5 rounded-full bg-[#ecebe8] px-3.5 py-2 text-[13px] font-semibold hover:bg-[#e3e2de]"
+                data-testid="preview-back">
+                <Icon name="chevron-left" className="h-3.5 w-3.5" />
+                {t("studio_preview_back")}
+              </button>
+            )}
+            <Segmented
+              value={device}
+              onChange={setDevice}
+              options={[
+                { value: "mobile", label: t("studio_preview_mobile") },
+                { value: "web", label: t("studio_preview_web") },
+              ]}
+            />
+          </div>
+          <div className="flex w-full items-center justify-center gap-4">
+            {device === "mobile" ? (
+              <PhoneFrame
+                variant="device"
+                screenBg={look.screenBg}
+                inkColor={look.fg}
+                maxWidth={340}
+                fill={!!previewPath}>
+                {previewPath ? (
+                  <LivePageFrame
+                    key={previewPath}
+                    path={previewPath}
+                    look={studioLook}
+                    title={t("studio_preview_calendar")}
                   />
-                </div>
-              )}
-            </PhoneFrame>
+                ) : (
+                  <div data-testid="page-editor-preview">
+                    <BookingPageProfile
+                      name={draft.name || data.name}
+                      avatar={
+                        <Avatar
+                          size="xl"
+                          imageSrc={data.avatarUrl}
+                          alt={data.name}
+                          className="rounded-none!"
+                        />
+                      }
+                      bio={draft.bio.trim() ? { text: draft.bio } : null}
+                      services={visibleServices}
+                      themeId={draft.pageTheme}
+                      buttonShape={draft.pageButtonShape}
+                      pageStyle={draft.style}
+                      brandingHidden={data.brandingHidden}
+                      onSelect={(service) => setPreviewServiceId(service.id)}
+                      className="min-h-full"
+                    />
+                  </div>
+                )}
+              </PhoneFrame>
+            ) : (
+              <BrowserFrame
+                url={`${typeof window === "undefined" ? "" : window.location.host}${previewPath ?? publicUrl ?? ""}`}>
+                {previewPath ? (
+                  <LivePageFrame
+                    key={previewPath}
+                    path={previewPath}
+                    look={studioLook}
+                    title={t("studio_preview_calendar")}
+                  />
+                ) : (
+                  <div data-testid="page-editor-preview">
+                    <BookingPageProfile
+                      name={draft.name || data.name}
+                      avatar={
+                        <Avatar
+                          size="xl"
+                          imageSrc={data.avatarUrl}
+                          alt={data.name}
+                          className="rounded-none!"
+                        />
+                      }
+                      bio={draft.bio.trim() ? { text: draft.bio } : null}
+                      services={visibleServices}
+                      themeId={draft.pageTheme}
+                      buttonShape={draft.pageButtonShape}
+                      pageStyle={draft.style}
+                      brandingHidden={data.brandingHidden}
+                      onSelect={(service) => setPreviewServiceId(service.id)}
+                    />
+                  </div>
+                )}
+              </BrowserFrame>
+            )}
             <div className="flex flex-col gap-1 rounded-full bg-[#ecebe8] p-1.5">
               <button
                 type="button"
@@ -971,6 +1104,20 @@ export default function PageStudio() {
       </div>
     </div>
   );
+}
+
+type EditorData = RouterOutputs["viewer"]["pageLook"]["editor"];
+
+function draftFrom(data: EditorData): Draft {
+  return {
+    name: data.name,
+    bio: data.bio,
+    pageTheme: data.pageTheme,
+    pageButtonShape: data.pageButtonShape,
+    style: data.pageStyle,
+    order: data.services.map((s) => s.id),
+    hidden: Object.fromEntries(data.services.map((s) => [s.id, s.hidden])),
+  };
 }
 
 const PHOTO_SIZE_LIMIT = 5 * 1000000;

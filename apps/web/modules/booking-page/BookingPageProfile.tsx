@@ -36,6 +36,8 @@ type Props = {
     onClick?: () => void;
     style?: CSSProperties;
   };
+  /** Editor preview: rows become buttons that open the service's calendar inside the preview. */
+  onSelect?: (service: BookingPageService) => void;
   compact?: boolean;
   className?: string;
 };
@@ -140,6 +142,20 @@ export function BookingPageProfile(props: Props) {
                 />
               </>
             );
+            if (props.onSelect) {
+              const onSelect = props.onSelect;
+              return (
+                <button
+                  key={service.id}
+                  type="button"
+                  onClick={() => onSelect(service)}
+                  style={ROW_STYLE}
+                  className={classNames(rowClass, "w-full")}
+                  data-testid="event-type-link">
+                  {body}
+                </button>
+              );
+            }
             return link ? (
               <Link
                 key={service.id}

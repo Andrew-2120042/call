@@ -14,7 +14,8 @@ import classNames from "classnames";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { BookerLayouts } from "@calcom/prisma/zod-utils";
-import { TimeFormat } from "@calcom/lib/timeFormat";
+import { detectBrowserTimeFormat, TimeFormat } from "@calcom/lib/timeFormat";
+import { useStudioPreviewLook } from "@calcom/web/modules/booking-page/useStudioPreviewLook";
 
 const BOOKER_LAYOUT: Record<CalendarLayout, BookerLayouts> = {
   month_view: BookerLayouts.MONTH_VIEW,
@@ -42,11 +43,16 @@ function Type({
   isBrandingHidden,
   eventData,
   orgBannerUrl,
-  pageTheme,
-  pageButtonShape,
-  pageStyle,
+  pageTheme: savedPageTheme,
+  pageButtonShape: savedPageButtonShape,
+  pageStyle: savedPageStyle,
 }: PageProps) {
   const searchParams = useSearchParams();
+  const { pageTheme, pageButtonShape, pageStyle } = useStudioPreviewLook({
+    pageTheme: savedPageTheme,
+    pageButtonShape: savedPageButtonShape,
+    pageStyle: savedPageStyle,
+  });
   const calendarOverride = pageStyle?.calendarByService?.[String(eventData.id)];
   const calendar = resolveCalendar(pageStyle?.calendar, calendarOverride);
   const ownerSetLayout =
@@ -66,10 +72,16 @@ function Type({
   }, [ownerSetLayout, calendar.layout, calendar.allowLayoutSwitch]);
 
   useEffect(() => {
-    if (isEmbed || calendar.timeFormat === "auto") return;
+    if (isEmbed) return;
     // setState rather than setTimeFormat so the owner's choice isn't written into the visitor's own preference.
+    // "auto" restores the device default, which matters when the editor preview flips back from 12h/24h.
     timePreferencesStore.setState({
-      timeFormat: calendar.timeFormat === "24h" ? TimeFormat.TWENTY_FOUR_HOUR : TimeFormat.TWELVE_HOUR,
+      timeFormat:
+        calendar.timeFormat === "24h"
+          ? TimeFormat.TWENTY_FOUR_HOUR
+          : calendar.timeFormat === "12h"
+            ? TimeFormat.TWELVE_HOUR
+            : detectBrowserTimeFormat,
     });
   }, [isEmbed, calendar.timeFormat]);
 

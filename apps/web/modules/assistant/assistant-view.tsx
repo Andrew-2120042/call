@@ -7,14 +7,9 @@ import { Icon } from "@calcom/ui/components/icon";
 import classNames from "classnames";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { describeAssistantAction, type AssistantAction } from "./describeAssistantAction";
 
-type Action =
-  | { type: "service_created"; title: string; minutes: number; url: string }
-  | { type: "service_updated"; title: string }
-  | { type: "profile_updated"; fields: string[] }
-  | { type: "look_updated"; theme?: string; buttonShape?: string };
-
-type Turn = { role: "user" | "assistant"; content: string; actions?: Action[] };
+type Turn = { role: "user" | "assistant"; content: string; actions?: AssistantAction[] };
 
 const EXAMPLES: { icon: IconName; titleKey: string; promptKey: string }[] = [
   { icon: "zap", titleKey: "assistant_ex_setup_title", promptKey: "assistant_ex_setup_prompt" },
@@ -204,7 +199,7 @@ export default function AssistantView() {
                       <span className="grid h-4 w-4 flex-none place-items-center rounded-full bg-emerald-500 text-white">
                         <Icon name="check" className="h-2.5 w-2.5" />
                       </span>
-                      {describeAction(action, t)}
+                      {describeAssistantAction(action, t)}
                     </li>
                   ))}
                 </ul>
@@ -228,21 +223,4 @@ export default function AssistantView() {
       <div className="pb-2">{composer}</div>
     </div>
   );
-}
-
-function describeAction(action: Action, t: (key: string, o?: Record<string, unknown>) => string) {
-  switch (action.type) {
-    case "service_created":
-      return t("assistant_did_create", { title: action.title, minutes: action.minutes });
-    case "service_updated":
-      return t("assistant_did_update", { title: action.title });
-    case "profile_updated":
-      return action.fields.includes("name") && action.fields.includes("bio")
-        ? t("assistant_did_profile")
-        : action.fields.includes("name")
-          ? t("assistant_did_name")
-          : t("assistant_did_bio");
-    case "look_updated":
-      return t("assistant_did_look");
-  }
 }

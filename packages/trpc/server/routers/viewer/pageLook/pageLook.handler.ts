@@ -56,6 +56,7 @@ export const editorHandler = async ({ ctx }: Ctx) => {
         id: true,
         title: true,
         slug: true,
+        description: true,
         length: true,
         price: true,
         currency: true,
