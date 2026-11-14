@@ -164,20 +164,25 @@ export const EventMeta = ({
       )}
       {!isPending && !!event && (
         <m.div {...fadeInUp} layout transition={{ ...fadeInUp.transition, delay: 0.3 }}>
-          <EventMembers
-            schedulingType={event.schedulingType}
-            users={event.subsetOfUsers}
-            profile={event.profile}
-            entity={event.entity}
-            isPrivateLink={isPrivateLink}
-            roundRobinHideOrgAndTeam={roundRobinHideOrgAndTeam}
-            hideOrgTeamAvatar={hideOrgTeamAvatar}
-          />
+          <div data-sw-block="avatar">
+            <EventMembers
+              schedulingType={event.schedulingType}
+              users={event.subsetOfUsers}
+              profile={event.profile}
+              entity={event.entity}
+              isPrivateLink={isPrivateLink}
+              roundRobinHideOrgAndTeam={roundRobinHideOrgAndTeam}
+              hideOrgTeamAvatar={hideOrgTeamAvatar}
+            />
+          </div>
           <EventTitle className={`${classNames?.eventMetaTitle} my-2`}>
             {translatedTitle ?? event?.title}
           </EventTitle>
           {(event.description || translatedDescription) && (
-            <EventMetaBlock data-testid="event-meta-description" contentClassName="mb-8">
+            <EventMetaBlock
+              data-testid="event-meta-description"
+              data-sw-block="description"
+              contentClassName="mb-8">
               <ScrollableWithGradients
                 className="wrap-break-word scroll-bar max-h-[180px] max-w-full overflow-y-auto pr-4"
                 ariaLabel={t("description")}>
@@ -219,6 +224,7 @@ export const EventMeta = ({
             )}
             <EventDetails event={event} />
             <EventMetaBlock
+              data-sw-block="timezone"
               className="cursor-pointer [&_.current-timezone:before]:focus-within:opacity-100 [&_.current-timezone:before]:hover:opacity-100"
               contentClassName="relative max-w-[90%]"
               icon="globe">

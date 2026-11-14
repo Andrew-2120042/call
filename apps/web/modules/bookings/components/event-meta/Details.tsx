@@ -142,7 +142,7 @@ export const EventDetails = ({ event, blocks = defaultEventDetailsBlocks }: Even
         switch (block) {
           case EventDetailBlocks.DURATION:
             return (
-              <EventMetaBlock key={block} icon="clock" className="items-center">
+              <EventMetaBlock key={block} icon="clock" className="items-center" data-sw-block="duration">
                 <EventDuration event={event} />
               </EventMetaBlock>
             );
@@ -150,7 +150,7 @@ export const EventDetails = ({ event, blocks = defaultEventDetailsBlocks }: Even
           case EventDetailBlocks.LOCATION:
             if (!event?.locations?.length || event.enablePerHostLocations) return null;
             return (
-              <EventMetaBlock key={block}>
+              <EventMetaBlock key={block} data-sw-block="location">
                 <AvailableEventLocations locations={event.locations} />
               </EventMetaBlock>
             );

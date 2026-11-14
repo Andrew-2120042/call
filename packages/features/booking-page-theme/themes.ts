@@ -1,6 +1,9 @@
 // Booking page looks the owner can pick (free). Kept framework-free so pages, emails and the
 // settings preview share one source of truth.
 
+import type { CalendarStyle } from "./calendar";
+import { parseCalendarOverrides, parseCalendarStyle } from "./calendar";
+
 export type PageThemeId = "fog" | "coral" | "sky" | "butter" | "pine" | "ink";
 export type ButtonShape = "pill" | "rounded" | "square";
 
@@ -63,6 +66,8 @@ export type PageStyle = {
   font?: PageFont;
   textColor?: string;
   titleColor?: string;
+  calendar?: CalendarStyle;
+  calendarByService?: Record<string, CalendarStyle>;
 };
 
 export const PAGE_FONTS: Record<PageFont, { label: string; stack: string }> = {
@@ -97,6 +102,10 @@ export function parsePageStyle(input: unknown): PageStyle {
   if (PAGE_FONT_IDS.includes(raw.font as PageFont)) style.font = raw.font as PageFont;
   style.textColor = hex(raw.textColor);
   style.titleColor = hex(raw.titleColor);
+  const calendar = parseCalendarStyle(raw.calendar);
+  if (calendar) style.calendar = calendar;
+  const calendarByService = parseCalendarOverrides(raw.calendarByService);
+  if (calendarByService) style.calendarByService = calendarByService;
   return style;
 }
 
