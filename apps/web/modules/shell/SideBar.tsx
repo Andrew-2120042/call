@@ -14,6 +14,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@coss/ui/icons";
 import Link from "next/link";
 import type { User as UserAuth } from "next-auth";
 import { useSession } from "next-auth/react";
+import { AssistantSidebarButton } from "../assistant/AssistantSidebarButton";
 import { SidebarSetupCard } from "../home/SidebarSetupCard";
 import { KBarTrigger } from "./Kbar";
 import { Navigation } from "./navigation/Navigation";
@@ -115,6 +116,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
               <KBarTrigger />
             </div>
           </header>
+          <AssistantSidebarButton />
           {/* logo icon for tablet */}
           <Link href="/event-types" className="text-center md:inline lg:hidden">
             <Logo small icon />

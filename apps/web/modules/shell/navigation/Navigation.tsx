@@ -28,11 +28,6 @@ const getNavigationItems = (): NavigationItemType[] => [
     icon: "link",
   },
   {
-    name: "assistant_page_title",
-    href: "/assistant",
-    icon: "sparkles",
-  },
-  {
     name: "bookings",
     href: "/bookings/upcoming",
     icon: "calendar",

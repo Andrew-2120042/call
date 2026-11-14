@@ -565,7 +565,7 @@ const BookingItemBadges = ({
   const { t } = useLocale();
 
   return (
-    <div className="hidden h-9 flex-row items-center pb-4 pl-6 sm:flex">
+    <div className="hidden h-9 flex-row items-center pb-4 pl-6 empty:hidden sm:flex sm:empty:hidden">
       {isPending && (
         <Badge className="ltr:mr-2 rtl:ml-2" variant="orange">
           {t("unconfirmed")}

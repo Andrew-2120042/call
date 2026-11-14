@@ -278,7 +278,6 @@ export default function PageEditorView() {
           inkColor={resolvePageTheme(data.pageTheme).fg}>
           <div data-testid="page-editor-preview">
             <BookingPageProfile
-              compact
               name={name || data.name}
               avatar={
                 <Avatar size="lg" imageSrc={data.avatarUrl} alt={data.name} className="rounded-none!" />

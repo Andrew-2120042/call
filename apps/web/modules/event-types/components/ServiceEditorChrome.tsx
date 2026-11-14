@@ -54,7 +54,7 @@ export function ServicePhonePreview({ url, saving }: { url: string; saving: bool
   }, [saving]);
 
   return (
-    <div className="w-[320px]" data-testid="service-phone-preview">
+    <div data-testid="service-phone-preview">
       <div className="flex items-center justify-between pb-3">
         <p className="text-subtle text-sm">Live preview</p>
         <a
