@@ -358,7 +358,8 @@ describe("Middleware Integration Tests", () => {
       const spy = vi.spyOn(NextResponse, "next");
 
       const req = createTestRequest({
-        url: `${WEBAPP_URL}/team/test`,
+        // Only app-host paths the proxy handles get request-header overrides, so use one of those.
+        url: `${WEBAPP_URL}/availability`,
         // Next.js will translate request overrides into x-middleware-request-* headers internally
         headers: {
           "cf-region": "São Paulo", // contains non-ASCII "ã"
@@ -384,7 +385,8 @@ describe("Middleware Integration Tests", () => {
       const spy = vi.spyOn(NextResponse, "next");
 
       const req = createTestRequest({
-        url: `${WEBAPP_URL}/team/test`,
+        // Only app-host paths the proxy handles get request-header overrides, so use one of those.
+        url: `${WEBAPP_URL}/availability`,
         headers: {
           "cf-region": "SÃ£o Paulo", // mojibake for "São Paulo"; includes non-ASCII bytes
         },
@@ -473,6 +475,8 @@ describe("Middleware Matcher Configuration", () => {
       "/:path*/embed",
       "/availability",
       "/api/auth/signup",
+      // Custom domains: every page request is checked so book.yourname.com can be routed to its owner.
+      "/((?!_next/|api/|.*\\..*).*)",
     ]);
   });
 });
