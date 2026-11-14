@@ -15,6 +15,7 @@ import {
   type PageThemeId,
   resolvePageLook,
 } from "@calcom/features/booking-page-theme/themes";
+import { resolveCalendar } from "@calcom/features/booking-page-theme/calendar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Avatar } from "@calcom/ui/components/avatar";
@@ -27,9 +28,12 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Toaster } from "sonner";
 import { BookingPageProfile } from "./BookingPageProfile";
+import { CalendarPanel } from "./CalendarPanel";
+import { CalendarPreview } from "./CalendarPreview";
 import { PhoneFrame } from "./PhoneFrame";
+import { ColourInput, FieldRow, OptionTile, Segmented, Toggle } from "./studio-controls";
 
-type Tab = "content" | "header" | "design" | "enhance";
+type Tab = "content" | "calendar" | "header" | "design" | "enhance";
 type Sub = null | "theme" | "wallpaper" | "buttons" | "text" | "colours" | "footer";
 
 type Draft = {
@@ -45,6 +49,7 @@ type Draft = {
 
 const RAIL: { id: Tab; labelKey: string; icon: IconName }[] = [
   { id: "content", labelKey: "studio_content", icon: "layers" },
+  { id: "calendar", labelKey: "studio_calendar", icon: "calendar" },
   { id: "header", labelKey: "studio_header", icon: "user" },
   { id: "design", labelKey: "studio_design", icon: "paintbrush" },
   { id: "enhance", labelKey: "studio_enhance", icon: "message-circle" },
@@ -58,19 +63,6 @@ const ENHANCE_PROMPTS = [
   "studio_enhance_intro",
   "studio_enhance_look",
 ] as const;
-
-const SWATCHES = [
-  "#ffffff",
-  "#121212",
-  "#f4f3f0",
-  "#e4edf5",
-  "#e3ebe2",
-  "#f6e7e1",
-  "#f5edd2",
-  "#2f3b52",
-  "#7a3b2e",
-  "#3d5a40",
-];
 
 /** Full-screen booking page editor, laid out like the Linktree editor: rail, floating panel, phone. */
 export default function PageStudio() {
@@ -95,6 +87,7 @@ export default function PageStudio() {
   const [dragId, setDragId] = useState<number | null>(null);
   const [dragOrder, setDragOrder] = useState<number[] | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [calendarScope, setCalendarScope] = useState<number | null>(null);
 
   // Fill the draft once; later refetches must not wipe unsaved edits.
   useEffect(() => {
@@ -328,7 +321,8 @@ export default function PageStudio() {
 
       <div className="relative flex min-h-0 flex-1 pb-[64px] md:pb-0">
         {/* Rail: round buttons with labels (a bottom tab bar on phones) */}
-        <nav className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[112px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
+        <nav
+          className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[112px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
           // Inline sizes keep the rail from collapsing if the browser holds an older stylesheet during dev reloads.
           style={{ flexShrink: 0, paddingLeft: 16, paddingRight: 16, rowGap: 20 }}>
           {RAIL.map((item) => (
@@ -338,7 +332,7 @@ export default function PageStudio() {
               onClick={() => go(item.id)}
               aria-current={tab === item.id ? "page" : undefined}
               className="flex flex-col items-center gap-1.5 text-[11px] font-medium md:text-[12.5px]"
-              style={{ width: 72 }}>
+              style={{ width: 64 }}>
               <span
                 className={classNames(
                   "grid h-10 w-10 flex-none place-items-center rounded-full transition md:h-12 md:w-12",
@@ -884,6 +878,16 @@ export default function PageStudio() {
               </div>
             )}
 
+            {tab === "calendar" && (
+              <CalendarPanel
+                style={draft.style}
+                services={orderedServices}
+                scope={calendarScope}
+                onScopeChange={setCalendarScope}
+                onChange={updateStyle}
+              />
+            )}
+
             {tab === "enhance" && (
               <>
                 <p className="text-[13px] text-[#6b6a66]">{t("studio_enhance_intro_text")}</p>
@@ -910,21 +914,38 @@ export default function PageStudio() {
         <div className="relative hidden min-w-0 flex-1 items-center justify-center py-5 lg:flex">
           <div className="flex items-center gap-4">
             <PhoneFrame variant="bare" screenBg={look.screenBg} inkColor={look.fg} maxWidth={320}>
-              <div data-testid="page-editor-preview">
-                <BookingPageProfile
-                  name={draft.name || data.name}
-                  avatar={
-                    <Avatar size="xl" imageSrc={data.avatarUrl} alt={data.name} className="rounded-none!" />
+              {tab === "calendar" ? (
+                <CalendarPreview
+                  calendar={resolveCalendar(
+                    draft.style.calendar,
+                    calendarScope === null
+                      ? undefined
+                      : draft.style.calendarByService?.[String(calendarScope)]
+                  )}
+                  background={look.background}
+                  ownerName={draft.name || data.name}
+                  avatar={<Avatar size="sm" imageSrc={data.avatarUrl} alt={data.name} />}
+                  service={
+                    (calendarScope === null ? orderedServices[0] : serviceById.get(calendarScope)) ?? null
                   }
-                  bio={draft.bio.trim() ? { text: draft.bio } : null}
-                  services={visibleServices}
-                  themeId={draft.pageTheme}
-                  buttonShape={draft.pageButtonShape}
-                  pageStyle={draft.style}
-                  brandingHidden={data.brandingHidden}
-                  className="min-h-full"
                 />
-              </div>
+              ) : (
+                <div data-testid="page-editor-preview">
+                  <BookingPageProfile
+                    name={draft.name || data.name}
+                    avatar={
+                      <Avatar size="xl" imageSrc={data.avatarUrl} alt={data.name} className="rounded-none!" />
+                    }
+                    bio={draft.bio.trim() ? { text: draft.bio } : null}
+                    services={visibleServices}
+                    themeId={draft.pageTheme}
+                    buttonShape={draft.pageButtonShape}
+                    pageStyle={draft.style}
+                    brandingHidden={data.brandingHidden}
+                    className="min-h-full"
+                  />
+                </div>
+              )}
             </PhoneFrame>
             <div className="flex flex-col gap-1 rounded-full bg-[#ecebe8] p-1.5">
               <button
@@ -1001,122 +1022,6 @@ function RowCard(props: { icon: ReactNode; label: string; value: string; onClick
       <span className="flex-1 text-[14px] font-medium">{props.label}</span>
       <span className="text-[13px] text-[#6b6a66]">{props.value}</span>
       <Icon name="chevron-right" className="h-4 w-4 text-[#9b9a95]" />
-    </button>
-  );
-}
-
-function FieldRow(props: { label: string; hint?: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div>
-        <div className="text-[14px] font-semibold">{props.label}</div>
-        {props.hint && <div className="text-[12px] text-[#6b6a66]">{props.hint}</div>}
-      </div>
-      {props.children}
-    </div>
-  );
-}
-
-function OptionTile(props: { selected: boolean; onClick: () => void; label: string; children: ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={props.onClick}
-      aria-pressed={props.selected}
-      className={classNames(
-        "rounded-2xl border p-3 text-center transition",
-        props.selected ? "border-[#121212] ring-1 ring-[#121212]" : "border-[#e4e3df] hover:border-[#bdbcb7]"
-      )}>
-      {props.children}
-      <span className="mt-2 block text-[12px] font-medium">{props.label}</span>
-    </button>
-  );
-}
-
-function Segmented(props: {
-  value: string;
-  options: { value: string; label: string }[];
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="inline-flex rounded-full bg-[#f1f0ed] p-1">
-      {props.options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          onClick={() => props.onChange(option.value)}
-          className={classNames(
-            "rounded-full px-4 py-1.5 text-[13px] font-semibold transition",
-            props.value === option.value ? "bg-white shadow-sm" : "text-[#6b6a66]"
-          )}>
-          {option.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-/** Colour box: current colour (click for any colour), hex field and quick swatches. */
-function ColourInput(props: { value: string; onChange: (value: string) => void }) {
-  const [text, setText] = useState(props.value);
-  useEffect(() => setText(props.value), [props.value]);
-  return (
-    <div className="flex flex-col items-end gap-2">
-      <div className="flex items-center gap-2 rounded-xl border border-[#e4e3df] py-1.5 pl-1.5 pr-3">
-        <label
-          className="relative h-7 w-7 cursor-pointer overflow-hidden rounded-lg border border-black/10"
-          style={{ background: props.value }}>
-          <input
-            type="color"
-            value={props.value}
-            onChange={(e) => props.onChange(e.target.value)}
-            className="absolute inset-0 cursor-pointer opacity-0"
-            aria-label="Pick a colour"
-          />
-        </label>
-        <input
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) props.onChange(e.target.value);
-          }}
-          className="w-[76px] border-0 bg-transparent p-0 font-mono text-[12px] uppercase focus:outline-none focus:ring-0"
-          aria-label="Hex colour"
-        />
-      </div>
-      <div className="flex gap-1">
-        {SWATCHES.map((swatch) => (
-          <button
-            key={swatch}
-            type="button"
-            aria-label={swatch}
-            onClick={() => props.onChange(swatch)}
-            className="h-4 w-4 rounded-full border border-black/10"
-            style={{ background: swatch }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Toggle(props: { on: boolean; label: string; onChange: (on: boolean) => void }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={props.on}
-      aria-label={props.label}
-      onClick={() => props.onChange(!props.on)}
-      className={classNames(
-        "relative h-6 w-10 flex-none rounded-full transition-colors",
-        props.on ? "bg-[#121212]" : "bg-[#dcdbd7]"
-      )}>
-      <span
-        className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform"
-        // Inline transform so the knob position survives a stale dev stylesheet in Safari.
-        style={{ transform: props.on ? "translateX(16px)" : "translateX(0)" }}
-      />
     </button>
   );
 }
