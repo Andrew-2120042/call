@@ -237,7 +237,9 @@ export default function PageStudio() {
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-[#f6f5f2] text-[#121212]" data-testid="page-editor">
       {/* Top bar: menu · page pill · Share */}
-      <div className="relative z-[70] flex shrink-0 items-center justify-between px-4 pb-2 pt-3.5 md:px-5">
+      <div
+        className="relative z-[70] flex shrink-0 items-center justify-between px-4 md:px-6"
+        style={{ paddingTop: 22, paddingBottom: 10 }}>
         <Link
           href="/home"
           aria-label={t("studio_back_home")}
@@ -315,7 +317,7 @@ export default function PageStudio() {
           className="flex min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white md:mt-5"
           // Inline so the panel keeps its size even if a browser holds an older stylesheet during dev reloads.
           style={{
-            maxWidth: 600,
+            maxWidth: 560,
             borderTopLeftRadius: 28,
             borderTopRightRadius: 28,
             boxShadow: "0 0 0 1px rgba(0,0,0,.04), 0 10px 40px -20px rgba(0,0,0,.25)",
