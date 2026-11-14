@@ -4,15 +4,12 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "apps/api/*",
     "packages/*",
     "packages/embeds/*",
     "packages/features/*",
     "packages/app-store",
     "packages/app-store/*",
-    "packages/platform/*",
-    "packages/platform/examples/base",
-    "example-apps/*"
+    "packages/platform/*"
   ],
   "scripts": {
     "app-store-cli": "yarn workspace @calcom/app-store-cli",
@@ -36,8 +33,6 @@
     "deploy": "turbo run deploy",
     "dev:all": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/website\" --filter=\"@calcom/console\"",
     "dev:ai": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/api-proxy\" --filter=\"@calcom/ai\"",
-    "dev:api": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/api-proxy\"",
-    "dev:api:console": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/api-proxy\" --filter=\"@calcom/console\"",
     "dev:console": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/console\"",
     "dev:swagger": "turbo run dev --filter=\"@calcom/api-proxy\" --filter=\"@calcom/swagger\"",
     "dev:website": "turbo run dev --filter=\"@calcom/web\" --filter=\"@calcom/website\"",
