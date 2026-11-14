@@ -285,17 +285,20 @@ export default function PageStudio() {
 
       <div className="relative flex min-h-0 flex-1 pb-[64px] md:pb-0">
         {/* Rail: round buttons with labels (a bottom tab bar on phones) */}
-        <nav className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[112px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-6 md:border-0 md:bg-transparent md:p-0">
+        <nav className="fixed inset-x-0 bottom-0 z-[75] flex justify-around border-t border-[#e4e3df] bg-[#f6f5f2]/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur md:static md:w-[112px] md:shrink-0 md:flex-col md:items-center md:justify-center md:gap-6 md:border-0 md:bg-transparent md:p-0"
+          // Inline sizes keep the rail from collapsing if the browser holds an older stylesheet during dev reloads.
+          style={{ flexShrink: 0, paddingLeft: 16, paddingRight: 16, rowGap: 20 }}>
           {RAIL.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => go(item.id)}
               aria-current={tab === item.id ? "page" : undefined}
-              className="flex flex-col items-center gap-1.5 text-[11px] font-medium md:text-[12.5px]">
+              className="flex flex-col items-center gap-1.5 text-[11px] font-medium md:text-[12.5px]"
+              style={{ width: 72 }}>
               <span
                 className={classNames(
-                  "grid h-10 w-10 place-items-center rounded-full transition md:h-12 md:w-12",
+                  "grid h-10 w-10 flex-none place-items-center rounded-full transition md:h-12 md:w-12",
                   tab === item.id
                     ? "bg-[#121212] text-white ring-2 ring-[#121212] ring-offset-2 ring-offset-[#f6f5f2]"
                     : "bg-[#ecebe8] text-[#121212] hover:bg-[#e3e2de]"
@@ -428,7 +431,8 @@ export default function PageStudio() {
                     return (
                       <li
                         key={service.id}
-                        className="group relative flex min-h-[80px] items-center gap-4 rounded-[24px] border border-[#ebeae6] bg-white py-4 pl-6 pr-4 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]">
+                        className="group relative flex min-h-[80px] items-center gap-4 rounded-[24px] border border-[#ebeae6] bg-white py-4 pl-6 pr-4 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]"
+                        style={{ borderRadius: 24 }}>
                         <div className="absolute left-1 top-1/2 flex -translate-y-1/2 flex-col text-[#9b9a95] opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
                           <button
                             type="button"
@@ -447,7 +451,9 @@ export default function PageStudio() {
                             <Icon name="chevron-down" className="h-3.5 w-3.5" />
                           </button>
                         </div>
-                        <span className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[#f3f2ef]">
+                        <span
+                          className="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-[#f3f2ef]"
+                          style={{ background: "#f3f2ef", borderRadius: 16 }}>
                           <Icon name="clock" className="h-[18px] w-[18px]" />
                         </span>
                         <div
