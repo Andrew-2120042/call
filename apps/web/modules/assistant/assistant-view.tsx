@@ -5,6 +5,7 @@ import { trpc } from "@calcom/trpc/react";
 import type { IconName } from "@calcom/ui/components/icon";
 import { Icon } from "@calcom/ui/components/icon";
 import classNames from "classnames";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 type Action =
@@ -28,7 +29,8 @@ export default function AssistantView() {
   const utils = trpc.useUtils();
   const status = trpc.viewer.assistant.status.useQuery();
   const [turns, setTurns] = useState<Turn[]>([]);
-  const [draft, setDraft] = useState("");
+  const searchParams = useSearchParams();
+  const [draft, setDraft] = useState(() => searchParams?.get("prompt") ?? "");
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 

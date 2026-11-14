@@ -1,11 +1,11 @@
 "use client";
 
-import React, { Suspense } from "react";
-
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { Button } from "@calcom/ui/components/button";
 import { LoaderIcon } from "@coss/ui/icons";
-import { useLocale } from "@calcom/lib/hooks/useLocale";
+import type React from "react";
+import { Suspense } from "react";
 
 type HeaderPropsBase = {
   children: React.ReactNode;
@@ -45,7 +45,7 @@ export default function Header({
       <header
         className={classNames(
           "border-subtle mx-auto flex justify-between",
-          borderInShellHeader && "rounded-t-lg border px-4 py-6 sm:px-6",
+          borderInShellHeader && "pb-6",
           borderInShellHeader === undefined && "mb-8 border-b pb-8"
         )}>
         <div className="flex w-full items-center justify-between gap-2">
@@ -63,14 +63,14 @@ export default function Header({
             )}
             <div>
               {title ? (
-                <h1 className="font-cal text-emphasis mb-1 text-xl font-semibold leading-5 tracking-wide">
+                <h1 className="text-emphasis mb-1 text-[26px] font-semibold leading-tight tracking-[-0.02em]">
                   {title}
                 </h1>
               ) : (
                 <div className="bg-emphasis mb-1 h-5 w-24 animate-pulse rounded-lg" />
               )}
               {description ? (
-                <p className="text-default text-sm ltr:mr-4 rtl:ml-4">{description}</p>
+                <p className="text-subtle text-sm ltr:mr-4 rtl:ml-4">{description}</p>
               ) : (
                 <div className="bg-emphasis h-5 w-32 animate-pulse rounded-lg" />
               )}
@@ -79,7 +79,9 @@ export default function Header({
           <div className={classNames("shrink-0", ctaClassName)}>{CTA}</div>
         </div>
       </header>
-      <Suspense fallback={<LoaderIcon className="mx-auto my-5 animate-spin" />}>{children}</Suspense>
+      <Suspense fallback={<LoaderIcon className="mx-auto my-5 animate-spin" />}>
+        {borderInShellHeader ? <div className="sw-settings-card">{children}</div> : children}
+      </Suspense>
     </div>
   );
 }

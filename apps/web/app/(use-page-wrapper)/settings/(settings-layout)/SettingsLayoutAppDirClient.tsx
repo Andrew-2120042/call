@@ -120,21 +120,6 @@ const getTabs = (
           href: "/settings/developer/webhooks",
           trackingMetadata: { section: "developer", page: "webhooks" },
         },
-        {
-          name: "oAuth",
-          href: "/settings/developer/oauth",
-          trackingMetadata: { section: "developer", page: "oauth_clients" },
-        },
-        {
-          name: "api_keys",
-          href: "/settings/developer/api-keys",
-          trackingMetadata: { section: "developer", page: "api_keys" },
-        },
-        {
-          name: "api_docs",
-          href: "/docs",
-          trackingMetadata: { section: "developer", page: "api_docs" },
-        },
         // TODO: Add profile level for embeds
         // { name: "embeds", href: "/v2/settings/developer/embeds" },
       ],
@@ -437,6 +422,7 @@ const SettingsSidebarContainer = ({
           ? "translate-x-0 opacity-100"
           : "-translate-x-full opacity-0 lg:translate-x-0 lg:opacity-100"
       )}
+      data-sw-settings-nav
       aria-label={t("settings_navigation")}>
       <BackButtonInSidebar name={t("back")} />
       {tabsWithPermissions.map((tab) => {

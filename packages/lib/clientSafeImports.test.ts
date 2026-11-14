@@ -25,7 +25,7 @@ const CLIENT_OR_EDGE_FILES = [
   "packages/features/booking-page-theme/themes.ts",
   "apps/web/modules/home/home-view.tsx",
   "apps/web/modules/booking-page/BookingPageProfile.tsx",
-  "apps/web/modules/booking-page/page-editor-view.tsx",
+  "apps/web/modules/booking-page/page-studio-view.tsx",
   "apps/web/modules/booking-page/PhoneFrame.tsx",
   "apps/web/modules/apps/curated-apps-view.tsx",
   "apps/web/modules/assistant/assistant-view.tsx",

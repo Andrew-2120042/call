@@ -22,26 +22,59 @@ type Props = {
   fill?: boolean;
   /** Largest width the phone may take on screen. */
   maxWidth?: number;
+  /** "device": metal band, bezel and status bar. "bare": just the rounded screen, like the Linktree editor. */
+  variant?: "device" | "bare";
 };
 
 /**
  * A modern phone drawn in CSS around a true-size mobile screen, scaled down as a whole so the full
  * device always fits in the window without scrolling.
  */
-export function PhoneFrame({ screenBg, inkColor, children, fill, maxWidth = 340 }: Props) {
+export function PhoneFrame({
+  screenBg,
+  inkColor,
+  children,
+  fill,
+  maxWidth = 340,
+  variant = "device",
+}: Props) {
   const slotRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.7);
+
+  const bare = variant === "bare";
+  const outerW = bare ? SCREEN_W : DEVICE_W;
+  const outerH = bare ? SCREEN_H : DEVICE_H;
 
   useLayoutEffect(() => {
     const measure = () => {
       const top = slotRef.current?.getBoundingClientRect().top ?? 120;
       const available = window.innerHeight - Math.max(top, 0) - BOTTOM_GAP;
-      setScale(Math.max(0.45, Math.min(available / DEVICE_H, maxWidth / DEVICE_W, 1)));
+      setScale(Math.max(0.45, Math.min(available / outerH, maxWidth / outerW, 1)));
     };
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [maxWidth]);
+  }, [maxWidth, outerH, outerW]);
+
+  if (bare) {
+    return (
+      <div
+        ref={slotRef}
+        className="relative mx-auto select-none"
+        style={{ width: SCREEN_W * scale, height: SCREEN_H * scale }}
+        data-testid="phone-frame">
+        <div
+          className="absolute left-0 top-0 origin-top-left overflow-hidden rounded-[44px] shadow-[0_0_0_1px_rgba(0,0,0,.06),0_24px_60px_-30px_rgba(0,0,0,.35)]"
+          style={{ width: SCREEN_W, height: SCREEN_H, transform: `scale(${scale})`, background: screenBg }}>
+          {fill ? (
+            <div className="absolute inset-0">{children}</div>
+          ) : (
+            <div className="no-scrollbar absolute inset-0 overflow-y-auto">{children}</div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

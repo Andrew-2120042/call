@@ -214,6 +214,13 @@ How it works:
 ## Editor view
 - `.vscode/settings.json` (Cursor reads it) hides the parts of the Cal.com base we don't use: the API v2 app, the docs site, platform examples, 94 unused integrations, 43 non-English locales and the e2e tests. They're hidden only, not deleted; remove the `files.exclude` block to see them again.
 
+## Booking page editor (/page-editor, 2026-11-14)
+- A full-screen copy of the Linktree editor, with Usuals' CardStudio as the reference. It sits outside the app shell (`app/(use-page-wrapper)/page-editor`).
+- Layout: top bar (menu → Home, page pill menu, Share), round-button rail (Content / Header / Design / Enhance), a floating panel with draft + undo/redo + Cancel/Save, and a bare true-size phone preview with a link/open pill.
+- Saves in one go: profile (name/bio), page look, service hidden flags, order. The footer toggle (branding) applies immediately and is plan-checked.
+- "Booking page" is no longer in the sidebar; reach the editor via Home → Edit or the URL.
+- Enhance links to `/assistant?prompt=...`, which pre-fills the Assistant box.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.

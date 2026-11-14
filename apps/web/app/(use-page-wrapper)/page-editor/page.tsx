@@ -1,10 +1,9 @@
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
-import { _generateMetadata, getTranslate } from "app/_utils";
+import { _generateMetadata } from "app/_utils";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import PageEditorView from "~/booking-page/page-editor-view";
-import { ShellMainAppDir } from "../ShellMainAppDir";
+import PageStudio from "~/booking-page/page-studio-view";
 
 export const generateMetadata = async () =>
   await _generateMetadata(
@@ -15,15 +14,11 @@ export const generateMetadata = async () =>
     "/page-editor"
   );
 
+// Full-screen editor (no app sidebar), modelled on the Linktree editor.
 const Page = async () => {
   const session = await getServerSession({ req: buildLegacyRequest(await headers(), await cookies()) });
-  if (!session?.user?.id) return redirect("/auth/login");
-  const t = await getTranslate();
-  return (
-    <ShellMainAppDir heading={t("page_editor_title")} subtitle={t("page_editor_subtitle")}>
-      <PageEditorView />
-    </ShellMainAppDir>
-  );
+  if (!session?.user?.id) return redirect("/auth/login?callbackUrl=/page-editor");
+  return <PageStudio />;
 };
 
 export default Page;
