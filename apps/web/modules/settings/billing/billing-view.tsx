@@ -99,7 +99,7 @@ export default function BillingView() {
     {
       id: "TEAM",
       price: "$49",
-      per: t("billing_per_month_team"),
+      per: t("billing_per_month"),
       features: [
         t("billing_f_everything_pro"),
         t("billing_f_team_members"),
@@ -175,11 +175,9 @@ export default function BillingView() {
                   <span className="bg-subtle rounded-full px-2.5 py-0.5 text-xs">{t("billing_soon")}</span>
                 )}
               </div>
-              <p className="mt-3">
-                <span className="text-[32px] font-semibold tracking-tight">{plan.price}</span>
-                <span className={isPro ? "ml-1 text-sm opacity-70" : "text-subtle ml-1 text-sm"}>
-                  {plan.per}
-                </span>
+              <p className="mt-3 flex items-baseline" style={{ columnGap: 6 }}>
+                <span className="text-[32px] font-semibold leading-none tracking-tight">{plan.price}</span>
+                <span className={isPro ? "text-sm opacity-70" : "text-subtle text-sm"}>{plan.per}</span>
               </p>
               <ul className="mt-5 flex-1 space-y-2.5 text-sm">
                 {plan.features.map((feature) => (

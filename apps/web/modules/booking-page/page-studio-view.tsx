@@ -553,7 +553,7 @@ export default function PageStudio() {
                           "group flex min-h-[72px] items-center gap-3.5 border border-[#ebeae6] bg-white py-3.5 pl-2 pr-3 shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]",
                           dragId === service.id && "opacity-50"
                         )}
-                        style={{ borderRadius: 22 }}>
+                        style={{ borderRadius: 22, columnGap: 14 }}>
                         <button
                           type="button"
                           aria-label={t("page_editor_drag_to_reorder", { title: service.title })}
@@ -688,8 +688,8 @@ export default function PageStudio() {
                   label={t("studio_theme")}
                   value={Object.keys(draft.style).length ? t("studio_custom") : look.theme.label}
                 />
-                <div className="mb-2.5 mt-5 px-1 text-[14px] font-semibold">{t("studio_customize")}</div>
-                <div className="space-y-2.5">
+                <div className="mb-3 mt-7 px-1 text-[14px] font-semibold">{t("studio_customize")}</div>
+                <div className="flex flex-col" style={{ rowGap: 10 }}>
                   <RowCard
                     onClick={() => setSub("wallpaper")}
                     icon={
@@ -1029,7 +1029,8 @@ export default function PageStudio() {
               ]}
             />
           </div>
-          <div className="flex w-full items-center justify-center gap-4">
+          {/* The phone stays centred; the link/open buttons hang off its right edge. */}
+          <div className="relative">
             {device === "mobile" ? (
               <PhoneFrame
                 variant="device"
@@ -1102,7 +1103,9 @@ export default function PageStudio() {
                 )}
               </BrowserFrame>
             )}
-            <div className="flex flex-col gap-1 rounded-full bg-[#ecebe8] p-1.5">
+            <div
+              className="absolute top-1/2 flex -translate-y-1/2 flex-col rounded-full bg-[#ecebe8] p-1.5"
+              style={{ left: "100%", marginLeft: 16, rowGap: 4 }}>
               <button
                 type="button"
                 onClick={share}
@@ -1184,13 +1187,16 @@ function RowCard(props: { icon: ReactNode; label: string; value: string; onClick
     <button
       type="button"
       onClick={props.onClick}
-      className="flex w-full items-center gap-3.5 rounded-2xl border border-[#efeeeb] bg-white px-3.5 py-3 text-left shadow-[0_1px_2px_rgba(0,0,0,.03)] transition hover:border-[#dcdad5]">
-      <span className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl border border-[#efeeeb] bg-[#f6f5f2] p-0.5">
+      className="flex w-full items-center border border-[#ebeae6] bg-white text-left shadow-[0_1px_3px_rgba(0,0,0,.04)] transition hover:border-[#dcdad5]"
+      style={{ minHeight: 68, columnGap: 14, padding: "12px 16px 12px 14px", borderRadius: 20 }}>
+      <span
+        className="grid shrink-0 place-items-center overflow-hidden border border-[#efeeeb] bg-[#f6f5f2]"
+        style={{ width: 40, height: 40, borderRadius: 12, padding: 2 }}>
         {props.icon}
       </span>
-      <span className="flex-1 text-[14px] font-medium">{props.label}</span>
+      <span className="flex-1 text-[14.5px] font-semibold">{props.label}</span>
       <span className="text-[13px] text-[#6b6a66]">{props.value}</span>
-      <Icon name="chevron-right" className="h-4 w-4 text-[#9b9a95]" />
+      <Icon name="chevron-right" className="h-4 w-4 flex-none text-[#9b9a95]" />
     </button>
   );
 }

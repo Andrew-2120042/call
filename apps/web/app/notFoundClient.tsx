@@ -1,152 +1,54 @@
 "use client";
 
-import { DOCS_URL, IS_CALCOM, WEBSITE_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect } from "react";
 
-enum PageType {
-  USER = "USER",
-  OTHER = "OTHER",
-}
-
-function getPageInfo(pathname: string) {
-  const [routerUsername] = pathname?.replace("%20", "-").split(/[?#]/) ?? [];
-  return {
-    username: routerUsername ?? "",
-    pageType: PageType.USER,
-    url: `${WEBSITE_URL}/signup?username=${(routerUsername ?? "").replace("/", "")}`,
-  };
-}
-
-export function NotFound({ host }: { host: string }) {
+export function NotFound(_props: { host: string }) {
   const { t } = useLocale();
   const pathname = usePathname() ?? "";
-  const { username, pageType, url } = getPageInfo(pathname);
-  const isBookingSuccessPage = pathname?.startsWith("/booking");
-  const isSubpage = pathname?.includes("/", 2) || isBookingSuccessPage;
+  const isBooking = pathname.startsWith("/booking");
 
   useLayoutEffect(() => {
-    if (typeof window !== "undefined") {
-      window.CalComPageStatus = "404";
-    }
+    // Embeds read this to tell their host page the booking page wasn't found.
+    window.CalComPageStatus = "404";
   }, []);
 
-  const links = [
-    {
-      title: t("documentation"),
-      description: t("documentation_description"),
-      icon: "file-text" as const,
-      href: DOCS_URL,
-    },
-    {
-      title: t("blog"),
-      description: t("blog_description"),
-      icon: "book-open" as const,
-      href: `${WEBSITE_URL}/blog`,
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-default px-4" data-testid="404-page">
-      <main className="mx-auto max-w-xl pt-16 pb-6 sm:pt-24">
-        <div className="text-center">
-          <p className="font-semibold text-emphasis text-sm uppercase tracking-wide">{t("error_404")}</p>
-          <h1 className="mt-2 font-cal font-extrabold text-4xl text-emphasis sm:text-5xl">
-            {isBookingSuccessPage ? "Booking not found" : t("page_doesnt_exist")}
-          </h1>
-          {isSubpage ? (
-            <span className="mt-2 inline-block text-lg">{t("check_spelling_mistakes_or_go_back")}</span>
-          ) : IS_CALCOM ? (
-            <a target="_blank" href={url} className="mt-2 inline-block text-lg" rel="noreferrer">
-              {t(`404_the_${pageType.toLowerCase()}`)}{" "}
-              {username ? (
-                <>
-                  <strong className="text-blue-500">{username}</strong>
-                  {` ${t("is_still_available")} `}
-                  <span className="text-blue-500">{t("register_now")}</span>.
-                </>
-              ) : null}
-            </a>
-          ) : (
-            <span className="mt-2 inline-block text-lg">
-              {t(`404_the_${pageType.toLowerCase()}`)}{" "}
-              {username ? (
-                <>
-                  <strong className="mt-2 inline-block text-green-500 text-lg">{username}</strong>{" "}
-                  {t("is_still_available")}
-                </>
-              ) : null}
-            </span>
-          )}
-        </div>
-        <div className="mt-12">
-          {!isSubpage && IS_CALCOM && (
-            <ul role="list" className="my-4">
-              <li className="border-2 border-green-500 px-4 py-2">
-                <a
-                  href={url}
-                  target="_blank"
-                  className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse"
-                  rel="noreferrer">
-                  <div className="shrink-0">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
-                      <Icon name="check" className="h-6 w-6 text-green-500" aria-hidden="true" />
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-medium text-base text-emphasis">
-                      <span className="rounded-sm focus-within:ring-2 focus-within:ring-empthasis focus-within:ring-offset-2">
-                        <span className="focus:outline-none">
-                          <span className="absolute inset-0" aria-hidden="true" />
-                          {t("register")} <strong className="text-green-500">{username}</strong>
-                        </span>
-                      </span>
-                    </h3>
-                    <p className="text-base text-subtle">{t(`404_claim_entity_${pageType.toLowerCase()}`)}</p>
-                  </div>
-                  <div className="shrink-0 self-center">
-                    <Icon name="chevron-right" className="h-5 w-5 text-muted" aria-hidden="true" />
-                  </div>
-                </a>
-              </li>
-            </ul>
-          )}
-          <h2 className="font-semibold text-sm text-subtle uppercase tracking-wide">{t("popular_pages")}</h2>
-          <ul role="list" className="divide-y divide-subtle border-subtle">
-            {links.map((link, linkIdx) => (
-              <li key={linkIdx} className="px-4 py-2">
-                <a href={link.href} className="relative flex items-start space-x-4 py-6 rtl:space-x-reverse">
-                  <div className="shrink-0">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-cal-muted">
-                      <Icon name={link.icon} className="h-6 w-6 text-default" aria-hidden="true" />
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-medium text-base text-emphasis">
-                      <span className="rounded-sm focus-within:ring-2 focus-within:ring-empthasis focus-within:ring-offset-2">
-                        <span className="absolute inset-0" aria-hidden="true" />
-                        {link.title}
-                      </span>
-                    </h3>
-                    <p className="text-base text-subtle">{link.description}</p>
-                  </div>
-                  <div className="shrink-0 self-center">
-                    <Icon name="chevron-right" className="h-5 w-5 text-muted" aria-hidden="true" />
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8">
-            <Link href={WEBSITE_URL} className="font-medium text-base text-emphasis hover:text-subtle">
-              {t("or_go_back_home")}
-              <span aria-hidden="true"> &rarr;</span>
-            </Link>
-          </div>
-        </div>
+    <div
+      className="flex min-h-screen items-center justify-center bg-[#f6f5f2] px-4 text-[#121212]"
+      data-testid="404-page">
+      <main
+        className="w-full bg-white text-center"
+        style={{
+          maxWidth: 440,
+          padding: "44px 32px 36px",
+          borderRadius: 28,
+          boxShadow: "0 0 0 1px rgba(0,0,0,.05), 0 24px 60px -36px rgba(0,0,0,.35)",
+        }}>
+        <span
+          className="mx-auto grid place-items-center bg-[#f3f2ef]"
+          style={{ width: 56, height: 56, borderRadius: 18 }}>
+          <Icon name={isBooking ? "calendar-x-2" : "map"} className="h-6 w-6" />
+        </span>
+        <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#9b9a95]">
+          {t("error_404")}
+        </p>
+        <h1 className="mt-2 text-[26px] font-bold leading-tight tracking-[-0.02em]">
+          {isBooking ? t("not_found_booking_title") : t("not_found_title")}
+        </h1>
+        <p className="mx-auto mt-2 max-w-[32ch] text-[15px] leading-relaxed text-[#6b6a66]">
+          {isBooking ? t("not_found_booking_body") : t("not_found_body")}
+        </p>
+        <Link
+          href="/"
+          className="mt-7 inline-flex items-center justify-center bg-[#121212] font-semibold text-white transition hover:opacity-90"
+          style={{ height: 46, padding: "0 22px", borderRadius: 999, columnGap: 8, fontSize: 14.5 }}>
+          <Icon name="arrow-left" className="h-4 w-4" />
+          {t("go_back_home")}
+        </Link>
       </main>
     </div>
   );

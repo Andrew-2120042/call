@@ -29,7 +29,6 @@ import CustomEmailTextField from "@components/settings/CustomEmailTextField";
 import SecondaryEmailConfirmModal from "@components/settings/SecondaryEmailConfirmModal";
 import SecondaryEmailModal from "@components/settings/SecondaryEmailModal";
 import { UsernameAvailabilityField } from "@components/ui/UsernameAvailability";
-import { InfoIcon } from "@coss/ui/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import { revalidateSettingsProfile } from "app/cache/path/settings/my-account";
@@ -649,10 +648,6 @@ const ProfileForm = ({
           />
         </div>
         {extraField}
-        <p className="mt-1 flex gap-1 text-sm text-subtle">
-          <InfoIcon className="mt-0.5 shrink-0" />
-          <span className="flex-1">{t("tip_username_plus")}</span>
-        </p>
         <div className="mt-6">
           <TextField label={t("full_name")} {...formMethods.register("name")} />
         </div>

@@ -61,8 +61,13 @@ export const BookerLayoutSelector = ({
   const shouldShowUserSettings = (fallbackToUserSettings && !getValues(name || defaultFieldName)) || false;
 
   return (
-    <div className={classNames(isOuterBorder && "border-subtle rounded-lg border p-6")}>
-      <div className={classNames(isOuterBorder ? "pb-5" : "border-subtle rounded-t-xl border p-6")}>
+    // One card in both variants: header, options and the save row share a single border.
+    <div
+      className={classNames(
+        "border-subtle bg-default overflow-hidden border",
+        isOuterBorder ? "rounded-lg p-6" : "rounded-[22px]"
+      )}>
+      <div className={classNames(isOuterBorder ? "pb-5" : "px-6 pt-6")}>
         <Label className={classNames("mb-1 font-semibold", isOuterBorder ? "text-sm" : "text-base")}>
           {title ? title : t("layout")}
         </Label>
@@ -88,7 +93,7 @@ export const BookerLayoutSelector = ({
               isUserLoading={isUserLoading}
             />
             {!isOuterBorder && (
-              <SectionBottomActions align="end">
+              <SectionBottomActions align="end" className="rounded-none border-x-0 border-b-0">
                 <Button loading={isLoading} type="submit" disabled={isDisabled} color="primary">
                   {t("update")}
                 </Button>
@@ -177,7 +182,7 @@ const BookerLayoutFields = ({
     if (user?.defaultBookerLayouts) onChange(user.defaultBookerLayouts);
   };
   return (
-    <div className={classNames("stack-y-5", !isOuterBorder && "border-subtle border-x px-6 py-8")}>
+    <div className={classNames("stack-y-5", !isOuterBorder && "px-6 pb-7 pt-5")}>
       <div
         className={classNames(
           "flex flex-col gap-5 transition-opacity sm:flex-row sm:gap-3",

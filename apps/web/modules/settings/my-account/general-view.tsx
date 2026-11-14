@@ -135,9 +135,6 @@ const GeneralView = ({ user, travelSchedules }: GeneralViewProps) => {
   } = formMethods;
   const isDisabled = isSubmitting || !isDirty;
 
-  const [isAllowDynamicBookingChecked, setIsAllowDynamicBookingChecked] = useState(
-    !!user.allowDynamicBooking
-  );
   const [isAllowSEOIndexingChecked, setIsAllowSEOIndexingChecked] = useState(
     user.organizationSettings?.allowSEOIndexing === false
       ? !!user.organizationSettings?.allowSEOIndexing
@@ -333,19 +330,6 @@ const GeneralView = ({ user, travelSchedules }: GeneralViewProps) => {
             </Button>
           </SectionBottomActions>
         </Form>
-
-        <SettingsToggle
-          toggleSwitchAtTheEnd={true}
-          title={t("dynamic_booking")}
-          description={t("allow_dynamic_booking")}
-          disabled={mutation.isPending}
-          checked={isAllowDynamicBookingChecked}
-          onCheckedChange={(checked) => {
-            setIsAllowDynamicBookingChecked(checked);
-            mutation.mutate({ allowDynamicBooking: checked });
-          }}
-          switchContainerClassName="mt-6"
-        />
 
         <SettingsToggle
           data-testid="my-seo-indexing-switch"
