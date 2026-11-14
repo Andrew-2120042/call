@@ -37,13 +37,11 @@ import { CheckboxField, Form, PasswordField, SelectField, TextField } from "@cal
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import { InfoIcon, ShieldCheckIcon, StarIcon } from "@coss/ui/icons";
-import { Analytics as DubAnalytics } from "@dub/analytics/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { getServerSideProps } from "@lib/signup/getServerSideProps";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
 import { signIn } from "next-auth/react";
 import posthog from "posthog-js";
 import { useEffect, useState } from "react";
@@ -64,30 +62,6 @@ const TurnstileCaptcha = dynamic(() => import("@calcom/web/modules/auth/componen
 type FormValues = z.infer<typeof signupSchema>;
 
 export type SignupProps = inferSSRProps<typeof getServerSideProps>;
-
-const FEATURES = [
-  {
-    title: "connect_all_calendars",
-    description: "connect_all_calendars_description",
-    i18nOptions: {
-      appName: APP_NAME,
-    },
-    icon: "calendar-heart" as const,
-  },
-  {
-    title: "set_availability",
-    description: "set_availbility_description",
-    icon: "users" as const,
-  },
-  {
-    title: "share_a_link_or_embed",
-    description: "share_a_link_or_embed_description",
-    icon: "link-2" as const,
-    i18nOptions: {
-      appName: APP_NAME,
-    },
-  },
-];
 
 function truncateDomain(domain: string) {
   const maxLength = 25;
@@ -336,53 +310,9 @@ export default function Signup({
 
   return (
     <>
-      {IS_CALCOM && (!IS_EUROPE || userConsentToCookie) ? (
-        <>
-          {process.env.NEXT_PUBLIC_GTM_ID && (
-            <>
-              {/* biome-ignore lint/security/noDangerouslySetInnerHtml: GTM script injection */}
-              <Script
-                id="gtm-init-script"
-                // It is strictly not necessary to disable, but in a future update of react/no-danger this will error.
-                // And we don't want it to error here anyways
-
-                dangerouslySetInnerHTML={{
-                  __html: `(function (w, d, s, l, i) {
-                        w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-                        var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-                        j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-                    })(window, document, 'script', 'dataLayer', '${process.env.NEXT_PUBLIC_GTM_ID}');`,
-                }}
-              />
-              {/* biome-ignore lint/security/noDangerouslySetInnerHtml: GTM noscript fallback */}
-              <noscript
-                dangerouslySetInnerHTML={{
-                  __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
-                }}
-              />
-            </>
-          )}
-          <DubAnalytics
-            apiHost="/_proxy/dub"
-            cookieOptions={{
-              domain: isENVDev ? undefined : `.${new URL(WEBSITE_URL).hostname}`,
-            }}
-            domainsConfig={{
-              refer: "refer.cal.com",
-            }}
-          />
-        </>
-      ) : null}
-      <div
-        className={classNames(
-          "light flex min-h-screen w-full flex-col items-center justify-center bg-cal-muted [--cal-brand:#111827] 2xl:bg-default dark:[--cal-brand:#FFFFFF]",
-          "[--cal-brand-subtle:#9CA3AF]",
-          "[--cal-brand-text:#FFFFFF] dark:[--cal-brand-text:#000000]",
-          "[--cal-brand-emphasis:#101010] dark:[--cal-brand-emphasis:#e1e1e1]"
-        )}>
-        <div className="grid w-full max-w-[1440px] grid-cols-1 grid-rows-1 overflow-hidden bg-cal-muted lg:grid-cols-2 2xl:rounded-[20px] 2xl:border 2xl:border-subtle 2xl:py-6">
-          {/* Left side */}
-          <div className="mt-0 mr-auto ml-auto flex w-full max-w-xl flex-col px-4 pt-6 sm:px-16 md:px-20 lg:mt-24 2xl:px-28">
+      <div className="bg-cal-muted flex min-h-screen w-full flex-col items-center justify-center px-4 py-10">
+        <div className="border-subtle bg-default w-full max-w-md rounded-2xl border p-8 sm:p-10">
+          <div className="flex w-full flex-col">
             {accountUnderReview ? (
               <div
                 className="flex flex-col items-center gap-4 py-10 text-center"
@@ -401,7 +331,7 @@ export default function Signup({
             ) : (
               <>
                 {displayBackButton && (
-                  <div className="flex w-fit lg:-mt-12">
+                  <div className="flex w-fit ">
                     <Button
                       color="minimal"
                       className="todesktop:mt-10 mb-6 flex h-6 max-h-6 w-full items-center rounded-md px-3 py-2 hover:bg-subtle"
@@ -511,15 +441,8 @@ export default function Signup({
                           setPremium={(value) => setPremiumUsername(value)}
                           addOnLeading={
                             orgSlug
-                              ? truncateDomain(
-                                  `${WEBAPP_URL.replace(
-                                    URL_PROTOCOL_REGEX,
-                                    ""
-                                  )}/`
-                                )
-                              : truncateDomain(
-                                  `${WEBSITE_URL.replace(URL_PROTOCOL_REGEX, "")}/`
-                                )
+                              ? truncateDomain(`${WEBAPP_URL.replace(URL_PROTOCOL_REGEX, "")}/`)
+                              : truncateDomain(`${WEBSITE_URL.replace(URL_PROTOCOL_REGEX, "")}/`)
                           }
                         />
                       ) : null}
@@ -769,93 +692,6 @@ export default function Signup({
                 </div>
               </>
             )}
-          </div>
-          <div className="mx-auto mt-24 w-full max-w-2xl flex-col justify-between rounded-l-2xl border-subtle pl-4 lg:mt-0 lg:flex lg:max-w-full lg:border lg:bg-subtle lg:py-12 lg:pl-12 dark:bg-none">
-            {IS_CALCOM && (
-              <>
-                <div className="-mt-4 mr-12 mb-6 grid w-full grid-cols-3 gap-5 pr-4 sm:gap-3 lg:grid-cols-4">
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/product-of-the-day.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.diy was Product of the Day at ProductHunt"
-                    />
-                  </div>
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/product-of-the-week.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.diy was Product of the Week at ProductHunt"
-                    />
-                  </div>
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/product-of-the-month.svg"
-                      className="h-[34px] w-full dark:invert"
-                      alt="Cal.diy was Product of the Month at ProductHunt"
-                    />
-                  </div>
-                </div>
-                <div className="mr-12 mb-6 grid w-full grid-cols-3 gap-5 pr-4 sm:gap-3 lg:grid-cols-4">
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/producthunt.svg"
-                      className="h-[54px] w-full"
-                      alt="ProductHunt Rating of 5 Stars"
-                    />
-                  </div>
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/google-reviews.svg"
-                      className="h-[54px] w-full"
-                      alt="Google Reviews Rating of 4.7 Stars"
-                    />
-                  </div>
-                  <div>
-                    {/* eslint-disable @next/next/no-img-element */}
-                    <img
-                      src="/product-cards/g2.svg"
-                      className="h-[54px] w-full"
-                      alt="G2 Rating of 4.7 Stars"
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-            <div className="hidden rounded-tl-2xl rounded-br-none rounded-bl-2xl border border-default border-r-0 border-dashed bg-black/3 lg:block lg:py-[6px] lg:pl-[6px] dark:bg-white/5">
-              <img className="block dark:hidden" src="/mock-event-type-list.svg" alt="Cal.diy Booking Page" />
-              {/* eslint-disable @next/next/no-img-element */}
-              <img
-                className="hidden dark:block"
-                src="/mock-event-type-list-dark.svg"
-                alt="Cal.diy Booking Page"
-              />
-            </div>
-            <div className="mt-8 mr-12 hidden h-full w-full grid-cols-3 gap-4 overflow-hidden lg:grid">
-              {FEATURES.map((feature, index) => (
-                <div key={index} className="mb-8 flex max-w-52 flex-col leading-none sm:mb-0">
-                  <div className="items-center text-emphasis">
-                    <Icon name={feature.icon} className="mb-1 h-4 w-4" />
-                    <span className="font-medium text-sm">{t(feature.title)}</span>
-                  </div>
-                  <div className="text-sm text-subtle">
-                    <p>
-                      {t(
-                        feature.description,
-                        feature.i18nOptions && {
-                          ...feature.i18nOptions,
-                        }
-                      )}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
         <Toaster position="bottom-right" />
