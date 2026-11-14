@@ -1,6 +1,7 @@
 import slugify from "@calcom/lib/slugify";
 import type { PrismaClient } from "@calcom/prisma";
 import type { Prisma } from "@calcom/prisma/client";
+import { resolvePageTheme } from "../../booking-page-theme/themes";
 import { uniqueSlug } from "../../calendly-import/lib/mapCalendly";
 import type {
   AssistantPageSnapshot,
@@ -68,7 +69,7 @@ export class AssistantActionsRepository implements IAssistantActions {
     return {
       name: user?.name ?? "",
       bio: user?.bio ?? "",
-      theme: user?.pageTheme ?? "fog",
+      theme: resolvePageTheme(user?.pageTheme).label,
       buttonShape: user?.pageButtonShape ?? "rounded",
       services: services.map((row) => this.toSummary(row)),
     };

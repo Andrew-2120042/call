@@ -112,7 +112,7 @@ export default function AssistantView() {
         className="mx-auto flex min-h-[calc(100dvh-120px)] max-w-[680px] flex-col justify-center py-10"
         data-testid="assistant-page">
         <div className="bg-default border-subtle mx-auto grid h-12 w-12 place-items-center rounded-2xl border">
-          <Icon name="sparkles" className="text-emphasis h-5 w-5" />
+          <Icon name="message-circle" className="text-emphasis h-5 w-5" />
         </div>
         <h1 className="text-emphasis mt-5 text-center text-[32px] font-semibold leading-tight tracking-[-0.025em]">
           {t("assistant_page_heading")}
@@ -163,7 +163,7 @@ export default function AssistantView() {
     <div className="mx-auto flex h-[calc(100dvh-120px)] max-w-[720px] flex-col" data-testid="assistant-page">
       <div className="border-subtle flex items-center justify-between border-b pb-3">
         <div className="flex items-center gap-2">
-          <Icon name="sparkles" className="text-emphasis h-4 w-4" />
+          <Icon name="message-circle" className="text-emphasis h-4 w-4" />
           <h1 className="text-emphasis text-base font-semibold">{t("assistant_page_title")}</h1>
         </div>
         <button
@@ -184,7 +184,7 @@ export default function AssistantView() {
             className={classNames("flex gap-3", turn.role === "user" ? "justify-end" : "justify-start")}>
             {turn.role === "assistant" && (
               <span className="bg-default border-subtle mt-0.5 grid h-7 w-7 flex-none place-items-center rounded-full border">
-                <Icon name="sparkles" className="text-emphasis h-3.5 w-3.5" />
+                <Icon name="message-circle" className="text-emphasis h-3.5 w-3.5" />
               </span>
             )}
             <div
@@ -194,7 +194,9 @@ export default function AssistantView() {
                   ? "bg-inverted text-inverted rounded-[20px] rounded-br-md px-4 py-2.5"
                   : "text-emphasis pt-0.5"
               )}>
-              <p className="whitespace-pre-line">{turn.content}</p>
+              <p className="whitespace-pre-line">
+                {turn.content.replace(/\*\*(.+?)\*\*/g, "$1").replace(/^\s*[-*]\s+/gm, "• ")}
+              </p>
               {!!turn.actions?.length && (
                 <ul className="border-subtle bg-default mt-3 space-y-1.5 rounded-2xl border p-3 text-sm">
                   {turn.actions.map((action, i) => (
@@ -213,7 +215,7 @@ export default function AssistantView() {
         {chat.isPending && (
           <div className="flex gap-3">
             <span className="bg-default border-subtle grid h-7 w-7 flex-none place-items-center rounded-full border">
-              <Icon name="sparkles" className="text-emphasis h-3.5 w-3.5" />
+              <Icon name="message-circle" className="text-emphasis h-3.5 w-3.5" />
             </span>
             <span className="text-subtle flex items-center gap-2 pt-1 text-sm">
               <Icon name="loader" className="h-4 w-4 animate-spin" />
@@ -235,7 +237,11 @@ function describeAction(action: Action, t: (key: string, o?: Record<string, unkn
     case "service_updated":
       return t("assistant_did_update", { title: action.title });
     case "profile_updated":
-      return t("assistant_did_profile");
+      return action.fields.includes("name") && action.fields.includes("bio")
+        ? t("assistant_did_profile")
+        : action.fields.includes("name")
+          ? t("assistant_did_name")
+          : t("assistant_did_bio");
     case "look_updated":
       return t("assistant_did_look");
   }

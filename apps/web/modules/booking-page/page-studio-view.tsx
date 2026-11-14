@@ -39,7 +39,7 @@ const RAIL: { id: Tab; labelKey: string; icon: IconName }[] = [
   { id: "content", labelKey: "studio_content", icon: "layers" },
   { id: "header", labelKey: "studio_header", icon: "user" },
   { id: "design", labelKey: "studio_design", icon: "paintbrush" },
-  { id: "enhance", labelKey: "studio_enhance", icon: "sparkles" },
+  { id: "enhance", labelKey: "studio_enhance", icon: "message-circle" },
 ];
 
 const BIO_LIMIT = 160;
@@ -339,7 +339,7 @@ export default function PageStudio() {
                   <Link
                     href="/assistant"
                     className="flex items-center justify-center gap-2 rounded-full bg-[#ecebe8] px-4 py-3.5 text-[15px] font-semibold hover:bg-[#e3e2de]">
-                    <Icon name="sparkles" className="h-4 w-4" />
+                    <Icon name="message-circle" className="h-4 w-4" />
                     {t("studio_ask_assistant")}
                   </Link>
                   <Link
@@ -588,7 +588,7 @@ export default function PageStudio() {
                       href={`/assistant?prompt=${encodeURIComponent(t(key))}`}
                       className="flex items-center gap-4 rounded-2xl border border-[#efeeeb] bg-white px-4 py-4 transition hover:border-[#dcdad5]">
                       <span className="grid h-11 w-11 flex-none place-items-center rounded-xl bg-[#121212] text-white">
-                        <Icon name="sparkles" className="h-5 w-5" />
+                        <Icon name="message-circle" className="h-5 w-5" />
                       </span>
                       <span className="flex-1 text-[15px] font-medium">{t(key)}</span>
                       <Icon name="chevron-right" className="h-5 w-5 text-[#9b9a95]" />

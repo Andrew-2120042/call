@@ -13,6 +13,11 @@ export const MORE_SEPARATOR_NAME = "more";
 
 const getNavigationItems = (): NavigationItemType[] => [
   {
+    name: "assistant_page_title",
+    href: "/assistant",
+    icon: "message-circle",
+  },
+  {
     name: "home_page_title",
     href: "/home",
     icon: "layout-dashboard",

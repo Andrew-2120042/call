@@ -1,7 +1,7 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import * as z from "zod/v4";
-import { BUTTON_SHAPES, PAGE_THEME_IDS } from "../../booking-page-theme/themes";
+import { BUTTON_SHAPES, PAGE_THEME_IDS, PAGE_THEMES } from "../../booking-page-theme/themes";
 import type { AssistantAction, ChatMessage, IAssistantActions } from "./types";
 
 export const DEFAULT_ASSISTANT_MODEL = "claude-haiku-5-5";
@@ -19,7 +19,10 @@ How to work:
 - Bios are one or two sentences in the first person, specific about who they help. No hashtags, no emoji unless they use them.
 - Prices: payments aren't available yet. If they mention a price, put it in the service description ("$150 per session") and say payments come later.
 - You can't change availability, calendars or billing. Point them to Availability, Apps or Billing in one sentence.
-- Keep replies short and concrete. Ask at most one question, and only when you truly can't make a reasonable choice.`;
+- Keep replies short and concrete. Ask at most one question, and only when you truly can't make a reasonable choice.
+- Write plain sentences. No markdown: no asterisks, no bullet characters, no headings.
+- Only say you checked or confirmed something after you actually called get_page in this turn.
+- Page colours have a display name and an id. Talk to the owner using the display name only.`;
 
 const themeEnum = z.enum(PAGE_THEME_IDS as [string, ...string[]]);
 const shapeEnum = z.enum(BUTTON_SHAPES as [string, ...string[]]);
@@ -95,11 +98,14 @@ export async function runAssistant(options: {
     }),
     betaZodTool({
       name: "set_page_look",
-      description: `Change the booking page colour (${PAGE_THEME_IDS.join(", ")}) and/or button shape (${BUTTON_SHAPES.join(", ")}).`,
+      description: `Change the booking page colour and/or button shape. Colours as id (display name): ${PAGE_THEME_IDS.map(
+        (id) => `${id} (${PAGE_THEMES[id].label})`
+      ).join(", ")}. Button shapes: ${BUTTON_SHAPES.join(", ")}.`,
       inputSchema: z.object({ theme: themeEnum.optional(), buttonShape: shapeEnum.optional() }),
       run: async (patch) => {
         await actions.setLook(userId, patch as Parameters<IAssistantActions["setLook"]>[1]);
-        performed.push({ type: "look_updated", ...patch });
+        if (!performed.some((action) => action.type === "look_updated"))
+          performed.push({ type: "look_updated", ...patch });
         return "Saved.";
       },
     }),

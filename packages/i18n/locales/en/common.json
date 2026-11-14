@@ -5038,5 +5038,7 @@
   "studio_enhance_services": "Suggest better names and descriptions for my services",
   "studio_enhance_bio": "Rewrite my bio so it's clear who I help",
   "studio_enhance_intro": "Add a free 15 minute intro call",
-  "studio_enhance_look": "Pick a page colour that fits my work"
+  "studio_enhance_look": "Pick a page colour that fits my work",
+  "assistant_did_name": "Updated your name",
+  "assistant_did_bio": "Updated your bio"
 }
