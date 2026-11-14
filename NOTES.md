@@ -211,6 +211,9 @@ How it works:
 - Home, modelled on the Linktree admin: greeting plus a link pill, "Your booking page" card tinted with the page theme, "In the last week" stats, coming up.
 - Service editor: pill tabs (`ServiceEditorChrome.tsx`), Apps/Webhooks tabs hidden (webhooks are still in Settings → Developer), tabs switch via `history.pushState`, a live phone preview of the real booking page.
 
+## Editor view
+- `.vscode/settings.json` (Cursor reads it) hides the parts of the Cal.com base we don't use: the API v2 app, the docs site, platform examples, 94 unused integrations, 43 non-English locales and the e2e tests. They're hidden only, not deleted; remove the `files.exclude` block to see them again.
+
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
