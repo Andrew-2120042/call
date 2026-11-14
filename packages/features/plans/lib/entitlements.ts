@@ -18,25 +18,28 @@ export type PlanLimits = {
   maxRemindersPerService: number;
 };
 
+// Free matches what individuals expect from any scheduling tool (approvals, unlimited questions).
+// Pro is what protects income: filling cancellations, stopping no-shows, AI triage, and your own brand.
+const FREE_FEATURES: PlanFeature[] = ["approvalRequests", "unlimitedScreeningQuestions"];
+
 const PRO_FEATURES: PlanFeature[] = [
-  "approvalRequests",
+  ...FREE_FEATURES,
   "waitlist",
   "confirmOrRelease",
   "aiRequestInsights",
   "multipleReminders",
-  "unlimitedScreeningQuestions",
   "removeBranding",
   "customDomain",
 ];
 
 const PLAN_FEATURES: Record<SlotwisePlan, ReadonlySet<PlanFeature>> = {
-  [SlotwisePlan.FREE]: new Set(),
+  [SlotwisePlan.FREE]: new Set(FREE_FEATURES),
   [SlotwisePlan.PRO]: new Set(PRO_FEATURES),
   [SlotwisePlan.TEAM]: new Set<PlanFeature>([...PRO_FEATURES, "teamScheduling"]),
 };
 
 const PLAN_LIMITS: Record<SlotwisePlan, PlanLimits> = {
-  [SlotwisePlan.FREE]: { maxScreeningQuestionsPerService: 2, maxRemindersPerService: 1 },
+  [SlotwisePlan.FREE]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 1 },
   [SlotwisePlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
   [SlotwisePlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
 };

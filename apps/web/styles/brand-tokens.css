@@ -61,3 +61,14 @@ body {
   letter-spacing: 0.015em;
   text-rendering: optimizeLegibility;
 }
+
+/* Compact type across the product: one step smaller than the default scale. Spacing is unchanged. */
+:root {
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.3125rem;
+  --text-3xl: 1.625rem;
+}

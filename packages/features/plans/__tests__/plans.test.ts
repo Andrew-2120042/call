@@ -14,13 +14,16 @@ const LATER = new Date("2026-12-13T12:00:00.000Z");
 const EARLIER = new Date("2026-11-01T12:00:00.000Z");
 
 describe("entitlements", () => {
-  it("gives Free none of the paid features and Pro all of them except teams", () => {
+  it("gives Free approvals and questions, and keeps the income-protecting features for Pro", () => {
+    expect(planHasFeature(SlotwisePlan.FREE, "approvalRequests")).toBe(true);
     expect(planHasFeature(SlotwisePlan.FREE, "waitlist")).toBe(false);
+    expect(planHasFeature(SlotwisePlan.FREE, "confirmOrRelease")).toBe(false);
+    expect(planHasFeature(SlotwisePlan.FREE, "customDomain")).toBe(false);
     expect(planHasFeature(SlotwisePlan.PRO, "waitlist")).toBe(true);
     expect(planHasFeature(SlotwisePlan.PRO, "teamScheduling")).toBe(false);
     expect(planHasFeature(SlotwisePlan.TEAM, "teamScheduling")).toBe(true);
     expect(getPlanLimits(SlotwisePlan.FREE)).toEqual({
-      maxScreeningQuestionsPerService: 2,
+      maxScreeningQuestionsPerService: 50,
       maxRemindersPerService: 1,
     });
   });
@@ -55,8 +58,8 @@ describe("getEventTypePlanViolations", () => {
       },
       { attendeeReminderMinutes: [1440] }
     );
+    // Approval is free; the rest are Pro.
     expect(violations.map((v) => v.field)).toEqual([
-      "requiresConfirmation",
       "waitlistEnabled",
       "attendeeConfirmationHours",
       "attendeeReminderMinutes",
@@ -80,21 +83,21 @@ describe("getEventTypePlanViolations", () => {
     ).toEqual([]);
   });
 
-  it("limits custom screening questions on Free but ignores system fields", () => {
-    const three = [system, question, question, question];
+  it("caps custom screening questions at the plan limit and ignores system fields", () => {
+    const tooMany = [system, ...Array.from({ length: 51 }, () => question)];
     expect(
-      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: three }, { bookingFields: [] })
+      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: tooMany }, { bookingFields: [] })
     ).toHaveLength(1);
     expect(
       getEventTypePlanViolations(
         SlotwisePlan.FREE,
-        { bookingFields: [system, system, question, question] },
+        { bookingFields: [system, system, question, question, question] },
         {}
       )
     ).toEqual([]);
-    expect(getEventTypePlanViolations(SlotwisePlan.PRO, { bookingFields: three }, {})).toEqual([]);
+    // Saving a service that is already over the limit is allowed as long as it doesn't grow.
     expect(
-      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: three }, { bookingFields: three })
+      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: tooMany }, { bookingFields: tooMany })
     ).toEqual([]);
   });
 

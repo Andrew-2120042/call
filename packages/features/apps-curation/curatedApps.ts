@@ -56,12 +56,6 @@ export const CURATED_APP_GROUPS: {
       },
     ],
   },
-  {
-    id: "payments",
-    titleKey: "apps_group_payments",
-    subtitleKey: "apps_group_payments_sub",
-    apps: [{ slug: "stripe", descriptionKey: "apps_desc_stripe", comingSoon: true }],
-  },
 ];
 
 export const CURATED_APP_SLUGS = CURATED_APP_GROUPS.flatMap((group) => group.apps.map((app) => app.slug));
