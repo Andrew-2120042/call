@@ -25,6 +25,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { Toaster } from "sonner";
 import { BookingPageProfile } from "./BookingPageProfile";
 import { PhoneFrame } from "./PhoneFrame";
 
@@ -117,6 +118,27 @@ export default function PageStudio() {
     onSuccess: () => utils.viewer.pageLook.editor.invalidate(),
     onError: (error) => showToast(error.message, "error"),
   });
+  const setPhoto = trpc.viewer.me.updateProfile.useMutation({
+    onSuccess: async () => {
+      await utils.viewer.pageLook.editor.invalidate();
+      await utils.viewer.me.invalidate();
+      showToast(t("studio_photo_updated"), "success");
+    },
+    onError: () => showToast(t("studio_photo_failed"), "error"),
+  });
+
+  const onPhotoPicked = async (file: File | undefined) => {
+    if (!file) return;
+    if (file.size > PHOTO_SIZE_LIMIT) {
+      showToast(t("image_size_limit_exceed"), "error");
+      return;
+    }
+    try {
+      setPhoto.mutate({ avatarUrl: await toSquareJpeg(file) });
+    } catch {
+      showToast(t("studio_photo_failed"), "error");
+    }
+  };
 
   const dirty = useMemo(
     () => !!draft && !!base && JSON.stringify(draft) !== JSON.stringify(base),
@@ -236,6 +258,8 @@ export default function PageStudio() {
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-[#f6f5f2] text-[#121212]" data-testid="page-editor">
+      {/* The studio renders outside Shell, which is where the app's Toaster normally lives. */}
+      <Toaster position="bottom-center" />
       {/* Top bar: menu · page pill · Share */}
       <div
         className="relative z-[70] flex shrink-0 items-center justify-between px-4 md:px-6"
@@ -491,11 +515,24 @@ export default function PageStudio() {
                 <FieldRow label={t("studio_profile_image")} hint={t("studio_profile_image_hint")}>
                   <div className="flex items-center gap-3">
                     <Avatar size="md" imageSrc={data.avatarUrl} alt={data.name} />
-                    <Link
-                      href="/settings/my-account/profile"
-                      className="rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]">
-                      {t("page_editor_change_photo")}
-                    </Link>
+                    <label
+                      className={classNames(
+                        "cursor-pointer rounded-full border border-[#e4e3df] px-3.5 py-1.5 text-[13px] font-semibold hover:bg-[#f6f5f2]",
+                        setPhoto.isPending && "pointer-events-none opacity-60"
+                      )}>
+                      {setPhoto.isPending ? t("studio_uploading_photo") : t("page_editor_change_photo")}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        data-testid="studio-photo-input"
+                        disabled={setPhoto.isPending}
+                        onChange={(e) => {
+                          void onPhotoPicked(e.target.files?.[0]);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
                   </div>
                 </FieldRow>
                 <div>
@@ -876,6 +913,33 @@ export default function PageStudio() {
       </div>
     </div>
   );
+}
+
+const PHOTO_SIZE_LIMIT = 5 * 1000000;
+const PHOTO_SIZE_PX = 512;
+
+/** Centre-crops to a square JPEG so any format the browser can open (HEIC, WebP…) is accepted by the upload. */
+async function toSquareJpeg(file: File): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const side = Math.min(bitmap.width, bitmap.height);
+  const canvas = document.createElement("canvas");
+  canvas.width = PHOTO_SIZE_PX;
+  canvas.height = PHOTO_SIZE_PX;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Unable to prepare photo: canvas 2D context is unavailable");
+  ctx.drawImage(
+    bitmap,
+    (bitmap.width - side) / 2,
+    (bitmap.height - side) / 2,
+    side,
+    side,
+    0,
+    0,
+    PHOTO_SIZE_PX,
+    PHOTO_SIZE_PX
+  );
+  bitmap.close();
+  return canvas.toDataURL("image/jpeg", 0.9);
 }
 
 function RowCard(props: { icon: ReactNode; label: string; value: string; onClick: () => void }) {
