@@ -121,11 +121,11 @@ export function UserDropdown({ small }: UserDropdownProps) {
         }>
         <span
           className={classNames(
-            small ? "h-8 w-8" : "h-5 w-5 ltr:mr-2 rtl:ml-2",
+            small ? "h-4 w-4" : "h-5 w-5 ltr:mr-2 rtl:ml-2",
             "relative shrink-0 rounded-full"
           )}>
           <Avatar
-            size={small ? "sm" : "xsm"}
+            size={small ? "xs" : "xsm"}
             imageSrc={user?.avatarUrl ?? user?.avatar}
             alt={user?.username ? `${user.username} Avatar` : "Nameless User Avatar"}
             className="overflow-hidden"

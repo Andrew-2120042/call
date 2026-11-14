@@ -4991,5 +4991,10 @@
   "assistant_did_create": "Created {{title}} ({{minutes}} min)",
   "assistant_did_update": "Updated {{title}}",
   "assistant_did_profile": "Updated your name and bio",
-  "assistant_did_look": "Changed your page look"
+  "assistant_did_look": "Changed your page look",
+  "setup_sidebar_title": "Your setup checklist",
+  "assistant_page_title": "Assistant",
+  "assistant_page_heading": "What should we set up?",
+  "home_live": "Live",
+  "home_last_week": "In the last week"
 }

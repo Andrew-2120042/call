@@ -4,6 +4,7 @@ import classNames from "@calcom/ui/classNames";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 import UnconfirmedBookingBadge from "../../bookings/components/UnconfirmedBookingBadge";
+import { KBarTrigger } from "../Kbar";
 import type { NavigationItemType } from "./NavigationItem";
 import { MobileNavigationItem, MobileNavigationMoreItem, NavigationItem } from "./NavigationItem";
 import { useMobileMoreItems } from "./useMobileMoreItems";
@@ -15,6 +16,11 @@ const getNavigationItems = (): NavigationItemType[] => [
     name: "home_page_title",
     href: "/home",
     icon: "layout-dashboard",
+  },
+  {
+    name: "assistant_page_title",
+    href: "/assistant",
+    icon: "sparkles",
   },
   {
     name: "page_editor_title",
@@ -81,10 +87,13 @@ export const Navigation = () => {
   const { desktopNavigationItems } = useNavigationItems();
 
   return (
-    <nav className="mt-2 flex-1 md:px-2 ">
+    <nav className="mt-2 flex-1 md:px-2 lg:mt-4 lg:px-0">
       {desktopNavigationItems.map((item) => (
         <NavigationItem key={item.name} item={item} />
       ))}
+      <div className="mt-0.5 text-subtle lg:hidden">
+        <KBarTrigger />
+      </div>
     </nav>
   );
 };

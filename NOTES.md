@@ -199,15 +199,17 @@ How it works:
 - The nav has a single "Apps" item. The old app store pages still exist but are no longer linked.
 - **Production:** enable the curated apps and add each provider's keys (Google, Microsoft, Zoom, Daily) through the admin apps settings.
 
-## AI setup assistant (Home)
-- "What should we set up?" card on Home. It uses Claude Haiku 5.5 (`claude-haiku-5-5`, effort low) via the SDK tool runner. Override the model with `ASSISTANT_MODEL`.
+## AI setup assistant (/assistant)
+- Its own page ("Assistant" in the sidebar): a full chat with a centered prompt when empty. It uses Claude Haiku 5.5 (`claude-haiku-5-5`, effort low) via the SDK tool runner. Override the model with `ASSISTANT_MODEL`.
 - Tools, all scoped to the signed-in owner (`packages/features/assistant`): get_page, create_service, update_service, update_profile, set_page_look. Every change is returned as an action and shown under the reply.
 - Needs `ANTHROPIC_API_KEY`. Without it the card shows a setup note and the endpoint returns PRECONDITION_FAILED. Rate-limited per user, max 20 messages of 2,000 chars.
 - Untested against the live API on this machine (no key). Unit tests use a fake tool runner.
 
-## Shell (2026-11-14)
-- Manychat-style icon rail (labels as tooltips, the `lg:` desktop sidebar classes removed) plus one rounded content panel (`dashboard-theme.css`).
-- Service editor: pill tabs (`ServiceEditorChrome.tsx`), Apps/Webhooks tabs hidden, tabs switch via `history.pushState` (no server round trip), a live phone preview of the real booking page that reloads on save.
+## Shell (2026-11-14, final)
+- The user rejected the Manychat icon rail and wants the text sidebar ("like before"). Don't bring the rail back.
+- The text sidebar has a Linktree-style setup card at the bottom (`SidebarSetupCard`; hidden when done).
+- Home, modelled on the Linktree admin: greeting plus a link pill, "Your booking page" card tinted with the page theme, "In the last week" stats, coming up.
+- Service editor: pill tabs (`ServiceEditorChrome.tsx`), Apps/Webhooks tabs hidden (webhooks are still in Settings → Developer), tabs switch via `history.pushState`, a live phone preview of the real booking page.
 
 ## Local dev
 - Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.

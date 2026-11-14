@@ -18,7 +18,14 @@ export const getHandler = async ({ ctx }: Ctx) => {
     await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
-        select: { name: true, username: true, avatarUrl: true, bio: true, defaultScheduleId: true },
+        select: {
+          name: true,
+          username: true,
+          avatarUrl: true,
+          bio: true,
+          defaultScheduleId: true,
+          pageTheme: true,
+        },
       }),
       prisma.customDomain.findUnique({ where: { userId }, select: { domain: true, verifiedAt: true } }),
       prisma.booking.count({
@@ -70,6 +77,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
   return {
     name: user?.name ?? user?.username ?? "",
     avatarUrl: user?.avatarUrl ?? null,
+    pageTheme: user?.pageTheme ?? "fog",
     pageUrl,
     serviceCount,
     setup,

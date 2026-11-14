@@ -1,91 +1,52 @@
-/* Owner dashboard shell: an icon rail on the canvas and all content in one rounded panel.
-   Applied through data-sw-* attributes so Cal's components stay untouched. */
-
-:root {
-  --sw-canvas: #efeeec;
-  --sw-panel: #fbfbfa;
-}
-
-.dark {
-  --sw-canvas: #0b0b0b;
-  --sw-panel: #151515;
-}
-
-body:has([data-sw-main]) {
-  background: var(--sw-canvas) !important;
-}
+/* Owner dashboard shell: quiet grey sidebar, off-white canvas, white cards. Applied through data-sw-*
+   attributes on the shell so Cal's components stay untouched. */
 
 [data-sw-sidebar] {
-  background: transparent !important;
-  border: 0 !important;
+  background: #efeeec !important;
+  border-color: transparent !important;
 }
 
-/* Rail items: square icon buttons with a soft active state. Labels show as tooltips. */
+.dark [data-sw-sidebar] {
+  background: #0c0c0c !important;
+}
+
 [data-sw-sidebar] nav a,
-[data-sw-sidebar] nav button,
-[data-sw-sidebar] > div > div:last-child a,
-[data-sw-sidebar] > div > div:last-child button {
-  width: 40px;
-  height: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 !important;
-  justify-content: center !important;
-  border-radius: 12px !important;
+[data-sw-sidebar] nav button {
+  border-radius: 10px !important;
 }
 
-[data-sw-sidebar] nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 0 !important;
-}
-
-[data-sw-sidebar] a svg,
-[data-sw-sidebar] button svg {
-  width: 20px !important;
-  height: 20px !important;
-  margin: 0 !important;
+@media (min-width: 1024px) {
+  [data-sw-sidebar] nav a,
+  [data-sw-sidebar] nav button {
+    font-size: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 [data-sw-sidebar] nav a:hover,
 [data-sw-sidebar] nav button:hover {
-  background: rgba(18, 18, 18, 0.06) !important;
+  background: rgba(18, 18, 18, 0.05) !important;
 }
 
 [data-sw-sidebar] nav a[aria-current="page"] {
-  background: #ffffff !important;
+  background: #e2e1de !important;
   color: #121212 !important;
-  box-shadow: 0 1px 2px rgba(18, 18, 18, 0.08);
+  font-weight: 600;
 }
 
 .dark [data-sw-sidebar] nav a:hover,
 .dark [data-sw-sidebar] nav button:hover {
-  background: rgba(255, 255, 255, 0.07) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
 .dark [data-sw-sidebar] nav a[aria-current="page"] {
-  background: #222222 !important;
+  background: #242424 !important;
   color: #ffffff !important;
 }
 
-/* The rounded content panel. */
-@media (min-width: 768px) {
-  [data-sw-main] {
-    margin: 8px 8px 8px 0;
-    border: 1px solid rgba(18, 18, 18, 0.07);
-    border-radius: 20px;
-    min-height: calc(100dvh - 16px);
-    overflow: clip;
-  }
-}
-
 [data-sw-main] {
-  background: var(--sw-panel) !important;
-}
-
-.dark [data-sw-main] {
-  border-color: rgba(255, 255, 255, 0.08);
+  background: var(--cal-bg-muted) !important;
 }
 
 [data-sw-main] h1,
@@ -111,6 +72,11 @@ body:has([data-sw-main]) {
   --cal-brand-accent: #121212;
 }
 
+/* Page headers sit on the same colour as the work area (no band behind titles). */
+:root {
+  --sw-panel: var(--cal-bg-muted);
+}
+
 /* Tab content entering: quick and subtle, never blocking clicks. */
 @keyframes sw-tab-enter {
   from {
@@ -132,4 +98,3 @@ body:has([data-sw-main]) {
     animation: none;
   }
 }
-

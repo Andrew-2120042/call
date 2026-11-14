@@ -1,13 +1,13 @@
 "use client";
 
 import dayjs from "@calcom/dayjs";
+import { resolvePageTheme } from "@calcom/features/booking-page-theme/themes";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
-import { AssistantCard } from "./AssistantCard";
 
 const greetingKey = (hour: number) =>
   hour < 12 ? "home_good_morning" : hour < 18 ? "home_good_afternoon" : "home_good_evening";
@@ -30,40 +30,72 @@ export default function HomeView() {
     }
   };
 
+  const theme = resolvePageTheme(data.pageTheme);
+
   return (
     <div className="mx-auto max-w-5xl" data-testid="home">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-emphasis text-[26px] font-semibold tracking-[-0.02em]">
-            {t(greetingKey(new Date().getHours()), { name: firstName })}
-          </h1>
-          <a
-            href={data.pageUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-subtle hover:text-emphasis mt-1 inline-flex items-center gap-1.5 text-sm"
-            data-testid="home-page-url">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            {pageLabel}
-          </a>
-        </div>
-        <div className="flex gap-2">
-          <Button color="secondary" onClick={copyLink}>
-            {t("home_copy_link")}
-          </Button>
-          <Link href="/page-editor">
-            <Button color="secondary">{t("home_edit_look")}</Button>
-          </Link>
-          <a href={data.pageUrl} target="_blank" rel="noreferrer">
-            <Button>{t("home_open_page")}</Button>
-          </a>
-        </div>
+      <header className="border-subtle flex flex-wrap items-center justify-between gap-4 border-b pb-6">
+        <h1 className="text-emphasis text-[30px] font-semibold tracking-[-0.025em]">
+          {t(greetingKey(new Date().getHours()), { name: firstName })}
+        </h1>
+        <button
+          type="button"
+          onClick={copyLink}
+          className="bg-subtle text-emphasis hover:bg-emphasis inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
+          data-testid="home-page-url"
+          title={t("home_copy_link")}>
+          <span className="truncate">{pageLabel}</span>
+          <Icon name="share-2" className="h-4 w-4 flex-none" />
+        </button>
       </header>
 
-      <div className="mt-6">
-        <AssistantCard />
+      <h2 className="text-emphasis mt-8 text-[22px] font-semibold tracking-[-0.02em]">
+        {t("home_your_page")}
+      </h2>
+      <div
+        className="mt-4 flex w-[280px] flex-col rounded-3xl p-4"
+        style={{ background: theme.bg, color: theme.fg }}
+        data-testid="home-page-card">
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-1 text-xs font-medium text-[#121212]">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          {t("home_live")}
+        </span>
+        <div className="mx-auto mt-4 h-[148px] w-[148px] overflow-hidden rounded-full bg-white/60">
+          {data.avatarUrl ? (
+            // biome-ignore lint/performance/noImgElement: user avatar from our own storage
+            <img src={data.avatarUrl} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <div className="grid h-full w-full place-items-center text-4xl font-semibold opacity-60">
+              {(data.name || "?").slice(0, 1).toUpperCase()}
+            </div>
+          )}
+        </div>
+        <div className="mt-5 flex items-end justify-between gap-2">
+          <div className="min-w-0">
+            <p className="truncate text-lg font-semibold">{data.name}</p>
+            <p className="text-sm opacity-60">{t("home_service_count", { count: data.serviceCount })}</p>
+          </div>
+          <div className="flex flex-none gap-1.5">
+            <a
+              href={data.pageUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t("home_open_page")}
+              className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#121212]">
+              <Icon name="external-link" className="h-4 w-4" />
+            </a>
+            <Link
+              href="/page-editor"
+              className="grid h-10 place-items-center rounded-full bg-white px-4 text-sm font-medium text-[#121212]">
+              {t("edit")}
+            </Link>
+          </div>
+        </div>
       </div>
 
+      <h2 className="text-emphasis mt-10 text-[22px] font-semibold tracking-[-0.02em]">
+        {t("home_last_week")}
+      </h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <Stat
           label={t("home_bookings_week")}
@@ -93,48 +125,45 @@ export default function HomeView() {
         />
       </div>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
-        <section className="bg-default border-subtle rounded-3xl border p-5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
-            <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
-              {t("home_all_bookings")}
-            </Link>
-          </div>
-          {data.upcoming.length === 0 ? (
-            <p className="text-subtle mt-3 text-sm">{t("home_nothing_coming_up")}</p>
-          ) : (
-            <ul className="mt-3 divide-y divide-[var(--cal-border-subtle)]">
-              {data.upcoming.map((booking) => (
-                <li key={booking.uid}>
-                  <Link href={`/booking/${booking.uid}`} className="flex items-center gap-3 py-3">
-                    <span className="bg-subtle text-emphasis grid h-9 w-9 flex-none place-items-center rounded-full text-xs font-semibold">
-                      {(booking.attendeeName ?? "?").slice(0, 2).toUpperCase()}
+      <section className="bg-default border-subtle mt-4 rounded-3xl border p-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
+          <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
+            {t("home_all_bookings")}
+          </Link>
+        </div>
+        {data.upcoming.length === 0 ? (
+          <p className="text-subtle mt-3 text-sm">{t("home_nothing_coming_up")}</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-[var(--cal-border-subtle)]">
+            {data.upcoming.map((booking) => (
+              <li key={booking.uid}>
+                <Link href={`/booking/${booking.uid}`} className="flex items-center gap-3 py-3">
+                  <span className="bg-subtle text-emphasis grid h-9 w-9 flex-none place-items-center rounded-full text-xs font-semibold">
+                    {(booking.attendeeName ?? "?").slice(0, 2).toUpperCase()}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="text-emphasis block truncate text-sm font-medium">
+                      {booking.attendeeName ?? booking.title}
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="text-emphasis block truncate text-sm font-medium">
-                        {booking.attendeeName ?? booking.title}
-                      </span>
-                      <span className="text-subtle block text-xs">
-                        {dayjs(booking.startTime).format("ddd D MMM, h:mma")}
-                      </span>
+                    <span className="text-subtle block text-xs">
+                      {dayjs(booking.startTime).format("ddd D MMM, h:mma")}
                     </span>
-                    <span
-                      className={
-                        booking.isRequest
-                          ? "bg-subtle text-emphasis rounded-full px-2.5 py-1 text-[11px] font-medium"
-                          : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
-                      }>
-                      {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-        <SetupChecklist steps={data.setup} />
-      </div>
+                  </span>
+                  <span
+                    className={
+                      booking.isRequest
+                        ? "bg-subtle text-emphasis rounded-full px-2.5 py-1 text-[11px] font-medium"
+                        : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                    }>
+                    {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
@@ -155,53 +184,5 @@ function Stat(props: { label: string; value: number; note: string; href?: string
     </Link>
   ) : (
     body
-  );
-}
-
-function SetupChecklist(props: { steps: readonly { id: string; done: boolean; href: string }[] }) {
-  const { t } = useLocale();
-  const done = props.steps.filter((step) => step.done).length;
-  if (done === props.steps.length) return null;
-  return (
-    <section
-      className="bg-default border-subtle self-start rounded-3xl border p-5"
-      data-testid="setup-checklist">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-emphasis font-semibold">{t("setup_title")}</h2>
-        <span className="text-subtle text-xs">
-          {t("setup_progress", { done, total: props.steps.length })}
-        </span>
-      </div>
-      <div className="bg-subtle mt-3 h-1.5 w-full overflow-hidden rounded-full" aria-hidden>
-        <div
-          className="bg-inverted h-full rounded-full"
-          style={{ width: `${Math.round((done / props.steps.length) * 100)}%` }}
-        />
-      </div>
-      <ul className="mt-3 space-y-0.5">
-        {props.steps.map((step) => (
-          <li key={step.id}>
-            <Link
-              href={step.href}
-              className={
-                step.done
-                  ? "text-subtle flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm"
-                  : "text-emphasis hover:bg-subtle flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm font-medium"
-              }
-              data-testid={`setup-step-${step.id}`}>
-              <span
-                className={
-                  step.done
-                    ? "bg-inverted text-inverted grid h-4 w-4 flex-none place-items-center rounded-full"
-                    : "border-emphasis h-4 w-4 flex-none rounded-full border-[1.5px]"
-                }>
-                {step.done && <Icon name="check" className="h-2.5 w-2.5" />}
-              </span>
-              {t(`setup_step_${step.id}`)}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
   );
 }
