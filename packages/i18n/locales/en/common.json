@@ -5015,5 +5015,7 @@
   "custom_domain_step_records": "Add these records at your domain provider",
   "custom_domain_step_check": "Check the connection",
   "custom_domain_not_checked": "Not checked yet",
-  "sw_app_theme_hint": "How your dashboard looks. Changes apply right away."
+  "sw_app_theme_hint": "How your dashboard looks. Changes apply right away.",
+  "move_service_up": "Move {{title}} up",
+  "move_service_down": "Move {{title}} down"
 }

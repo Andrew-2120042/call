@@ -15,7 +15,7 @@ import { MembershipRole, SchedulingType } from "@calcom/prisma/enums";
 import type { RouterOutputs } from "@calcom/trpc/react";
 import { trpc } from "@calcom/trpc/react";
 import classNames from "@calcom/ui/classNames";
-import { ArrowButton } from "@calcom/ui/components/arrow-button";
+import { Icon } from "@calcom/ui/components/icon";
 import { UserAvatarGroup } from "@calcom/ui/components/avatar";
 import { Badge } from "@calcom/ui/components/badge";
 import { Button } from "@calcom/ui/components/button";
@@ -559,19 +559,25 @@ export const InfiniteEventTypeList = ({
               <li key={type.id}>
                 <div className="flex w-full items-center justify-between transition hover:bg-cal-muted">
                   <div className="group flex w-full max-w-full items-center justify-between overflow-hidden px-4 py-4 sm:px-6">
-                    {!(firstItem && firstItem.id === type.id) && (
-                      <ArrowButton
+                    {/* Reorder controls live inside the row (in flow), so they never hang off the card edge. */}
+                    <div className="mr-3 hidden w-6 flex-none flex-col items-center gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100 sm:flex">
+                      <button
+                        type="button"
+                        aria-label={t("move_service_up", { title: type.title })}
+                        disabled={!!(firstItem && firstItem.id === type.id)}
                         onClick={() => moveEventType(LIMIT * pageIdx + index, -1)}
-                        arrowDirection="up"
-                      />
-                    )}
-
-                    {!(lastItem && lastItem.id === type.id) && (
-                      <ArrowButton
+                        className="text-subtle hover:bg-emphasis hover:text-emphasis grid h-5 w-6 place-items-center rounded disabled:pointer-events-none disabled:opacity-25">
+                        <Icon name="chevron-up" className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={t("move_service_down", { title: type.title })}
+                        disabled={!!(lastItem && lastItem.id === type.id)}
                         onClick={() => moveEventType(LIMIT * pageIdx + index, 1)}
-                        arrowDirection="down"
-                      />
-                    )}
+                        className="text-subtle hover:bg-emphasis hover:text-emphasis grid h-5 w-6 place-items-center rounded disabled:pointer-events-none disabled:opacity-25">
+                        <Icon name="chevron-down" className="h-4 w-4" />
+                      </button>
+                    </div>
                     <MemoizedItem type={type} group={group} readOnly={readOnly} />
                     <div className="mt-4 hidden sm:mt-0 sm:flex">
                       <div className="flex justify-between space-x-2 rtl:space-x-reverse">
@@ -930,9 +936,7 @@ const CTA = ({ profileOptions }: { profileOptions: ProfileOption[] }) => {
         }}
         placeholder={t("search")}
       />
-      <Button
-        data-testid="new-event-type"
-        href={`?dialog=new&eventPage=${profileOptions[0]?.slug ?? ""}`}>
+      <Button data-testid="new-event-type" href={`?dialog=new&eventPage=${profileOptions[0]?.slug ?? ""}`}>
         {t("new")}
       </Button>
       <CreateEventTypeDialog profileOptions={profileOptions} />
