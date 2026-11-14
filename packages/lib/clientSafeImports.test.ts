@@ -28,6 +28,8 @@ const CLIENT_OR_EDGE_FILES = [
   "apps/web/modules/booking-page/page-editor-view.tsx",
   "apps/web/modules/booking-page/PhoneFrame.tsx",
   "apps/web/modules/apps/curated-apps-view.tsx",
+  "apps/web/modules/home/AssistantCard.tsx",
+  "apps/web/modules/event-types/components/ServiceEditorChrome.tsx",
   "apps/web/components/ui/UsernameAvailability/index.tsx",
   "apps/web/modules/shell/SideBar.tsx",
   "apps/web/modules/shell/navigation/Navigation.tsx",

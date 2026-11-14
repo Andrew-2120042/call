@@ -4,8 +4,10 @@ import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
+import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
+import { AssistantCard } from "./AssistantCard";
 
 const greetingKey = (hour: number) =>
   hour < 12 ? "home_good_morning" : hour < 18 ? "home_good_afternoon" : "home_good_evening";
@@ -29,25 +31,21 @@ export default function HomeView() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl" data-testid="home">
-      <h1 className="text-emphasis text-[26px] font-semibold tracking-[-0.02em]">
-        {t(greetingKey(new Date().getHours()), { name: firstName })}
-      </h1>
-
-      <SetupChecklist steps={data.setup} />
-
-      <section className="bg-default border-subtle mt-6 flex flex-wrap items-center gap-4 rounded-3xl border p-5">
-        <div className="min-w-0 flex-1">
-          <p className="text-subtle text-sm">{t("home_your_page")}</p>
+    <div className="mx-auto max-w-5xl" data-testid="home">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-emphasis text-[26px] font-semibold tracking-[-0.02em]">
+            {t(greetingKey(new Date().getHours()), { name: firstName })}
+          </h1>
           <a
             href={data.pageUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-emphasis mt-1 block truncate text-lg font-semibold hover:underline"
+            className="text-subtle hover:text-emphasis mt-1 inline-flex items-center gap-1.5 text-sm"
             data-testid="home-page-url">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             {pageLabel}
           </a>
-          <p className="text-subtle mt-1 text-sm">{t("home_service_count", { count: data.serviceCount })}</p>
         </div>
         <div className="flex gap-2">
           <Button color="secondary" onClick={copyLink}>
@@ -60,7 +58,11 @@ export default function HomeView() {
             <Button>{t("home_open_page")}</Button>
           </a>
         </div>
-      </section>
+      </header>
+
+      <div className="mt-6">
+        <AssistantCard />
+      </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <Stat
@@ -91,45 +93,48 @@ export default function HomeView() {
         />
       </div>
 
-      <section className="bg-default border-subtle mt-4 rounded-3xl border p-5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
-          <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
-            {t("home_all_bookings")}
-          </Link>
-        </div>
-        {data.upcoming.length === 0 ? (
-          <p className="text-subtle mt-3 text-sm">{t("home_nothing_coming_up")}</p>
-        ) : (
-          <ul className="mt-3 divide-y divide-[var(--cal-border-subtle)]">
-            {data.upcoming.map((booking) => (
-              <li key={booking.uid}>
-                <Link href={`/booking/${booking.uid}`} className="flex items-center gap-3 py-3">
-                  <span className="bg-subtle text-emphasis grid h-9 w-9 flex-none place-items-center rounded-full text-xs font-semibold">
-                    {(booking.attendeeName ?? "?").slice(0, 2).toUpperCase()}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="text-emphasis block truncate text-sm font-medium">
-                      {booking.attendeeName ?? booking.title}
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_320px]">
+        <section className="bg-default border-subtle rounded-3xl border p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
+            <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
+              {t("home_all_bookings")}
+            </Link>
+          </div>
+          {data.upcoming.length === 0 ? (
+            <p className="text-subtle mt-3 text-sm">{t("home_nothing_coming_up")}</p>
+          ) : (
+            <ul className="mt-3 divide-y divide-[var(--cal-border-subtle)]">
+              {data.upcoming.map((booking) => (
+                <li key={booking.uid}>
+                  <Link href={`/booking/${booking.uid}`} className="flex items-center gap-3 py-3">
+                    <span className="bg-subtle text-emphasis grid h-9 w-9 flex-none place-items-center rounded-full text-xs font-semibold">
+                      {(booking.attendeeName ?? "?").slice(0, 2).toUpperCase()}
                     </span>
-                    <span className="text-subtle block text-xs">
-                      {dayjs(booking.startTime).format("ddd D MMM, h:mma")}
+                    <span className="min-w-0 flex-1">
+                      <span className="text-emphasis block truncate text-sm font-medium">
+                        {booking.attendeeName ?? booking.title}
+                      </span>
+                      <span className="text-subtle block text-xs">
+                        {dayjs(booking.startTime).format("ddd D MMM, h:mma")}
+                      </span>
                     </span>
-                  </span>
-                  <span
-                    className={
-                      booking.isRequest
-                        ? "bg-subtle text-emphasis rounded-full px-2.5 py-1 text-[11px] font-medium"
-                        : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
-                    }>
-                    {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+                    <span
+                      className={
+                        booking.isRequest
+                          ? "bg-subtle text-emphasis rounded-full px-2.5 py-1 text-[11px] font-medium"
+                          : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                      }>
+                      {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+        <SetupChecklist steps={data.setup} />
+      </div>
     </div>
   );
 }
@@ -157,43 +162,40 @@ function SetupChecklist(props: { steps: readonly { id: string; done: boolean; hr
   const { t } = useLocale();
   const done = props.steps.filter((step) => step.done).length;
   if (done === props.steps.length) return null;
-  const percent = Math.round((done / props.steps.length) * 100);
   return (
-    <section className="bg-default border-subtle mt-6 rounded-3xl border p-5" data-testid="setup-checklist">
-      <div className="flex items-center gap-4">
-        <div
-          className="grid h-14 w-14 flex-none place-items-center rounded-full"
-          style={{
-            background: `conic-gradient(var(--cal-text-emphasis) ${percent * 3.6}deg, var(--cal-bg-emphasis) 0)`,
-          }}
-          aria-hidden>
-          <div className="bg-default text-emphasis grid h-11 w-11 place-items-center rounded-full text-sm font-bold">
-            {percent}%
-          </div>
-        </div>
-        <div>
-          <h2 className="text-emphasis font-semibold">{t("setup_title")}</h2>
-          <p className="text-subtle text-sm">{t("setup_progress", { done, total: props.steps.length })}</p>
-        </div>
+    <section
+      className="bg-default border-subtle self-start rounded-3xl border p-5"
+      data-testid="setup-checklist">
+      <div className="flex items-baseline justify-between">
+        <h2 className="text-emphasis font-semibold">{t("setup_title")}</h2>
+        <span className="text-subtle text-xs">
+          {t("setup_progress", { done, total: props.steps.length })}
+        </span>
       </div>
-      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+      <div className="bg-subtle mt-3 h-1.5 w-full overflow-hidden rounded-full" aria-hidden>
+        <div
+          className="bg-inverted h-full rounded-full"
+          style={{ width: `${Math.round((done / props.steps.length) * 100)}%` }}
+        />
+      </div>
+      <ul className="mt-3 space-y-0.5">
         {props.steps.map((step) => (
           <li key={step.id}>
             <Link
               href={step.href}
               className={
                 step.done
-                  ? "text-subtle flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm line-through"
-                  : "text-emphasis hover:bg-subtle flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium"
+                  ? "text-subtle flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm"
+                  : "text-emphasis hover:bg-subtle flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm font-medium"
               }
               data-testid={`setup-step-${step.id}`}>
               <span
                 className={
                   step.done
-                    ? "bg-inverted text-inverted grid h-5 w-5 flex-none place-items-center rounded-full text-[11px]"
-                    : "border-emphasis h-5 w-5 flex-none rounded-full border-2"
+                    ? "bg-inverted text-inverted grid h-4 w-4 flex-none place-items-center rounded-full"
+                    : "border-emphasis h-4 w-4 flex-none rounded-full border-[1.5px]"
                 }>
-                {step.done ? "✓" : null}
+                {step.done && <Icon name="check" className="h-2.5 w-2.5" />}
               </span>
               {t(`setup_step_${step.id}`)}
             </Link>

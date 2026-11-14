@@ -36,6 +36,7 @@ export const ENDPOINTS = [
   "calendlyImport",
   "pageLook",
   "home",
+  "assistant",
   "webhook",
   "googleWorkspace",
   "oAuth",

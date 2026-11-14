@@ -4978,5 +4978,18 @@
   "apps_desc_webhooks": "Send booking events to your own URL.",
   "apps_desc_ga4": "See booking page visits and bookings in Google Analytics.",
   "apps_desc_metapixel": "Track bookings from Instagram and Facebook ads.",
-  "apps_desc_stripe": "Take payment or a deposit when someone books."
+  "apps_desc_stripe": "Take payment or a deposit when someone books.",
+  "assistant_title": "What should we set up?",
+  "assistant_subtitle": "Tell me about your work and I'll create your services, bio and page look.",
+  "assistant_placeholder": "e.g. I'm a fitness coach. I do free 15 min intro calls and 60 min sessions.",
+  "assistant_not_configured": "The assistant needs an Anthropic API key on the server (ANTHROPIC_API_KEY).",
+  "assistant_send": "Send",
+  "assistant_working": "Setting things up…",
+  "assistant_suggest_coach": "I'm a life coach. Set up my page.",
+  "assistant_suggest_intro": "Add a free 15 minute intro call",
+  "assistant_suggest_bio": "Write me a short, professional bio",
+  "assistant_did_create": "Created {{title}} ({{minutes}} min)",
+  "assistant_did_update": "Updated {{title}}",
+  "assistant_did_profile": "Updated your name and bio",
+  "assistant_did_look": "Changed your page look"
 }
