@@ -48,22 +48,12 @@ export const CURATED_APP_GROUPS: {
     subtitleKey: "apps_group_automations_sub",
     apps: [
       { slug: "zapier", descriptionKey: "apps_desc_zapier" },
-      { slug: "make", descriptionKey: "apps_desc_make" },
       {
         slug: "webhooks",
         descriptionKey: "apps_desc_webhooks",
         href: "/settings/developer/webhooks",
         name: "Webhooks",
       },
-    ],
-  },
-  {
-    id: "tracking",
-    titleKey: "apps_group_tracking",
-    subtitleKey: "apps_group_tracking_sub",
-    apps: [
-      { slug: "ga4", descriptionKey: "apps_desc_ga4" },
-      { slug: "metapixel", descriptionKey: "apps_desc_metapixel" },
     ],
   },
   {
