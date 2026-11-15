@@ -33,7 +33,7 @@ export function FinalCta({ title = "Get your booking link in two minutes" }: { t
   return (
     <section className="py-16">
       <Container>
-        <div className="rounded-3xl border border-line bg-surface px-6 py-14 text-center">
+        <div data-reveal className="rounded-3xl border border-line bg-surface px-6 py-14 text-center">
           <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">{title}</h2>
           <p className="text-muted mx-auto mt-3 max-w-[48ch] text-sm sm:text-base">
             Free forever for one person. Upgrade only when you want the waitlist, no-show protection or a team.

@@ -11,7 +11,16 @@ import { articles } from "@/content/articles";
 import { homeFaq } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
-const integrations = ["Google Calendar", "Outlook", "Apple Calendar", "CalDAV", "Google Meet", "Zoom", "Zapier", "Webhooks"];
+const integrations = [
+  { name: "Google Calendar", logo: "/logos/google-calendar.svg" },
+  { name: "Outlook", logo: "/logos/outlook.svg" },
+  { name: "Apple Calendar", logo: "/logos/apple-calendar.svg" },
+  { name: "CalDAV", logo: "/logos/caldav.svg" },
+  { name: "Google Meet", logo: "/logos/google-meet.webp" },
+  { name: "Zoom", logo: "/logos/zoom.svg" },
+  { name: "Zapier", logo: "/logos/zapier.svg" },
+  { name: "Webhooks", logo: "/logos/webhooks.svg" },
+];
 
 const stories: Story[] = [
   {
@@ -118,9 +127,10 @@ export default function Home() {
       {/* Works with */}
       <section className="border-y border-line">
         <Container className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
-          {integrations.map((name) => (
-            <div key={name} className="text-faint flex h-20 items-center justify-center border-line text-[13px] font-medium [&:not(:last-child)]:lg:border-r">
-              {name}
+          {integrations.map((item) => (
+            <div key={item.name} className="text-muted flex h-20 items-center justify-center gap-2.5 whitespace-nowrap border-line text-[13px] font-medium [&:not(:last-child)]:lg:border-r">
+              <Image src={item.logo} alt="" width={22} height={22} className="h-[22px] w-[22px] object-contain" />
+              {item.name}
             </div>
           ))}
         </Container>
@@ -130,7 +140,7 @@ export default function Home() {
       <section id="product" className="scroll-mt-20 py-28">
         <Container>
           <p className="text-accent text-xs font-medium">Product</p>
-          <h2 className="mt-3 max-w-[22ch] text-3xl font-medium leading-tight tracking-tight sm:text-5xl">
+          <h2 data-reveal className="mt-3 max-w-[22ch] text-3xl font-medium leading-tight tracking-tight sm:text-5xl">
             The calendar that works after you&apos;re booked. <span className="text-faint">Fills gaps, catches no-shows, shares the load.</span>
           </h2>
           <div className="mt-20">
@@ -143,13 +153,13 @@ export default function Home() {
       <section className="py-24">
         <Container className="text-center">
           <p className="text-accent text-xs font-medium">Set up in minutes</p>
-          <h2 className="mx-auto mt-3 max-w-[30ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
+          <h2 data-reveal className="mx-auto mt-3 max-w-[30ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
             Live from day one. <span className="text-faint">Connect your calendar, import from Calendly, and share your link before lunch.</span>
           </h2>
           <a href={signupUrl} className="mt-7 inline-block rounded-full border border-line-strong px-4 py-2 text-[13px] transition hover:bg-raised">
             Start for free
           </a>
-          <div className="mx-auto mt-14 max-w-4xl">
+          <div data-reveal className="mx-auto mt-14 max-w-4xl">
             <Window title="Bookings">
               <Image src="/shots/bookings.png" alt="The Slotwise bookings list" width={2560} height={1600} className="h-auto w-full" />
             </Window>
@@ -185,7 +195,7 @@ export default function Home() {
         <Container className="grid items-center gap-16 lg:grid-cols-2">
           <div>
             <p className="text-accent text-xs font-medium">Under the hood</p>
-            <h2 className="mt-3 max-w-[18ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
+            <h2 data-reveal className="mt-3 max-w-[18ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
               All the scheduling, none of the busywork. <span className="text-faint">Ready on day one.</span>
             </h2>
             <div className="mt-10">
@@ -212,13 +222,16 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container className="text-center">
           <p className="text-accent text-xs font-medium">Connectivity</p>
-          <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">Your tools, connected.</h2>
+          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">Your tools, connected.</h2>
           <p className="text-muted mx-auto mt-3 max-w-[46ch] text-sm">Calendars, video and automation you already use. Bring your services and hours over from Calendly in a minute.</p>
-          <div className="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-2.5">
-            {integrations.map((name) => (
-              <span key={name} className="text-muted rounded-full border border-line-strong bg-surface px-4 py-2 text-[13px]">
-                {name}
-              </span>
+          <div data-reveal className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-3">
+            {integrations.map((item) => (
+              <div key={item.name} className="group flex w-24 flex-col items-center gap-2">
+                <span className="grid h-16 w-16 place-items-center rounded-2xl border border-line-strong bg-surface transition duration-300 group-hover:-translate-y-1 group-hover:border-fg/30">
+                  <Image src={item.logo} alt={item.name} width={32} height={32} className="h-8 w-8 object-contain" />
+                </span>
+                <span className="text-faint text-[11px]">{item.name}</span>
+              </div>
             ))}
           </div>
         </Container>
@@ -227,7 +240,7 @@ export default function Home() {
       {/* Developers */}
       <section className="border-t border-line py-24">
         <Container>
-          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="text-3xl font-medium tracking-tight sm:text-4xl">
             Webhooks. API keys. Embeds. <span className="text-faint">Build on {site.name}.</span>
           </h2>
           <a href={signupUrl} className="text-muted hover:text-fg mt-4 inline-block text-[13px] transition">
@@ -250,10 +263,10 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container>
           <p className="text-accent text-xs font-medium">Built to be simple</p>
-          <h2 className="mt-3 max-w-[20ch] text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="mt-3 max-w-[20ch] text-3xl font-medium tracking-tight sm:text-4xl">
             Free to start. <span className="text-faint">Fair when you grow.</span>
           </h2>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div data-reveal className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {facts.map((f) => (
               <div key={f.label} className="border-s border-line-strong ps-4">
                 <p className="text-3xl font-medium tabular-nums">{f.value}</p>
@@ -268,10 +281,10 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container>
           <p className="text-accent text-xs font-medium">Guides</p>
-          <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
             Straight answers. <span className="text-faint">About scheduling tools and full calendars.</span>
           </h2>
-          <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3">
+          <div data-reveal className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3">
             {articles.slice(0, 3).map((a) => (
               <Link key={a.slug} href={`/blog/${a.slug}`} className="group bg-bg p-6 transition hover:bg-surface">
                 <p className="text-faint text-[11px] uppercase tracking-[0.12em]">{a.keyword}</p>
@@ -287,10 +300,10 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container>
           <p className="text-accent text-xs font-medium">Changelog</p>
-          <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
             Better as you grow. <span className="text-faint">New features to keep pace with you.</span>
           </h2>
-          <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          <div data-reveal className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             {changelog.map((c) => (
               <div key={c.title} className="bg-bg p-6">
                 <p className="text-faint text-[11px]">{c.date}</p>
@@ -305,7 +318,7 @@ export default function Home() {
       {/* Pricing */}
       <section className="border-t border-line py-24" id="pricing">
         <Container>
-          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="text-3xl font-medium tracking-tight sm:text-4xl">
             Simple pricing. <span className="text-faint">Start free, upgrade when it pays for itself.</span>
           </h2>
           <PricingCards />
@@ -317,7 +330,7 @@ export default function Home() {
       {/* Final CTA */}
       <section className="border-t border-line py-32">
         <Container className="text-center">
-          <h2 className="mx-auto max-w-[14ch] text-4xl font-medium leading-tight tracking-[-0.03em] sm:text-6xl">Full calendars run on {site.name}.</h2>
+          <h2 data-reveal className="mx-auto max-w-[14ch] text-4xl font-medium leading-tight tracking-[-0.03em] sm:text-6xl">Full calendars run on {site.name}.</h2>
           <div className="mt-8 flex justify-center gap-2.5">
             <Link href="/pricing" className="rounded-full border border-line-strong px-4 py-2 text-[13px] transition hover:bg-raised">
               See pricing

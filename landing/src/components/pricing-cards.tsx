@@ -4,7 +4,7 @@ import { ButtonLink } from "./ui";
 
 export function PricingCards() {
   return (
-    <div className="mt-10 grid gap-4 lg:grid-cols-3">
+    <div data-reveal className="mt-10 grid gap-4 lg:grid-cols-3">
       {pricing.map((plan) => (
         <div
           key={plan.name}

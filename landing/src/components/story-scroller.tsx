@@ -54,10 +54,10 @@ export function StoryScroller({ stories }: { stories: Story[] }) {
               refs.current[s.id] = el;
             }}
             className="scroll-mt-28">
-            <h3 className="max-w-[30ch] text-2xl font-medium leading-snug tracking-tight sm:text-[28px]">
+            <h3 data-reveal className="max-w-[30ch] text-2xl font-medium leading-snug tracking-tight sm:text-[28px]">
               {s.lead} <span className="text-faint">{s.rest}</span>
             </h3>
-            <div className="mt-8 rounded-2xl border border-line bg-gradient-to-b from-surface to-bg p-4 sm:p-8">{s.visual}</div>
+            <div data-reveal className="mt-8 rounded-2xl border border-line bg-gradient-to-b from-surface to-bg p-4 sm:p-8">{s.visual}</div>
             <div className="mt-8 grid gap-8 sm:grid-cols-2">
               {s.points.map((p) => (
                 <div key={p.title}>

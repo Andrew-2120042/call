@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { Footer, Header } from "@/components/site-chrome";
+import { RevealObserver } from "@/components/reveal";
 import { JsonLd } from "@/components/ui";
 import { site } from "@/site.config";
 import "./globals.css";
@@ -25,7 +26,15 @@ export const viewport: Viewport = { themeColor: "#090909", colorScheme: "dark" }
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${serif.variable}`}>
+      <head>
+        {/* Marks the page before first paint so revealed sections don't flash in and out. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static, first-party
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-ready')" }}
+        />
+      </head>
       <body className="min-h-screen">
+        <RevealObserver />
         <Header />
         <main>{children}</main>
         <Footer />

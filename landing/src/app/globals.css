@@ -34,3 +34,21 @@ body {
   background: var(--color-accent);
   color: white;
 }
+
+/* Smooth motion. Only applied once the reveal script has run, and never for people who prefer less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  .reveal-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal-ready [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
