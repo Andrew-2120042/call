@@ -10,6 +10,15 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
 ## Launch checklist (things only the owner can set up)
 - Real domain: replace `slotwise.example` (landing `src/site.config.ts` or its env vars) and the app URLs above.
 - Google and Microsoft OAuth apps for calendar sync (`GOOGLE_API_CREDENTIALS`, `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET`), plus `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` and `DAILY_API_KEY` for video. After setting them, run `corepack yarn workspace @calcom/prisma seed-app-store` once (safe to re-run; it upserts). That stores the keys and turns the apps on, so Google Calendar, Outlook, Google Meet, Zoom and built-in video appear in onboarding and settings. Without it onboarding only offers Apple and CalDAV.
+- CRM and Teams developer apps (all free to register):
+  - Microsoft Teams video: uses the same `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET` as Outlook.
+  - HubSpot: `HUBSPOT_CLIENT_ID` / `HUBSPOT_CLIENT_SECRET` (developers.hubspot.com → create app).
+  - Salesforce: `SALESFORCE_CONSUMER_KEY` / `SALESFORCE_CONSUMER_SECRET` (a Connected App in any Salesforce org).
+  - Pipedrive: client id and secret from developers.pipedrive.com, entered in Settings → Admin → Apps.
+  - Then run `seed-app-store` again. Google Analytics, Tag Manager, Meta Pixel and Make need no keys.
+- Zapier and Make: the restored apps point people at Cal.com's Zapier/Make listings, which talk to Cal's
+  servers. Slotwise needs its own Zapier and Make apps (free on their developer platforms) before these work
+  end to end. Webhooks work today.
 - Email sending domain (SPF, DKIM, DMARC) and `EMAIL_SERVER_*`.
 - Polar products and webhook (section 5), `DAILY_API_KEY` for built-in video, `ANTHROPIC_API_KEY` for AI summaries.
 - Cron jobs (section 4) running against production.
