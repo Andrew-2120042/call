@@ -116,11 +116,16 @@ function callHandler(body: SignupBody): Promise<MockResponse> {
   });
 }
 
-runP2002TestSuite("calcomHandler", callHandler, () => {
-  vi.clearAllMocks();
-  resetPrismaMock();
-  mockFindTokenByToken.mockResolvedValue(createMockFoundToken());
-  mockValidateAndGetCorrectedUsernameForTeam.mockResolvedValue("testuser");
-  prismaMock.team.findUnique.mockResolvedValue(createMockTeam() as never);
-  prismaMock.verificationToken.delete.mockResolvedValue({} as never);
-});
+runP2002TestSuite(
+  "calcomHandler",
+  callHandler,
+  () => {
+    vi.clearAllMocks();
+    resetPrismaMock();
+    mockFindTokenByToken.mockResolvedValue(createMockFoundToken());
+    mockValidateAndGetCorrectedUsernameForTeam.mockResolvedValue("testuser");
+    prismaMock.team.findUnique.mockResolvedValue(createMockTeam() as never);
+    prismaMock.verificationToken.delete.mockResolvedValue({} as never);
+  },
+  (identifier) => mockFindTokenByToken.mockResolvedValue(createMockFoundToken({ identifier }))
+);

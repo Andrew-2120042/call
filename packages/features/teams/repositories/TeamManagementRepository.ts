@@ -282,6 +282,31 @@ export class TeamManagementRepository {
     await this.prismaClient.verificationToken.delete({ where: { id: tokenId } });
   }
 
+  async findOwnerUserId(teamId: number): Promise<number | null> {
+    const owner = await this.prismaClient.membership.findFirst({
+      where: { teamId, role: "OWNER", accepted: true },
+      select: { userId: true },
+    });
+    return owner?.userId ?? null;
+  }
+
+  async listPublicServices(teamId: number) {
+    return this.prismaClient.eventType.findMany({
+      where: { teamId, hidden: false },
+      orderBy: [{ position: "desc" }, { id: "asc" }],
+      select: { id: true, title: true, slug: true, length: true, description: true, schedulingType: true },
+    });
+  }
+
+  async listPublicMembers(teamId: number) {
+    const memberships = await this.prismaClient.membership.findMany({
+      where: { teamId, accepted: true, user: { username: { not: null } } },
+      orderBy: { createdAt: "asc" },
+      select: { user: { select: { id: true, name: true, username: true, avatarUrl: true } } },
+    });
+    return memberships.map(({ user }) => user);
+  }
+
   async countTeamServices(teamId: number): Promise<number> {
     return this.prismaClient.eventType.count({ where: { teamId } });
   }

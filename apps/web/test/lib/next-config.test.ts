@@ -100,11 +100,8 @@ describe("next.config.js - Org Rewrite", () => {
         type: "def",
       });
 
-      // With teams removed, /team/abc is treated as a normal /:user/:type booking page
-      expect(orgUserTypeRouteMatch("/team/abc")?.params).toEqual({
-        user: "team",
-        type: "abc",
-      });
+      // /team/... is the team booking page route, not a /:user/:type page
+      expect(orgUserTypeRouteMatch("/team/abc")).toEqual(false);
 
       expect(orgUserTypeRouteMatch("/abc")).toEqual(false);
 

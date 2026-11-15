@@ -69,7 +69,7 @@ export const useScheduleForEvent = ({
   orgSlug,
   teamMemberEmail,
   isTeamEvent,
-  useApiV2 = true,
+  useApiV2 = false,
   bookerLayout,
 }: {
   username?: string | null;

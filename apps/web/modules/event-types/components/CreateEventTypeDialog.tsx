@@ -8,6 +8,7 @@ import { SchedulingType } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
 import { DialogClose, DialogContent, DialogFooter } from "@calcom/ui/components/dialog";
+import { Label, ToggleGroup } from "@calcom/ui/components/form";
 import { showToast } from "@calcom/ui/components/toast";
 import { isValidPhoneNumber } from "libphonenumber-js/max";
 import { useRouter } from "next/navigation";
@@ -114,20 +115,48 @@ export function CreateEventTypeDialog({ profileOptions }: { profileOptions: Prof
         enableOverflow
         title={teamId ? t("add_new_team_event_type") : t("add_new_event_type")}
         description={t("new_event_type_to_book_description")}>
-        {teamId ? null : (
+        {teamId && !permissions.canCreateEventType ? (
+          <p className="text-subtle pb-6 text-sm">{t("error_event_type_unauthorized_create")}</p>
+        ) : (
           <CreateEventTypeForm
             urlPrefix={urlPrefix}
             isPending={createMutation.isPending}
             form={form}
             isManagedEventType={isManagedEventType}
             handleSubmit={(values) => {
-              createMutation.mutate(values);
+              createMutation.mutate(
+                teamId
+                  ? { ...values, teamId, schedulingType: values.schedulingType ?? SchedulingType.ROUND_ROBIN }
+                  : values
+              );
             }}
             SubmitButton={SubmitButton}
-            pageSlug={pageSlug}
+            pageSlug={teamProfile?.slug ?? pageSlug}
+            extraFields={teamId ? <TeamAssignmentChoice form={form} /> : null}
           />
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function TeamAssignmentChoice({ form }: { form: ReturnType<typeof useCreateEventType>["form"] }) {
+  const { t } = useLocale();
+  const value = form.watch("schedulingType") ?? SchedulingType.ROUND_ROBIN;
+  return (
+    <div>
+      <Label>{t("assignment")}</Label>
+      <ToggleGroup
+        value={value}
+        onValueChange={(next) => next && form.setValue("schedulingType", next as SchedulingType)}
+        options={[
+          { value: SchedulingType.ROUND_ROBIN, label: t("round_robin") },
+          { value: SchedulingType.COLLECTIVE, label: t("collective") },
+        ]}
+      />
+      <p className="text-subtle mt-1.5 text-xs">
+        {value === SchedulingType.COLLECTIVE ? t("collective_description") : t("round_robin_description")}
+      </p>
+    </div>
   );
 }

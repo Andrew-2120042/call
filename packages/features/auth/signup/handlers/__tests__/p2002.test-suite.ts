@@ -18,7 +18,8 @@ type CallHandler = (body: SignupBody) => Promise<MockResponse>;
 export function runP2002TestSuite(
   handlerName: string,
   callHandler: CallHandler,
-  setupMocks: () => void
+  setupMocks: () => void,
+  setFoundTokenIdentifier: (identifier: string) => void
 ): void {
   describe(`${handlerName} – signup P2002 contract`, () => {
     describe("P2002 Error Handling (non-token flow)", () => {
@@ -106,6 +107,19 @@ export function runP2002TestSuite(
         const response = await callHandler(createSignupBody({ token: "valid-token" }));
 
         expect(response.status).toBe(201);
+        expect(prismaMock.verificationToken.delete).toHaveBeenCalledTimes(1);
+      });
+
+      it("keeps a shared team invite link usable after someone signs up with it", async () => {
+        setFoundTokenIdentifier("invite-link-for-team-1");
+        prismaMock.user.findUnique.mockResolvedValue(null as never);
+        prismaMock.user.findFirst.mockResolvedValue(null as never);
+        prismaMock.user.upsert.mockResolvedValue(createMockUser() as never);
+
+        const response = await callHandler(createSignupBody({ token: "valid-token" }));
+
+        expect(response.status).toBe(201);
+        expect(prismaMock.verificationToken.delete).not.toHaveBeenCalled();
       });
     });
 

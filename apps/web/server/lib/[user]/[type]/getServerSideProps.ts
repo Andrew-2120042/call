@@ -317,3 +317,57 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   return isDynamicGroup ? await getDynamicGroupPageProps(context) : await getUserPageProps(context);
 };
+
+const teamParamsSchema = z.object({
+  slug: z.string(),
+  type: z.string().transform((s) => slugify(s)),
+});
+
+/** Booking page for a team service: /team/[slug]/[type]. */
+export const getTeamTypeServerSideProps = async (context: GetServerSidePropsContext) => {
+  const session = await getServerSession({ req: context.req });
+  const { slug: teamSlug, type: slug } = teamParamsSchema.parse(context.params);
+  const { rescheduleUid, bookingUid } = context.query;
+  const allowRescheduleForCancelledBooking = context.query.allowRescheduleForCancelledBooking === "true";
+
+  const { getTeamService } = await import("@calcom/features/teams/lib/getTeamService");
+  const teamPage = await getTeamService().getPublicPage(teamSlug);
+  if (!teamPage) return { notFound: true } as const;
+
+  const eventData = await EventRepository.getPublicEvent(
+    { username: teamSlug, eventSlug: slug, isTeamEvent: true, org: null, fromRedirectOfNonOrgLink: false },
+    session?.user?.id
+  );
+  if (!eventData) return { notFound: true } as const;
+
+  const props: Props = {
+    eventData,
+    user: teamSlug,
+    slug,
+    isBrandingHidden: false,
+    isSEOIndexable: true,
+    themeBasis: `team/${teamSlug}`,
+    bookingUid: bookingUid ? `${bookingUid}` : null,
+    rescheduleUid: null,
+    orgBannerUrl: null,
+  };
+
+  if (rescheduleUid) {
+    const processRescheduleResult = await processReschedule({
+      props,
+      rescheduleUid,
+      session,
+      allowRescheduleForCancelledBooking,
+    });
+    if (processRescheduleResult) return processRescheduleResult;
+  } else if (bookingUid) {
+    const processSeatResult = await processSeatedEvent({
+      props,
+      bookingUid,
+      allowRescheduleForCancelledBooking,
+    });
+    if (processSeatResult) return processSeatResult;
+  }
+
+  return { props };
+};

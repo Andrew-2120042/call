@@ -65,11 +65,16 @@ function callHandler(body: SignupBody): ReturnType<typeof handler> {
   return handler(body as unknown as Record<string, string>);
 }
 
-runP2002TestSuite("selfHostedHandler", callHandler, () => {
-  vi.clearAllMocks();
-  resetPrismaMock();
-  mockFindTokenByToken.mockResolvedValue(createMockFoundToken());
-  mockValidateAndGetCorrectedUsernameForTeam.mockResolvedValue("testuser");
-  prismaMock.team.findUnique.mockResolvedValue(createMockTeam() as never);
-  prismaMock.verificationToken.delete.mockResolvedValue({} as never);
-});
+runP2002TestSuite(
+  "selfHostedHandler",
+  callHandler,
+  () => {
+    vi.clearAllMocks();
+    resetPrismaMock();
+    mockFindTokenByToken.mockResolvedValue(createMockFoundToken());
+    mockValidateAndGetCorrectedUsernameForTeam.mockResolvedValue("testuser");
+    prismaMock.team.findUnique.mockResolvedValue(createMockTeam() as never);
+    prismaMock.verificationToken.delete.mockResolvedValue({} as never);
+  },
+  (identifier) => mockFindTokenByToken.mockResolvedValue(createMockFoundToken({ identifier }))
+);

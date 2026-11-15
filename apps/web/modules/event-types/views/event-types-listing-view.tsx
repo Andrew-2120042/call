@@ -919,8 +919,16 @@ const CreateFirstEventTypeView = ({ slug, searchTerm }: { slug: string; searchTe
 const CTA = ({ profileOptions }: { profileOptions: ProfileOption[] }) => {
   const { t } = useLocale();
   const { searchTerm, setSearchTerm } = useSearchContext();
+  const { data: query } = useTypedQuery(querySchema);
 
   if (!profileOptions.length) return null;
+  // On a team's tab, "New" creates a service for that team.
+  const activeTeam = query.teamId
+    ? profileOptions.find((option) => option.teamId === query.teamId)
+    : undefined;
+  const newHref = activeTeam
+    ? `?dialog=new&eventPage=${activeTeam.slug ?? ""}&teamId=${activeTeam.teamId}`
+    : `?dialog=new&eventPage=${profileOptions.find((option) => !option.teamId)?.slug ?? profileOptions[0]?.slug ?? ""}`;
 
   return (
     <div className="flex items-center gap-4">
@@ -936,7 +944,7 @@ const CTA = ({ profileOptions }: { profileOptions: ProfileOption[] }) => {
         }}
         placeholder={t("search")}
       />
-      <Button data-testid="new-event-type" href={`?dialog=new&eventPage=${profileOptions[0]?.slug ?? ""}`}>
+      <Button data-testid="new-event-type" href={newHref}>
         {t("new")}
       </Button>
       <CreateEventTypeDialog profileOptions={profileOptions} />

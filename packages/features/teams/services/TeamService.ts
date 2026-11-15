@@ -67,6 +67,23 @@ export class TeamService {
     }
   }
 
+  /** Team booking pages run on the owner's Team plan and pause when it ends. */
+  async isTeamSchedulingActive(teamId: number) {
+    const ownerId = await this.repo.findOwnerUserId(teamId);
+    if (!ownerId) return false;
+    return this.deps.hasPlanFeature(ownerId, "teamScheduling");
+  }
+
+  async getPublicPage(slug: string) {
+    const team = await this.repo.findBySlug(slug);
+    if (!team || !(await this.isTeamSchedulingActive(team.id))) return null;
+    const [services, members] = await Promise.all([
+      this.repo.listPublicServices(team.id),
+      team.hideBookATeamMember ? Promise.resolve([]) : this.repo.listPublicMembers(team.id),
+    ]);
+    return { team, services, members };
+  }
+
   async listForUser(userId: number) {
     const teams = await this.repo.listForUser(userId);
     return {

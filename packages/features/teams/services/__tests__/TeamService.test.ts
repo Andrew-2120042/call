@@ -135,6 +135,16 @@ function createFakeRepository() {
       );
     },
     countTeamServices: async () => 0,
+    findOwnerUserId: async (teamId: number) =>
+      memberships.find((m) => m.teamId === teamId && m.role === MembershipRole.OWNER && m.accepted)?.userId ??
+      null,
+    listPublicServices: async () => [
+      { id: 1, title: "Intro", slug: "intro", length: 30, description: null, schedulingType: "ROUND_ROBIN" },
+    ],
+    listPublicMembers: async (teamId: number) =>
+      memberships
+        .filter((m) => m.teamId === teamId && m.accepted)
+        .map((m) => users.find((user) => user.id === m.userId) as User),
   };
 
   return { repo: repo as unknown as TeamManagementRepository, users, memberships, tokens };
@@ -447,6 +457,29 @@ describe("TeamService", () => {
         slug: "sales-eu",
         bio: null,
       });
+    });
+  });
+
+  describe("public team page", () => {
+    it("is live while the owner has the Team plan and pauses when it ends", async () => {
+      await teamWithAdminAndMember();
+      const page = await service.getPublicPage("sales-team");
+      expect(page?.team.name).toBe("Sales Team");
+      expect(page?.services).toHaveLength(1);
+      expect(page?.members.map((m) => m.username)).toEqual(["olive", "ada", "max"]);
+
+      hasTeamPlan = false;
+      expect(await service.getPublicPage("sales-team")).toBeNull();
+    });
+
+    it("hides individual members when the team turns that off", async () => {
+      const { team } = await teamWithAdminAndMember();
+      await service.update({ userId: 1, teamId: team.id, data: { hideBookATeamMember: true } });
+      expect((await service.getPublicPage("sales-team"))?.members).toEqual([]);
+    });
+
+    it("is not found for an unknown URL", async () => {
+      expect(await service.getPublicPage("nobody")).toBeNull();
     });
   });
 });
