@@ -36,16 +36,16 @@ export function NotFound(_props: { host: string }) {
         <p className="mt-5 text-[12px] font-semibold uppercase tracking-[0.08em] text-muted">
           {t("error_404")}
         </p>
-        <h1 className="mt-2 text-[26px] font-bold leading-tight tracking-[-0.02em]">
+        <h1 className="mt-2 text-[23px] font-bold leading-tight tracking-[-0.02em]">
           {isBooking ? t("not_found_booking_title") : t("not_found_title")}
         </h1>
-        <p className="mx-auto mt-2 max-w-[32ch] text-[15px] leading-relaxed text-subtle">
+        <p className="mx-auto mt-2 max-w-[32ch] text-[14px] leading-relaxed text-subtle">
           {isBooking ? t("not_found_booking_body") : t("not_found_body")}
         </p>
         <Link
           href="/"
           className="mt-7 inline-flex items-center justify-center bg-inverted font-semibold text-inverted transition hover:opacity-90"
-          style={{ height: 46, padding: "0 22px", borderRadius: 999, columnGap: 8, fontSize: 14.5 }}>
+          style={{ height: 46, padding: "0 22px", borderRadius: 999, columnGap: 8, fontSize: 13.5 }}>
           <Icon name="arrow-left" className="h-4 w-4" />
           {t("go_back_home")}
         </Link>

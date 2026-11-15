@@ -24,11 +24,11 @@ export default function TeamPublicView({ team, services, members }: Props) {
       <main className="mx-auto w-full max-w-[560px]" data-testid="team-public-page">
         <header className="flex flex-col items-center text-center">
           <TeamLogo size="xl" name={team.name} logoUrl={team.logoUrl} />
-          <h1 className="text-emphasis mt-4 text-[26px] font-semibold leading-tight tracking-[-0.02em]">
+          <h1 className="text-emphasis mt-4 text-[23px] font-semibold leading-tight tracking-[-0.02em]">
             {team.name}
           </h1>
           {team.bio && (
-            <p className="text-subtle mt-2 max-w-[44ch] text-[15px] leading-relaxed">{team.bio}</p>
+            <p className="text-subtle mt-2 max-w-[44ch] text-[14px] leading-relaxed">{team.bio}</p>
           )}
         </header>
 
@@ -46,10 +46,10 @@ export default function TeamPublicView({ team, services, members }: Props) {
               )}
               data-testid="team-service-link">
               <span className="min-w-0">
-                <span className="text-emphasis block truncate text-[15px] font-semibold">
+                <span className="text-emphasis block truncate text-[14px] font-semibold">
                   {service.title}
                 </span>
-                <span className="text-subtle mt-1 flex flex-wrap items-center gap-x-2 text-[13px]">
+                <span className="text-subtle mt-1 flex flex-wrap items-center gap-x-2 text-[12.5px]">
                   <span className="inline-flex items-center gap-1.5">
                     <Icon name="clock" className="h-3.5 w-3.5" />
                     {t("service_minutes", { count: service.length })}

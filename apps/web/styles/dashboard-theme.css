@@ -26,7 +26,7 @@ body:has([data-sw-settings-nav]) {
   [data-sw-sidebar] nav button,
   [data-sw-sidebar] > div:last-child a,
   [data-sw-sidebar] > div:last-child button {
-    font-size: 14px;
+    font-size: 13px;
     padding: 7px 12px !important;
   }
 
@@ -159,7 +159,7 @@ body:has([data-sw-settings-nav]) {
   width: 100% !important;
   border-radius: 10px !important;
   padding: 7px 12px !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   color: var(--sw-nav-text);
 }
 
@@ -176,7 +176,7 @@ body:has([data-sw-settings-nav]) {
 
 [data-sw-settings-nav] > div > div > p,
 [data-sw-settings-nav] p.text-subtle {
-  font-size: 12px !important;
+  font-size: 11px !important;
   color: var(--cal-text-muted) !important;
 }
 

@@ -80,7 +80,7 @@ export function UserPage(props: PageProps) {
             }}
           />
           <h1
-            className="text-emphasis mt-4 text-[26px] font-semibold leading-tight tracking-[-0.02em]"
+            className="text-emphasis mt-4 text-[23px] font-semibold leading-tight tracking-[-0.02em]"
             data-testid="name-title">
             {profile.name}
             {user.verified && (
@@ -96,7 +96,7 @@ export function UserPage(props: PageProps) {
           {!isBioEmpty && (
             // biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized on the server (markdownToSafeHTML)
             <div
-              className="text-subtle wrap-break-word mt-2 max-w-[44ch] text-[15px] leading-relaxed [&_a]:underline"
+              className="text-subtle wrap-break-word mt-2 max-w-[44ch] text-[14px] leading-relaxed [&_a]:underline"
               dangerouslySetInnerHTML={{ __html: props.safeBio }}
             />
           )}
@@ -118,10 +118,10 @@ export function UserPage(props: PageProps) {
               )}
               data-testid="event-type-link">
               <span className="min-w-0">
-                <span className="text-emphasis block truncate text-[15px] font-semibold">
+                <span className="text-emphasis block truncate text-[14px] font-semibold">
                   {eventType.title}
                 </span>
-                <span className="text-subtle mt-1 flex flex-wrap items-center gap-x-2 text-[13px]">
+                <span className="text-subtle mt-1 flex flex-wrap items-center gap-x-2 text-[12.5px]">
                   <span className="inline-flex items-center gap-1.5">
                     <Icon name="clock" className="h-3.5 w-3.5" />
                     {t("service_minutes", { count: eventType.length })}

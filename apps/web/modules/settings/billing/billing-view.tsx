@@ -176,7 +176,7 @@ export default function BillingView() {
                 )}
               </div>
               <p className="mt-3 flex items-baseline" style={{ columnGap: 6 }}>
-                <span className="text-[32px] font-semibold leading-none tracking-tight">{plan.price}</span>
+                <span className="text-[28px] font-semibold leading-none tracking-tight">{plan.price}</span>
                 <span className={isPro ? "text-sm opacity-70" : "text-subtle text-sm"}>{plan.per}</span>
               </p>
               <ul className="mt-5 flex-1 space-y-2.5 text-sm">

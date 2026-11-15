@@ -85,7 +85,7 @@ export default function AssistantView() {
         }}
         placeholder={t("assistant_placeholder")}
         aria-label={t("assistant_page_title")}
-        className="text-emphasis placeholder:text-muted block w-full resize-none border-0 bg-transparent px-3 pt-2.5 text-[15px] leading-relaxed focus:outline-none focus:ring-0 disabled:cursor-not-allowed"
+        className="text-emphasis placeholder:text-muted block w-full resize-none border-0 bg-transparent px-3 pt-2.5 text-[14px] leading-relaxed focus:outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <div className="flex items-center justify-between pl-3">
         <span className="text-muted text-xs">{t("assistant_enter_hint")}</span>
@@ -108,10 +108,10 @@ export default function AssistantView() {
         <div className="bg-default border-subtle mx-auto grid h-12 w-12 place-items-center rounded-2xl border">
           <Icon name="message-circle" className="text-emphasis h-5 w-5" />
         </div>
-        <h1 className="text-emphasis mt-5 text-center text-[32px] font-semibold leading-tight tracking-[-0.025em]">
+        <h1 className="text-emphasis mt-5 text-center text-[28px] font-semibold leading-tight tracking-[-0.025em]">
           {t("assistant_page_heading")}
         </h1>
-        <p className="text-subtle mx-auto mt-2 max-w-[440px] text-center text-[15px] leading-relaxed">
+        <p className="text-subtle mx-auto mt-2 max-w-[440px] text-center text-[14px] leading-relaxed">
           {t("assistant_subtitle")}
         </p>
 
@@ -183,7 +183,7 @@ export default function AssistantView() {
             )}
             <div
               className={classNames(
-                "max-w-[80%] text-[15px] leading-relaxed",
+                "max-w-[80%] text-[14px] leading-relaxed",
                 turn.role === "user"
                   ? "bg-inverted text-inverted rounded-[20px] rounded-br-md px-4 py-2.5"
                   : "text-emphasis pt-0.5"

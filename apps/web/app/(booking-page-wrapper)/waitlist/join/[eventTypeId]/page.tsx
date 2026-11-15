@@ -230,7 +230,7 @@ export default function JoinWaitlistPage() {
 
       <section className="mt-7">
         <div className="mb-2.5 flex items-baseline justify-between">
-          <span className="text-[14px] font-semibold">{t("date")}</span>
+          <span className="text-[13px] font-semibold">{t("date")}</span>
           <span className="text-[12.5px] text-muted">{dayjs(date).format("MMMM YYYY")}</span>
         </div>
         <div className="no-scrollbar -mx-1 flex overflow-x-auto px-1 pb-1" style={{ columnGap: 8 }}>
@@ -255,7 +255,7 @@ export default function JoinWaitlistPage() {
                 <span className={classNames("text-[11px] font-semibold uppercase", !active && "text-muted")}>
                   {day.format("ddd")}
                 </span>
-                <span className="mt-0.5 text-[17px] font-bold">{day.format("D")}</span>
+                <span className="mt-0.5 text-[15.5px] font-bold">{day.format("D")}</span>
               </button>
             );
           })}
@@ -263,9 +263,9 @@ export default function JoinWaitlistPage() {
       </section>
 
       <section className="mt-6">
-        <div className="mb-2.5 text-[14px] font-semibold">{t("waitlist_join_pick_time")}</div>
+        <div className="mb-2.5 text-[13px] font-semibold">{t("waitlist_join_pick_time")}</div>
         {options.takenTimes.length === 0 ? (
-          <p className="bg-cal-muted px-4 py-3.5 text-[13.5px] text-subtle" style={{ borderRadius: 14 }}>
+          <p className="bg-cal-muted px-4 py-3.5 text-[12.5px] text-subtle" style={{ borderRadius: 14 }}>
             {t("waitlist_join_no_taken")}
           </p>
         ) : (
@@ -279,7 +279,7 @@ export default function JoinWaitlistPage() {
                   aria-pressed={active}
                   onClick={() => setSelected(slot)}
                   className={classNames(
-                    "border text-[14px] font-semibold transition",
+                    "border text-[13px] font-semibold transition",
                     active
                       ? "border-emphasis bg-inverted text-inverted"
                       : "border-default hover:border-emphasis"
@@ -305,7 +305,7 @@ export default function JoinWaitlistPage() {
           onSubmit={submit}>
           {options.fields.map((field) => (
             <div key={field.name}>
-              <label htmlFor={`wl-${field.name}`} className="mb-1.5 block text-[14px] font-semibold">
+              <label htmlFor={`wl-${field.name}`} className="mb-1.5 block text-[13px] font-semibold">
                 {t(field.label)}
                 {!field.required && <span className="font-normal text-muted"> ({t("optional")})</span>}
               </label>

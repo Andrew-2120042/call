@@ -130,7 +130,7 @@ function StatusBar({ color }: { color: string }) {
       className="absolute inset-x-0 top-0 z-10 flex h-[54px] items-center justify-between pl-[42px] pr-[30px] pt-[4px]"
       style={{ color }}
       aria-hidden>
-      <span className="text-[17px] font-semibold tracking-[-0.01em]">9:41</span>
+      <span className="text-[15.5px] font-semibold tracking-[-0.01em]">9:41</span>
       <span className="flex items-center gap-[6px]">
         <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
           <rect x="0" y="8" width="3" height="4" rx="1" />

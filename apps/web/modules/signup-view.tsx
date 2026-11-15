@@ -320,7 +320,7 @@ export default function Signup({
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-subtle">
                   <ShieldCheckIcon className="h-6 w-6 text-default" />
                 </div>
-                <h1 className="font-cal text-[28px] leading-none">{t("account_under_review_title")}</h1>
+                <h1 className="font-cal text-[24px] leading-none">{t("account_under_review_title")}</h1>
                 <p className="font-medium text-base text-subtle leading-5">
                   {t("account_under_review_description")}
                 </p>
@@ -345,7 +345,7 @@ export default function Signup({
                   </div>
                 )}
                 <div className="flex flex-col gap-2">
-                  <h1 className="font-cal text-[28px] leading-none">
+                  <h1 className="font-cal text-[24px] leading-none">
                     {IS_CALCOM ? t("create_your_calcom_account") : t("create_your_account")}
                   </h1>
                   {IS_CALCOM ? (

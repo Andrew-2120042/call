@@ -50,9 +50,9 @@ export function ClientHeader(props: { icon: IconName; tone?: Tone; title: string
         style={{ width: 52, height: 52, borderRadius: 16, background: tone.bg, color: tone.fg }}>
         <Icon name={props.icon} className="h-[22px] w-[22px]" />
       </span>
-      <h1 className="mt-4 text-[24px] font-bold leading-tight tracking-[-0.02em]">{props.title}</h1>
+      <h1 className="mt-4 text-[21px] font-bold leading-tight tracking-[-0.02em]">{props.title}</h1>
       {props.subtitle && (
-        <p className="mx-auto mt-1.5 max-w-[36ch] text-[14.5px] leading-relaxed text-subtle">
+        <p className="mx-auto mt-1.5 max-w-[36ch] text-[13.5px] leading-relaxed text-subtle">
           {props.subtitle}
         </p>
       )}
@@ -72,10 +72,10 @@ export function BookingSummary(props: {
   const end = props.endTime && props.timeZone ? dayjs(props.endTime).tz(props.timeZone) : null;
   return (
     <div className="mt-6 bg-cal-muted text-left" style={{ borderRadius: 18, padding: "16px 18px" }}>
-      <div className="text-[15.5px] font-semibold">{props.title}</div>
-      {props.hostName && <div className="mt-0.5 text-[13.5px] text-subtle">{props.hostName}</div>}
+      <div className="text-[14px] font-semibold">{props.title}</div>
+      {props.hostName && <div className="mt-0.5 text-[12.5px] text-subtle">{props.hostName}</div>}
       {start && (
-        <div className="mt-3 flex flex-col text-[14px]" style={{ rowGap: 6 }}>
+        <div className="mt-3 flex flex-col text-[13px]" style={{ rowGap: 6 }}>
           <span className="flex items-center" style={{ columnGap: 10 }}>
             <Icon name="calendar" className="h-4 w-4 flex-none text-subtle" />
             {start.format("dddd, MMMM D, YYYY")}
@@ -85,7 +85,7 @@ export function BookingSummary(props: {
             {start.format("h:mma")}
             {end ? ` – ${end.format("h:mma")}` : ""}
           </span>
-          <span className="flex items-center text-[13px] text-subtle" style={{ columnGap: 10 }}>
+          <span className="flex items-center text-[12.5px] text-subtle" style={{ columnGap: 10 }}>
             <Icon name="globe" className="h-4 w-4 flex-none" />
             {props.timeZone}
           </span>
@@ -110,7 +110,7 @@ export function PrimaryButton(props: {
       disabled={props.disabled || props.loading}
       data-testid={props.testId}
       className="flex w-full items-center justify-center bg-inverted font-semibold text-inverted transition hover:opacity-90 disabled:opacity-50"
-      style={{ height: 50, borderRadius: 999, fontSize: 15, columnGap: 8 }}>
+      style={{ height: 50, borderRadius: 999, fontSize: 14, columnGap: 8 }}>
       {props.loading && <Icon name="loader" className="h-4 w-4 animate-spin" />}
       {props.children}
     </button>
@@ -121,7 +121,7 @@ export function Notice(props: { children: ReactNode; tone?: "muted" | "error" })
   return (
     <p
       className={classNames(
-        "mt-4 text-center text-[13.5px] leading-relaxed",
+        "mt-4 text-center text-[12.5px] leading-relaxed",
         props.tone === "error" ? "text-error" : "text-subtle"
       )}
       role={props.tone === "error" ? "alert" : undefined}>
@@ -139,4 +139,4 @@ export function LoadingCard() {
 }
 
 export const fieldClass =
-  "block w-full border border-default bg-default px-3.5 text-[14.5px] text-emphasis transition focus:border-emphasis focus:outline-none";
+  "block w-full border border-default bg-default px-3.5 text-[13.5px] text-emphasis transition focus:border-emphasis focus:outline-none";

@@ -62,13 +62,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Compact type across the product: one step smaller than the default scale. Spacing is unchanged. */
+/* Compact type across the product, two steps under Tailwind's default (the owner wants a dense, Polar-like
+   dashboard). In px: 10.5 / 12 / 13 / 14.5 / 16 / 18.5 / 22. Spacing is unchanged. */
 :root {
-  --text-xs: 0.6875rem;
-  --text-sm: 0.8125rem;
-  --text-base: 0.875rem;
-  --text-lg: 1rem;
-  --text-xl: 1.125rem;
-  --text-2xl: 1.3125rem;
-  --text-3xl: 1.625rem;
+  --text-xs: 0.65625rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.8125rem;
+  --text-lg: 0.90625rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.15625rem;
+  --text-3xl: 1.375rem;
 }
