@@ -5088,5 +5088,8 @@
   "team_host_always_attends": "Always attends",
   "team_service_with_everyone": "With the whole team",
   "team_no_public_services": "This team has no services to book yet.",
-  "team_book_a_member": "Or book someone directly"
+  "team_book_a_member": "Or book someone directly",
+  "onboarding_preview_service_intro": "Intro call",
+  "onboarding_preview_service_consultation": "Consultation",
+  "onboarding_preview_service_follow_up": "Follow-up session"
 }
