@@ -29,7 +29,25 @@ import {
 import type { TUpdateInputSchema } from "./update.schema";
 
 const isUrlScanningEnabled = (..._args: unknown[]) => false;
-const updateChildrenEventTypes = async (..._args: unknown[]) => {};
+const syncManagedChildren = async ({
+  eventTypeId,
+  children,
+  prisma,
+}: {
+  eventTypeId: number;
+  children: { owner: { id: number }; hidden: boolean }[] | undefined;
+  prisma: PrismaClient;
+}) => {
+  const { ManagedEventTypeRepository } = await import(
+    "@calcom/features/eventtypes/managed/ManagedEventTypeRepository"
+  );
+  const { ManagedEventTypeService } = await import("@calcom/features/eventtypes/managed/ManagedEventTypeService");
+  const service = new ManagedEventTypeService(new ManagedEventTypeRepository(prisma));
+  await service.sync({
+    templateId: eventTypeId,
+    assigned: children?.map((child) => ({ userId: child.owner.id, hidden: child.hidden })),
+  });
+};
 const allowDisablingHostConfirmationEmails = (..._args: unknown[]): boolean => false;
 const allowDisablingAttendeeConfirmationEmails = (..._args: unknown[]): boolean => false;
 
@@ -749,29 +767,8 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     return acc;
   }, {});
 
-  // Determine calVideoSettings to pass to children:
-  // - If calVideoSettings provided in input, sync to children
-  // - If Cal Video location removed, delete from children (pass null)
-  // - Otherwise, leave children's settings untouched (pass undefined)
-  let calVideoSettingsForChildren: typeof calVideoSettings | null | undefined;
-  if (calVideoSettings !== undefined) {
-    calVideoSettingsForChildren = calVideoSettings;
-  } else if (eventType.calVideoSettings && !isCalVideoLocationActive) {
-    calVideoSettingsForChildren = null;
-  }
-
-  // Handling updates to children event types (managed events types)
-  await updateChildrenEventTypes({
-    eventTypeId: id,
-    currentUserId: ctx.user.id,
-    oldEventType: eventType,
-    updatedEventType,
-    children,
-    profileId: ctx.user.profile.id,
-    prisma: ctx.prisma,
-    updatedValues,
-    calVideoSettings: calVideoSettingsForChildren,
-  });
+  // Managed services: push the template to members' copies and add or remove copies to match `children`.
+  await syncManagedChildren({ eventTypeId: id, children, prisma: ctx.prisma });
 
   // Clean up empty host groups
   if (hostGroups !== undefined || hosts) {

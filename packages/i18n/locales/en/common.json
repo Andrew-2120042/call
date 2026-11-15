@@ -5091,5 +5091,7 @@
   "team_book_a_member": "Or book someone directly",
   "onboarding_preview_service_intro": "Intro call",
   "onboarding_preview_service_consultation": "Consultation",
-  "onboarding_preview_service_follow_up": "Follow-up session"
+  "onboarding_preview_service_follow_up": "Follow-up session",
+  "managed_service_members": "Members",
+  "managed_service_members_body": "Each member you tick gets their own copy of this service on their personal page. You set it up once here; each member keeps their own location and schedule."
 }

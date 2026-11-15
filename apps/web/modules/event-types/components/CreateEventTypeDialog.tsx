@@ -152,10 +152,15 @@ function TeamAssignmentChoice({ form }: { form: ReturnType<typeof useCreateEvent
         options={[
           { value: SchedulingType.ROUND_ROBIN, label: t("round_robin") },
           { value: SchedulingType.COLLECTIVE, label: t("collective") },
+          { value: SchedulingType.MANAGED, label: t("managed") },
         ]}
       />
       <p className="text-subtle mt-1.5 text-xs">
-        {value === SchedulingType.COLLECTIVE ? t("collective_description") : t("round_robin_description")}
+        {value === SchedulingType.COLLECTIVE
+          ? t("collective_description")
+          : value === SchedulingType.MANAGED
+            ? t("managed_service_members_body")
+            : t("round_robin_description")}
       </p>
     </div>
   );
