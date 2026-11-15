@@ -182,12 +182,12 @@ export function HeroWindows() {
       <Window title="Slotwise · Services" className="relative z-10">
         <Image src="/shots/dashboard.png" alt="The Slotwise dashboard" width={2560} height={1600} priority className="h-auto w-full" />
       </Window>
-      <FloatCard className="absolute -left-2 top-16 z-20 hidden w-64 md:block lg:-left-16">
+      <FloatCard className="absolute left-3 top-16 z-20 hidden w-64 md:block xl:-left-16">
         <p className="text-faint">Waitlist</p>
         <p className="mt-1 text-sm font-medium">Cancelled slot refilled</p>
         <p className="text-muted mt-0.5">Priya claimed Sat 10:00am in 4 minutes.</p>
       </FloatCard>
-      <FloatCard className="absolute -right-2 bottom-12 z-20 hidden w-60 md:block lg:-right-14">
+      <FloatCard className="absolute right-3 bottom-12 z-20 hidden w-60 md:block xl:-right-14">
         <p className="text-emerald-400">Confirmed</p>
         <p className="mt-1">3 of 3 clients confirmed for tomorrow.</p>
       </FloatCard>
