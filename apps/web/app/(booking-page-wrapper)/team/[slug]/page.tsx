@@ -1,3 +1,4 @@
+import { getTeamRoutingService } from "@calcom/features/teams/lib/getTeamRoutingService";
 import { getTeamService } from "@calcom/features/teams/lib/getTeamService";
 import { APP_NAME } from "@calcom/lib/constants";
 import type { Metadata } from "next";
@@ -18,7 +19,14 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
 const Page = async ({ params }: Params) => {
   const page = await loadTeamPage((await params).slug);
   if (!page) return notFound();
-  return <TeamPublicView team={page.team} services={page.services} members={page.members} />;
+  return (
+    <TeamPublicView
+      team={page.team}
+      services={page.services}
+      members={page.members}
+      routingEnabled={getTeamRoutingService().isEnabled}
+    />
+  );
 };
 
 export default Page;

@@ -8,14 +8,16 @@ import { Icon } from "@calcom/ui/components/icon";
 import classNames from "classnames";
 import Link from "next/link";
 import { TeamLogo } from "./components/TeamLogo";
+import { TeamRoutingBox } from "./components/TeamRoutingBox";
 
 type Props = {
+  routingEnabled?: boolean;
   team: { name: string; slug: string | null; logoUrl: string | null; bio: string | null };
   services: { id: number; title: string; slug: string; length: number; schedulingType: string | null }[];
   members: { id: number; name: string | null; username: string | null; avatarUrl: string | null }[];
 };
 
-export default function TeamPublicView({ team, services, members }: Props) {
+export default function TeamPublicView({ team, services, members, routingEnabled }: Props) {
   const { t } = useLocale();
   useTheme("dark");
 
@@ -69,6 +71,8 @@ export default function TeamPublicView({ team, services, members }: Props) {
             <p className="text-subtle px-5 py-8 text-center text-sm">{t("team_no_public_services")}</p>
           )}
         </div>
+
+        {routingEnabled && team.slug && services.length > 1 && <TeamRoutingBox teamSlug={team.slug} />}
 
         {members.length > 0 && (
           <section className="mt-10">

@@ -5118,5 +5118,10 @@
   "team_coverage_unreadable": "Shown as busy because they have no working hours set: {{names}}. Ask them to set their availability.",
   "managed_copy_title": "Managed by your team",
   "managed_copy_body": "Your team sets this service up. You can change its location and which schedule it uses; other settings are locked.",
-  "managed_copy_locked_error": "These settings are managed by your team and can't be changed on your copy: {{fields}}"
+  "managed_copy_locked_error": "These settings are managed by your team and can't be changed on your copy: {{fields}}",
+  "team_routing_title": "Not sure what to book?",
+  "team_routing_placeholder": "Tell us what you need, e.g. “a quick call about moving our team off spreadsheets”",
+  "team_routing_button": "Find the right fit",
+  "team_routing_book": "Book {{service}}",
+  "team_routing_book_with": "Book with {{name}}"
 }
