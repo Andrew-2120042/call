@@ -6,6 +6,7 @@ import {
   ZInviteInput,
   ZInviteLinkInput,
   ZMembershipInput,
+  ZTeamAvailabilityInput,
   ZTeamIdInput,
   ZTokenInput,
   ZUpdateTeamInput,
@@ -27,6 +28,64 @@ export const teamsRouter = router({
   }),
   get: authedProcedure.input(ZTeamIdInput).query(async ({ ctx, input }) => {
     return (await loadService()).get({ userId: ctx.user.id, teamId: input.teamId });
+  }),
+  insights: authedProcedure.input(ZTeamIdInput).query(async ({ ctx, input }) => {
+    // Any member may see the team's numbers; get() throws for non-members.
+    await (await loadService()).get({ userId: ctx.user.id, teamId: input.teamId });
+    const { prisma } = await import("@calcom/prisma");
+    const { TeamInsightsRepository } = await import(
+      "@calcom/features/teams/repositories/TeamInsightsRepository"
+    );
+    const { TeamInsightsService } = await import("@calcom/features/teams/services/TeamInsightsService");
+    return new TeamInsightsService(new TeamInsightsRepository(prisma)).get({ teamId: input.teamId });
+  }),
+  availability: authedProcedure.input(ZTeamAvailabilityInput).query(async ({ ctx, input }) => {
+    await (await loadService()).get({ userId: ctx.user.id, teamId: input.teamId });
+    const [
+      { prisma },
+      { default: dayjs },
+      { TeamInsightsRepository },
+      { TeamAvailabilityService },
+      { getUserAvailabilityService },
+    ] = await Promise.all([
+      import("@calcom/prisma"),
+      import("@calcom/dayjs"),
+      import("@calcom/features/teams/repositories/TeamInsightsRepository"),
+      import("@calcom/features/teams/services/TeamAvailabilityService"),
+      import("@calcom/features/di/containers/GetUserAvailability"),
+    ]);
+    const { findUsersForAvailabilityCheck } = await import(
+      "@calcom/features/availability/lib/findUsersForAvailabilityCheck"
+    );
+    const members = new TeamInsightsRepository(prisma);
+    const availability = getUserAvailabilityService();
+    const service = new TeamAvailabilityService({
+      listMembers: async (teamId) =>
+        (await members.listMembers(teamId)).map((m) => ({ id: m.id, name: m.name || m.email })),
+      getFreeRanges: async ({ userId, from, to }) => {
+        // The availability engine works on a fully loaded user (schedules, credentials, calendars).
+        const user = await findUsersForAvailabilityCheck({ where: { id: userId } });
+        if (!user) throw new Error(`User ${userId} not found`);
+        const result = await availability
+          .getUserAvailability(
+            {
+              userId,
+              dateFrom: dayjs(from),
+              dateTo: dayjs(to),
+              returnDateOverrides: false,
+              silentlyHandleCalendarFailures: true,
+            },
+            { user }
+          )
+          .catch(async (error: unknown) => {
+            const { default: logger } = await import("@calcom/lib/logger");
+            logger.warn("[team-coverage] couldn't read availability", { userId, error: String(error) });
+            throw error;
+          });
+        return result.dateRanges.map((r) => ({ start: r.start.toDate(), end: r.end.toDate() }));
+      },
+    });
+    return service.getCoverage({ teamId: input.teamId, timeZone: input.timeZone });
   }),
   create: authedProcedure.input(ZCreateTeamInput).mutation(async ({ ctx, input }) => {
     return (await loadService()).create({ userId: ctx.user.id, ...input });

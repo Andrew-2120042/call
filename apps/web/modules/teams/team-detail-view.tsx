@@ -16,6 +16,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SettingsCardSkeleton } from "~/shell/skeletons";
 import { InviteMembersDialog } from "./components/InviteMembersDialog";
+import { TeamCoverageCard } from "./components/TeamCoverageCard";
+import { TeamInsightsCard } from "./components/TeamInsightsCard";
 import { TeamLogo } from "./components/TeamLogo";
 import { TeamRoleBadge } from "./components/TeamRoleBadge";
 
@@ -61,6 +63,8 @@ export default function TeamDetailView({ teamId }: { teamId: number }) {
   return (
     <div className="flex flex-col gap-6" data-testid="team-detail">
       <TeamHeader team={team} canManage={canManage} onInvite={() => setInviteOpen(true)} />
+      <TeamInsightsCard teamId={team.id} />
+      <TeamCoverageCard teamId={team.id} />
       {canManage && <TeamProfileCard team={team} />}
       <MembersCard teamId={team.id} members={members} myRole={myRole} canManage={canManage} />
       <DangerZone teamId={team.id} teamName={team.name} isOwner={myRole === MembershipRole.OWNER} />

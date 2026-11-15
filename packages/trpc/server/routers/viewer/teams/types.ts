@@ -6,6 +6,8 @@ const inviteRole = z.enum([MembershipRole.MEMBER, MembershipRole.ADMIN]);
 
 export const ZTeamIdInput = z.object({ teamId });
 
+export const ZTeamAvailabilityInput = z.object({ teamId, timeZone: z.string().min(1).max(64) });
+
 export const ZCreateTeamInput = z.object({
   name: z.string().trim().min(1).max(80),
   slug: z.string().trim().max(80).optional(),
