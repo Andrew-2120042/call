@@ -2,6 +2,19 @@
 
 Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backed by Postgres.
 
+## 0. Two sites, one repo
+- **Landing site** (`landing/`): the marketing site on the root domain. Separate Vercel project with Root Directory `landing`. See `landing/README.md`.
+- **App** (`apps/web`): on `app.<domain>`. Set `NEXT_PUBLIC_WEBAPP_URL` and `NEXTAUTH_URL` to `https://app.<domain>`, and `NEXT_PUBLIC_WEBSITE_URL` to `https://<domain>`.
+- The app's `robots.txt` only lets search engines index public booking pages; account pages and email-link pages are `noindex`.
+
+## Launch checklist (things only the owner can set up)
+- Real domain: replace `slotwise.example` (landing `src/site.config.ts` or its env vars) and the app URLs above.
+- Google and Microsoft OAuth apps for calendar sync (`GOOGLE_API_CREDENTIALS`, `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET`), then enable the apps in Settings → Admin → Apps. Without them onboarding only offers Apple and CalDAV.
+- Email sending domain (SPF, DKIM, DMARC) and `EMAIL_SERVER_*`.
+- Polar products and webhook (section 5), `DAILY_API_KEY` for built-in video, `ANTHROPIC_API_KEY` for AI summaries.
+- Cron jobs (section 4) running against production.
+- Legal review of `landing/src/app/privacy` and `landing/src/app/terms`.
+
 ## 1. Infrastructure
 - **App:** Vercel (or any Node 20+ host). Build `apps/web`.
 - **Database:** managed Postgres (for example Neon in us-east-1). Turn on point-in-time recovery and daily backups.

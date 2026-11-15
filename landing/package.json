@@ -1,0 +1,25 @@
+{
+  "name": "slotwise-landing",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Slotwise marketing site. Separate from the app: its own dependencies and its own deploy.",
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.4.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "22.10.2",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3"
+  }
+}
