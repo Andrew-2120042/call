@@ -39,6 +39,7 @@ import type { UseFormRegisterReturn, UseFormReturn } from "react-hook-form";
 import { Controller, useFormContext } from "react-hook-form";
 import type { SingleValue } from "react-select";
 import MaxActiveBookingsPerBookerController from "./MaxActiveBookingsPerBookerController";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 type IPeriodType = (typeof PeriodType)[keyof typeof PeriodType];
 
@@ -456,7 +457,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
   };
 
   const shouldLockIndicator = (_field: string): null => null;
-  const shouldLockDisableProps = (_field: string) => ({ disabled: false, LockedIcon: false as const, isLocked: false });
+  const { shouldLockDisableProps } = useManagedFieldLock();
 
   const bookingLimitsLocked = shouldLockDisableProps("bookingLimits");
   const durationLimitsLocked = shouldLockDisableProps("durationLimits");

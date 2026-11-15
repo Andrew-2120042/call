@@ -12,6 +12,7 @@ import { Section } from "@calcom/ui/components/section";
 import useAppsData from "@calcom/features/apps/hooks/useAppsData";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export type EventType = Pick<EventTypeSetupProps, "eventType">["eventType"] &
   EventTypeAppCardComponentProps["eventType"];
@@ -38,12 +39,8 @@ export const EventAppsTab = ({
   const { getAppDataGetter, getAppDataSetter, eventTypeFormMetadata } = useAppsData();
 
   const isManagedEventType = false;
-  const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string, _opts?: { simple: boolean }) => ({
-    disabled: false,
-    LockedIcon: false as const,
-    isLocked: false,
-  });
+  const isChildrenManagedEventType = useManagedFieldLock().isManagedCopy;
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const appsDisableProps = shouldLockDisableProps("apps", { simple: true });
   const lockedText = appsDisableProps.isLocked ? "locked" : "unlocked";

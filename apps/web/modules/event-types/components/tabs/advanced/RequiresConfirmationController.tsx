@@ -16,6 +16,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import type z from "zod";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export type RequiresConfirmationCustomClassNames = SettingsToggleClassNames & {
   radioGroupContainer?: string;
@@ -60,7 +61,7 @@ export default function RequiresConfirmationController({
     }
   }, [requiresConfirmation, formMethods.setValue]);
 
-  const shouldLockDisableProps = (_field: string) => ({ disabled: false, LockedIcon: false as const, isLocked: false });
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const requiresConfirmationLockedProps = shouldLockDisableProps("requiresConfirmation");
 

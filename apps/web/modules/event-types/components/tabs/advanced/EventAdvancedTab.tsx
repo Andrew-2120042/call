@@ -65,6 +65,7 @@ import DisableReschedulingController from "./DisableReschedulingController";
 import { FormBuilder } from "./FormBuilder";
 import type { RequiresConfirmationCustomClassNames } from "./RequiresConfirmationController";
 import RequiresConfirmationController from "./RequiresConfirmationController";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export type EventAdvancedTabCustomClassNames = {
   destinationCalendar?: SelectClassNames;
@@ -495,12 +496,8 @@ export const EventAdvancedTab = ({
   };
 
   const isManagedEventType = false;
-  const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string) => ({
-    disabled: false,
-    LockedIcon: false as const,
-    isLocked: false,
-  });
+  const isChildrenManagedEventType = useManagedFieldLock().isManagedCopy;
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string): Record<string, never> => ({});
   const eventNamePlaceholder = getEventName({
     ...eventNameObject,

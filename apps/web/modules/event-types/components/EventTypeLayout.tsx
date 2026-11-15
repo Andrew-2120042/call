@@ -30,6 +30,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Shell as PlatformShell } from "../../../../../packages/platform/atoms/src/components/ui/shell";
 import { DeleteDialog } from "./dialogs/DeleteDialog";
 import { ServicePhonePreview, ServiceTabs } from "./ServiceEditorChrome";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 type Props = {
   children: React.ReactNode;
@@ -78,12 +79,8 @@ function EventTypeSingleLayout({
     isUserOrganizationAdmin;
 
   const isManagedEventType = false;
-  const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string) => ({
-    disabled: false,
-    LockedIcon: false as const,
-    isLocked: false,
-  });
+  const isChildrenManagedEventType = useManagedFieldLock().isManagedCopy;
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const EventTypeTabs = tabsNavigation;
   const permalink = `${bookerUrl}/${

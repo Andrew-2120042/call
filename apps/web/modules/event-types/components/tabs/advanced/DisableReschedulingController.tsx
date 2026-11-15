@@ -12,6 +12,7 @@ import { RadioField } from "@calcom/ui/components/radio";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export type DisableReschedulingCustomClassNames = SettingsToggleClassNames & {
   radioGroupContainer?: string;
@@ -56,7 +57,7 @@ export default function DisableReschedulingController({
     }
   }, [currentMinimumRescheduleNotice]);
 
-  const shouldLockDisableProps = (_field: string) => ({ disabled: false, LockedIcon: false as const, isLocked: false });
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const disableReschedulingLocked = shouldLockDisableProps("disableRescheduling");
   const minimumRescheduleNoticeLocked = shouldLockDisableProps("minimumRescheduleNotice");

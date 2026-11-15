@@ -7,8 +7,10 @@ import type { ChildrenEventType } from "@calcom/features/eventtypes/components/C
 import type { EventTypeSetupProps } from "@calcom/features/eventtypes/lib/types";
 import { WEBSITE_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { Icon } from "@calcom/ui/components/icon";
 import { useTypedQuery } from "@calcom/lib/hooks/useTypedQuery";
 import { HttpError } from "@calcom/lib/http-error";
+import { ManagedFieldLockProvider } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 import { SchedulingType } from "@calcom/prisma/enums";
 import type { RouterOutputs } from "@calcom/trpc/react";
 import { trpc } from "@calcom/trpc/react";
@@ -337,10 +339,25 @@ const EventTypeWeb = ({
     void Promise.all(TAB_PRELOADS.map((load) => load()));
   }, []);
 
+  const isManagedCopy = !!eventType.parent;
+  // On a member's copy of a managed service, every tab explains which settings come from the team.
+  const tabMapWithNotice = isManagedCopy
+    ? (Object.fromEntries(
+        Object.entries(tabMap).map(([key, content]) => [
+          key,
+          <>
+            <ManagedCopyNotice />
+            {content}
+          </>,
+        ])
+      ) as typeof tabMap)
+    : tabMap;
+
   return (
+    <ManagedFieldLockProvider value={{ isManagedCopy, teamName: null }}>
     <EventTypeComponent
       {...rest}
-      tabMap={tabMap}
+      tabMap={tabMapWithNotice}
       onDelete={(id) => {
         deleteMutation.mutate({ id });
       }}
@@ -377,5 +394,19 @@ const EventTypeWeb = ({
         id={eventType.id}
       />
     </EventTypeComponent>
+    </ManagedFieldLockProvider>
   );
 };
+
+function ManagedCopyNotice() {
+  const { t } = useLocale();
+  return (
+    <div className="border-subtle bg-cal-muted mb-4 flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm" data-testid="managed-copy-notice">
+      <Icon name="lock" className="text-subtle mt-0.5 h-4 w-4 flex-none" />
+      <span>
+        <span className="text-emphasis block font-medium">{t("managed_copy_title")}</span>
+        <span className="text-subtle block text-xs">{t("managed_copy_body")}</span>
+      </span>
+    </div>
+  );
+}

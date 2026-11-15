@@ -1,57 +1,9 @@
 import type { PrismaClient } from "@calcom/prisma";
 import { Prisma } from "@calcom/prisma/client";
 
-/** Fields a managed service's template decides for every member's copy. */
-export const MANAGED_LOCKED_FIELDS = [
-  "title",
-  "description",
-  "interfaceLanguage",
-  "slug",
-  "length",
-  "offsetStart",
-  "recurringEvent",
-  "minimumRescheduleNotice",
-  "disableGuests",
-  "disableCancelling",
-  "disableRescheduling",
-  "requiresCancellationReason",
-  "allowReschedulingCancelledBookings",
-  "requiresConfirmation",
-  "requiresConfirmationForFreeEmail",
-  "requiresConfirmationWillBlockSlot",
-  "eventName",
-  "hideCalendarNotes",
-  "hideCalendarEventDetails",
-  "minimumBookingNotice",
-  "beforeEventBuffer",
-  "afterEventBuffer",
-  "successRedirectUrl",
-  "seatsPerTimeSlot",
-  "seatsShowAttendees",
-  "seatsShowAvailabilityCount",
-  "forwardParamsSuccessRedirect",
-  "periodType",
-  "periodDays",
-  "periodStartDate",
-  "periodEndDate",
-  "periodCountCalendarDays",
-  "bookingLimits",
-  "onlyShowFirstAvailableSlot",
-  "slotInterval",
-  "bookingFields",
-  "durationLimits",
-  "lockTimeZoneToggleOnBookingPage",
-  "lockedTimeZone",
-  "requiresBookerEmailVerification",
-  "eventTypeColor",
-  "allowReschedulingPastBookings",
-  "hideOrganizerEmail",
-  "customReplyToEmail",
-  "waitlistEnabled",
-  "attendeeConfirmationHours",
-  "releaseUnconfirmedBookings",
-  "attendeeReminderMinutes",
-] as const;
+import { MANAGED_LOCKED_FIELDS } from "./lockedFields";
+
+export { MANAGED_LOCKED_FIELDS };
 
 /** Copied once when a member is added; afterwards each member controls these on their own copy. */
 export const MANAGED_MEMBER_OWNED_FIELDS = ["locations"] as const;

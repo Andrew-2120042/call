@@ -18,6 +18,7 @@ import { useFormContext } from "react-hook-form";
 import { WebhookForm } from "~/webhooks/components";
 import WebhookListItem from "~/webhooks/components/WebhookListItem";
 import type { TWebhook, WebhookFormSubmitData } from "~/webhooks/components/WebhookForm";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export const EventWebhooksTab = ({ eventType }: Pick<EventTypeSetupProps, "eventType">) => {
   const { t } = useLocale();
@@ -105,12 +106,8 @@ export const EventWebhooksTab = ({ eventType }: Pick<EventTypeSetupProps, "event
   };
 
   const isManagedEventType = false;
-  const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string, _opts?: { simple: boolean }) => ({
-    disabled: false,
-    LockedIcon: false as const,
-    isLocked: false,
-  });
+  const isChildrenManagedEventType = useManagedFieldLock().isManagedCopy;
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const webhooksDisableProps = shouldLockDisableProps("webhooks", { simple: true });
   const lockedText = webhooksDisableProps.isLocked ? "locked" : "unlocked";

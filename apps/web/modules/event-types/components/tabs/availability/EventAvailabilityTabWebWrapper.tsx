@@ -5,6 +5,7 @@ import { trpc } from "@calcom/trpc/react";
 import { useFormContext } from "react-hook-form";
 import type { TeamMembers } from "../../EventType";
 import { EventAvailabilityTab } from "./EventAvailabilityTab";
+import { useManagedFieldLock } from "@calcom/features/eventtypes/managed/ManagedFieldLock";
 
 export type EventAvailabilityTabWebWrapperProps = {
   eventType: EventTypeSetup;
@@ -23,8 +24,8 @@ const EventAvailabilityTabWebWrapper = (props: EventAvailabilityTabWebWrapperPro
   const restrictionScheduleId = formMethods.watch("restrictionScheduleId");
 
   const isManagedEventType = false;
-  const isChildrenManagedEventType = false;
-  const shouldLockDisableProps = (_field: string) => ({ disabled: false, LockedIcon: false as const, isLocked: false });
+  const isChildrenManagedEventType = useManagedFieldLock().isManagedCopy;
+  const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
 
   // Check if team has restriction schedule feature enabled

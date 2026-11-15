@@ -1,4 +1,5 @@
 import type { appDataSchemas } from "@calcom/app-store/apps.schemas.generated";
+import { lockedFieldsInUpdate } from "@calcom/features/eventtypes/managed/lockedFields";
 import { getEventTypeUpdatePlanViolations } from "@calcom/features/plans/lib/getEventTypeUpdatePlanViolations";
 import { DailyLocationType } from "@calcom/app-store/constants";
 import { eventTypeAppMetadataOptionalSchema } from "@calcom/app-store/zod-utils";
@@ -136,6 +137,7 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
   const eventType = await ctx.prisma.eventType.findUniqueOrThrow({
     where: { id },
     select: {
+      parentId: true,
       title: true,
       locations: true,
       description: true,
@@ -216,6 +218,18 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
 
   if (input.teamId && eventType.team?.id && input.teamId !== eventType.team.id) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  // A member's copy of a managed service: the team's template owns these settings.
+  if (eventType.parentId) {
+    const { id: _id, ...changes } = input;
+    const locked = lockedFieldsInUpdate(changes);
+    if (locked.length) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: `These settings are managed by your team and can't be changed on your copy: ${locked.join(", ")}`,
+      });
+    }
   }
 
   const finalSeatsPerTimeSlot =
