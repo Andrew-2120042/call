@@ -35,7 +35,7 @@ export default async function handler(body: Record<string, string>) {
     return NextResponse.json({ message: "Invalid username" }, { status: 422 });
   }
 
-  let foundToken: { id: number; teamId: number | null; expires: Date } | null = null;
+  let foundToken: { id: number; identifier: string; teamId: number | null; expires: Date } | null = null;
   let correctedUsername = username;
   if (token) {
     foundToken = await findTokenByToken({ token });
@@ -148,12 +148,10 @@ export default async function handler(body: Record<string, string>) {
       }
     }
 
-    // Cleanup token after use
-    await prisma.verificationToken.delete({
-      where: {
-        id: foundToken.id,
-      },
-    });
+    // A personal invite is single-use; a shared team invite link (no email in it) must keep working for the next person.
+    if (foundToken.identifier.includes("@")) {
+      await prisma.verificationToken.delete({ where: { id: foundToken.id } });
+    }
   } else {
     const isUsernameAvailable = !(await isUsernameReservedDueToMigration(correctedUsername));
     if (!isUsernameAvailable) {

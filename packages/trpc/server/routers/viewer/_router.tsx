@@ -31,6 +31,7 @@ import { customDomainRouter } from "./customDomain/_router";
 import { homeRouter } from "./home/_router";
 import { assistantRouter } from "./assistant/_router";
 import { requestInsightsRouter } from "./requestInsights/_router";
+import { teamsRouter } from "./teams/_router";
 import { waitlistRouter } from "./waitlist/_router";
 import { webhookRouter } from "./webhook/_router";
 
@@ -43,6 +44,7 @@ export const viewerRouter = router({
   deploymentSetup: deploymentSetupRouter,
   bookings: bookingsRouter,
   waitlist: waitlistRouter,
+  teams: teamsRouter,
   requestInsights: requestInsightsRouter,
   bookingRules: bookingRulesRouter,
   customDomain: customDomainRouter,

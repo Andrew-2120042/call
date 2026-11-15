@@ -93,7 +93,7 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
 
   const email = _email.toLowerCase();
 
-  let foundToken: { id: number; teamId: number | null; expires: Date } | null = null;
+  let foundToken: { id: number; identifier: string; teamId: number | null; expires: Date } | null = null;
   if (token) {
     foundToken = await findTokenByToken({ token });
     throwIfTokenExpired(foundToken?.expires);
@@ -241,12 +241,10 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
       }
     }
 
-    // Cleanup token after use
-    await prisma.verificationToken.delete({
-      where: {
-        id: foundToken.id,
-      },
-    });
+    // A personal invite is single-use; a shared team invite link (no email in it) must keep working for the next person.
+    if (foundToken.identifier.includes("@")) {
+      await prisma.verificationToken.delete({ where: { id: foundToken.id } });
+    }
   } else {
     // Create the user
     try {
