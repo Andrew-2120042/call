@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 
 export const AppSetupMap = {
   "apple-calendar": dynamic(() => import("@calcom/web/components/apps/applecalendar/Setup")),
+  make: dynamic(() => import("@calcom/web/components/apps/make/Setup")),
   "caldav-calendar": dynamic(() => import("@calcom/web/components/apps/caldavcalendar/Setup")),
   stripe: dynamic(() => import("@calcom/web/components/apps/stripepayment/Setup")),
 };

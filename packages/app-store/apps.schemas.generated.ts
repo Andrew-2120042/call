@@ -3,11 +3,17 @@
     Don't modify this file manually.
 **/
 import { appDataSchema as dailyvideo_zod_ts } from "./dailyvideo/zod"
+import { appDataSchema as ga4_zod_ts } from "./ga4/zod"
 import { appDataSchema as googlecalendar_zod_ts } from "./googlecalendar/zod"
 import { appDataSchema as googlevideo_zod_ts } from "./googlevideo/zod"
+import { appDataSchema as gtm_zod_ts } from "./gtm/zod"
+import { appDataSchema as hubspot_zod_ts } from "./hubspot/zod"
+import { appDataSchema as make_zod_ts } from "./make/zod"
+import { appDataSchema as metapixel_zod_ts } from "./metapixel/zod"
 import { appDataSchema as mock_payment_app_zod_ts } from "./mock-payment-app/zod"
 import { appDataSchema as office365calendar_zod_ts } from "./office365calendar/zod"
 import { appDataSchema as office365video_zod_ts } from "./office365video/zod"
+import { appDataSchema as pipedrive_crm_zod_ts } from "./pipedrive-crm/zod"
 import { appDataSchema as salesforce_zod_ts } from "./salesforce/zod"
 import { appDataSchema as stripepayment_zod_ts } from "./stripepayment/zod"
 import { appDataSchema as booking_pages_tag_zod_ts } from "./templates/booking-pages-tag/zod"
@@ -16,11 +22,17 @@ import { appDataSchema as zapier_zod_ts } from "./zapier/zod"
 import { appDataSchema as zoomvideo_zod_ts } from "./zoomvideo/zod"
 export const appDataSchemas = {
 "dailyvideo": dailyvideo_zod_ts,
+"ga4": ga4_zod_ts,
 "googlecalendar": googlecalendar_zod_ts,
 "googlevideo": googlevideo_zod_ts,
+"gtm": gtm_zod_ts,
+"hubspot": hubspot_zod_ts,
+"make": make_zod_ts,
+"metapixel": metapixel_zod_ts,
 "mock-payment-app": mock_payment_app_zod_ts,
 "office365calendar": office365calendar_zod_ts,
 "office365video": office365video_zod_ts,
+"pipedrive-crm": pipedrive_crm_zod_ts,
 "salesforce": salesforce_zod_ts,
 "stripe": stripepayment_zod_ts,
 "booking-pages-tag": booking_pages_tag_zod_ts,

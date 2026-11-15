@@ -3,5 +3,7 @@
     Don't modify this file manually.
 **/
 export const CrmServiceMap = {
+"hubspot": import("./hubspot/lib/CrmService"),
+"pipedrive-crm": import("./pipedrive-crm/lib/CrmService"),
 "salesforce": import("./salesforce/lib/CrmService"),
 };

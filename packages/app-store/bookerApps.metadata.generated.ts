@@ -3,14 +3,20 @@
     Don't modify this file manually.
 **/
 import { metadata as dailyvideo__metadata_ts } from "./dailyvideo/_metadata"
+import ga4_config_json from "./ga4/config.json"
 import { metadata as googlevideo__metadata_ts } from "./googlevideo/_metadata"
+import gtm_config_json from "./gtm/config.json"
+import metapixel_config_json from "./metapixel/config.json"
 import office365video_config_json from "./office365video/config.json"
 import booking_pages_tag_config_json from "./templates/booking-pages-tag/config.json"
 import event_type_location_video_static_config_json from "./templates/event-type-location-video-static/config.json"
 import { metadata as zoomvideo__metadata_ts } from "./zoomvideo/_metadata"
 export const appStoreMetadata = {
 "dailyvideo": dailyvideo__metadata_ts,
+"ga4": ga4_config_json,
 "googlevideo": googlevideo__metadata_ts,
+"gtm": gtm_config_json,
+"metapixel": metapixel_config_json,
 "office365video": office365video_config_json,
 "booking-pages-tag": booking_pages_tag_config_json,
 "event-type-location-video-static": event_type_location_video_static_config_json,

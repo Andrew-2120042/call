@@ -5125,5 +5125,17 @@
   "team_routing_book": "Book {{service}}",
   "team_routing_book_with": "Book with {{name}}",
   "waitlist_unavailable_title": "No waitlist for this service",
-  "waitlist_unavailable_body": "This service isn't taking a waitlist right now. Go back to the booking page to pick another time."
+  "waitlist_unavailable_body": "This service isn't taking a waitlist right now. Go back to the booking page to pick another time.",
+  "apps_group_crm": "CRM",
+  "apps_group_crm_sub": "New bookings create or update contacts and meetings in your CRM.",
+  "apps_group_tracking": "Tracking",
+  "apps_group_tracking_sub": "Measure which ads and pages bring you bookings.",
+  "apps_desc_msteams": "Every booking gets a Microsoft Teams meeting link.",
+  "apps_desc_hubspot": "Add each booking to HubSpot as a contact and meeting.",
+  "apps_desc_salesforce": "Create or update Salesforce contacts and events for every booking.",
+  "apps_desc_pipedrive": "Add people who book to Pipedrive with the meeting attached.",
+  "apps_desc_make": "Start a Make scenario when someone books, cancels or reschedules.",
+  "apps_desc_ga4": "Track visits to your booking pages in Google Analytics 4.",
+  "apps_desc_gtm": "Load your Google Tag Manager container on your booking pages.",
+  "apps_desc_metapixel": "Track bookings from your Meta (Facebook and Instagram) ads."
 }

@@ -5,11 +5,17 @@
 import { metadata as applecalendar__metadata_ts } from "./applecalendar/_metadata"
 import { metadata as caldavcalendar__metadata_ts } from "./caldavcalendar/_metadata"
 import { metadata as dailyvideo__metadata_ts } from "./dailyvideo/_metadata"
+import ga4_config_json from "./ga4/config.json"
 import { metadata as googlecalendar__metadata_ts } from "./googlecalendar/_metadata"
 import { metadata as googlevideo__metadata_ts } from "./googlevideo/_metadata"
+import gtm_config_json from "./gtm/config.json"
+import { metadata as hubspot__metadata_ts } from "./hubspot/_metadata"
+import make_config_json from "./make/config.json"
+import metapixel_config_json from "./metapixel/config.json"
 import mock_payment_app_config_json from "./mock-payment-app/config.json"
 import { metadata as office365calendar__metadata_ts } from "./office365calendar/_metadata"
 import office365video_config_json from "./office365video/config.json"
+import pipedrive_crm_config_json from "./pipedrive-crm/config.json"
 import salesforce_config_json from "./salesforce/config.json"
 import { metadata as stripepayment__metadata_ts } from "./stripepayment/_metadata"
 import basic_config_json from "./templates/basic/config.json"
@@ -24,11 +30,17 @@ export const appStoreMetadata = {
 "applecalendar": applecalendar__metadata_ts,
 "caldavcalendar": caldavcalendar__metadata_ts,
 "dailyvideo": dailyvideo__metadata_ts,
+"ga4": ga4_config_json,
 "googlecalendar": googlecalendar__metadata_ts,
 "googlevideo": googlevideo__metadata_ts,
+"gtm": gtm_config_json,
+"hubspot": hubspot__metadata_ts,
+"make": make_config_json,
+"metapixel": metapixel_config_json,
 "mock-payment-app": mock_payment_app_config_json,
 "office365calendar": office365calendar__metadata_ts,
 "office365video": office365video_config_json,
+"pipedrive-crm": pipedrive_crm_config_json,
 "salesforce": salesforce_config_json,
 "stripepayment": stripepayment__metadata_ts,
 "basic": basic_config_json,

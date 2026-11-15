@@ -2130,6 +2130,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@calcom/ga4@workspace:packages/app-store/ga4":
+  version: 0.0.0-use.local
+  resolution: "@calcom/ga4@workspace:packages/app-store/ga4"
+  dependencies:
+    "@calcom/lib": "workspace:*"
+    "@calcom/types": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "@calcom/googlecalendar@workspace:packages/app-store/googlecalendar":
   version: 0.0.0-use.local
   resolution: "@calcom/googlecalendar@workspace:packages/app-store/googlecalendar"
@@ -2146,6 +2155,26 @@ __metadata:
   dependencies:
     "@calcom/prisma": "workspace:*"
     "@calcom/types": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@calcom/gtm@workspace:packages/app-store/gtm":
+  version: 0.0.0-use.local
+  resolution: "@calcom/gtm@workspace:packages/app-store/gtm"
+  dependencies:
+    "@calcom/lib": "workspace:*"
+    "@calcom/types": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@calcom/hubspot@workspace:packages/app-store/hubspot":
+  version: 0.0.0-use.local
+  resolution: "@calcom/hubspot@workspace:packages/app-store/hubspot"
+  dependencies:
+    "@calcom/lib": "workspace:*"
+    "@calcom/prisma": "workspace:*"
+    "@calcom/types": "workspace:*"
+    "@hubspot/api-client": "npm:6.0.1"
   languageName: unknown
   linkType: soft
 
@@ -2201,6 +2230,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@calcom/make@workspace:packages/app-store/make":
+  version: 0.0.0-use.local
+  resolution: "@calcom/make@workspace:packages/app-store/make"
+  dependencies:
+    "@calcom/lib": "workspace:*"
+    "@calcom/types": "workspace:*"
+    "@types/node-schedule": "npm:2.1.0"
+  languageName: unknown
+  linkType: soft
+
+"@calcom/metapixel@workspace:packages/app-store/metapixel":
+  version: 0.0.0-use.local
+  resolution: "@calcom/metapixel@workspace:packages/app-store/metapixel"
+  dependencies:
+    "@calcom/lib": "workspace:*"
+    "@calcom/types": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "@calcom/mock-payment-app@workspace:packages/app-store/mock-payment-app":
   version: 0.0.0-use.local
   resolution: "@calcom/mock-payment-app@workspace:packages/app-store/mock-payment-app"
@@ -2228,6 +2276,15 @@ __metadata:
   dependencies:
     "@calcom/lib": "workspace:*"
     "@calcom/prisma": "workspace:*"
+    "@calcom/types": "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"@calcom/pipedrive-crm@workspace:packages/app-store/pipedrive-crm":
+  version: 0.0.0-use.local
+  resolution: "@calcom/pipedrive-crm@workspace:packages/app-store/pipedrive-crm"
+  dependencies:
+    "@calcom/lib": "workspace:*"
     "@calcom/types": "workspace:*"
   languageName: unknown
   linkType: soft
@@ -4623,6 +4680,22 @@ __metadata:
   peerDependencies:
     react-hook-form: ^7.0.0
   checksum: 10/65c2dbf61a7eec70b247409cea592e9ab6b9e0f6be3dd95da14f0e68a199cd9f902b7d7f9d4c44b0eb6de1d9b1917d58585d5d8cf25f0ce6387cd0b4ca122293
+  languageName: node
+  linkType: hard
+
+"@hubspot/api-client@npm:6.0.1":
+  version: 6.0.1
+  resolution: "@hubspot/api-client@npm:6.0.1"
+  dependencies:
+    bluebird: "npm:^3.7.2"
+    bottleneck: "npm:^2.19.5"
+    btoa: "npm:^1.2.1"
+    es6-promise: "npm:^4.2.4"
+    form-data: "npm:^2.5.0"
+    lodash: "npm:^4.17.21"
+    node-fetch: "npm:^2.6.0"
+    url-parse: "npm:^1.4.3"
+  checksum: 10/0dd21a0d2a4991ae6eeea2af0e588cd9da102d04df28cb6720eb11d641259ed1c4fec27c505e97fe2d4837777b557b216cf8ed88dacd8342faa55a3aeacf717a
   languageName: node
   linkType: hard
 
@@ -15476,6 +15549,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bluebird@npm:^3.7.2":
+  version: 3.7.2
+  resolution: "bluebird@npm:3.7.2"
+  checksum: 10/007c7bad22c5d799c8dd49c85b47d012a1fe3045be57447721e6afbd1d5be43237af1db62e26cb9b0d9ba812d2e4ca3bac82f6d7e016b6b88de06ee25ceb96e7
+  languageName: node
+  linkType: hard
+
 "bmp-js@npm:^0.1.0":
   version: 0.1.0
   resolution: "bmp-js@npm:0.1.0"
@@ -15529,7 +15609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bottleneck@npm:^2.15.3":
+"bottleneck@npm:^2.15.3, bottleneck@npm:^2.19.5":
   version: 2.19.5
   resolution: "bottleneck@npm:2.19.5"
   checksum: 10/ffb982185236fc42b135f88eb3cfc8b87c4307fb9c3e3658e843ed673ad1c77780b65a01ab532f9857fa0f75ad4d6c1857985b21c9b2bd7eac8ef3c378d7ebf6
@@ -15626,6 +15706,15 @@ __metadata:
   version: 6.10.3
   resolution: "bson@npm:6.10.3"
   checksum: 10/53693ad7636fa1a128f32d5c30a9584b4a09a2b2aa2040ea8bf8dca35a283eb1394138770bc6c2dae91b0c6df96b3caef3b14532644736f4d7a1d3177969537b
+  languageName: node
+  linkType: hard
+
+"btoa@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "btoa@npm:1.2.1"
+  bin:
+    btoa: bin/btoa.js
+  checksum: 10/29f2ca93837e10427184626bdfd5d00065dff28b604b822aa9849297dac8c8d6ad385cc96eed812ebf153d80c24a4556252afdbb97c7a712938baeaad7547705
   languageName: node
   linkType: hard
 
@@ -18704,6 +18793,13 @@ __metadata:
     prettier-plugin-sort-re-exports@0.0.1:
       unplugged: true
   checksum: 10/3b7e7d5bd50b8e603fbde93149d90ae541c1fc804b516d3b22f3d107724fb0b8f91bc4a17ca6af3bd17c8e5be89f1a7ec673a3e7f8a55323704a31e77cc5fa67
+  languageName: node
+  linkType: hard
+
+"es6-promise@npm:^4.2.4":
+  version: 4.2.8
+  resolution: "es6-promise@npm:4.2.8"
+  checksum: 10/b250c55523c496c43c9216c2646e58ec182b819e036fe5eb8d83fa16f044ecc6b8dcefc88ace2097be3d3c4d02b6aa8eeae1a66deeaf13e7bee905ebabb350a3
   languageName: node
   linkType: hard
 
@@ -33609,7 +33705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"url-parse@npm:^1.5.3":
+"url-parse@npm:^1.4.3, url-parse@npm:^1.5.3":
   version: 1.5.10
   resolution: "url-parse@npm:1.5.10"
   dependencies:

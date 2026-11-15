@@ -1,7 +1,7 @@
 // The short list of integrations Slotwise offers. The underlying app store has 100+ apps; most are
 // noise for solo creators and coaches, so the Apps page only shows these, in this order.
 
-export type CuratedGroupId = "calendars" | "video" | "automations" | "tracking" | "payments";
+export type CuratedGroupId = "calendars" | "video" | "crm" | "automations" | "tracking" | "payments";
 
 export type CuratedApp = {
   slug: string;
@@ -39,7 +39,18 @@ export const CURATED_APP_GROUPS: {
     apps: [
       { slug: "google-meet", descriptionKey: "apps_desc_google_meet" },
       { slug: "zoom", descriptionKey: "apps_desc_zoom" },
+      { slug: "msteams", descriptionKey: "apps_desc_msteams", name: "Microsoft Teams" },
       { slug: "daily-video", descriptionKey: "apps_desc_daily" },
+    ],
+  },
+  {
+    id: "crm",
+    titleKey: "apps_group_crm",
+    subtitleKey: "apps_group_crm_sub",
+    apps: [
+      { slug: "hubspot", descriptionKey: "apps_desc_hubspot" },
+      { slug: "salesforce", descriptionKey: "apps_desc_salesforce" },
+      { slug: "pipedrive-crm", descriptionKey: "apps_desc_pipedrive", name: "Pipedrive" },
     ],
   },
   {
@@ -48,12 +59,23 @@ export const CURATED_APP_GROUPS: {
     subtitleKey: "apps_group_automations_sub",
     apps: [
       { slug: "zapier", descriptionKey: "apps_desc_zapier" },
+      { slug: "make", descriptionKey: "apps_desc_make" },
       {
         slug: "webhooks",
         descriptionKey: "apps_desc_webhooks",
         href: "/settings/developer/webhooks",
         name: "Webhooks",
       },
+    ],
+  },
+  {
+    id: "tracking",
+    titleKey: "apps_group_tracking",
+    subtitleKey: "apps_group_tracking_sub",
+    apps: [
+      { slug: "ga4", descriptionKey: "apps_desc_ga4", name: "Google Analytics" },
+      { slug: "gtm", descriptionKey: "apps_desc_gtm", name: "Google Tag Manager" },
+      { slug: "metapixel", descriptionKey: "apps_desc_metapixel", name: "Meta Pixel" },
     ],
   },
 ];

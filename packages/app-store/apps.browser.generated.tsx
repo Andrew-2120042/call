@@ -11,12 +11,20 @@ export const AppSettingsComponentsMap = {
 "zapier": dynamic(() => import("./zapier/components/AppSettingsInterface")),
 };
 export const EventTypeAddonMap = {
+"ga4": dynamic(() => import("./ga4/components/EventTypeAppCardInterface")),
+"gtm": dynamic(() => import("./gtm/components/EventTypeAppCardInterface")),
+"hubspot": dynamic(() => import("./hubspot/components/EventTypeAppCardInterface")),
+"metapixel": dynamic(() => import("./metapixel/components/EventTypeAppCardInterface")),
 "mock-payment-app": dynamic(() => import("./mock-payment-app/components/EventTypeAppCardInterface")),
+"pipedrive-crm": dynamic(() => import("./pipedrive-crm/components/EventTypeAppCardInterface")),
 "salesforce": dynamic(() => import("./salesforce/components/EventTypeAppCardInterface")),
 "stripepayment": dynamic(() => import("./stripepayment/components/EventTypeAppCardInterface")),
 "booking-pages-tag": dynamic(() => import("./templates/booking-pages-tag/components/EventTypeAppCardInterface")),
 "event-type-app-card": dynamic(() => import("./templates/event-type-app-card/components/EventTypeAppCardInterface")),
 };
 export const EventTypeSettingsMap = {
+"ga4": dynamic(() => import("./ga4/components/EventTypeAppSettingsInterface")),
+"gtm": dynamic(() => import("./gtm/components/EventTypeAppSettingsInterface")),
+"metapixel": dynamic(() => import("./metapixel/components/EventTypeAppSettingsInterface")),
 "stripepayment": dynamic(() => import("./stripepayment/components/EventTypeAppSettingsInterface")),
 };
