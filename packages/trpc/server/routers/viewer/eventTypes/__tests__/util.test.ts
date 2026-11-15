@@ -5,6 +5,17 @@ import { beforeEach, describe, expect, it, type Mock, vi } from "vitest";
 import type { authedProcedure } from "../../../procedures/authedProcedure";
 import { createEventPbacProcedure, ensureEmailOrPhoneNumberIsPresent } from "../util";
 
+// Team permission decisions are covered by the service's own tests; here every team role check passes so
+// these tests can focus on event ownership and host assignment rules.
+const { mockCheckPermission } = vi.hoisted(() => ({ mockCheckPermission: vi.fn() }));
+vi.mock("@calcom/features/pbac/services/permission-check.service", () => ({
+  PermissionCheckService: class {
+    checkPermission = mockCheckPermission;
+    hasPermission = mockCheckPermission;
+    getTeamIdsWithPermission = async () => [];
+  },
+}));
+
 describe("createEventPbacProcedure", () => {
   const mockPrisma = {
     eventType: {
@@ -28,6 +39,7 @@ describe("createEventPbacProcedure", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCheckPermission.mockResolvedValue(true);
   });
 
   describe("personal events", () => {

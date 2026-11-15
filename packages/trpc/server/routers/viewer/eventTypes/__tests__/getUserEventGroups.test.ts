@@ -4,6 +4,17 @@ import { TRPCError } from "@trpc/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getUserEventGroups } from "../getUserEventGroups.handler";
 
+// Team permission decisions are covered by the service's own tests; here every team role check passes so
+// these tests can focus on event ownership and host assignment rules.
+const { mockCheckPermission } = vi.hoisted(() => ({ mockCheckPermission: vi.fn() }));
+vi.mock("@calcom/features/pbac/services/permission-check.service", () => ({
+  PermissionCheckService: class {
+    checkPermission = mockCheckPermission;
+    hasPermission = mockCheckPermission;
+    getTeamIdsWithPermission = async () => [];
+  },
+}));
+
 // Mock dependencies
 vi.mock("@calcom/lib/checkRateLimitAndThrowError", () => ({
   checkRateLimitAndThrowError: vi.fn(),
@@ -79,6 +90,7 @@ describe("getUserEventGroups", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCheckPermission.mockResolvedValue(true);
   });
 
   describe("Basic functionality", () => {
@@ -171,7 +183,7 @@ describe("getUserEventGroups", () => {
   });
 
   describe("Permissions", () => {
-    it("should grant permissions for team members (stub always returns true)", async () => {
+    it("should grant permissions for team members with an admin role", async () => {
       const { ProfileRepository } = await import("@calcom/features/profile/repositories/ProfileRepository");
 
       const mockTeamMembership = {

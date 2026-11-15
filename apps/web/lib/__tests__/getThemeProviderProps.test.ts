@@ -26,6 +26,8 @@ describe("getThemeProviderProps", () => {
       key: expectedStorageKey,
       nonce: "test-nonce",
       enableColorScheme: false,
+      // Pages render dark until a visitor or owner has a stored choice.
+      defaultTheme: "dark",
     };
 
     it("should return app theme configuration when not in booking page or embed mode", () => {
@@ -40,7 +42,7 @@ describe("getThemeProviderProps", () => {
       });
     });
 
-    it("should force light theme and no storageKey and system theme support is required when isThemeSupported is false", () => {
+    it("should force dark theme and no storageKey and system theme support is required when isThemeSupported is false", () => {
       const result = getThemeProviderProps({
         ...fnArg,
         pathname: "/test",
@@ -54,7 +56,9 @@ describe("getThemeProviderProps", () => {
         ...appThemeExpectedProps,
         storageKey: "forcedThemeKey",
         key: "forcedThemeKey",
-        forcedTheme: "light",
+        forcedTheme: "dark",
+        // A forced theme ignores the default.
+        defaultTheme: undefined,
         enableSystem: false,
       });
     });
@@ -82,6 +86,8 @@ describe("getThemeProviderProps", () => {
       attribute: "class",
       nonce: "test-nonce",
       enableColorScheme: false,
+      // Pages render dark until a visitor or owner has a stored choice.
+      defaultTheme: "dark",
     };
 
     it("should handle booking page theme", () => {
@@ -131,6 +137,7 @@ describe("getThemeProviderProps", () => {
       enableColorScheme: false,
       enableSystem: true,
       forcedTheme: undefined,
+      defaultTheme: "dark",
     };
 
     it("should handle embed mode with default theme", () => {
