@@ -43,7 +43,7 @@ export const InstallableAppCard = ({
       <InstallAppButtonWithoutPlanCheck
         type={app.type}
         options={installOptions}
-        render={(buttonProps) => (
+        render={({ useDefaultComponent: _useDefaultComponent, ...buttonProps }) => (
           <Button
             {...buttonProps}
             color="secondary"

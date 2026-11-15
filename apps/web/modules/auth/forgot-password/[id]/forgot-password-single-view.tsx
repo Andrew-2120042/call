@@ -77,10 +77,21 @@ function PasswordResetForm({
   } = formMethods;
 
   useEffect(() => {
+    // Each fetch replaces the cookie, so only the latest response may set the form value; otherwise the
+    // submitted token and the cookie can belong to different requests and the reset fails.
+    let isLatest = true;
+    setValue("csrfToken", "");
     fetch("/api/csrf", { cache: "no-store" })
       .then((res) => res.json())
-      .then(({ csrfToken }) => setValue("csrfToken", csrfToken))
-      .catch(() => setValue("csrfToken", ""));
+      .then(({ csrfToken }) => {
+        if (isLatest) setValue("csrfToken", csrfToken);
+      })
+      .catch(() => {
+        if (isLatest) setValue("csrfToken", "");
+      });
+    return () => {
+      isLatest = false;
+    };
   }, [setValue, refreshToken]);
 
   const submitChangePassword = async ({
@@ -103,12 +114,16 @@ function PasswordResetForm({
     if (!res.ok) {
       // if the request fails, we want to force refresh of the CSRF token - this allows resubmit
       forceRefresh();
-      return setError("newPassword", { type: "server", message: json.message });
+      return setError("newPassword", {
+        type: "server",
+        message: json.message ?? json.error ?? t("something_went_wrong"),
+      });
     }
   };
 
   const passwordValue = watch("newPassword");
   const isEmpty = passwordValue?.length === 0;
+  const csrfReady = !!watch("csrfToken");
 
   return (
     <Form
@@ -139,7 +154,8 @@ function PasswordResetForm({
             },
             pattern: {
               message: "Should contain a number, uppercase and lowercase letters",
-              value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).*$/gm,
+              // No g flag: a global regex keeps lastIndex between validations and fails every other check.
+              value: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/m,
             },
           })}
           label={t("new_password")}
@@ -151,7 +167,7 @@ function PasswordResetForm({
           loading={loading}
           color="primary"
           type="submit"
-          disabled={loading || isEmpty}
+          disabled={loading || isEmpty || !csrfReady}
           className="w-full justify-center">
           {t("reset_password")}
         </Button>

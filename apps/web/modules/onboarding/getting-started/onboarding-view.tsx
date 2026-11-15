@@ -78,7 +78,13 @@ export const OnboardingView = ({ userEmail }: OnboardingViewProps) => {
       if (selectedPlan === "organization") {
         router.push("/onboarding/organization/details");
       } else if (selectedPlan === "team") {
-        router.push("/onboarding/teams/details");
+        // Everyone sets up their own profile first; a team is created from the Teams page afterwards.
+        try {
+          localStorage.setItem("onBoardingRedirect", "/teams");
+        } catch {
+          // Without storage the user simply lands on Services and can open Teams from the sidebar.
+        }
+        router.push("/onboarding/personal/settings");
       } else if (selectedPlan === "personal") {
         router.push("/onboarding/personal/settings");
       }

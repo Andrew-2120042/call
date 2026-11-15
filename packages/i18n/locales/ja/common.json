@@ -4410,7 +4410,6 @@
   "onboarding_plan_team_title": "チームで利用",
   "onboarding_plan_team_description": "時間を有効活用し、チームとしてのパフォーマンスを向上させたい小規模チームに強くおすすめです。",
   "onboarding_plan_organization_title": "組織向け",
-  "onboarding_plan_team_badge": "ユーザーあたり月額15ドル",
   "onboarding_plan_organization_badge": "ユーザーあたり月額37ドル",
   "onboarding_plan_organization_description": "より高度な制御、プライバシー、セキュリティを求める大規模チーム向けの堅牢なスケジューリング。",
   "view_previous_week": "前週を表示",
@@ -4655,11 +4654,9 @@
   "orgs": "組織",
   "available_on": "利用可能なプラン",
   "available_on_plan": "{{plan}}プランで利用可能",
-
   "upgrade_banner_roles_name": "役割と権限",
   "upgrade_banner_roles_title": "役割と権限でチームのアクセスを管理",
   "upgrade_banner_roles_subtitle": "イベント、設定、スケジュールへの適切なアクセス権をチームメンバーに付与します。",
-
   "upgrade_banner_teams_name": "チーム",
   "upgrade_banner_teams_title": "ミーティングをチームに自動的に振り分ける",
   "upgrade_banner_teams_subtitle": "個人のスケジューリングを、ミーティングの割り当て、振り分け、管理を行う仕組みに変えます。",
@@ -4667,21 +4664,17 @@
   "upgrade_banner_teams_feature2": "ラウンドロビンでミーティングを公平に振り分ける",
   "upgrade_banner_teams_feature3": "どのミーティングが予約されているか、予約されていないかを確認する",
   "upgrade_banner_teams_feature4": "{{appName}}のブランディングを削除",
-
   "upgrade_banner_insights_name": "インサイト",
   "upgrade_banner_insights_title": "何が予約されていて、何が予約されていないかを確認",
   "upgrade_banner_insights_subtitle": "予約データを分かりやすい情報に変え、問題点の発見、業務量の調整、より良いスケジューリング判断に役立てます。",
   "upgrade_banner_insights_feature1": "予約数とキャンセル数を把握する",
   "upgrade_banner_insights_feature2": "チームメンバー間でミーティングがどのように分配されているかを確認する",
   "upgrade_banner_insights_feature3": "空き時間やルーティングの改善に役立つ傾向を把握する",
-
   "upgrade_banner_routing_form_name": "ルーティング",
   "upgrade_banner_routing_form_title": "予約を適切なチームメンバーに自動的に振り分ける",
   "upgrade_banner_routing_form_subtitle": "ルーティングルールを使用して予約者を条件に基づいて選別し、最適なチームメンバーにミーティングを割り当てます。",
-
   "upgrade_banner_team_attributes_title": "チームメンバーの属性に基づいてミーティングを振り分ける",
   "upgrade_banner_team_attributes_subtitle": "役割、地域、専門分野などの属性を定義し、それらを使用して予約を適切な担当者に自動的に振り分けます。",
-
   "play_video": "動画を再生",
   "connected_accounts": "接続済みアカウント",
   "discount_25": "-25%",
