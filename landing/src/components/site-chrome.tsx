@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { articles } from "@/content/articles";
 import { audiences, comparisons, features } from "@/content/site-content";
 import { loginUrl, signupUrl, site } from "@/site.config";
 import { ButtonLink, Container } from "./ui";
@@ -25,6 +26,7 @@ export function Header() {
           <Link href="/features/team-scheduling" className="hover:text-fg transition">Teams</Link>
           <Link href="/pricing" className="hover:text-fg transition">Pricing</Link>
           <Link href="/compare/calendly-alternative" className="hover:text-fg transition">Compare</Link>
+          <Link href="/blog" className="hover:text-fg transition">Guides</Link>
         </nav>
         <div className="flex items-center gap-2">
           <a href={loginUrl} className="text-muted hover:text-fg hidden px-3 text-sm transition sm:inline">Log in</a>
@@ -39,6 +41,7 @@ export function Header() {
                 { href: "/features/team-scheduling", label: "Teams" },
                 { href: "/pricing", label: "Pricing" },
                 { href: "/compare/calendly-alternative", label: "Compare" },
+                { href: "/blog", label: "Guides" },
               ].map((l) => (
                 <Link key={l.href} href={l.href} className="text-muted hover:text-fg hover:bg-raised block rounded-lg px-3 py-2 text-sm">{l.label}</Link>
               ))}
@@ -62,6 +65,7 @@ export function Footer() {
         { href: "/pricing", label: "Pricing" },
       ],
     },
+    { title: "Guides", links: articles.slice(0, 5).map((a) => ({ href: `/blog/${a.slug}`, label: a.keyword[0].toUpperCase() + a.keyword.slice(1) })) },
     {
       title: "Company",
       links: [
@@ -73,7 +77,7 @@ export function Footer() {
   ];
   return (
     <footer className="border-t border-line mt-24">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
+      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-6">
         <div className="lg:col-span-1">
           <Logo />
           <p className="text-faint mt-3 max-w-[28ch] text-sm">{site.tagline}.</p>

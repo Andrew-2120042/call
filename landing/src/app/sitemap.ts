@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { articles } from "@/content/articles";
 import { audiences, comparisons, features } from "@/content/site-content";
 import { site } from "@/site.config";
 
@@ -11,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...features.map((f) => page(`/features/${f.slug}`, 0.8)),
     ...comparisons.map((c) => page(`/compare/${c.slug}`, 0.8)),
     ...audiences.map((a) => page(`/for/${a.slug}`, 0.7)),
+    page("/blog", 0.7),
+    ...articles.map((a) => ({ url: `${site.url}/blog/${a.slug}`, lastModified: new Date(`${a.updated}T00:00:00Z`), priority: 0.8 })),
     page("/privacy", 0.2),
     page("/terms", 0.2),
   ];

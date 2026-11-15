@@ -133,10 +133,11 @@ export const comparisons: Comparison[] = [
     summary:
       "Calendly is the best-known booking link. Slotwise covers the everyday scheduling you use it for, then adds the pieces Calendly users keep asking for: a real waitlist and a way to stop no-shows.",
     rows: [
+      { label: "Free plan", us: "Unlimited services and calendars", them: "1 event type, 1 calendar, one-on-one only" },
       { label: "Waitlist that refills cancellations", us: "Built in (Pro)", them: "Not built in; needs webhooks or another tool" },
       { label: "Approve bookings before confirming", us: "Free", them: "Not built in" },
-      { label: "Confirm-or-release for no-shows", us: "Built in (Pro)", them: "Reminders only" },
-      { label: "Team pricing", us: "$49/month flat, up to 10 people", them: "Per seat" },
+      { label: "Confirm-or-release for no-shows", us: "Built in (Pro)", them: "Reminders on paid plans" },
+      { label: "Round robin for teams", us: "$49/month flat, up to 10 people", them: "Teams plan, $16 per seat/month" },
       { label: "Calendar sync, video links, reminders", us: "Yes", them: "Yes" },
     ],
     verdict:
@@ -153,7 +154,7 @@ export const comparisons: Comparison[] = [
       { label: "Waitlist for taken times", us: "Built in (Pro)", them: "Not built in" },
       { label: "Confirm-or-release", us: "Built in (Pro)", them: "Not built in" },
       { label: "AI summaries of booking requests", us: "Built in (Pro)", them: "Not built in" },
-      { label: "Team pricing", us: "$49/month flat, up to 10 people", them: "Per seat" },
+      { label: "Round robin for teams", us: "$49/month flat, up to 10 people", them: "Teams plan, $12 per user/month" },
     ],
     verdict:
       "Choose Slotwise if you want a booking link that works out of the box and actively protects your time.",
@@ -284,6 +285,7 @@ export const pricing = [
 ];
 
 export const homeFaq = [
+  { q: "What is Slotwise?", a: "Slotwise is an online scheduling tool: a booking link that syncs with your calendar, plus a waitlist that refills cancelled slots, one-click attendance confirmation to stop no-shows, and AI summaries of booking requests. It's free for one person; Pro is $12 a month and Team is $49 a month for up to 10 people." },
   { q: "Is the free plan really free?", a: "Yes. No trial and no card. You get unlimited services and bookings, calendar sync, video links, approvals and booking questions." },
   { q: "Can I move from Calendly?", a: "Yes. Paste a Calendly access token in Settings → Import and your services and weekly hours come across." },
   { q: "Which calendars work?", a: "Google Calendar, Outlook and Office 365, Apple iCloud, and any CalDAV calendar. Slotwise checks them for conflicts and adds new bookings." },

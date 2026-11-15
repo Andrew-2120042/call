@@ -9,7 +9,7 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
 
 ## Launch checklist (things only the owner can set up)
 - Real domain: replace `slotwise.example` (landing `src/site.config.ts` or its env vars) and the app URLs above.
-- Google and Microsoft OAuth apps for calendar sync (`GOOGLE_API_CREDENTIALS`, `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET`), then enable the apps in Settings → Admin → Apps. Without them onboarding only offers Apple and CalDAV.
+- Google and Microsoft OAuth apps for calendar sync (`GOOGLE_API_CREDENTIALS`, `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET`), plus `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` and `DAILY_API_KEY` for video. After setting them, run `corepack yarn workspace @calcom/prisma seed-app-store` once (safe to re-run; it upserts). That stores the keys and turns the apps on, so Google Calendar, Outlook, Google Meet, Zoom and built-in video appear in onboarding and settings. Without it onboarding only offers Apple and CalDAV.
 - Email sending domain (SPF, DKIM, DMARC) and `EMAIL_SERVER_*`.
 - Polar products and webhook (section 5), `DAILY_API_KEY` for built-in video, `ANTHROPIC_API_KEY` for AI summaries.
 - Cron jobs (section 4) running against production.
