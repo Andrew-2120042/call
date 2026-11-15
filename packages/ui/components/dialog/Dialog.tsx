@@ -75,6 +75,8 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
           <DialogPrimitive.Overlay className="fadeIn fixed inset-0 z-50 bg-neutral-800/70 transition-opacity dark:bg-neutral-800/80" />
         )}
         <DialogPrimitive.Content
+          // Without a description, opt out explicitly so Radix doesn't point aria-describedby at nothing.
+          {...(props.description ? {} : { "aria-describedby": undefined })}
           {...props}
           onPointerDownOutside={(e) => {
             if (preventCloseOnOutsideClick) {
@@ -130,16 +132,18 @@ export function DialogHeader(props: DialogHeaderProps) {
           </div>
         )}
         <div>
-          <h2
-            data-testid="dialog-title"
-            className="text-semibold text-emphasis font-cal text-xl"
-            id="modal-title">
-            {props.title}
-          </h2>
+          {/* Radix's Title/Description give the dialog its accessible name and description. */}
+          <DialogPrimitive.Title asChild>
+            <h2 data-testid="dialog-title" className="text-semibold text-emphasis font-cal text-xl">
+              {props.title}
+            </h2>
+          </DialogPrimitive.Title>
           {props.subtitle && (
-            <p className="text-subtle text-sm" data-testid="dialog-subtitle">
-              {props.subtitle}
-            </p>
+            <DialogPrimitive.Description asChild>
+              <p className="text-subtle text-sm" data-testid="dialog-subtitle">
+                {props.subtitle}
+              </p>
+            </DialogPrimitive.Description>
           )}
         </div>
       </div>

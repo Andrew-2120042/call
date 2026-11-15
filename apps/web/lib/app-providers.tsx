@@ -23,6 +23,7 @@ import { useSession } from "next-auth/react";
 import { appWithTranslation } from "next-i18next";
 import type { SSRConfig } from "next-i18next/dist/types/types";
 import { ThemeProvider } from "next-themes";
+import { themeScriptProps } from "./themeScriptProps";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import type { PropsWithChildren, ReactNode } from "react";
 import { useEffect } from "react";
@@ -141,7 +142,7 @@ const CalcomThemeProvider = (props: CalcomThemeProps) => {
   const { key, ...themeProviderProps } = getThemeProviderProps({ props, isEmbedMode, embedNamespace });
 
   return (
-    <ThemeProvider key={key} {...themeProviderProps}>
+    <ThemeProvider key={key} {...themeProviderProps} scriptProps={themeScriptProps}>
       {/* Embed Mode can be detected reliably only on client side here as there can be static generated pages as well which can't determine if it's embed mode at backend */}
       {/* color-scheme makes background:transparent not work in iframe which is required by embed. */}
       {typeof window !== "undefined" && !isEmbedMode && (
@@ -246,7 +247,7 @@ function getThemeProviderProps({
     // next-themes doesn't listen to changes on storageKey. So we need to force a re-render when storageKey changes
     // This is how login to dashboard soft navigation changes theme from light to dark
     key: storageKey,
-    attribute: "class",
+    attribute: "class" as const,
   };
 }
 

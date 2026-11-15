@@ -12,6 +12,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import type { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
+import { themeScriptProps } from "./themeScriptProps";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { getThemeProviderProps } from "./getThemeProviderProps";
 
@@ -66,7 +67,7 @@ const CalcomThemeProvider = (props: CalcomThemeProps) => {
   });
 
   return (
-    <ThemeProvider key={key} {...themeProviderProps}>
+    <ThemeProvider key={key} {...themeProviderProps} scriptProps={themeScriptProps}>
       {/* Embed Mode can be detected reliably only on client side here as there can be static generated pages as well which can't determine if it's embed mode at backend */}
       {/* color-scheme makes background:transparent not work in iframe which is required by embed. */}
       {typeof window !== "undefined" && !isEmbedMode && (
