@@ -38,8 +38,20 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 const CheckboxField = forwardRef<HTMLInputElement, Props>(
-  ({ label, description, error, disabled, descriptionAsSafeHtml, ...rest }, ref) => {
-    const descriptionAsLabel = !label || rest.descriptionAsLabel;
+  (
+    {
+      label,
+      description,
+      error,
+      disabled,
+      descriptionAsSafeHtml,
+      descriptionAsLabel: descriptionAsLabelProp,
+      descriptionClassName,
+      ...rest
+    },
+    ref
+  ) => {
+    const descriptionAsLabel = !label || descriptionAsLabelProp;
     const id = useId();
     return (
       <div className="block items-center sm:flex">
@@ -95,7 +107,7 @@ const CheckboxField = forwardRef<HTMLInputElement, Props>(
                     className={classNames(
                       "text-default ml-2 text-sm [&_a]:text-blue-500",
                       !label && "font-medium",
-                      rest.descriptionClassName
+                      descriptionClassName
                     )}
                     dangerouslySetInnerHTML={{
                       __html: descriptionAsSafeHtml,
@@ -106,7 +118,7 @@ const CheckboxField = forwardRef<HTMLInputElement, Props>(
                     className={classNames(
                       "text-default ml-2 text-sm",
                       !label && "font-medium",
-                      rest.descriptionClassName
+                      descriptionClassName
                     )}>
                     {description}
                   </span>
