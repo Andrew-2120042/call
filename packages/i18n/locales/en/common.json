@@ -5137,5 +5137,19 @@
   "apps_desc_make": "Start a Make scenario when someone books, cancels or reschedules.",
   "apps_desc_ga4": "Track visits to your booking pages in Google Analytics 4.",
   "apps_desc_gtm": "Load your Google Tag Manager container on your booking pages.",
-  "apps_desc_metapixel": "Track bookings from your Meta (Facebook and Instagram) ads."
+  "apps_desc_metapixel": "Track bookings from your Meta (Facebook and Instagram) ads.",
+  "automation_setup_title": "Connect {{appName}}",
+  "automation_setup_subtitle": "{{appName}} signs in to Slotwise with an API key you create here.",
+  "automation_setup_open_invite": "Open the Slotwise app on {{appName}}",
+  "automation_setup_invite_pending": "The Slotwise app on {{appName}} is being published. The link appears here once it's live.",
+  "automation_setup_step_key": "When {{appName}} asks for your account, paste the API key from below.",
+  "automation_setup_step_test": "Test the trigger with a booking, then turn it on.",
+  "zapier_setup_step_zap": "In Zapier, create a new Zap.",
+  "zapier_setup_step_trigger": "Choose Slotwise as the trigger app and pick an event, like New Booking.",
+  "make_setup_step_scenario": "In Make, create a new scenario.",
+  "make_setup_step_trigger": "Add the Slotwise module and pick an event, like Booking Created.",
+  "automation_key_personal": "Your services",
+  "automation_key_exists": "A key is active. Make a new one if you lost it; the old one stops working.",
+  "automation_key_none": "No key yet.",
+  "automation_key_regenerate": "Make a new key"
 }

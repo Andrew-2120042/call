@@ -1,0 +1,9 @@
+{
+  "url": "/addSubscription",
+  "method": "POST",
+  "body": {
+    "subscriberUrl": "{{webhook.url}}",
+    "triggerEvent": "{{parameters.triggerEvent}}"
+  },
+  "response": { "data": { "externalHookId": "{{body.id}}" } }
+}

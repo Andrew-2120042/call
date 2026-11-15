@@ -206,9 +206,12 @@ export default async function main() {
       invite_link: process.env.ZAPIER_INVITE_LINK,
     });
   }
-  await createApp("make", "make", ["automation"], "make_automation", {
-    invite_link: "https://make.com/en/hq/app-invitation/6cb2772b61966508dd8f414ba3b44510",
-  });
+  // Our own Make app's invite link (the upstream link installs Cal.com's app, which talks to Cal's servers).
+  if (process.env.MAKE_INVITE_LINK) {
+    await createApp("make", "make", ["automation"], "make_automation", {
+      invite_link: process.env.MAKE_INVITE_LINK,
+    });
+  }
 
   if (process.env.HUDDLE01_API_TOKEN) {
     await createApp("huddle01", "huddle01video", ["conferencing"], "huddle01_video", {

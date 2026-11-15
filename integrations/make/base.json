@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://app.slotwise.example/api/integrations/make",
+  "qs": { "apiKey": "{{connection.apiKey}}" },
+  "response": { "error": { "message": "[{{statusCode}}] {{body.message}}" } },
+  "log": { "sanitize": ["request.qs.apiKey"] }
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://app.slotwise.example/api/integrations/make/me",
+  "method": "GET",
+  "qs": { "apiKey": "{{parameters.apiKey}}" },
+  "response": {
+    "metadata": { "type": "text", "value": "{{body.username}}" },
+    "error": { "message": "[{{statusCode}}] {{body.message}}" }
+  },
+  "log": { "sanitize": ["request.qs.apiKey"] }
+}

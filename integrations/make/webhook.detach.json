@@ -1,0 +1,5 @@
+{
+  "url": "/deleteSubscription",
+  "method": "DELETE",
+  "qs": { "id": "{{webhook.externalHookId}}" }
+}

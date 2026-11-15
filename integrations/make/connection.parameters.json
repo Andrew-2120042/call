@@ -1,0 +1,9 @@
+[
+  {
+    "name": "apiKey",
+    "type": "password",
+    "label": "Slotwise API key",
+    "required": true,
+    "help": "In Slotwise, open Apps → Make and click Generate API key."
+  }
+]

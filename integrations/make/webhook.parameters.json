@@ -1,0 +1,14 @@
+[
+  {
+    "name": "triggerEvent",
+    "type": "select",
+    "label": "Event",
+    "required": true,
+    "options": [
+      { "label": "Booking created", "value": "BOOKING_CREATED" },
+      { "label": "Booking requested (needs approval)", "value": "BOOKING_REQUESTED" },
+      { "label": "Booking rescheduled", "value": "BOOKING_RESCHEDULED" },
+      { "label": "Booking cancelled", "value": "BOOKING_CANCELLED" }
+    ]
+  }
+]
