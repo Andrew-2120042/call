@@ -45,6 +45,13 @@ const getNavigationItems = (): NavigationItemType[] => [
     icon: "users",
   },
   {
+    name: "teams",
+    href: "/teams",
+    icon: "building",
+    moreOnMobile: true,
+    isCurrent: ({ pathname: path, item }) => path?.startsWith(item.href) ?? false,
+  },
+  {
     name: "apps",
     href: "/apps",
     icon: "grid-3x3",
