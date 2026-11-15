@@ -44,6 +44,7 @@ export default function JoinWaitlistPage() {
   const [date, setDate] = useState(searchParams?.get("date") ?? dayjs().add(1, "day").format("YYYY-MM-DD"));
   const [options, setOptions] = useState<Options | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [notAvailable, setNotAvailable] = useState(false);
   const [selected, setSelected] = useState<{ start: string; end: string } | null>(null);
   const [answers, setAnswers] = useState<Record<string, string | boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -57,6 +58,7 @@ export default function JoinWaitlistPage() {
       `/api/waitlist/options?eventTypeId=${eventTypeId}&date=${date}&timeZone=${encodeURIComponent(timeZone)}`
     );
     const body = await res.json();
+    if (res.status === 404) return setNotAvailable(true);
     if (!res.ok) return setLoadError(body.message ?? t("something_went_wrong"));
     setOptions(body);
   }, [eventTypeId, date, timeZone, t]);
@@ -171,6 +173,15 @@ export default function JoinWaitlistPage() {
 
   const today = dayjs().tz(timeZone).startOf("day");
   const days = Array.from({ length: DAYS_SHOWN }, (_, index) => today.add(index, "day"));
+
+  // An expected situation (the service has no waitlist), so it gets a calm message rather than an error.
+  if (notAvailable) {
+    return (
+      <ClientPageShell testId="waitlist-join-page">
+        <ClientHeader icon="calendar" title={t("waitlist_unavailable_title")} subtitle={t("waitlist_unavailable_body")} />
+      </ClientPageShell>
+    );
+  }
 
   if (loadError) {
     return (

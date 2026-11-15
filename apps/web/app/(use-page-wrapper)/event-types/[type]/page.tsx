@@ -1,5 +1,6 @@
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import { eventTypesRouter } from "@calcom/trpc/server/routers/viewer/eventTypes/_router";
+import { TRPCError } from "@trpc/server";
 import { EventTypeWebWrapper } from "@calcom/web/modules/event-types/components/EventTypeWebWrapper";
 import { buildLegacyRequest } from "@lib/buildLegacyCtx";
 import { createRouterCaller, getTRPCContext } from "app/_trpc/context";
@@ -7,7 +8,7 @@ import type { PageProps, ReadonlyHeaders, ReadonlyRequestCookies } from "app/_ty
 import { _generateMetadata } from "app/_utils";
 import { unstable_cache } from "next/cache";
 import { cookies, headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 
 const querySchema = z.object({
@@ -45,17 +46,22 @@ const ServerPage = async ({ params }: PageProps) => {
   }
 
   const parsed = querySchema.safeParse(await params);
-  if (!parsed.success) {
-    throw new Error("Invalid Event Type id");
-  }
+  if (!parsed.success) return notFound();
   const eventTypeId = parsed.data.type;
   const _headers = await headers();
   const _cookies = await cookies();
 
-  const data = await getCachedEventType(eventTypeId, _headers, _cookies);
-  if (!data?.eventType) {
-    throw new Error("This event type does not exist");
+  let data: Awaited<ReturnType<typeof getCachedEventType>> | null = null;
+  try {
+    data = await getCachedEventType(eventTypeId, _headers, _cookies);
+  } catch (error) {
+    // Someone else's service, or one that was deleted, should look like a missing page, not a crash.
+    if (error instanceof TRPCError && ["FORBIDDEN", "NOT_FOUND", "UNAUTHORIZED"].includes(error.code)) {
+      return notFound();
+    }
+    throw error;
   }
+  if (!data?.eventType) return notFound();
 
   // Fetch permissions for the event type's team
   const permissions = {
