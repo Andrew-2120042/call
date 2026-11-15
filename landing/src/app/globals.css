@@ -13,6 +13,7 @@
   --color-accent: #2563eb;
   --color-accent-soft: rgb(37 99 235 / 0.14);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
 }
 
 html {
