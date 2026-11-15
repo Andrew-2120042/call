@@ -5,6 +5,7 @@ import {
   type PlanViolation,
 } from "./eventTypePlanGuard";
 import { getPlanService } from "./getPlanService";
+import { getServicePlanAccountId } from "./getServicePlanAccount";
 
 /** Lists the settings in an event type update that the user's plan doesn't include (empty when allowed). */
 export async function getEventTypeUpdatePlanViolations(params: {
@@ -32,6 +33,7 @@ export async function getEventTypeUpdatePlanViolations(params: {
   });
   if (!current) return [];
 
-  const plan = await getPlanService().getEffectivePlan(params.userId);
+  const planAccountId = (await getServicePlanAccountId(params.eventTypeId)) ?? params.userId;
+  const plan = await getPlanService().getEffectivePlan(planAccountId);
   return getEventTypePlanViolations(plan, params.update, current);
 }

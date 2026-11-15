@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { shallow } from "zustand/shallow";
 
 import type { Dayjs } from "@calcom/dayjs";
@@ -108,7 +109,11 @@ export const DatePicker = ({
     onMonthChange,
     isLoading: isLoading ?? true,
   });
-  moveToNextMonthOnNoAvailability();
+  // Switching months updates the shared booker store, so it must happen after render, not during it.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: re-run only when the month, loading state or available days change
+  useEffect(() => {
+    moveToNextMonthOnNoAvailability();
+  }, [browsingDate.format("YYYY-MM"), nonEmptyScheduleDays.length, isLoading]);
 
   // Determine if this is a compact sidebar view based on layout
   const isCompact = layout !== "month_view" && layout !== "mobile";

@@ -20,7 +20,7 @@ const EventAdvancedWebWrapper = ({ ...props }: EventAdvancedBaseProps) => {
         verifiedEmails={verifiedEmails}
         localeOptions={localeOptions}
       />
-      {!props.team && props.eventType?.id ? <BookingRulesCard eventTypeId={props.eventType.id} /> : null}
+      {props.eventType?.id ? <BookingRulesCard eventTypeId={props.eventType.id} /> : null}
     </>
   );
 };

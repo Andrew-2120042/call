@@ -10,7 +10,7 @@ const recipientOf = (entry: WaitlistEntryRecord) => ({
 });
 
 const hostNameOf = (eventType: WaitlistEventType) =>
-  eventType.owner?.name || eventType.owner?.username || eventType.title;
+  eventType.owner?.name || eventType.owner?.username || eventType.team?.name || eventType.title;
 
 export class WaitlistEmailNotifier implements IWaitlistNotifier {
   async sendJoined(params: { entry: WaitlistEntryRecord; eventType: WaitlistEventType; position: number }) {

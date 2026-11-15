@@ -8,7 +8,7 @@ import { HttpError } from "@calcom/lib/http-error";
 import { defaultResponder } from "@calcom/lib/server/defaultResponder";
 import { piiHasher } from "@calcom/lib/server/PiiHasher";
 import { prisma } from "@calcom/prisma";
-import { BookingStatus } from "@calcom/prisma/enums";
+import { BookingStatus, SchedulingType } from "@calcom/prisma/enums";
 import type { NextApiRequest } from "next";
 import { z } from "zod";
 
@@ -66,10 +66,19 @@ async function handler(req: NextApiRequest) {
       disableGuests: true,
       customInputs: true,
       metadata: true,
+      teamId: true,
+      schedulingType: true,
       owner: { select: { name: true } },
+      team: { select: { name: true } },
+      hosts: { select: { userId: true } },
     },
   });
-  if (!eventType || !eventType.waitlistEnabled || eventType.hidden || !eventType.userId) {
+  if (
+    !eventType ||
+    !eventType.waitlistEnabled ||
+    eventType.hidden ||
+    (!eventType.userId && !eventType.teamId)
+  ) {
     throw new ErrorWithCode(ErrorCode.NotFound, "This service doesn't have a waitlist");
   }
 
@@ -82,9 +91,23 @@ async function handler(req: NextApiRequest) {
       status: { in: [BookingStatus.ACCEPTED, BookingStatus.AWAITING_HOST] },
       startTime: { gte: dayStart.toDate() > now ? dayStart.toDate() : now, lt: dayEnd.toDate() },
     },
-    select: { startTime: true, endTime: true },
+    select: { startTime: true, endTime: true, userId: true },
     orderBy: { startTime: "asc" },
   });
+  // A team round-robin time is only taken once every host has a booking at it.
+  const hostCount = eventType.hosts.length;
+  const needsEveryHost = !eventType.userId && eventType.schedulingType === SchedulingType.ROUND_ROBIN;
+  const hostsBusyAt = new Map<string, Set<number | null>>();
+  for (const booking of taken) {
+    const key = `${booking.startTime.toISOString()}|${booking.endTime.toISOString()}`;
+    hostsBusyAt.set(key, (hostsBusyAt.get(key) ?? new Set()).add(booking.userId));
+  }
+  const fullTimes = Array.from(hostsBusyAt.entries())
+    .filter(([, hosts]) => !needsEveryHost || hosts.size >= hostCount)
+    .map(([key]) => {
+      const [start, end] = key.split("|");
+      return { startTime: new Date(start), endTime: new Date(end) };
+    });
 
   const fields = (
     getBookingFieldsWithSystemFields({
@@ -112,11 +135,11 @@ async function handler(req: NextApiRequest) {
   const locations = Array.isArray(eventType.locations) ? (eventType.locations as { type?: string }[]) : [];
   return {
     title: eventType.title,
-    hostName: eventType.owner?.name ?? null,
+    hostName: eventType.owner?.name ?? eventType.team?.name ?? null,
     length: eventType.length,
     defaultLocation: locations[0]?.type ?? null,
     fields,
-    takenTimes: taken
+    takenTimes: fullTimes
       .filter((b) => (b.endTime.getTime() - b.startTime.getTime()) / 60_000 === eventType.length)
       .map((b) => ({ start: b.startTime.toISOString(), end: b.endTime.toISOString() })),
   };

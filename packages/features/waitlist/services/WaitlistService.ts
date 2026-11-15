@@ -1,7 +1,7 @@
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
 import type { Prisma } from "@calcom/prisma/client";
-import { WaitlistEntryStatus } from "@calcom/prisma/enums";
+import { SchedulingType, WaitlistEntryStatus } from "@calcom/prisma/enums";
 import { createOfferToken, hashOfferToken, isWellFormedOfferToken } from "../lib/offerToken";
 import type {
   IWaitlistEntryRepository,
@@ -74,7 +74,8 @@ export class WaitlistService {
 
   async join(input: WaitlistJoinInput) {
     const eventType = await this.deps.repository.findEventTypeById(input.eventTypeId);
-    if (!eventType || !eventType.waitlistEnabled || !eventType.userId || !(await this.hostEntitled(eventType.userId))) {
+    const accountId = eventType ? payingAccountId(eventType) : null;
+    if (!eventType || !eventType.waitlistEnabled || !accountId || !(await this.hostEntitled(accountId))) {
       throw new ErrorWithCode(ErrorCode.BadRequest, "This service doesn't have a waitlist");
     }
 
@@ -89,11 +90,7 @@ export class WaitlistService {
       throw new ErrorWithCode(ErrorCode.BadRequest, "This time has already passed");
     }
 
-    const slotTaken = await this.deps.repository.hasBlockingBookingForHost({
-      userId: eventType.userId,
-      startTime: input.startTime,
-      endTime: input.endTime,
-    });
+    const slotTaken = await this.isSlotTaken(eventType, input.startTime, input.endTime);
     if (!slotTaken) {
       throw new ErrorWithCode(ErrorCode.BadRequest, "This time is still open, so you can book it directly");
     }
@@ -147,8 +144,9 @@ export class WaitlistService {
     if (params.startTime.getTime() <= now.getTime()) return null;
 
     const eventType = await this.deps.repository.findEventTypeById(params.eventTypeId);
-    if (!eventType || !eventType.waitlistEnabled || !eventType.userId) return null;
-    if (!(await this.hostEntitled(eventType.userId))) return null;
+    const accountId = eventType ? payingAccountId(eventType) : null;
+    if (!eventType || !eventType.waitlistEnabled || !accountId) return null;
+    if (!(await this.hostEntitled(accountId))) return null;
 
     const activeOffer = await this.deps.repository.findActiveOfferForSlot({
       eventTypeId: params.eventTypeId,
@@ -162,11 +160,7 @@ export class WaitlistService {
       const next = await this.deps.repository.findNextWaiting(params);
       if (!next) return null;
 
-      const stillTaken = await this.deps.repository.hasBlockingBookingForHost({
-        userId: eventType.userId,
-        startTime: next.startTime,
-        endTime: next.endTime,
-      });
+      const stillTaken = await this.isSlotTaken(eventType, next.startTime, next.endTime);
       if (stillTaken) return null;
 
       const { token, tokenHash } = createOfferToken();
@@ -316,6 +310,18 @@ export class WaitlistService {
     return { removed: false };
   }
 
+  /**
+   * A personal service's time is taken when its owner is booked. A team round-robin time is taken only when
+   * every host is booked; a collective time as soon as any host is.
+   */
+  private async isSlotTaken(eventType: WaitlistEventType, startTime: Date, endTime: Date) {
+    const hostIds = eventType.userId ? [eventType.userId] : eventType.hostUserIds;
+    if (!hostIds.length) return false;
+    const busy = await this.deps.repository.countBusyHosts({ userIds: hostIds, startTime, endTime });
+    const needsEveryoneBusy = !eventType.userId && eventType.schedulingType === SchedulingType.ROUND_ROBIN;
+    return needsEveryoneBusy ? busy >= hostIds.length : busy > 0;
+  }
+
   private async hostEntitled(userId: number) {
     return this.deps.isHostEntitled ? this.deps.isHostEntitled(userId) : true;
   }
@@ -338,4 +344,9 @@ export class WaitlistService {
       this.deps.logger?.error("[waitlist] failed to send email", error);
     }
   }
+}
+
+/** Whose plan pays for this service's waitlist: the owner of a personal service, or the team's owner. */
+function payingAccountId(eventType: WaitlistEventType) {
+  return eventType.userId ?? eventType.team?.ownerId ?? null;
 }

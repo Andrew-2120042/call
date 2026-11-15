@@ -23,17 +23,22 @@ const eventType: WaitlistEventType = {
   teamId: null,
   waitlistEnabled: true,
   owner: { name: "Jordan", email: "jordan@example.com", username: "jordan", timeZone: "America/Chicago" },
+  schedulingType: null,
+  team: null,
+  hostUserIds: [],
 };
 
 function createFakeRepository() {
   const entries: StoredEntry[] = [];
   let nextId = 1;
   let clock = 0;
-  const state = { slotTaken: true, eventType: { ...eventType } };
+  const state = { slotTaken: true, busyHosts: undefined as number | undefined, eventType: { ...eventType } };
 
   const repo: IWaitlistEntryRepository = {
     findEventTypeById: async (id) => (id === state.eventType.id ? state.eventType : null),
     hasBlockingBookingForHost: async () => state.slotTaken,
+    countBusyHosts: async ({ userIds }: { userIds: number[] }) =>
+      state.slotTaken ? (state.busyHosts ?? userIds.length) : 0,
     findByEventTypeStartAndEmail: async ({ eventTypeId, startTime, email }) =>
       entries.find(
         (e) =>
@@ -205,6 +210,62 @@ describe("WaitlistService", () => {
       await service.removeForHost({ userId: 4, uid: first.entry.uid });
       const rejoined = await service.join(joinInput("a@example.com"));
       expect(rejoined.position).toBe(2);
+    });
+
+    it("team round robin: open while any host is free, taken once all are booked", async () => {
+      fake.state.eventType = {
+        ...fake.state.eventType,
+        userId: null,
+        owner: null,
+        teamId: 10,
+        schedulingType: "ROUND_ROBIN",
+        team: { name: "Sales", ownerId: 77 },
+        hostUserIds: [1, 2],
+      } as WaitlistEventType;
+      fake.state.busyHosts = 1;
+      await expect(service.join(joinInput("a@example.com"))).rejects.toThrow(/still open/);
+      fake.state.busyHosts = 2;
+      expect((await service.join(joinInput("a@example.com"))).position).toBe(1);
+    });
+
+    it("team collective: taken as soon as one host is booked", async () => {
+      fake.state.eventType = {
+        ...fake.state.eventType,
+        userId: null,
+        owner: null,
+        teamId: 10,
+        schedulingType: "COLLECTIVE",
+        team: { name: "Sales", ownerId: 77 },
+        hostUserIds: [1, 2],
+      } as WaitlistEventType;
+      fake.state.busyHosts = 1;
+      expect((await service.join(joinInput("a@example.com"))).position).toBe(1);
+    });
+
+    it("team services are paid for by the team owner's plan", async () => {
+      const checked: number[] = [];
+      service = new WaitlistService({
+        repository: fake.repo,
+        notifier,
+        createBooking,
+        webappUrl: "https://app.test",
+        now: () => now,
+        isHostEntitled: async (userId) => {
+          checked.push(userId);
+          return true;
+        },
+      });
+      fake.state.eventType = {
+        ...fake.state.eventType,
+        userId: null,
+        owner: null,
+        teamId: 10,
+        schedulingType: "COLLECTIVE",
+        team: { name: "Sales", ownerId: 77 },
+        hostUserIds: [1],
+      } as WaitlistEventType;
+      await service.join(joinInput("a@example.com"));
+      expect(checked).toEqual([77]);
     });
 
     it("refuses joins and offers when the host's plan no longer includes the waitlist", async () => {

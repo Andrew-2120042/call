@@ -554,12 +554,20 @@ export const getPublicEvent = async (
     users = [];
   }
 
-  // Only offered for personal services whose owner's plan includes the waitlist.
+  // Offered when the plan behind the service includes the waitlist: the owner's for a personal service,
+  // the team owner's for a team service (a shared queue across the team's hosts).
+  let waitlistAccountId: number | null = event.team ? null : (event.owner?.id ?? null);
+  if (event.waitlistEnabled && event.teamId) {
+    const teamOwner = await prisma.membership.findFirst({
+      where: { teamId: event.teamId, role: MembershipRole.OWNER, accepted: true },
+      select: { userId: true },
+    });
+    waitlistAccountId = teamOwner?.userId ?? null;
+  }
   const waitlistAvailable =
     !!event.waitlistEnabled &&
-    !event.team &&
-    !!event.owner?.id &&
-    (await getPlanService().hasFeature(event.owner.id, "waitlist"));
+    !!waitlistAccountId &&
+    (await getPlanService().hasFeature(waitlistAccountId, "waitlist"));
 
   return {
     ...eventWithUserProfiles,
