@@ -56,7 +56,7 @@ Run on every deploy, before the new code serves traffic:
 corepack yarn workspace @calcom/prisma db-deploy
 ```
 
-## 4. Cron jobs (all `POST`, header `authorization: <CRON_API_KEY>`)
+## 4. Cron jobs (`POST` with header `authorization: <CRON_API_KEY>`, except the task runner in the last row, which is `GET`)
 | Endpoint | Schedule | Does |
 |---|---|---|
 | `/api/cron/waitlist` | every 5 min | Expires unclaimed offers, offers the slot to the next person, drops past slots |
@@ -65,7 +65,7 @@ corepack yarn workspace @calcom/prisma db-deploy
 | `/api/cron/request-insights` | every 1 min | AI summaries for new booking requests (no-op without `ANTHROPIC_API_KEY`) |
 | `/api/cron/calendar-health` | every 10 min | Checks connected calendars (each at most hourly), emails the owner once per outage, powers the reconnect banner |
 | `/api/cron/bookingReminder` | hourly | Upstream: reminds hosts about requests still waiting for approval |
-| `/api/tasks/cron` | every 1 min | Runs queued background tasks, including the host's "new request" email with its AI summary. Uses `authorization: Bearer <CRON_SECRET>` instead of `CRON_API_KEY`; without `CRON_SECRET` the request email is sent straight away, without the summary |
+| `GET /api/tasks/cron` | every 1 min | Runs queued background tasks, including the host's "new request" email with its AI summary. **Must be called with GET (POST returns 405)** and `authorization: Bearer <CRON_SECRET>` instead of `CRON_API_KEY`; without `CRON_SECRET` the request email is sent straight away, without the summary |
 
 On Vercel, use Vercel Cron with a small proxy or an external scheduler (for example GitHub Actions or cron-job.org) that sends the header. Every job is idempotent, so overlapping runs are safe.
 
