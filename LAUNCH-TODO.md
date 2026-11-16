@@ -22,5 +22,5 @@ Everything still needed before Slotwise goes live. Tick items off as they're don
 - [ ] Publish the Zapier and Make apps (built in `integrations/`, not listed yet). Webhooks already work.
 - [ ] Turn on "Sign in with Google".
 - [ ] Independent review of the Teams code (commits b6f814b..616d896), then the full test suite and a production build as a final check.
-- [ ] Waitlist improvements under discussion: a shorter claim window when the slot is soon, and "any time that day" / "anything earlier" waitlists.
+- [x] Waitlist improvements: first-come-first-served option, shorter windows for soon slots, "any time that day" and "earlier than my booking" (done 2026-11-16, tested end to end).
 - [ ] Remove the demo Team plan `demo-team-sub` on the `teampro` test account before production (it only exists in the local database).
