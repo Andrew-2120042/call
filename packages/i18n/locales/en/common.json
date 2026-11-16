@@ -5187,5 +5187,6 @@
   "home_minutes": "{{count}} min",
   "home_needs_approval": "Needs approval",
   "home_booked_30_days": "booked in the last 30 days",
-  "request_email_review": "Read the full summary and suggested reply"
+  "request_email_review": "Read the full summary and suggested reply",
+  "open_menu": "Open menu"
 }

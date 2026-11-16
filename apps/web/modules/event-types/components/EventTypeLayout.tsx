@@ -24,6 +24,7 @@ import {
   EventTypeEmbedDialog,
 } from "@calcom/web/modules/embed/components/EventTypeEmbed";
 import WebShell from "@calcom/web/modules/shell/Shell";
+import { SidebarDrawer } from "@calcom/web/modules/shell/components/SidebarDrawer";
 import { LoaderIcon } from "@coss/ui/icons";
 import { Suspense, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -101,6 +102,7 @@ function EventTypeSingleLayout({
     <Shell
       // The editor needs the width; the back arrow returns to Services, so the main sidebar steps aside here.
       SidebarContainer={isPlatform ? undefined : <NoSidebar />}
+      beforeBackButton={isPlatform ? undefined : <SidebarDrawer />}
       backPath={teamId ? `/event-types?teamId=${teamId}` : "/event-types"}
       title={`${eventType.title} | ${t("event_type")}`}
       heading={
@@ -292,8 +294,9 @@ function EventTypeSingleLayout({
             <LoaderIcon className="h-5 w-5 animate-spin" />
           </div>
         }>
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-          <div className="min-w-0 flex-1">
+        {/* A fixed-width form with the phone right beside it, centred, rather than stretched across the screen. */}
+        <div className="mx-auto flex max-w-[1100px] flex-col gap-8 lg:flex-row lg:items-start lg:justify-center">
+          <div className="min-w-0 flex-1 lg:max-w-[620px]">
             <ServiceTabs tabs={EventTypeTabs} />
             <div
               className={classNames(

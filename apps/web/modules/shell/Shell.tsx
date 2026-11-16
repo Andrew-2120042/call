@@ -73,6 +73,8 @@ export type LayoutProps = {
   TopNavContainer?: ReactNode;
   drawerState?: DrawerState;
   HeadingLeftIcon?: ReactNode;
+  /** Rendered before the back button, e.g. a toggle that brings back a hidden sidebar. */
+  beforeBackButton?: ReactNode;
   backPath?: string | boolean; // renders back button to specified path
   // use when content needs to expand with flex
   flexChildrenContainer?: boolean;
@@ -133,6 +135,7 @@ export function ShellMain(props: LayoutProps) {
             props.smallHeading ? "lg:mb-7" : "lg:mb-8",
             !props.disableSticky && "sticky top-0 z-10"
           )}>
+          {props.beforeBackButton}
           {!!props.backPath && (
             <Button
               variant="icon"
