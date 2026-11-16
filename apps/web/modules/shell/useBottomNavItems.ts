@@ -1,5 +1,6 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { showToast } from "@calcom/ui/components/toast";
+import { OPEN_FEEDBACK_EVENT } from "~/feedback/FeedbackDialog";
 import type { NavigationItemType } from "./navigation/NavigationItem";
 
 type BottomNavItemsProps = {
@@ -25,6 +26,15 @@ export function useBottomNavItems({ publicPageUrl }: BottomNavItemsProps): Navig
         showToast(t("link_copied"), "success");
       },
       icon: "copy",
+    },
+    {
+      name: "help_and_feedback",
+      href: "",
+      onClick: (e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        window.dispatchEvent(new Event(OPEN_FEEDBACK_EVENT));
+      },
+      icon: "circle-help",
     },
     {
       name: "settings",

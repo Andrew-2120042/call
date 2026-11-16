@@ -5247,5 +5247,19 @@
   "join_team_link_invalid_body": "It may have expired or been replaced. Ask the person who sent it for a new link.",
   "teams_just_joined": "Just joined",
   "teams_member_joined": "{{name}} just joined the team",
-  "team_is_full": "This team is full (up to 10 people). Ask the team owner to free up a seat."
+  "team_is_full": "This team is full (up to 10 people). Ask the team owner to free up a seat.",
+  "help_and_feedback": "Help & feedback",
+  "feedback_description": "Tell us what's working, what's broken, or ask a question. It goes straight to the team.",
+  "feedback_kind_label": "What is this about?",
+  "feedback_kind_feedback": "Feedback",
+  "feedback_kind_problem": "Something's broken",
+  "feedback_kind_question": "Question",
+  "feedback_placeholder_feedback": "What would make Slotwise better for you?",
+  "feedback_placeholder_problem": "What happened, and what did you expect instead?",
+  "feedback_placeholder_question": "What do you need help with?",
+  "feedback_message_label": "Your message",
+  "feedback_reply_note": "We reply by email.",
+  "feedback_docs_link": "Read the docs",
+  "feedback_sent": "Thanks, we got it. We'll reply by email.",
+  "send": "Send"
 }

@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { SidebarSetupCard } from "../home/SidebarSetupCard";
 import { KBarTrigger } from "./Kbar";
 import { Navigation } from "./navigation/Navigation";
+import { FeedbackDialog } from "~/feedback/FeedbackDialog";
 import { useBottomNavItems } from "./useBottomNavItems";
 import { ProfileDropdown } from "./user-dropdown/ProfileDropdown";
 import { UserDropdown } from "./user-dropdown/UserDropdown";
@@ -124,6 +125,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
 
         <div className="md:px-2 md:pb-4 lg:p-0">
           <SidebarSetupCard />
+          <FeedbackDialog />
           {bottomNavItems.map((item, index) => (
             <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
               <ButtonOrLink
