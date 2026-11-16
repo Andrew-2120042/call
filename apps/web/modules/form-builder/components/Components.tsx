@@ -142,7 +142,7 @@ export const Components: Record<FieldType, Component> = {
             label={variantField.label}
             containerClassName="w-full"
             readOnly={props.readOnly}
-            value={value}
+            value={value ?? ""}
             required={variantField.required}
             type="text"
             autoComplete="name"
@@ -172,7 +172,7 @@ export const Components: Record<FieldType, Component> = {
               placeholder={variantField.placeholder}
               label={variantField.label}
               containerClassName={`w-full testid-${variantField.name}`}
-              value={value[variantField.name as keyof typeof value]}
+              value={value?.[variantField.name as keyof typeof value] ?? ""}
               required={variantField.required}
               type="text"
               autoComplete={
@@ -221,6 +221,8 @@ export const Components: Record<FieldType, Component> = {
           noLabel={true}
           autoComplete="email"
           {...props}
+          // Empty until the booker types or a prefill arrives; "" keeps it controlled the whole time.
+          value={props.value ?? ""}
           onChange={(e) => setValue(e.target.value)}
         />
       );
