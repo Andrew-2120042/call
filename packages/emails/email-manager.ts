@@ -547,16 +547,20 @@ export const sendCancelledEmailsAndSMS = async (
             new AttendeeCancelledEmail(
               {
                 ...calendarEvent,
-                title: getEventName({
-                  ...eventNameObject,
-                  t: attendee.language.translate,
-                  attendeeName: attendee.name,
-                  host: calendarEvent.organizer.name,
-                  eventType: calendarEvent.title,
-                  eventDuration,
-                  ...(calendarEvent.responses && { bookingFields: calendarEvent.responses }),
-                  ...(calendarEvent.location && { location: calendarEvent.location }),
-                }),
+                // calendarEvent.title is already the full name ("Intro call between A and B"); rebuilding it from
+                // the default template would repeat "between A and B", so only rebuild for a custom template.
+                title: !eventNameObject.eventName
+                  ? calendarEvent.title
+                  : getEventName({
+                      ...eventNameObject,
+                      t: attendee.language.translate,
+                      attendeeName: attendee.name,
+                      host: calendarEvent.organizer.name,
+                      eventType: calendarEvent.title,
+                      eventDuration,
+                      ...(calendarEvent.responses && { bookingFields: calendarEvent.responses }),
+                      ...(calendarEvent.location && { location: calendarEvent.location }),
+                    }),
               },
               attendee
             )

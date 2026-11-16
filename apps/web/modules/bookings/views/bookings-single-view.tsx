@@ -62,6 +62,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { z } from "zod";
 import { HostRequestActions } from "../components/HostRequestActions";
+import { RebookSuggestions } from "../components/RebookSuggestions";
 import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
 import type { PageProps } from "./bookings-single-view.getServerSideProps";
@@ -567,6 +568,18 @@ export default function Success(props: PageProps) {
                       <div className="mt-3">
                         <p className="text-default">{getTitle()}</p>
                       </div>
+                      {isCancelled &&
+                        !isHost &&
+                        !bookingInfo.rescheduled &&
+                        !eventType.team &&
+                        !!bookingInfo.user?.username && (
+                          <RebookSuggestions
+                            bookingUid={bookingInfo.uid}
+                            eventTypeId={eventType.id}
+                            username={bookingInfo.user.username}
+                            hostName={bookingInfo.user.name || bookingInfo.user.username}
+                          />
+                        )}
                       {isHostReviewingRequest && (
                         <RequestInsightPanel
                           bookingUid={bookingInfo.uid}

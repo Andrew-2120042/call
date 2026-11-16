@@ -5190,5 +5190,11 @@
   "request_email_review": "Read the full summary and suggested reply",
   "open_menu": "Open menu",
   "search_bookings_placeholder": "Search by name, email or service",
-  "booking_was_rescheduled": "Rescheduled"
+  "booking_was_rescheduled": "Rescheduled",
+  "rebook_title": "Want a different time instead?",
+  "rebook_subtitle": "We picked these from {{name}}'s calendar, based on what you told us.",
+  "rebook_none": "No open times in the next two weeks. Check back soon.",
+  "rebook_book_this": "Book this time",
+  "rebook_see_all": "See all available times",
+  "rebook_email_cta": "Pick a new time"
 }
