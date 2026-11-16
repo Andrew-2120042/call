@@ -6,7 +6,7 @@ Companion files: `LAUNCH-TODO.md` (what still has to be set up) and `DEPLOY.md` 
 
 ## Result in one line
 
-**150 browser checks across 18 flows pass, 4,315 unit tests pass, type check passes.** No product bug is open from the sweep except the three items under "Found, not fixed". The real launch blockers are accounts and keys, not code.
+**128 browser checks across 18 flows pass, 4,315 unit tests pass, type check and production build pass.** No product bug is open from the sweep except the three items under "Found, not fixed". The real launch blockers are accounts and keys, not code.
 
 ## How to re-run
 
@@ -57,6 +57,8 @@ Also verified:
 - **Landing site (:3100):** home, pricing, docs, blog, privacy, terms, sitemap, robots, llms.txt all 200. All 35 sitemap pages 200. All 32 links on the home page work.
 - **Unit tests:** 432 files, 4,315 tests pass. The run exits non-zero only because vitest picks up a compiled test file inside a stale `apps/web/.next` build folder ("Page /api/book/recurring-event.test does not export a default function"). Delete `apps/web/.next` before running and it goes away. It is not a failing test.
 - **Type check:** `yarn type-check:ci --force` passes, 9 of 9 packages.
+- **Production build:** `next build` in `apps/web` completes with no errors.
+- **Two checks in the scripts report FAIL for test-only reasons:** in section 6, "No second email" miscounts because the test client is named "Connie Confirm" (checked by hand: exactly one "Please confirm" email was sent); in section 9, "offered the Team plan" no longer applies once `free@example.com` is in a team.
 
 ## Fixed during the sweep
 
