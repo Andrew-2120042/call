@@ -1,5 +1,6 @@
 import { WaitlistJoinedEmail, WaitlistOfferEmail } from "@calcom/emails/templates/waitlist-email";
 import { getTranslation } from "@calcom/i18n/server";
+import { WaitlistEntryKind } from "@calcom/prisma/enums";
 import type { WaitlistEntryRecord, WaitlistEventType } from "../repositories/WaitlistEntryRepository";
 import type { IWaitlistNotifier, WaitlistOfferEmailData } from "../services/WaitlistService";
 
@@ -21,6 +22,8 @@ export class WaitlistEmailNotifier implements IWaitlistNotifier {
       serviceTitle: params.eventType.title,
       startTime: params.entry.startTime,
       position: params.position,
+      kind: params.entry.kind,
+      rangeEnd: params.entry.rangeEnd,
       t,
     }).sendEmail();
   }
@@ -34,6 +37,8 @@ export class WaitlistEmailNotifier implements IWaitlistNotifier {
       startTime: params.entry.startTime,
       claimUrl: params.claimUrl,
       offerExpiresAt: params.offerExpiresAt,
+      firstComeFirstServed: params.firstComeFirstServed,
+      movesExistingBooking: params.entry.kind === WaitlistEntryKind.EARLIER_THAN_BOOKING,
       t,
     }).sendEmail();
   }

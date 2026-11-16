@@ -207,6 +207,7 @@ model EventType {
   requiresConfirmationWillBlockSlot  Boolean                @default(false)
   requiresConfirmationForFreeEmail   Boolean                @default(false)
   waitlistEnabled                    Boolean                @default(false)
+  waitlistOfferMode                  WaitlistOfferMode      @default(IN_ORDER)
   /// Hours before the start by which the attendee must confirm they are still coming; null turns it off.
   attendeeConfirmationHours          Int?
   /// When the attendee misses the confirmation deadline: cancel and free the slot (true) or only alert the host.
@@ -2878,32 +2879,61 @@ enum WaitlistEntryStatus {
   REMOVED
 }
 
+/// What a waitlist entry is waiting for.
+enum WaitlistEntryKind {
+  /// One exact taken time.
+  EXACT_TIME
+  /// Any time between rangeStart and rangeEnd (one day in the person's time zone).
+  ANY_TIME_ON_DAY
+  /// Any time before their existing booking; claiming moves that booking.
+  EARLIER_THAN_BOOKING
+}
+
+/// How a freed time is offered to the people waiting for it.
+enum WaitlistOfferMode {
+  /// One person at a time, in the order they joined.
+  IN_ORDER
+  /// Everyone waiting is told at once; the first to claim gets it.
+  EVERYONE
+}
+
 /// A person waiting for a specific taken slot of an event type. When the slot frees up the
 /// earliest WAITING entry is offered the slot through a single-use claim token.
 model WaitlistEntry {
-  id               Int                 @id @default(autoincrement())
-  uid              String              @unique @default(uuid())
-  eventTypeId      Int
-  eventType        EventType           @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
-  startTime        DateTime
-  endTime          DateTime
-  name             String
-  email            String
-  timeZone         String
-  language         String              @default("en")
-  responses        Json                @default("{}")
-  status           WaitlistEntryStatus @default(WAITING)
+  id                   Int                 @id @default(autoincrement())
+  uid                  String              @unique @default(uuid())
+  eventTypeId          Int
+  eventType            EventType           @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+  startTime            DateTime
+  endTime              DateTime
+  name                 String
+  email                String
+  timeZone             String
+  language             String              @default("en")
+  responses            Json                @default("{}")
+  status               WaitlistEntryStatus @default(WAITING)
+  kind                 WaitlistEntryKind   @default(EXACT_TIME)
+  /// Flexible entries: the window an opening must start in.
+  rangeStart           DateTime?
+  rangeEnd             DateTime?
+  /// EARLIER_THAN_BOOKING: the booking that gets moved when they claim.
+  rescheduleBookingUid String?
+  /// The exact time currently offered (for flexible entries this differs from startTime).
+  offerStartTime       DateTime?
+  offerEndTime         DateTime?
   /// sha256 of the claim token; the raw token only ever exists in the offer email
-  offerTokenHash   String?             @unique
-  offeredAt        DateTime?
-  offerExpiresAt   DateTime?
-  claimedBookingId Int?
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
+  offerTokenHash       String?             @unique
+  offeredAt            DateTime?
+  offerExpiresAt       DateTime?
+  claimedBookingId     Int?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
 
   @@unique([eventTypeId, startTime, email])
   @@index([eventTypeId, startTime, status])
   @@index([status, offerExpiresAt])
+  @@index([eventTypeId, status, kind])
+  @@index([eventTypeId, offerStartTime, status])
 }
 
 enum AttendeeConfirmationStatus {

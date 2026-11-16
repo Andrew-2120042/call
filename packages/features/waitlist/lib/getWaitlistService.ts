@@ -26,6 +26,7 @@ const createBookingForClaim: CreateBookingForClaim = async (params) => {
     metadata: {},
     responses: params.responses,
     creationSource: CreationSource.WEBAPP,
+    ...(params.rescheduleUid ? { rescheduleUid: params.rescheduleUid } : {}),
   };
   const booking = await getRegularBookingService().createBooking({
     bookingData,

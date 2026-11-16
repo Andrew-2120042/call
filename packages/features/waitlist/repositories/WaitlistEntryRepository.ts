@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@calcom/prisma";
 import type { Prisma } from "@calcom/prisma/client";
-import type { SchedulingType } from "@calcom/prisma/enums";
-import { BookingStatus, MembershipRole, WaitlistEntryStatus } from "@calcom/prisma/enums";
+import type { SchedulingType, WaitlistOfferMode } from "@calcom/prisma/enums";
+import { BookingStatus, MembershipRole, WaitlistEntryKind, WaitlistEntryStatus } from "@calcom/prisma/enums";
 
 const entrySelect = {
   id: true,
@@ -15,6 +15,12 @@ const entrySelect = {
   language: true,
   responses: true,
   status: true,
+  kind: true,
+  rangeStart: true,
+  rangeEnd: true,
+  rescheduleBookingUid: true,
+  offerStartTime: true,
+  offerEndTime: true,
   offeredAt: true,
   offerExpiresAt: true,
   claimedBookingId: true,
@@ -31,6 +37,7 @@ export type WaitlistEventType = {
   userId: number | null;
   teamId: number | null;
   waitlistEnabled: boolean;
+  waitlistOfferMode: WaitlistOfferMode;
   owner: { name: string | null; email: string; username: string | null; timeZone: string } | null;
   schedulingType: SchedulingType | null;
   /** Team services: the team's name and its owner, whose plan pays for the waitlist. */
@@ -56,6 +63,7 @@ export class WaitlistEntryRepository {
         userId: true,
         teamId: true,
         waitlistEnabled: true,
+        waitlistOfferMode: true,
         schedulingType: true,
         owner: { select: { name: true, email: true, username: true, timeZone: true } },
         team: {
@@ -123,6 +131,10 @@ export class WaitlistEntryRepository {
     timeZone: string;
     language: string;
     responses: Prisma.InputJsonValue;
+    kind?: WaitlistEntryKind;
+    rangeStart?: Date | null;
+    rangeEnd?: Date | null;
+    rescheduleBookingUid?: string | null;
   }) {
     return this.prismaClient.waitlistEntry.create({ data, select: entrySelect });
   }
@@ -146,14 +158,33 @@ export class WaitlistEntryRepository {
     });
   }
 
-  async countWaitingBefore(params: { eventTypeId: number; startTime: Date; createdAt: Date }) {
+  async countWaitingBefore(params: {
+    eventTypeId: number;
+    startTime: Date;
+    createdAt: Date;
+    kind?: WaitlistEntryKind;
+  }) {
     return this.prismaClient.waitlistEntry.count({
       where: {
         eventTypeId: params.eventTypeId,
         startTime: params.startTime,
+        kind: params.kind ?? WaitlistEntryKind.EXACT_TIME,
         status: WaitlistEntryStatus.WAITING,
         createdAt: { lt: params.createdAt },
       },
+    });
+  }
+
+  /** An existing "earlier than my booking" entry for this booking, in any state. */
+  async findEarlierEntryForBooking(params: { eventTypeId: number; bookingUid: string }) {
+    return this.prismaClient.waitlistEntry.findFirst({
+      where: {
+        eventTypeId: params.eventTypeId,
+        kind: WaitlistEntryKind.EARLIER_THAN_BOOKING,
+        rescheduleBookingUid: params.bookingUid,
+      },
+      orderBy: { id: "desc" },
+      select: entrySelect,
     });
   }
 
@@ -161,7 +192,7 @@ export class WaitlistEntryRepository {
     return this.prismaClient.waitlistEntry.findFirst({
       where: {
         eventTypeId: params.eventTypeId,
-        startTime: params.startTime,
+        offerStartTime: params.startTime,
         status: WaitlistEntryStatus.OFFERED,
         offerExpiresAt: { gt: params.now },
       },
@@ -169,16 +200,76 @@ export class WaitlistEntryRepository {
     });
   }
 
-  async findNextWaiting(params: { eventTypeId: number; startTime: Date }) {
-    return this.prismaClient.waitlistEntry.findFirst({
+  /** Everyone still waiting whose request this opening satisfies, oldest first. */
+  async findWaitingForSlot(params: { eventTypeId: number; startTime: Date; limit: number }) {
+    return this.prismaClient.waitlistEntry.findMany({
       where: {
         eventTypeId: params.eventTypeId,
-        startTime: params.startTime,
         status: WaitlistEntryStatus.WAITING,
+        OR: [
+          { kind: WaitlistEntryKind.EXACT_TIME, startTime: params.startTime },
+          {
+            kind: WaitlistEntryKind.ANY_TIME_ON_DAY,
+            rangeStart: { lte: params.startTime },
+            rangeEnd: { gt: params.startTime },
+          },
+          { kind: WaitlistEntryKind.EARLIER_THAN_BOOKING, rangeEnd: { gt: params.startTime } },
+        ],
       },
       orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       select: entrySelect,
+      take: params.limit,
     });
+  }
+
+  /** Other people holding the same first-come offer; used once someone has claimed it. */
+  async findOtherOffersForSlot(params: { eventTypeId: number; startTime: Date; exceptId: number }) {
+    return this.prismaClient.waitlistEntry.findMany({
+      where: {
+        eventTypeId: params.eventTypeId,
+        offerStartTime: params.startTime,
+        status: WaitlistEntryStatus.OFFERED,
+        id: { not: params.exceptId },
+      },
+      select: entrySelect,
+    });
+  }
+
+  /** Whether a booking still exists and still holds a time (for "earlier than my booking" entries). */
+  async isBookingActive(uid: string) {
+    const count = await this.prismaClient.booking.count({
+      where: { uid, status: { in: [BookingStatus.ACCEPTED, BookingStatus.PENDING, BookingStatus.AWAITING_HOST] } },
+    });
+    return count > 0;
+  }
+
+  /** What an "earlier than my booking" entry copies from the client's existing booking. */
+  async findBookingForEarlierWaitlist(uid: string) {
+    const booking = await this.prismaClient.booking.findUnique({
+      where: { uid },
+      select: {
+        uid: true,
+        eventTypeId: true,
+        startTime: true,
+        endTime: true,
+        status: true,
+        responses: true,
+        attendees: { select: { name: true, email: true, timeZone: true, locale: true }, take: 1, orderBy: { id: "asc" } },
+      },
+    });
+    if (!booking) return null;
+    const attendee = booking.attendees[0] ?? null;
+    return {
+      uid: booking.uid,
+      eventTypeId: booking.eventTypeId,
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      isActive: (
+        [BookingStatus.ACCEPTED, BookingStatus.PENDING, BookingStatus.AWAITING_HOST] as BookingStatus[]
+      ).includes(booking.status),
+      responses: booking.responses,
+      attendee,
+    };
   }
 
   /** Conditional transition so two workers can never offer or claim the same entry twice. */
@@ -211,7 +302,13 @@ export class WaitlistEntryRepository {
 
   async expireWaitingForPastSlots(now: Date) {
     const result = await this.prismaClient.waitlistEntry.updateMany({
-      where: { status: WaitlistEntryStatus.WAITING, startTime: { lte: now } },
+      where: {
+        status: WaitlistEntryStatus.WAITING,
+        OR: [
+          { kind: WaitlistEntryKind.EXACT_TIME, startTime: { lte: now } },
+          { kind: { not: WaitlistEntryKind.EXACT_TIME }, rangeEnd: { lte: now } },
+        ],
+      },
       data: { status: WaitlistEntryStatus.EXPIRED },
     });
     return result.count;
@@ -222,7 +319,7 @@ export class WaitlistEntryRepository {
       where: {
         eventType: managedByUser(params.userId),
         status: { in: params.statuses },
-        startTime: { gte: params.from },
+        OR: [{ startTime: { gte: params.from } }, { rangeEnd: { gt: params.from } }],
       },
       orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
       select: { ...entrySelect, eventType: { select: { id: true, title: true, slug: true } } },
@@ -264,7 +361,11 @@ export type IWaitlistEntryRepository = Pick<
   | "rejoin"
   | "countWaitingBefore"
   | "findActiveOfferForSlot"
-  | "findNextWaiting"
+  | "findWaitingForSlot"
+  | "findOtherOffersForSlot"
+  | "findEarlierEntryForBooking"
+  | "isBookingActive"
+  | "findBookingForEarlierWaitlist"
   | "transition"
   | "findByOfferTokenHash"
   | "findExpiredOffers"

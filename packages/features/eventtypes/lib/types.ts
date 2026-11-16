@@ -352,6 +352,7 @@ export type EventTypeUpdateInput = {
   requiresConfirmationWillBlockSlot?: boolean;
   requiresConfirmationForFreeEmail?: boolean;
   waitlistEnabled?: boolean;
+  waitlistOfferMode?: "IN_ORDER" | "EVERYONE";
   attendeeConfirmationHours?: number | null;
   releaseUnconfirmedBookings?: boolean;
   attendeeReminderMinutes?: number[];

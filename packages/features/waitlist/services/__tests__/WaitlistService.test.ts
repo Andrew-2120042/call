@@ -1,4 +1,4 @@
-import { WaitlistEntryStatus } from "@calcom/prisma/enums";
+import { WaitlistEntryKind, WaitlistEntryStatus, WaitlistOfferMode } from "@calcom/prisma/enums";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { hashOfferToken } from "../../lib/offerToken";
 import type {
@@ -22,6 +22,7 @@ const eventType: WaitlistEventType = {
   userId: 4,
   teamId: null,
   waitlistEnabled: true,
+  waitlistOfferMode: WaitlistOfferMode.IN_ORDER,
   owner: { name: "Jordan", email: "jordan@example.com", username: "jordan", timeZone: "America/Chicago" },
   schedulingType: null,
   team: null,
@@ -32,7 +33,15 @@ function createFakeRepository() {
   const entries: StoredEntry[] = [];
   let nextId = 1;
   let clock = 0;
-  const state = { slotTaken: true, busyHosts: undefined as number | undefined, eventType: { ...eventType } };
+  const state = {
+    slotTaken: true,
+    busyHosts: undefined as number | undefined,
+    eventType: { ...eventType },
+    bookings: new Map<
+      string,
+      { startTime: Date; endTime: Date; isActive: boolean; eventTypeId: number | null }
+    >(),
+  };
 
   const repo: IWaitlistEntryRepository = {
     findEventTypeById: async (id) => (id === state.eventType.id ? state.eventType : null),
@@ -53,6 +62,12 @@ function createFakeRepository() {
         offerExpiresAt: null,
         claimedBookingId: null,
         offerTokenHash: null,
+        kind: WaitlistEntryKind.EXACT_TIME,
+        rangeStart: null,
+        rangeEnd: null,
+        rescheduleBookingUid: null,
+        offerStartTime: null,
+        offerEndTime: null,
         createdAt: new Date(NOW.getTime() + clock++),
         ...data,
         responses: data.responses as StoredEntry["responses"],
@@ -73,10 +88,11 @@ function createFakeRepository() {
       });
       return entry;
     },
-    countWaitingBefore: async ({ eventTypeId, startTime, createdAt }) =>
+    countWaitingBefore: async ({ eventTypeId, startTime, createdAt, kind }) =>
       entries.filter(
         (e) =>
           e.eventTypeId === eventTypeId &&
+          e.kind === (kind ?? WaitlistEntryKind.EXACT_TIME) &&
           e.startTime.getTime() === startTime.getTime() &&
           e.status === WaitlistEntryStatus.WAITING &&
           e.createdAt < createdAt
@@ -85,20 +101,43 @@ function createFakeRepository() {
       entries.find(
         (e) =>
           e.eventTypeId === eventTypeId &&
-          e.startTime.getTime() === startTime.getTime() &&
+          e.offerStartTime?.getTime() === startTime.getTime() &&
           e.status === WaitlistEntryStatus.OFFERED &&
           !!e.offerExpiresAt &&
           e.offerExpiresAt > now
       ) ?? null,
-    findNextWaiting: async ({ eventTypeId, startTime }) =>
+    findWaitingForSlot: async ({ eventTypeId, startTime, limit }) =>
       entries
-        .filter(
-          (e) =>
-            e.eventTypeId === eventTypeId &&
-            e.startTime.getTime() === startTime.getTime() &&
-            e.status === WaitlistEntryStatus.WAITING
-        )
-        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())[0] ?? null,
+        .filter((e) => {
+          if (e.eventTypeId !== eventTypeId || e.status !== WaitlistEntryStatus.WAITING) return false;
+          if (e.kind === WaitlistEntryKind.EXACT_TIME) return e.startTime.getTime() === startTime.getTime();
+          if (e.kind === WaitlistEntryKind.ANY_TIME_ON_DAY)
+            return !!e.rangeStart && !!e.rangeEnd && e.rangeStart <= startTime && e.rangeEnd > startTime;
+          return !!e.rangeEnd && e.rangeEnd > startTime;
+        })
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .slice(0, limit),
+    findOtherOffersForSlot: async ({ eventTypeId, startTime, exceptId }) =>
+      entries.filter(
+        (e) =>
+          e.eventTypeId === eventTypeId &&
+          e.id !== exceptId &&
+          e.status === WaitlistEntryStatus.OFFERED &&
+          e.offerStartTime?.getTime() === startTime.getTime()
+      ),
+    findEarlierEntryForBooking: async ({ bookingUid }) =>
+      entries.filter((e) => e.rescheduleBookingUid === bookingUid).at(-1) ?? null,
+    isBookingActive: async (uid) => !!state.bookings.get(uid)?.isActive,
+    findBookingForEarlierWaitlist: async (uid) => {
+      const booking = state.bookings.get(uid);
+      if (!booking) return null;
+      return {
+        uid,
+        ...booking,
+        responses: { goals: "Mobility" },
+        attendee: { name: "Kim", email: "kim@example.com", timeZone: "UTC", locale: "en" },
+      };
+    },
     transition: async ({ id, from, data }) => {
       const entry = entries.find((e) => e.id === id);
       if (!entry || entry.status !== from) return false;
@@ -113,7 +152,8 @@ function createFakeRepository() {
     expireWaitingForPastSlots: async (now) => {
       let count = 0;
       for (const e of entries) {
-        if (e.status === WaitlistEntryStatus.WAITING && e.startTime <= now) {
+        const end = e.kind === WaitlistEntryKind.EXACT_TIME ? e.startTime : e.rangeEnd;
+        if (e.status === WaitlistEntryStatus.WAITING && end && end <= now) {
           e.status = WaitlistEntryStatus.EXPIRED;
           count++;
         }
@@ -423,6 +463,138 @@ describe("WaitlistService", () => {
 
     it("throws for entries that don't exist", async () => {
       await expect(service.removeForHost({ userId: 4, uid: "missing" })).rejects.toThrow(/not found/);
+    });
+  });
+
+  describe("first come, first served", () => {
+    beforeEach(() => {
+      fake.state.eventType.waitlistOfferMode = WaitlistOfferMode.EVERYONE;
+    });
+
+    it("offers the time to everyone waiting at once", async () => {
+      await service.join(joinInput("a@example.com"));
+      await service.join(joinInput("b@example.com"));
+      fake.state.slotTaken = false;
+      await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START });
+      expect(fake.entries.map((e) => e.status)).toEqual([WaitlistEntryStatus.OFFERED, WaitlistEntryStatus.OFFERED]);
+      expect(notifier.sendOffer).toHaveBeenCalledTimes(2);
+      expect(notifier.sendOffer.mock.calls[0][0].firstComeFirstServed).toBe(true);
+    });
+
+    it("the first to claim gets it; the others go back to waiting and their link says so", async () => {
+      await service.join(joinInput("a@example.com"));
+      await service.join(joinInput("b@example.com"));
+      fake.state.slotTaken = false;
+      await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START });
+      const [tokenA, tokenB] = notifier.sendOffer.mock.calls.map(
+        (c) => (c[0].claimUrl as string).split("/waitlist/claim/")[1]
+      );
+
+      expect(await service.claim(tokenB)).toMatchObject({ ok: true });
+      expect(fake.entries[0].status).toBe(WaitlistEntryStatus.WAITING);
+      expect(await service.claim(tokenA)).toEqual({ ok: false, reason: "taken_by_someone_else" });
+      expect((await service.getOffer(tokenA))?.takenBySomeoneElse).toBe(true);
+      expect(createBooking).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("in order: shorter windows for times that are soon", () => {
+    it("gives 30 minutes when the time is less than a day away", async () => {
+      await service.join(joinInput("a@example.com"));
+      fake.state.slotTaken = false;
+      now = new Date(SLOT_START.getTime() - 5 * 60 * 60_000);
+      await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START });
+      expect(fake.entries[0].offerExpiresAt).toEqual(new Date(now.getTime() + 30 * 60_000));
+    });
+  });
+
+  describe("any time that day", () => {
+    const dayStart = new Date("2026-11-17T00:00:00.000Z");
+    const dayEnd = new Date("2026-11-18T00:00:00.000Z");
+    const joinDay = (email: string) =>
+      service.join({ ...joinInput(email), kind: WaitlistEntryKind.ANY_TIME_ON_DAY, startTime: dayStart, endTime: dayEnd });
+
+    it("is offered whichever time opens that day, and books that time", async () => {
+      await joinDay("d@example.com");
+      fake.state.slotTaken = false;
+      const opening = new Date("2026-11-17T09:00:00.000Z");
+      const offered = await service.offerFreedSlot({ eventTypeId: 3, startTime: opening });
+      expect(offered?.email).toBe("d@example.com");
+      expect(notifier.sendOffer.mock.calls[0][0].entry.startTime).toEqual(opening);
+
+      expect(await service.claim(lastOfferToken())).toMatchObject({ ok: true });
+      expect(createBooking).toHaveBeenCalledWith(
+        expect.objectContaining({ startTime: opening, endTime: new Date(opening.getTime() + 30 * 60_000) })
+      );
+    });
+
+    it("is not offered times on other days, and waits behind earlier exact-time joiners", async () => {
+      await service.join(joinInput("a@example.com"));
+      await joinDay("d@example.com");
+      fake.state.slotTaken = false;
+      expect(
+        await service.offerFreedSlot({ eventTypeId: 3, startTime: new Date("2026-11-18T09:00:00.000Z") })
+      ).toBeNull();
+      expect((await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START }))?.email).toBe("a@example.com");
+    });
+
+    it("rejects ranges longer than a day", async () => {
+      await expect(
+        service.join({
+          ...joinInput("d@example.com"),
+          kind: WaitlistEntryKind.ANY_TIME_ON_DAY,
+          startTime: dayStart,
+          endTime: new Date(dayEnd.getTime() + 24 * 60 * 60_000),
+        })
+      ).rejects.toThrow(/single day/);
+    });
+  });
+
+  describe("earlier than my booking", () => {
+    const bookingStart = new Date("2026-11-20T10:00:00.000Z");
+    beforeEach(() => {
+      fake.state.bookings.set("bk-1", {
+        startTime: bookingStart,
+        endTime: new Date(bookingStart.getTime() + 30 * 60_000),
+        isActive: true,
+        eventTypeId: 3,
+      });
+    });
+
+    it("joins from the booking and, when an earlier time opens, moves the booking there", async () => {
+      const joined = await service.joinEarlier({ bookingUid: "bk-1" });
+      expect(joined.entry).toMatchObject({ kind: WaitlistEntryKind.EARLIER_THAN_BOOKING, email: "kim@example.com" });
+      expect((await service.joinEarlier({ bookingUid: "bk-1" })).alreadyJoined).toBe(true);
+
+      fake.state.slotTaken = false;
+      await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START });
+      await service.claim(lastOfferToken());
+      expect(createBooking).toHaveBeenCalledWith(
+        expect.objectContaining({ startTime: SLOT_START, rescheduleUid: "bk-1" })
+      );
+    });
+
+    it("is never offered a time at or after the booking", async () => {
+      await service.joinEarlier({ bookingUid: "bk-1" });
+      fake.state.slotTaken = false;
+      expect(await service.offerFreedSlot({ eventTypeId: 3, startTime: bookingStart })).toBeNull();
+      expect(
+        await service.offerFreedSlot({ eventTypeId: 3, startTime: new Date(bookingStart.getTime() - 10 * 60_000) })
+      ).toBeNull();
+    });
+
+    it("drops the entry when the booking was cancelled in the meantime", async () => {
+      await service.joinEarlier({ bookingUid: "bk-1" });
+      fake.state.bookings.get("bk-1")!.isActive = false;
+      fake.state.slotTaken = false;
+      expect(await service.offerFreedSlot({ eventTypeId: 3, startTime: SLOT_START })).toBeNull();
+      expect(fake.entries[0].status).toBe(WaitlistEntryStatus.REMOVED);
+    });
+
+    it("refuses cancelled or past bookings", async () => {
+      fake.state.bookings.get("bk-1")!.isActive = false;
+      await expect(service.joinEarlier({ bookingUid: "bk-1" })).rejects.toThrow(/not found/);
+      await expect(service.joinEarlier({ bookingUid: "nope" })).rejects.toThrow(/not found/);
     });
   });
 });
