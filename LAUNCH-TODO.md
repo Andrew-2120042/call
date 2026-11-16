@@ -5,11 +5,12 @@ Everything still needed before Slotwise goes live. Tick items off as they're don
 ## Accounts and keys (the owner signs up; Claude wires them in)
 - [ ] **Domain**: buy it, then replace the `slotwise.example` placeholders (landing `src/site.config.ts` env vars, app URLs).
 - [ ] **Hosted database**: Supabase or Neon Postgres. Turn on backups (Supabase Free has none, Pro $25/mo has daily backups). Run `db-deploy`.
-- [ ] **Email provider**: Resend (Free: 3,000/month, max 100/day; Pro $20/mo: 50,000/month). Verify the domain (SPF, DKIM, DMARC) and set `EMAIL_SERVER_*` and `EMAIL_FROM`.
-- [ ] **Video key (Daily.co)**: `DAILY_API_KEY`. New services default to "Slotwise Video", so without it bookings have no meeting link **and the host gets an "[Action Required]" error email for every booking** (confirmed in the sweep). Hard blocker.
-- [ ] **Google and Microsoft calendar apps**: OAuth clients, then `seed-app-store`. Google's calendar-scope verification can take weeks, so start early.
+- [~] **Email provider (Resend)**: account and a sending-only API key are done (2026-11-16, in `.env.launch-keys`, verified against Resend's API). Still needed: verify the sending domain (SPF, DKIM, DMARC) once the domain is bought. Until then Resend can only send to the account owner. The Resend team is named "wordofwealth21"; rename it or make a Slotwise team if you want them separate.
+- [x] **Video key (Daily.co)**: done 2026-11-16. Subdomain `slotwise.daily.co`, key in `.env` and `.env.launch-keys`, app switched on. Tested: a booking gets a Daily room, the link is in the client's email, no more "[Action Required]" host emails.
+- [~] **Google**: done for local use 2026-11-16. Project `slotwise-514917`, Calendar API on, consent screen "Slotwise" (External, testing mode, owner's Gmail is the only test user), web client with localhost redirect URIs, keys in both files, Google sign-in turned on. Tested up to Google's consent screen. Still needed after the domain: add the production URLs as redirect URIs, add the domain plus privacy and terms links to the consent screen, and submit for verification (takes weeks; until then only up to 100 listed test users can connect).
+- [ ] **Microsoft (Outlook, Teams video)**: blocked. A personal Microsoft account can't register apps without a directory. The owner needs to sign up for a free Azure account (asks for a card to verify identity), then Claude registers the app with redirect `/api/integrations/office365calendar/callback` and `/api/integrations/office365video/callback`.
 - [ ] **Billing moves from Polar to Dodo Payments** (owner's decision, 2026-11-16). The app's checkout, customer portal and webhook are written for Polar today, so this is code work: a Dodo gateway and webhook to replace `polarGateway.ts` / `polarWebhook.ts`. Then create Pro ($12) and Team ($49) products in Dodo test mode, set the keys and webhook, and test a purchase before going live. Dodo: no monthly fee, 4% + 40¢ per US sale (+1.5% international, +0.5% subscriptions).
-- [ ] **Rate limiting (Unkey)**: `UNKEY_ROOT_KEY`. Without it the public forms aren't protected from spam.
+- [x] **Rate limiting (Unkey)**: done 2026-11-16. Workspace `slotwise`, a root key limited to rate limiting, and all 8 namespaces the app uses (core, common, api, ai, forcedSlowMode, instantMeeting, sms, smsMonth) created. Key in both files, tested. Free tier: 150k checks/month.
 - [ ] **Hosting (Vercel)**: two projects, app (`apps/web`) and landing (`landing`).
 - [ ] **Scheduler for background jobs**: the cron endpoints in `DEPLOY.md` §4 (reminders, waitlist offers, confirmations, AI summaries, task runner).
 - [ ] **Legal review** of the privacy and terms pages.
@@ -29,3 +30,8 @@ Everything still needed before Slotwise goes live. Tick items off as they're don
 - [ ] From the launch sweep: re-test a round-robin time that another visitor is holding (it showed as bookable, then failed).
 - [ ] The task runner cron (`/api/tasks/cron`) must be scheduled as **GET**, not POST.
 - [ ] After each key is added, run the matching "Not tested" item in `LAUNCH-SWEEP.md` (real email, calendar sync, video, Dodo checkout, rate limits, custom domains).
+- [ ] **Where production keys live:** `.env.launch-keys` at the repo root (git-ignored). Copy its values into Vercel's environment variables at deploy time; never commit it.
+- [ ] `packages/prisma/.env` points at a different database than the root `.env`, so `seed-app-store` fails with P1003 unless run with `DATABASE_URL` set. Fix the file or always pass the URL.
+- [ ] **Dodo:** the existing Dodo account is the business "usuals". Decide whether Slotwise sells under it or gets its own business (its own verification) before products are created.
+- [ ] **Zapier and Make:** accounts are logged in, but the apps can only be connected and published once the app has a public URL (after the domain and hosting).
+

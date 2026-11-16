@@ -66,7 +66,7 @@ Also verified:
 
 ## Found, not fixed
 
-1. **No video key means an "[Action Required]" email to the host on every booking.** Services default to "Slotwise Video". Without `DAILY_API_KEY` the link can't be made and the host gets a "couldn't create the meeting" email each time. A recurring booking of 12 sessions sent 12. Bookings still go through. This is the video key item in `LAUNCH-TODO.md`; treat it as a hard blocker.
+1. **(Fixed 2026-11-16: Daily key added, re-tested with `scripts/launch-sweep/daily.cjs`.)** No video key meant an "[Action Required]" email to the host on every booking. Services default to "Slotwise Video". Without `DAILY_API_KEY` the link can't be made and the host gets a "couldn't create the meeting" email each time. A recurring booking of 12 sessions sent 12. Bookings still go through. This is the video key item in `LAUNCH-TODO.md`; treat it as a hard blocker.
 2. **"Who's free" can name people who can't take the booking.** The team page AI lists any free team member, but the "Book" button goes to a service whose hosts may be a smaller group. Seen with two new members who weren't hosts of the round-robin service. Fix: limit the list to the suggested service's hosts (`TeamRoutingService.availabilityFor`).
 3. **A held slot can look bookable on a round-robin service.** After killed test runs left slots held, the round-robin page still showed a held time and booking it failed with "This slot is no longer available". Holds expire in minutes, and it didn't reproduce once they were cleared. Worth one deliberate re-test: person A selects a time, person B opens the same service.
 
@@ -74,8 +74,8 @@ Also verified:
 
 These can't be checked locally. Test each one as soon as its key exists:
 - **Real email delivery** (spam folder, dark mode in Gmail/Apple Mail/Outlook). Everything above used the local catcher.
-- **Google and Outlook calendar sync:** busy times blocking slots, events written to the calendar, the calendar-health warning.
-- **Video links** (Daily, Meet, Zoom).
+- **Google and Outlook calendar sync** (Google is wired and verified up to Google's consent screen by `google.cjs`; the owner must click through it once to test real sync): busy times blocking slots, events written to the calendar, the calendar-health warning.
+- **Video links:** Daily is now verified (`daily.cjs`). Meet and Zoom are not.
 - **Polar checkout:** buying Pro and Team, the webhook upgrading the account, cancelling.
 - **Rate limiting:** `UNKEY_ROOT_KEY` is empty, so limits aren't enforced locally.
 - **Custom domains** (needs DNS and Vercel).
