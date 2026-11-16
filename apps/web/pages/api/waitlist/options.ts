@@ -8,7 +8,7 @@ import { HttpError } from "@calcom/lib/http-error";
 import { defaultResponder } from "@calcom/lib/server/defaultResponder";
 import { piiHasher } from "@calcom/lib/server/PiiHasher";
 import { prisma } from "@calcom/prisma";
-import { BookingStatus, SchedulingType } from "@calcom/prisma/enums";
+import { BookingStatus, SchedulingType, WaitlistEntryStatus } from "@calcom/prisma/enums";
 import type { NextApiRequest } from "next";
 import { z } from "zod";
 
@@ -109,6 +109,20 @@ async function handler(req: NextApiRequest) {
       return { startTime: new Date(start), endTime: new Date(end) };
     });
 
+  // Only a count per time, never who is waiting: lets people pick a shorter line before joining.
+  const waiting = fullTimes.length
+    ? await prisma.waitlistEntry.groupBy({
+        by: ["startTime"],
+        where: {
+          eventTypeId,
+          status: { in: [WaitlistEntryStatus.WAITING, WaitlistEntryStatus.OFFERED] },
+          startTime: { in: fullTimes.map((t) => t.startTime) },
+        },
+        _count: { _all: true },
+      })
+    : [];
+  const waitingAt = new Map(waiting.map((w) => [w.startTime.toISOString(), w._count._all]));
+
   const fields = (
     getBookingFieldsWithSystemFields({
       bookingFields: eventType.bookingFields,
@@ -141,7 +155,11 @@ async function handler(req: NextApiRequest) {
     fields,
     takenTimes: fullTimes
       .filter((b) => (b.endTime.getTime() - b.startTime.getTime()) / 60_000 === eventType.length)
-      .map((b) => ({ start: b.startTime.toISOString(), end: b.endTime.toISOString() })),
+      .map((b) => ({
+        start: b.startTime.toISOString(),
+        end: b.endTime.toISOString(),
+        waiting: waitingAt.get(b.startTime.toISOString()) ?? 0,
+      })),
   };
 }
 

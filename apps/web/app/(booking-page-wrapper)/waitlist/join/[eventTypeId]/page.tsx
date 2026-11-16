@@ -29,7 +29,7 @@ type Options = {
   hostName: string | null;
   defaultLocation: string | null;
   fields: Field[];
-  takenTimes: { start: string; end: string }[];
+  takenTimes: { start: string; end: string; waiting: number }[];
 };
 
 const RAW = { interpolation: { escapeValue: false } };
@@ -45,7 +45,7 @@ export default function JoinWaitlistPage() {
   const [options, setOptions] = useState<Options | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [notAvailable, setNotAvailable] = useState(false);
-  const [selected, setSelected] = useState<{ start: string; end: string } | null>(null);
+  const [selected, setSelected] = useState<{ start: string; end: string; waiting: number } | null>(null);
   const [answers, setAnswers] = useState<Record<string, string | boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ position: number } | null>(null);
@@ -296,16 +296,28 @@ export default function JoinWaitlistPage() {
                       : "border-default hover:border-emphasis"
                   )}
                   style={{
-                    height: 42,
-                    padding: "0 18px",
-                    borderRadius: 999,
+                    minHeight: 48,
+                    padding: "6px 18px",
+                    borderRadius: 16,
                     fontVariantNumeric: "tabular-nums",
                   }}>
-                  {dayjs(slot.start).tz(timeZone).format("h:mma")}
+                  <span className="block">{dayjs(slot.start).tz(timeZone).format("h:mma")}</span>
+                  <span className={classNames("block text-[11px] font-medium", active ? "opacity-70" : "text-subtle")}>
+                    {slot.waiting === 0
+                      ? t("waitlist_nobody_waiting_short")
+                      : t("waitlist_waiting_short", { count: slot.waiting })}
+                  </span>
                 </button>
               );
             })}
           </div>
+        )}
+        {selected && (
+          <p className="text-subtle mt-3 text-sm" data-testid="waitlist-position-preview">
+            {selected.waiting === 0
+              ? t("waitlist_you_would_be_first")
+              : t("waitlist_you_would_be_nth", { count: selected.waiting, position: selected.waiting + 1 })}
+          </p>
         )}
       </section>
 

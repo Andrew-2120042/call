@@ -38,9 +38,10 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
           </Button>
           <Button
             size="lg"
+            color="secondary"
             onClick={() => decide(false)}
             loading={isPending}
-            className={`${DECLINE_CLASSES} h-10`}>
+            className="h-10">
             {t("decline_request")}
           </Button>
         </div>
@@ -55,10 +56,11 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
       <div className="mt-3 grid grid-cols-2 gap-3">
         <Button
           size="lg"
+          color="secondary"
           StartIcon="x"
           onClick={() => setDeclining(true)}
           disabled={isPending}
-          className={`${DECLINE_CLASSES} h-11 justify-center text-sm`}
+          className="h-11 justify-center text-sm"
           data-testid="host-decline">
           {t("decline_booking")}
         </Button>
@@ -75,7 +77,3 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
     </div>
   );
 }
-
-// A solid red for the decline action, so it reads as clearly different from the white Accept button.
-const DECLINE_CLASSES =
-  "!border-red-600 !bg-red-600 !text-white !shadow-none hover:!border-red-700 hover:!bg-red-700";

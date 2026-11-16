@@ -5208,6 +5208,12 @@
   "team_routing_nobody_free": "Nobody on the team is free then. Try another time, or pick one below.",
   "team_routing_time_past": "That time has already passed. Try a time that's still ahead.",
   "team_routing_book_time": "Book {{time}}",
-  "team_ai_routing": "Help visitors choose",
-  "team_ai_routing_description": "Show a box on your team page where visitors describe what they need (or ask who's free) and get pointed to the right service."
+  "team_ai_routing": "\"Not sure what to book?\" box on your team page",
+  "team_ai_routing_description": "Visitors type what they need, or ask something like \"who's free Tuesday at 3pm?\". AI sends them to the right service or person and can book that exact time. Turn it off to hide the box.",
+  "waitlist_nobody_waiting_short": "No one waiting",
+  "waitlist_waiting_short_one": "{{count}} waiting",
+  "waitlist_waiting_short_other": "{{count}} waiting",
+  "waitlist_you_would_be_first": "No one is waiting for this time yet, so you'd be first in line.",
+  "waitlist_you_would_be_nth_one": "1 person is already waiting for this time. You'd be number {{position}} in line.",
+  "waitlist_you_would_be_nth_other": "{{count}} people are already waiting for this time. You'd be number {{position}} in line."
 }
