@@ -73,10 +73,20 @@ export function RequestInsightPanel({
         : {}),
     }
   );
-  const insight = query.data?.insight;
+  // Use the server's copy directly when there is one: the query isn't resolved during server rendering, and the
+  // server and browser must draw the same thing.
+  const insight =
+    query.data?.insight ??
+    (initialInsight
+      ? {
+          ...initialInsight,
+          fit: initialInsight.fit as "GOOD" | "UNCLEAR" | "POOR",
+          createdAt: new Date(initialInsight.createdAt),
+        }
+      : undefined);
 
   // Hold roughly the panel's space while it loads so the booking details below don't jump.
-  if (query.isPending && actions) {
+  if (!insight && query.isPending && actions) {
     return (
       // Matches the finished panel's height (about 575px), so nothing below it moves when it arrives.
       <div className="border-subtle bg-muted mt-6 flex h-[575px] animate-pulse flex-col rounded-xl border p-4" aria-hidden>
