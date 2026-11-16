@@ -409,6 +409,29 @@ export async function getBookings({
       }
     }
 
+    // 5b. Free-text search: booking title, or any attendee's name or email
+    const search = filters?.search?.trim();
+    if (search) {
+      const pattern = `%${search.replace(/[\\%_]/g, (c) => `\\${c}`)}%`;
+      fullQuery = fullQuery.where((eb) =>
+        eb.or([
+          eb("Booking.title", "ilike", pattern),
+          eb.exists(
+            eb
+              .selectFrom("Attendee as SearchAttendee")
+              .select("SearchAttendee.id")
+              .whereRef("SearchAttendee.bookingId", "=", "Booking.id")
+              .where((inner) =>
+                inner.or([
+                  inner("SearchAttendee.name", "ilike", pattern),
+                  inner("SearchAttendee.email", "ilike", pattern),
+                ])
+              )
+          ),
+        ])
+      );
+    }
+
     // 6. Filter by Booking Uid (if provided)
     if (filters?.bookingUid) {
       fullQuery = fullQuery.where("Booking.uid", "=", filters.bookingUid.trim());

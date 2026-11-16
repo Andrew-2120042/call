@@ -232,7 +232,8 @@ function BookingListItem(booking: BookingItemProps) {
   const RequestSentMessage = () => {
     return (
       <Badge startIcon="send" size="md" variant="gray" data-testid="request_reschedule_sent">
-        {t("reschedule_request_sent")}
+        {/* Covers both the client moving the time and the host asking them to, which the list can't tell apart. */}
+        {t("booking_was_rescheduled")}
       </Badge>
     );
   };

@@ -16,6 +16,8 @@ type TGetInputSchemaFilters = {
   attendeeEmail?: string | z.infer<typeof ZTextFilterValue>;
   attendeeName?: string | z.infer<typeof ZTextFilterValue>;
   bookingUid?: string;
+  /** Free-text search across the booking title and attendee names and emails. */
+  search?: string;
   afterStartDate?: string;
   beforeEndDate?: string;
   afterUpdatedDate?: string;
@@ -56,6 +58,7 @@ export const ZGetInputSchema: z.ZodType<TGetInputSchema, z.ZodTypeDef, TGetInput
     attendeeEmail: z.union([z.string(), ZTextFilterValue]).optional(),
     attendeeName: z.union([z.string(), ZTextFilterValue]).optional(),
     bookingUid: z.string().optional(),
+    search: z.string().max(100).optional(),
     afterStartDate: z.string().optional(),
     beforeEndDate: z.string().optional(),
     afterUpdatedDate: z.string().optional(),

@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useBookingFilters } from "~/bookings/hooks/useBookingFilters";
 import { useBookingListColumns } from "~/bookings/hooks/useBookingListColumns";
+import { useBookingSearch } from "~/bookings/hooks/useBookingSearch";
+import { BookingSearch } from "./BookingSearch";
 import { useBookingListData } from "~/bookings/hooks/useBookingListData";
 import { useBookingStatusTab } from "~/bookings/hooks/useBookingStatusTab";
 import { useFacetedUniqueValues } from "~/bookings/hooks/useFacetedUniqueValues";
@@ -178,6 +180,7 @@ function BookingListInner({
         </div>
 
         {/* Desktop: second item on first row, Mobile: first item on second row */}
+        <BookingSearch />
         <FilterButton
           table={table}
           displayedFilterCount={displayedFilterCount}
@@ -231,6 +234,11 @@ export function BookingListContainer(props: BookingListContainerProps) {
   const { limit, offset, setPageIndex, isValidatorPending } = useDataTable();
   const { eventTypeIds, teamIds, userIds, dateRange, attendeeName, attendeeEmail, bookingUid, aiLabels } =
     useBookingFilters();
+  const [search] = useBookingSearch();
+  // A new search starts from the first page, or it could land on a page that no longer exists.
+  useEffect(() => {
+    setPageIndex(0);
+  }, [search, setPageIndex]);
 
   // Build query input once - shared between query and prefetching
   const queryInput = useMemo(
@@ -246,6 +254,7 @@ export function BookingListContainer(props: BookingListContainerProps) {
         attendeeName,
         attendeeEmail,
         bookingUid,
+        search: search || undefined,
         afterStartDate: dateRange?.startDate
           ? dayjs(dateRange?.startDate).startOf("day").toISOString()
           : undefined,
@@ -263,6 +272,7 @@ export function BookingListContainer(props: BookingListContainerProps) {
       attendeeName,
       attendeeEmail,
       bookingUid,
+      search,
       dateRange,
     ]
   );
