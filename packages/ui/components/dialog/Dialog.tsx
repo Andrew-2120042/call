@@ -208,3 +208,7 @@ export function DialogClose(
     </DialogPrimitive.Close>
   );
 }
+
+/** For dialogs with a custom layout that don't use DialogHeader; gives screen readers the dialog's name. */
+export const DialogTitle = DialogPrimitive.Title;
+export const DialogDescription = DialogPrimitive.Description;

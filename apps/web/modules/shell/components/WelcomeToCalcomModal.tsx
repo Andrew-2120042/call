@@ -3,19 +3,17 @@
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
-import { Dialog, DialogContent } from "@calcom/ui/components/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@calcom/ui/components/dialog";
 import { Logo } from "@calcom/ui/components/logo";
 import { CheckIcon, UserIcon } from "@coss/ui/icons";
 import { useWelcomeToCalcomModal } from "../hooks/useWelcomeToCalcomModal";
 
 const features = [
-  "unlimited_calendars",
-  "unlimited_event_types",
-  "integrate_with_favorite_apps",
-  "accept_payments_via_stripe",
-  "html_react_embed",
-  "cal_ai_phone_agent",
-  "cal_video",
+  "welcome_feature_services",
+  "welcome_feature_calendars",
+  "welcome_feature_approvals",
+  "welcome_feature_video",
+  "welcome_feature_import",
 ];
 
 export function WelcomeToCalcomModal() {
@@ -77,10 +75,12 @@ export function WelcomeToCalcomModal() {
           </div>
 
           <div className="mb-2 flex flex-col gap-2 text-center">
-            <h2 className="font-cal text-emphasis text-2xl leading-none">
+            <DialogTitle className="font-cal text-emphasis text-2xl leading-none">
               {t("welcome_to_calcom", { appName: APP_NAME })}
-            </h2>
-            <p className="text-default text-sm leading-normal">{t("personal_welcome_description")}</p>
+            </DialogTitle>
+            <DialogDescription className="text-default text-sm leading-normal">
+              {t("personal_welcome_description")}
+            </DialogDescription>
           </div>
 
           <div className="mb-2 flex flex-col gap-3">
@@ -93,15 +93,7 @@ export function WelcomeToCalcomModal() {
           </div>
         </div>
 
-        <div className="bg-muted border-subtle flex shrink-0 items-center justify-between rounded-b-2xl border-t px-8 py-6">
-          <Button
-            color="minimal"
-            href="https://cal.diy"
-            target="_blank"
-            EndIcon="external-link"
-            className="pointer-events-none opacity-0">
-            {t("learn_more")}
-          </Button>
+        <div className="bg-muted border-subtle flex shrink-0 items-center justify-end rounded-b-2xl border-t px-8 py-6">
           <Button color="primary" onClick={closeModal}>
             {t("continue")}
           </Button>

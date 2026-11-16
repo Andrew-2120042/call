@@ -426,7 +426,7 @@
   "welcome_back": "Welcome back",
   "welcome_back_sign_in": "Welcome back! Sign in to continue",
   "welcome_to_calcom": "Welcome to {{appName}}",
-  "personal_welcome_description": "You're all set! Start scheduling meetings and managing your calendar.",
+  "personal_welcome_description": "Your booking page is ready. We've added three starter services you can rename, change or delete.",
   "unlimited_calendars": "Unlimited calendars",
   "unlimited_event_types": "Unlimited services",
   "workflows_feature": "Workflows",
@@ -5151,5 +5151,10 @@
   "automation_key_personal": "Your services",
   "automation_key_exists": "A key is active. Make a new one if you lost it; the old one stops working.",
   "automation_key_none": "No key yet.",
-  "automation_key_regenerate": "Make a new key"
+  "automation_key_regenerate": "Make a new key",
+  "welcome_feature_services": "Unlimited services, each with its own link",
+  "welcome_feature_calendars": "Sync with Google, Outlook and Apple calendars",
+  "welcome_feature_approvals": "Approve requests before they're booked",
+  "welcome_feature_video": "Google Meet, Zoom or built-in video on every booking",
+  "welcome_feature_import": "Bring your services over from Calendly"
 }

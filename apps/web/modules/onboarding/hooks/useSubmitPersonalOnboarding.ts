@@ -9,23 +9,11 @@ import { setShowWelcomeToCalcomModalFlag } from "@calcom/web/modules/shell/hooks
 const ONBOARDING_REDIRECT_KEY = "onBoardingRedirect";
 const ORG_MODAL_STORAGE_KEY = "showNewOrgModal";
 
+// Matches the three services shown in the onboarding preview, so people get what they were shown.
 const DEFAULT_EVENT_TYPES = [
-  {
-    title: "15min_meeting",
-    slug: "15min",
-    length: 15,
-  },
-  {
-    title: "30min_meeting",
-    slug: "30min",
-    length: 30,
-  },
-  {
-    title: "secret_meeting",
-    slug: "secret",
-    length: 15,
-    hidden: true,
-  },
+  { title: "onboarding_preview_service_intro", slug: "intro-call", length: 15 },
+  { title: "onboarding_preview_service_consultation", slug: "consultation", length: 30 },
+  { title: "onboarding_preview_service_follow_up", slug: "follow-up", length: 45 },
 ];
 
 export const useSubmitPersonalOnboarding = () => {
@@ -47,7 +35,6 @@ export const useSubmitPersonalOnboarding = () => {
                 title: t(event.title),
                 slug: event.slug,
                 length: event.length,
-                hidden: event.hidden,
               });
             })
           );
@@ -89,6 +76,9 @@ export const useSubmitPersonalOnboarding = () => {
     // telemetry.event(telemetryEventTypes.onboardingFinished);
     mutation.mutate({
       completedOnboarding: true,
+      // Signup doesn't ask for a time zone, so take the browser's; otherwise every new account starts on the
+      // schema default and is immediately asked to change it.
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
   };
 
