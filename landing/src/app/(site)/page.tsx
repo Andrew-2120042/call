@@ -171,6 +171,11 @@ export default function Home() {
 
       {/* Dark centrepiece */}
       <section className="relative overflow-hidden border-t border-line pt-36 pb-32">
+        {/* One soft glow under the horizon that fades out down the whole section, so nothing has a hard edge. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_42%_at_50%_44%,rgba(79,70,229,0.15),rgba(37,99,235,0.05)_50%,transparent_80%)]"
+        />
         {/* A wide horizon: a thin multi-colour ring masked from a gradient, with a soft glow under it. */}
         <div
           aria-hidden
@@ -199,7 +204,9 @@ export default function Home() {
             { t: "It reminds for you.", b: "Reminders before every booking.", icon: "M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16ZM10 20.5h4" },
             { t: "It shares the load.", b: "Round robin across your team.", icon: "M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6.5 0a2.5 2.5 0 1 0 0-5M3.5 19a5.5 5.5 0 0 1 11 0M16 13.5a4.5 4.5 0 0 1 4.5 5" },
           ].map((c) => (
-            <div key={c.t} className="flex h-56 flex-col justify-between border-line p-6 lg:[&:not(:last-child)]:border-r">
+            <div
+              key={c.t}
+              className="relative flex h-56 flex-col justify-between border-line p-6 lg:[&:not(:last-child)]:border-r lg:[&:not(:last-child)]:after:absolute lg:[&:not(:last-child)]:after:top-full lg:[&:not(:last-child)]:after:-right-px lg:[&:not(:last-child)]:after:h-40 lg:[&:not(:last-child)]:after:w-px lg:[&:not(:last-child)]:after:bg-[linear-gradient(180deg,var(--color-line),transparent)] lg:[&:not(:last-child)]:after:content-['']">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-faint" aria-hidden>
                 <path d={c.icon} />
               </svg>
@@ -211,22 +218,7 @@ export default function Home() {
           ))}
         </Container>
 
-        {/* The horizon keeps going: the card dividers carry on down as fading light, into the details below. */}
-        <div aria-hidden className="pointer-events-none relative mx-auto hidden h-28 max-w-6xl px-4 sm:px-6 lg:block">
-          <div className="grid h-full grid-cols-5">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <span key={i} className="border-r border-transparent last:border-r-0">
-                <span className="ms-auto block h-full w-px bg-[linear-gradient(180deg,var(--color-line),transparent)]" />
-              </span>
-            ))}
-          </div>
-        </div>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[620px] bg-[radial-gradient(ellipse_60%_55%_at_50%_0%,rgba(99,102,241,0.13),transparent_70%)]"
-        />
-
-        <Container className="relative mt-10 lg:mt-0">
+        <Container className="relative mt-16 lg:mt-24">
           <Accordion
             header={
               <>

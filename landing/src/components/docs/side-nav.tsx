@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { type DocIcon, type DocPage, docSlug } from "@/content/docs";
+import { type DocIcon, docSlug } from "@/content/docs";
 
 const ICONS: Record<DocIcon, string> = {
   home: "M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9.5Z",
@@ -17,6 +17,8 @@ const ICONS: Record<DocIcon, string> = {
   code: "m8 8-4 4 4 4m8-8 4 4-4 4m-6 2 4-12",
   spark: "M12 3v4m0 10v4M3 12h4m10 0h4M6 6l2.5 2.5m7 7L18 18M6 18l2.5-2.5m7-7L18 6",
   help: "M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14m0 3h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
+  book: "M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5v-15Zm0 15A1.5 1.5 0 0 0 6.5 21H19",
+  list: "M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01",
 };
 
 function Icon({ name }: { name: DocIcon }) {
@@ -27,13 +29,26 @@ function Icon({ name }: { name: DocIcon }) {
   );
 }
 
-type NavPage = Pick<DocPage, "slug" | "title" | "icon"> & { headings: string[]; text: string };
+export type NavPage = { href: string; title: string; icon: DocIcon; headings: string[]; text: string };
 
-export function DocsSidebar({ pages, siteName, supportEmail }: { pages: NavPage[]; siteName: string; supportEmail: string }) {
+/** The sidebar shared by the docs and the guides: brand, back link, search, page list with on-page sections, help. */
+export function SideNav({
+  pages,
+  label,
+  homeHref,
+  siteName,
+  supportEmail,
+}: {
+  pages: NavPage[];
+  /** Shown after the brand, e.g. "docs" or "guides". */
+  label: string;
+  homeHref: string;
+  siteName: string;
+  supportEmail: string;
+}) {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const current = pathname === "/docs" ? "introduction" : pathname.split("/")[2];
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -46,8 +61,8 @@ export function DocsSidebar({ pages, siteName, supportEmail }: { pages: NavPage[
   return (
     <>
       <div className="flex items-center justify-between border-b border-line px-4 py-3 lg:hidden">
-        <Link href="/docs" className="flex items-center gap-2 text-[13px] font-semibold">
-          <Mark /> {siteName} docs
+        <Link href={homeHref} className="flex items-center gap-2 text-[13px] font-semibold">
+          <Mark /> {siteName} {label}
         </Link>
         <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="text-muted rounded-md border border-line px-2.5 py-1 text-xs">
           {open ? "Close" : "Menu"}
@@ -56,8 +71,8 @@ export function DocsSidebar({ pages, siteName, supportEmail }: { pages: NavPage[
       <aside
         className={`${open ? "block" : "hidden"} border-b border-line lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-60 lg:flex-none lg:flex-col lg:border-b-0 lg:border-r`}>
         <div className="hidden px-4 pt-5 lg:block">
-          <Link href="/docs" className="flex items-center gap-2 text-[13px] font-semibold">
-            <Mark /> {siteName} docs
+          <Link href={homeHref} className="flex items-center gap-2 text-[13px] font-semibold">
+            <Mark /> {siteName} {label}
           </Link>
         </div>
         <div className="px-3 pt-4">
@@ -68,19 +83,19 @@ export function DocsSidebar({ pages, siteName, supportEmail }: { pages: NavPage[
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search docs"
-            aria-label="Search docs"
+            placeholder={`Search ${label}`}
+            aria-label={`Search ${label}`}
             className="placeholder:text-faint mt-3 w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-xs outline-none focus:border-line-strong"
           />
         </div>
-        <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Docs">
+        <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label={label}>
           <ul className="space-y-0.5">
             {shown.map((p) => {
-              const active = p.slug === current;
+              const active = p.href === pathname;
               return (
-                <li key={p.slug}>
+                <li key={p.href}>
                   <Link
-                    href={p.slug === "introduction" ? "/docs" : `/docs/${p.slug}`}
+                    href={p.href}
                     className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition ${active ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"}`}>
                     <Icon name={p.icon} />
                     {p.title}

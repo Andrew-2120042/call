@@ -103,7 +103,7 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
             return (
               <figure key={i} className="mt-5">
                 <div className="overflow-hidden rounded-lg border border-line bg-surface">
-                  <Image src={block.src} alt={block.alt} width={2560} height={1600} className="h-auto w-full" />
+                  <Image src={block.src} alt={block.alt} width={2560} height={1600} sizes="(min-width: 1024px) 680px, 100vw" quality={85} className="h-auto w-full" />
                 </div>
                 {block.caption && <figcaption className="text-faint mt-2 text-center text-[11px]">{block.caption}</figcaption>}
               </figure>

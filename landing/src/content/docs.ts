@@ -12,7 +12,7 @@ export type DocBlock =
   | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "changes"; items: { date: string; title: string; body: string }[] };
 
-export type DocIcon = "home" | "rocket" | "layers" | "clock" | "queue" | "check" | "users" | "plug" | "code" | "spark" | "help";
+export type DocIcon = "home" | "rocket" | "layers" | "clock" | "queue" | "check" | "users" | "plug" | "code" | "spark" | "help" | "book" | "list";
 
 export type DocPage = {
   slug: string;
