@@ -3,7 +3,7 @@ import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import * as z from "zod/v4";
 import type { GenerateInsight, RequestForAnalysis } from "../services/BookingRequestInsightService";
 
-export const DEFAULT_INSIGHT_MODEL = "claude-opus-5-5";
+export const DEFAULT_INSIGHT_MODEL = "claude-sonnet-5-5";
 
 const InsightSchema = z.object({
   summary: z.string().describe("One or two sentences: who is asking and what they want."),

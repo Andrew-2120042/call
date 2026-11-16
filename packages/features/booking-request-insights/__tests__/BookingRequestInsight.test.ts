@@ -92,14 +92,14 @@ describe("BookingRequestInsightService", () => {
     const { repository, saved } = makeRepo([pending()]);
     const generate: GenerateInsight = vi
       .fn()
-      .mockResolvedValue({ insight: goodInsight, model: "claude-opus-5-5" });
+      .mockResolvedValue({ insight: goodInsight, model: "claude-sonnet-5-5" });
     const service = new BookingRequestInsightService({ repository, generate });
 
     expect(await service.analysePendingRequests()).toEqual({ analysed: 1, skipped: null });
     expect(saved.get(7)).toMatchObject({
       fit: BookingRequestFit.GOOD,
       spamLikely: false,
-      model: "claude-opus-5-5",
+      model: "claude-sonnet-5-5",
     });
     expect(await service.analysePendingRequests()).toEqual({ analysed: 0, skipped: null });
     expect(generate).toHaveBeenCalledTimes(1);
