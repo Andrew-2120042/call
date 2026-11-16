@@ -258,3 +258,17 @@ body:has([data-sw-settings-nav]) {
   border-radius: 999px !important;
   padding: 8px 16px !important;
 }
+
+/* Teams: a member who just joined slides in and glows briefly, like a player entering a lobby. */
+@keyframes sw-member-join {
+  0% { opacity: 0; transform: translateY(-8px); background-color: rgb(16 185 129 / 0.22); }
+  35% { opacity: 1; transform: translateY(0); background-color: rgb(16 185 129 / 0.16); }
+  100% { background-color: transparent; }
+}
+.sw-member-joined {
+  animation: sw-member-join 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sw-member-joined { animation: none; background-color: rgb(16 185 129 / 0.12); }
+}
+

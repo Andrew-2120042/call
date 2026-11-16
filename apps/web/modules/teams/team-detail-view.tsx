@@ -1,6 +1,7 @@
 "use client";
 
 import { WEBAPP_URL } from "@calcom/lib/constants";
+import classNames from "@calcom/ui/classNames";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import slugify from "@calcom/lib/slugify";
 import { MembershipRole } from "@calcom/prisma/enums";
@@ -13,7 +14,7 @@ import { Select, Switch, TextAreaField, TextField } from "@calcom/ui/components/
 import { ImageUploader } from "@calcom/ui/components/image-uploader";
 import { showToast } from "@calcom/ui/components/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SettingsCardSkeleton } from "~/shell/skeletons";
 import { InviteMembersDialog } from "./components/InviteMembersDialog";
 import { TeamCoverageCard } from "./components/TeamCoverageCard";
@@ -29,7 +30,11 @@ export default function TeamDetailView({ teamId }: { teamId: number }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [inviteOpen, setInviteOpen] = useState(false);
-  const query = trpc.viewer.teams.get.useQuery({ teamId }, { retry: false });
+  // Re-checked every few seconds while the page is open, so people who join show up without a refresh.
+  const query = trpc.viewer.teams.get.useQuery(
+    { teamId },
+    { retry: false, refetchInterval: LIVE_REFRESH_MS, refetchIntervalInBackground: false }
+  );
 
   // A brand-new team lands here with ?invite=1 so the owner can add people straight away.
   useEffect(() => {
@@ -259,6 +264,7 @@ function MembersCard({
 }) {
   const { t } = useLocale();
   const accepted = members.filter((member) => member.accepted).length;
+  const justJoined = useJustJoined(members);
   return (
     <Card
       title={t("members")}
@@ -269,6 +275,7 @@ function MembersCard({
             key={member.membershipId}
             teamId={teamId}
             member={member}
+            justJoined={justJoined.has(member.membershipId)}
             myRole={myRole}
             canManage={canManage}
           />
@@ -281,11 +288,13 @@ function MembersCard({
 function MemberRow({
   teamId,
   member,
+  justJoined,
   myRole,
   canManage,
 }: {
   teamId: number;
   member: Member;
+  justJoined: boolean;
   myRole: MembershipRole;
   canManage: boolean;
 }) {
@@ -320,10 +329,20 @@ function MemberRow({
   const displayName = member.name || member.email;
 
   return (
-    <li className="flex flex-wrap items-center gap-3 px-5 py-3" data-testid="team-member-row">
+    <li
+      className={classNames("flex flex-wrap items-center gap-3 px-5 py-3", justJoined && "sw-member-joined")}
+      data-testid="team-member-row"
+      data-just-joined={justJoined || undefined}>
       <Avatar size="md" imageSrc={member.avatarUrl} alt={displayName} />
       <div className="min-w-0 flex-1">
-        <div className="text-emphasis truncate text-sm font-medium">{displayName}</div>
+        <div className="text-emphasis flex items-center gap-2 truncate text-sm font-medium">
+          {displayName}
+          {justJoined && (
+            <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-medium text-emerald-400">
+              {t("teams_just_joined")}
+            </span>
+          )}
+        </div>
         <div className="text-subtle truncate text-xs">
           {member.name ? member.email : null}
           {!member.accepted && (member.name ? " · " : "") + t("teams_invite_not_accepted")}
@@ -439,4 +458,40 @@ function DangerZone({ teamId, teamName, isOwner }: { teamId: number; teamName: s
       </Dialog>
     </section>
   );
+}
+
+const LIVE_REFRESH_MS = 4000;
+const JUST_JOINED_MS = 6000;
+
+/**
+ * Members who became active since the page opened: announced once with a toast and highlighted briefly.
+ * The first load only records who is already there, so opening the page doesn't announce everyone.
+ */
+function useJustJoined(members: Member[]) {
+  const { t } = useLocale();
+  const seenActive = useRef<Set<number> | null>(null);
+  const [recent, setRecent] = useState<Set<number>>(() => new Set());
+
+  useEffect(() => {
+    const active = members.filter((member) => member.accepted).map((member) => member.membershipId);
+    if (!seenActive.current) {
+      seenActive.current = new Set(active);
+      return;
+    }
+    const seen = seenActive.current;
+    const arrivals = members.filter((member) => member.accepted && !seen.has(member.membershipId));
+    if (!arrivals.length) return;
+    for (const member of arrivals) {
+      seen.add(member.membershipId);
+      showToast(t("teams_member_joined", { name: member.name || member.email }), "success");
+    }
+    const ids = arrivals.map((member) => member.membershipId);
+    setRecent((current) => new Set([...Array.from(current), ...ids]));
+    const timer = setTimeout(() => {
+      setRecent((current) => new Set(Array.from(current).filter((id) => !ids.includes(id))));
+    }, JUST_JOINED_MS);
+    return () => clearTimeout(timer);
+  }, [members, t]);
+
+  return recent;
 }

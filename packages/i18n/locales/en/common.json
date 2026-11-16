@@ -5238,5 +5238,14 @@
   "waitlist_earlier_joined": "You're on the list. We'll email you if an earlier time opens.",
   "waitlist_kind_any_time_on": "Any time on {{day}}",
   "waitlist_kind_earlier_than": "Earlier than {{date}}",
-  "waitlist_offered_time": "Offered: {{time}}"
+  "waitlist_offered_time": "Offered: {{time}}",
+  "join_team_title": "Join {{team}}",
+  "join_team_body": "You've been invited to book meetings together as a team. Create your account or log in to join.",
+  "join_team_create_account": "Create an account and join",
+  "join_team_have_account": "I already have an account",
+  "join_team_link_invalid_title": "This invite link doesn't work",
+  "join_team_link_invalid_body": "It may have expired or been replaced. Ask the person who sent it for a new link.",
+  "teams_just_joined": "Just joined",
+  "teams_member_joined": "{{name}} just joined the team",
+  "team_is_full": "This team is full (up to 10 people). Ask the team owner to free up a seat."
 }
