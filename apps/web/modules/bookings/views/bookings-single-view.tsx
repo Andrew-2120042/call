@@ -486,7 +486,9 @@ export default function Success(props: PageProps) {
           status={status}
         />
       )}
-      {isLoggedIn && !isEmbed && !isFeedbackMode && (
+      {/* The server already knows the host is signed in; waiting for the client session would make the whole
+          page jump down when this link appears. */}
+      {(isLoggedIn || isHost) && !isEmbed && !isFeedbackMode && (
         <div className="-mb-4 ml-4 mt-2">
           <Link
             href={allRemainingBookings ? "/bookings/recurring" : "/bookings/upcoming"}
