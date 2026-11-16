@@ -35,6 +35,45 @@ body {
   color: white;
 }
 
+.accordion-progress {
+  width: 0;
+  animation: accordion-progress linear forwards;
+}
+@keyframes accordion-progress {
+  to {
+    width: 100%;
+  }
+}
+
+/* Particles travelling down the "tunnel" lines in the under-the-hood graphic. */
+.tunnel-dot {
+  offset-rotate: 0deg;
+  animation: tunnel-travel 4.5s cubic-bezier(0.55, 0, 0.9, 0.6) infinite;
+}
+@keyframes tunnel-travel {
+  from {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  to {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-progress,
+  .tunnel-dot {
+    animation: none;
+  }
+  .accordion-progress {
+    width: 100%;
+  }
+}
+
 /* Smooth motion. Only applied once the reveal script has run, and never for people who prefer less motion. */
 @media (prefers-reduced-motion: no-preference) {
   html {

@@ -178,7 +178,7 @@ export function TeamMock() {
 
 export function HeroWindows() {
   return (
-    <div className="relative mx-auto max-w-5xl">
+    <div className="relative mx-auto max-w-6xl">
       <Window title="Slotwise · Services" className="relative z-10">
         <Image src="/shots/dashboard.png" alt="The Slotwise dashboard" width={2560} height={1600} priority className="h-auto w-full" />
       </Window>

@@ -6,6 +6,7 @@ import { ApprovalMock, BookingMock, HeroWindows, NoShowMock, TeamMock, WaitlistM
 import { Faq } from "@/components/sections";
 import { type Story, StoryScroller } from "@/components/story-scroller";
 import { Container, JsonLd } from "@/components/ui";
+import { ConstellationGraphic, GrowthCurve, TunnelGraphic } from "@/components/graphics";
 import { Window } from "@/components/window";
 import { articles } from "@/content/articles";
 import { homeFaq } from "@/content/site-content";
@@ -30,8 +31,8 @@ const stories: Story[] = [
     rest: "Clients pick a time that suits them in their own time zone. Your calendars stay in sync, so you're never double booked.",
     visual: <BookingMock />,
     points: [
-      { title: "Unlimited services, free.", body: "Each service gets its own link, length, questions and location." },
-      { title: "Your calendars, in sync.", body: "Google, Outlook, Apple and CalDAV are checked for conflicts and updated with every booking." },
+      { title: "Unlimited services, free.", body: "Each service gets its own link, length, questions and location.", demo: ["Intro call · 15 min", "Consultation · 60 min", "Follow-up · 30 min"] },
+      { title: "Your calendars, in sync.", body: "Google, Outlook, Apple and CalDAV are checked for conflicts and updated with every booking.", demo: ["Google Calendar · busy 2–3pm", "New booking added to Outlook"] },
     ],
   },
   {
@@ -41,8 +42,8 @@ const stories: Story[] = [
     rest: "People join a waitlist for times that are taken. The moment one frees up, the first in line gets it.",
     visual: <WaitlistMock />,
     points: [
-      { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books the slot." },
-      { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person automatically." },
+      { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books the slot.", demo: ["Priya N. · offered Sat 10:00am", "Claim link sent · 2 hours to accept"] },
+      { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person automatically.", demo: ["Offer expired · Priya N.", "Offered to Tom R. instead"] },
     ],
   },
   {
@@ -52,8 +53,8 @@ const stories: Story[] = [
     rest: "Clients confirm in one click before your deadline. If they don't, you're told and the time can go to someone else.",
     visual: <NoShowMock />,
     points: [
-      { title: "Confirm or release.", body: "Pick the deadline. Unconfirmed bookings can free themselves up." },
-      { title: "Reminders that land.", body: "Send them a day before, an hour before, or both." },
+      { title: "Confirm or release.", body: "Pick the deadline. Unconfirmed bookings can free themselves up.", demo: ["Please confirm by Thu 4pm", "Confirmed in one click"] },
+      { title: "Reminders that land.", body: "Send them a day before, an hour before, or both.", demo: ["Reminder · 1 day before", "Reminder · 1 hour before"] },
     ],
   },
   {
@@ -63,8 +64,8 @@ const stories: Story[] = [
     rest: "Approvals are free. On Pro, each request comes with a short summary of who is asking and why.",
     visual: <ApprovalMock />,
     points: [
-      { title: "Ask what you need.", body: "Unlimited booking questions on every plan." },
-      { title: "Decide in seconds.", body: "AI summaries turn long answers into a few clear lines." },
+      { title: "Ask what you need.", body: "Unlimited booking questions on every plan.", demo: ["What do you need help with?", "How did you hear about us?"] },
+      { title: "Decide in seconds.", body: "AI summaries turn long answers into a few clear lines.", demo: ["Summary · 6-person studio, budget agreed", "Accept · Decline"] },
     ],
   },
   {
@@ -74,8 +75,8 @@ const stories: Story[] = [
     rest: "Round robin, collective or one service copied to everyone, with a weekly view of who's free.",
     visual: <TeamMock />,
     points: [
-      { title: "See the gaps early.", body: "A weekly heatmap shows where nobody is free during working hours." },
-      { title: "One flat price.", body: "Team is $49 a month for up to 10 people. No per-seat maths." },
+      { title: "See the gaps early.", body: "A weekly heatmap shows where nobody is free during working hours.", demo: ["Nobody free · Tue 1pm–3pm", "Spotted before anyone tries to book"] },
+      { title: "One flat price.", body: "Team is $49 a month for up to 10 people. No per-seat maths.", demo: ["Team · $49 a month", "Up to 10 people · no per-seat maths"] },
     ],
   },
 ];
@@ -96,7 +97,9 @@ const facts = [
 
 export default function Home() {
   return (
-    <>
+    <div className="relative">
+      {/* Thin rails framing the content column all the way down the page. */}
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-1/2 z-0 hidden w-full max-w-6xl -translate-x-1/2 border-x border-line/70 lg:block" />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-[340px] mx-auto h-[520px] max-w-5xl rounded-full bg-accent/25 blur-[140px]" />
@@ -119,17 +122,24 @@ export default function Home() {
             </a>
           </div>
         </Container>
-        <Container className="relative pb-10">
-          <HeroWindows />
-        </Container>
+        <div className="relative pb-10">
+          {/* The coloured stage the product sits on, like a lit backdrop rising behind the window. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 top-1/3 bg-[linear-gradient(180deg,transparent,rgba(67,56,202,0.22)_45%,rgba(37,99,235,0.28))]"
+          />
+          <Container className="relative max-w-7xl!">
+            <HeroWindows />
+          </Container>
+        </div>
       </section>
 
       {/* Works with */}
       <section className="border-y border-line">
-        <Container className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
+        <Container className="grid grid-cols-2 gap-px bg-line px-0! sm:grid-cols-4">
           {integrations.map((item) => (
-            <div key={item.name} className="text-muted flex h-20 items-center justify-center gap-2.5 whitespace-nowrap border-line text-[13px] font-medium [&:not(:last-child)]:lg:border-r">
-              <Image src={item.logo} alt="" width={22} height={22} className="h-[22px] w-[22px] object-contain" />
+            <div key={item.name} className="bg-bg text-fg/85 flex h-28 items-center justify-center gap-3 whitespace-nowrap text-base font-medium tracking-tight transition hover:text-fg">
+              <Image src={item.logo} alt="" width={28} height={28} className="h-7 w-7 object-contain" />
               {item.name}
             </div>
           ))}
@@ -168,23 +178,41 @@ export default function Home() {
       </section>
 
       {/* Dark centrepiece */}
-      <section className="relative overflow-hidden border-y border-line py-32">
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-[58%] h-[900px] w-[1400px] -translate-x-1/2 rounded-[50%] border-t border-accent/50 shadow-[0_-30px_120px_-20px_rgba(37,99,235,0.45)]" />
+      <section className="relative overflow-hidden border-y border-line pt-36">
+        {/* A wide horizon: a thin multi-colour ring masked from a gradient, with a soft glow under it. */}
+        <div aria-hidden className="pointer-events-none absolute left-1/2 top-[300px] h-[1100px] w-[1900px] -translate-x-1/2">
+          <div className="absolute inset-0 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(37,99,235,0.18),transparent_45%)]" />
+          <div
+            className="absolute inset-0 bg-[linear-gradient(90deg,#f97316,#ec4899_30%,#8b5cf6_55%,#2563eb_80%,#22d3ee)] blur-[1px]"
+            style={{ mask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99.4%, #000 99.6%, #000 99.9%, transparent 100%)", WebkitMask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99.4%, #000 99.6%, #000 99.9%, transparent 100%)" }}
+          />
+          <div
+            className="absolute inset-0 bg-[linear-gradient(90deg,#f97316,#ec4899_30%,#8b5cf6_55%,#2563eb_80%,#22d3ee)] opacity-60 blur-2xl"
+            style={{ mask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 97%, #000 99.5%, transparent 100%)", WebkitMask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 97%, #000 99.5%, transparent 100%)" }}
+          />
+        </div>
         <Container className="relative text-center">
           <p className="text-faint text-xs">The only booking link with</p>
-          <h2 className="mt-4 text-5xl font-medium tracking-[-0.035em] sm:text-7xl">Self-filling calendars</h2>
+          <h2 className="mt-4 text-5xl font-medium tracking-[-0.035em] sm:text-7xl">
+            Self-filling calendars<sup className="text-faint align-super text-base">™</sup>
+          </h2>
         </Container>
-        <Container className="relative mt-40 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">
+        <Container className="relative mt-56 grid border-t border-line sm:grid-cols-2 lg:grid-cols-5">
           {[
-            { t: "It waits for you.", b: "Waitlists queue up for every taken time." },
-            { t: "It asks for you.", b: "Clients confirm, or the time is released." },
-            { t: "It reads for you.", b: "Requests arrive with a short summary." },
-            { t: "It reminds for you.", b: "Reminders before every booking." },
-            { t: "It shares the load.", b: "Round robin across your team." },
+            { t: "It waits for you.", b: "Waitlists queue up for every taken time.", icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" },
+            { t: "It asks for you.", b: "Clients confirm, or the time is released.", icon: "m8 12.5 2.5 2.5L16 9.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" },
+            { t: "It reads for you.", b: "Requests arrive with a short summary.", icon: "M5 5h14v14H5zM8.5 9.5h7M8.5 12h7M8.5 14.5h4" },
+            { t: "It reminds for you.", b: "Reminders before every booking.", icon: "M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16ZM10 20.5h4" },
+            { t: "It shares the load.", b: "Round robin across your team.", icon: "M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6.5 0a2.5 2.5 0 1 0 0-5M3.5 19a5.5 5.5 0 0 1 11 0M16 13.5a4.5 4.5 0 0 1 4.5 5" },
           ].map((c) => (
-            <div key={c.t} className="bg-bg p-6">
-              <p className="text-sm font-medium">{c.t}</p>
-              <p className="text-faint mt-1.5 text-xs leading-relaxed">{c.b}</p>
+            <div key={c.t} className="flex h-56 flex-col justify-between border-line p-6 lg:[&:not(:last-child)]:border-r">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-faint" aria-hidden>
+                <path d={c.icon} />
+              </svg>
+              <div>
+                <p className="text-sm font-medium">{c.t}</p>
+                <p className="text-faint mt-1.5 text-xs leading-relaxed">{c.b}</p>
+              </div>
             </div>
           ))}
         </Container>
@@ -209,12 +237,7 @@ export default function Home() {
               />
             </div>
           </div>
-          <div aria-hidden className="relative mx-auto aspect-square w-full max-w-md">
-            {[100, 78, 58, 40, 24].map((size) => (
-              <span key={size} className="absolute rounded-full border border-line-strong" style={{ inset: `${(100 - size) / 2}%` }} />
-            ))}
-            <span className="bg-fg absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_0_30px_6px_rgba(37,99,235,0.6)]" />
-          </div>
+          <TunnelGraphic />
         </Container>
       </section>
 
@@ -224,28 +247,38 @@ export default function Home() {
           <p className="text-accent text-xs font-medium">Connectivity</p>
           <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">Your tools, connected.</h2>
           <p className="text-muted mx-auto mt-3 max-w-[46ch] text-sm">Calendars, video and automation you already use. Bring your services and hours over from Calendly in a minute.</p>
-          <div data-reveal className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-3">
+          <Link href="/features/team-scheduling" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
+            See what it works with <span aria-hidden>→</span>
+          </Link>
+          <div
+            data-reveal
+            className="mx-auto mt-14 flex max-w-5xl flex-wrap justify-center gap-4 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
             {integrations.map((item) => (
-              <div key={item.name} className="group flex w-24 flex-col items-center gap-2">
-                <span className="grid h-16 w-16 place-items-center rounded-2xl border border-line-strong bg-surface transition duration-300 group-hover:-translate-y-1 group-hover:border-fg/30">
-                  <Image src={item.logo} alt={item.name} width={32} height={32} className="h-8 w-8 object-contain" />
-                </span>
-                <span className="text-faint text-[11px]">{item.name}</span>
-              </div>
+              <span
+                key={item.name}
+                title={item.name}
+                className="grid h-[72px] w-[72px] place-items-center rounded-2xl border border-line-strong bg-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition duration-300 hover:-translate-y-1 hover:border-fg/30">
+                <Image src={item.logo} alt={item.name} width={34} height={34} className="h-[34px] w-[34px] object-contain" />
+              </span>
             ))}
           </div>
         </Container>
       </section>
 
       {/* Developers */}
-      <section className="border-t border-line py-24">
-        <Container>
-          <h2 data-reveal className="text-3xl font-medium tracking-tight sm:text-4xl">
-            Webhooks. API keys. Embeds. <span className="text-faint">Build on {site.name}.</span>
-          </h2>
-          <a href={signupUrl} className="text-muted hover:text-fg mt-4 inline-block text-[13px] transition">
-            Get started <span aria-hidden>→</span>
-          </a>
+      <section className="border-t border-line py-32">
+        <Container className="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <h2 data-reveal className="text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
+              Webhooks. API keys. Embeds.
+              <br />
+              <span className="text-faint">Build anything on {site.name}.</span>
+            </h2>
+            <a href={signupUrl} className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
+              Get started <span aria-hidden>→</span>
+            </a>
+          </div>
+          <ConstellationGraphic />
         </Container>
       </section>
 
@@ -263,16 +296,19 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container>
           <p className="text-accent text-xs font-medium">Built to be simple</p>
-          <h2 data-reveal className="mt-3 max-w-[20ch] text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="mt-3 max-w-[14ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
             Free to start. <span className="text-faint">Fair when you grow.</span>
           </h2>
-          <div data-reveal className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {facts.map((f) => (
-              <div key={f.label} className="border-s border-line-strong ps-4">
-                <p className="text-3xl font-medium tabular-nums">{f.value}</p>
-                <p className="text-faint mt-1 text-xs">{f.label}</p>
-              </div>
-            ))}
+          <div className="mt-12 grid items-end gap-12 lg:grid-cols-[1fr_1.3fr]">
+            <div data-reveal className="grid grid-cols-2 gap-x-8 gap-y-10">
+              {facts.map((f) => (
+                <div key={f.label} className="border-s border-line-strong ps-4">
+                  <p className="text-3xl font-medium tabular-nums">{f.value}</p>
+                  <p className="text-faint mt-1 text-xs">{f.label}</p>
+                </div>
+              ))}
+            </div>
+            <GrowthCurve />
           </div>
         </Container>
       </section>
@@ -284,14 +320,32 @@ export default function Home() {
           <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
             Straight answers. <span className="text-faint">About scheduling tools and full calendars.</span>
           </h2>
-          <div data-reveal className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3">
-            {articles.slice(0, 3).map((a) => (
-              <Link key={a.slug} href={`/blog/${a.slug}`} className="group bg-bg p-6 transition hover:bg-surface">
-                <p className="text-faint text-[11px] uppercase tracking-[0.12em]">{a.keyword}</p>
-                <p className="mt-3 text-lg font-medium leading-snug">{a.title}</p>
-                <p className="text-muted mt-3 text-[13px] opacity-0 transition group-hover:opacity-100">Read <span aria-hidden>→</span></p>
-              </Link>
-            ))}
+          <Link href="/blog" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
+            All guides <span aria-hidden>→</span>
+          </Link>
+          <div data-reveal className="mt-10 overflow-hidden rounded-2xl border border-line">
+            <div className="grid gap-px bg-line md:grid-cols-3">
+              {articles.slice(0, 3).map((a, i) => (
+                <Link
+                  key={a.slug}
+                  href={`/blog/${a.slug}`}
+                  className={`px-5 py-4 text-center text-[13px] font-medium transition ${i === 0 ? "bg-surface text-fg" : "bg-bg text-faint hover:text-muted"}`}>
+                  {a.keyword[0].toUpperCase() + a.keyword.slice(1)}
+                </Link>
+              ))}
+            </div>
+            <Link href={`/blog/${articles[0].slug}`} className="group grid border-t border-line md:grid-cols-[1fr_1.2fr]">
+              <div className="flex flex-col justify-end p-8">
+                <p className="text-faint text-[11px] uppercase tracking-[0.12em]">Comparison</p>
+                <p className="mt-3 max-w-[22ch] text-2xl font-medium leading-snug tracking-tight">{articles[0].title}</p>
+                <p className="text-muted mt-4 text-[13px] transition group-hover:text-fg">
+                  Read the guide <span aria-hidden>→</span>
+                </p>
+              </div>
+              <div className="relative min-h-64 overflow-hidden border-line bg-surface md:border-s">
+                <Image src="/shots/booking.png" alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover object-left-top opacity-90 transition duration-700 group-hover:scale-[1.03]" />
+              </div>
+            </Link>
           </div>
         </Container>
       </section>
@@ -358,6 +412,6 @@ export default function Home() {
           ],
         }}
       />
-    </>
+    </div>
   );
 }

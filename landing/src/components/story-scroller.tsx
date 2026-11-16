@@ -9,7 +9,8 @@ export type Story = {
   lead: string;
   rest: string;
   visual: ReactNode;
-  points: { title: string; body: string }[];
+  /** Each point shows a small panel of example lines above its text. */
+  points: { title: string; body: string; demo?: string[] }[];
 };
 
 /** Sticky step list on the left; the active step follows whichever story is in view. */
@@ -61,6 +62,20 @@ export function StoryScroller({ stories }: { stories: Story[] }) {
             <div className="mt-8 grid gap-8 sm:grid-cols-2">
               {s.points.map((p) => (
                 <div key={p.title}>
+                  {p.demo && (
+                    <div
+                      data-reveal
+                      aria-hidden
+                      className="mb-5 flex h-36 flex-col justify-center gap-2 rounded-xl border border-line bg-[radial-gradient(circle_at_1px_1px,var(--color-line)_1px,transparent_0)] bg-[length:14px_14px] p-5">
+                      {p.demo.map((line, i) => (
+                        <span
+                          key={line}
+                          className={`w-fit rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs shadow-lg shadow-black/40 ${i % 2 ? "ms-6 text-muted" : ""}`}>
+                          {line}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <p className="text-sm font-medium">{p.title}</p>
                   <p className="text-muted mt-1.5 text-sm leading-relaxed">{p.body}</p>
                 </div>
