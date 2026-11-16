@@ -5186,5 +5186,6 @@
   "home_add_first_service": "Add your first service",
   "home_minutes": "{{count}} min",
   "home_needs_approval": "Needs approval",
-  "home_booked_30_days": "booked in the last 30 days"
+  "home_booked_30_days": "booked in the last 30 days",
+  "request_email_review": "Read the full summary and suggested reply"
 }

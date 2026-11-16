@@ -40,6 +40,8 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
 | `NEXT_PUBLIC_WEBAPP_URL`, `NEXT_PUBLIC_WEBSITE_URL` | Public URL of the app |
 | `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` | Brand |
 | `CRON_API_KEY` | Shared secret for every cron endpoint below |
+| `CRON_SECRET` | Secret for `/api/tasks/cron` (the background task runner) |
+| `NEXT_PUBLIC_DOCS_URL` | Where in-app help links go, e.g. `https://slotwise.com/docs` (defaults to the website URL + `/docs`) |
 | `EMAIL_FROM`, `EMAIL_SERVER_HOST`, `EMAIL_SERVER_PORT`, `EMAIL_SERVER_USER`, `EMAIL_SERVER_PASSWORD` | Outgoing email |
 | `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_ENVIRONMENT=production`, `POLAR_PRO_PRODUCT_ID`, `POLAR_TEAM_PRODUCT_ID` | Billing |
 | `ANTHROPIC_API_KEY` (optional), `REQUEST_INSIGHTS_MODEL` (optional) | AI request summaries |
@@ -63,6 +65,7 @@ corepack yarn workspace @calcom/prisma db-deploy
 | `/api/cron/request-insights` | every 1 min | AI summaries for new booking requests (no-op without `ANTHROPIC_API_KEY`) |
 | `/api/cron/calendar-health` | every 10 min | Checks connected calendars (each at most hourly), emails the owner once per outage, powers the reconnect banner |
 | `/api/cron/bookingReminder` | hourly | Upstream: reminds hosts about requests still waiting for approval |
+| `/api/tasks/cron` | every 1 min | Runs queued background tasks, including the host's "new request" email with its AI summary. Uses `authorization: Bearer <CRON_SECRET>` instead of `CRON_API_KEY`; without `CRON_SECRET` the request email is sent straight away, without the summary |
 
 On Vercel, use Vercel Cron with a small proxy or an external scheduler (for example GitHub Actions or cron-job.org) that sends the header. Every job is idempotent, so overlapping runs are safe.
 

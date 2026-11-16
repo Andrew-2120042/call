@@ -51,6 +51,17 @@ export class BookingRequestInsightRepository {
     }
   }
 
+  async findById(id: number) {
+    return this.prismaClient.booking.findUnique({ where: { id }, select: { ...pendingSelect, status: true } });
+  }
+
+  async findInsightByBookingId(bookingId: number) {
+    return this.prismaClient.bookingRequestInsight.findUnique({
+      where: { bookingId },
+      select: { summary: true, fit: true, spamLikely: true, concerns: true, suggestedReply: true, model: true },
+    });
+  }
+
   async findByUidForHostIncludeAttendees(params: { bookingUid: string; userId: number }) {
     return this.prismaClient.booking.findFirst({
       where: { uid: params.bookingUid, userId: params.userId },
@@ -83,5 +94,10 @@ export class BookingRequestInsightRepository {
 
 export type IBookingRequestInsightRepository = Pick<
   BookingRequestInsightRepository,
-  "findPendingWithoutInsight" | "save" | "findByBookingUidForHost" | "findByUidForHostIncludeAttendees"
+  | "findPendingWithoutInsight"
+  | "save"
+  | "findByBookingUidForHost"
+  | "findByUidForHostIncludeAttendees"
+  | "findById"
+  | "findInsightByBookingId"
 >;

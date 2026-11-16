@@ -310,13 +310,41 @@ export class BookingEmailSmsHandler {
       "@calcom/emails/email-manager"
     );
 
+    const hostEmailDeferred = await this.deferHostRequestEmailForSummary(evt, additionalNotes);
+
     try {
       await Promise.all([
-        sendOrganizerRequestEmail(eventWithNotes, metadata),
+        hostEmailDeferred ? null : sendOrganizerRequestEmail(eventWithNotes, metadata),
         sendAttendeeRequestEmailAndSMS(eventWithNotes, attendees[0], metadata),
       ]);
     } catch (err) {
       this.log.error("Failed to send requested event related emails", err);
+    }
+  }
+
+  /**
+   * When the host gets AI request summaries, their "new request" email is sent by a background task once the
+   * summary is written (about a minute), so it can include it. Returns false to send the email right away instead.
+   */
+  private async deferHostRequestEmailForSummary(
+    evt: RequestedEmailAndSmsPayload["evt"],
+    additionalNotes: string | null | undefined
+  ): Promise<boolean> {
+    const bookingUid = evt.uid;
+    const hostId = evt.organizer?.id;
+    // Without the task runner (/api/tasks/cron, authorised by CRON_SECRET) a deferred email would never go out.
+    if (!bookingUid || !hostId || evt.team?.members?.length || !process.env.CRON_SECRET) return false;
+    try {
+      const { getBookingRequestInsightService } = await import(
+        "@calcom/features/booking-request-insights/lib/getBookingRequestInsightService"
+      );
+      if (!(await getBookingRequestInsightService().isAvailableFor(hostId))) return false;
+      const { default: tasker } = await import("@calcom/features/tasker");
+      await tasker.create("sendHostRequestEmail", { bookingUid, additionalNotes });
+      return true;
+    } catch (err) {
+      this.log.error("Couldn't queue the host request email; sending it now instead", err);
+      return false;
     }
   }
 

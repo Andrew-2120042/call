@@ -46,6 +46,22 @@ export function RequestInsightPanel({
   const query = trpc.viewer.requestInsights.get.useQuery({ bookingUid }, { retry: false });
   const insight = query.data?.insight;
 
+  // Hold roughly the panel's space while it loads so the booking details below don't jump.
+  if (query.isPending && actions) {
+    return (
+      <div className="border-subtle bg-muted mt-6 animate-pulse rounded-xl border p-4" aria-hidden>
+        <div className="bg-emphasis h-4 w-40 rounded" />
+        <div className="bg-emphasis mt-3 h-3 w-full rounded" />
+        <div className="bg-emphasis mt-2 h-3 w-5/6 rounded" />
+        <div className="bg-emphasis mt-5 h-28 w-full rounded-lg" />
+        <div className="mt-5 flex justify-end gap-2">
+          <div className="bg-emphasis h-9 w-32 rounded-lg" />
+          <div className="bg-emphasis h-9 w-32 rounded-lg" />
+        </div>
+      </div>
+    );
+  }
+
   if (!insight) {
     if (!actions) return null;
     return (
@@ -135,10 +151,11 @@ function SuggestedReply({ bookingUid, initial, clientName }: { bookingUid: strin
 export function RequestInsightLine({ bookingUid }: { bookingUid: string }) {
   const query = trpc.viewer.requestInsights.get.useQuery({ bookingUid }, { retry: false, staleTime: 60_000 });
   const insight = query.data?.insight;
-  if (!insight) return null;
+  // The line keeps its height whether it's loading, empty or filled, so list rows never change size.
+  if (!insight) return <div className="mt-1.5 h-5" aria-hidden />;
   return (
     <div
-      className="mt-1.5 flex min-w-0 max-w-[16rem] items-center gap-1.5 sm:max-w-56 md:max-w-80 xl:max-w-md"
+      className="mt-1.5 flex h-5 min-w-0 max-w-[16rem] items-center gap-1.5 sm:max-w-56 md:max-w-80 xl:max-w-md"
       data-testid="request-insight-line">
       <RequestFitBadges fit={insight.fit as Fit} spamLikely={insight.spamLikely} />
       <span className="text-subtle min-w-0 truncate text-xs" title={insight.summary}>

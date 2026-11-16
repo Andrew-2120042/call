@@ -59,7 +59,7 @@ const EmailBodyLogo = () => {
                             width: "100%",
                             fontSize: "13px",
                           }}
-                          width="89"
+                          width="62"
                           alt=""
                         />
                       </a>

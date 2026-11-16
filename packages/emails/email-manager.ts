@@ -40,6 +40,7 @@ import OrganizerCancelledEmail from "./templates/organizer-cancelled-email";
 import OrganizerLocationChangeEmail from "./templates/organizer-location-change-email";
 import OrganizerReassignedEmail from "./templates/organizer-reassigned-email";
 import OrganizerRequestEmail from "./templates/organizer-request-email";
+import type { OrganizerRequestInsight } from "./templates/organizer-request-email";
 import OrganizerRequestReminderEmail from "./templates/organizer-request-reminder-email";
 import OrganizerRequestedToRescheduleEmail from "./templates/organizer-requested-to-reschedule-email";
 import OrganizerRescheduledEmail from "./templates/organizer-rescheduled-email";
@@ -436,17 +437,27 @@ export const sendCancelledSeatEmailsAndSMS = async (
   await cancelledSeatSMS.sendSMSToAttendee(cancelledAttendee);
 };
 
-const _sendOrganizerRequestEmail = async (calEvent: CalendarEvent, eventTypeMetadata?: EventTypeMetadata) => {
+const _sendOrganizerRequestEmail = async (
+  calEvent: CalendarEvent,
+  eventTypeMetadata?: EventTypeMetadata,
+  requestInsight?: OrganizerRequestInsight | null
+) => {
   if (eventTypeDisableHostEmail(eventTypeMetadata)) return;
   const calendarEvent = formatCalEvent(calEvent);
 
   const emailsToSend: Promise<unknown>[] = [];
 
-  emailsToSend.push(sendEmail(() => new OrganizerRequestEmail({ calEvent: calendarEvent })));
+  emailsToSend.push(
+    sendEmail(() => new OrganizerRequestEmail({ calEvent: calendarEvent }).withInsight(requestInsight))
+  );
 
   if (calendarEvent.team?.members) {
     for (const teamMember of calendarEvent.team.members) {
-      emailsToSend.push(sendEmail(() => new OrganizerRequestEmail({ calEvent: calendarEvent, teamMember })));
+      emailsToSend.push(
+        sendEmail(() =>
+          new OrganizerRequestEmail({ calEvent: calendarEvent, teamMember }).withInsight(requestInsight)
+        )
+      );
     }
   }
 

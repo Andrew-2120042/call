@@ -1,5 +1,5 @@
 import { checkIfUserHasFeatureController } from "@calcom/features/flags/operations/check-if-user-has-feature.controller";
-import { EMAIL_FROM_NAME } from "@calcom/lib/constants";
+import { EMAIL_FROM_NAME, WEBAPP_URL } from "@calcom/lib/constants";
 import { getReplyToHeader } from "@calcom/lib/getReplyToHeader";
 import type { CalendarEvent, Person } from "@calcom/types/Calendar";
 
@@ -14,7 +14,21 @@ async function getOrganizerRequestTemplate(userId?: number) {
   return hasNewTemplate ? ("OrganizerRequestEmailV2" as const) : ("OrganizerRequestEmail" as const);
 }
 
+export type OrganizerRequestInsight = {
+  summary: string;
+  fit: "GOOD" | "UNCLEAR" | "POOR";
+  spamLikely: boolean;
+};
+
 export default class OrganizerRequestEmail extends OrganizerScheduledEmail {
+  private requestInsight?: OrganizerRequestInsight;
+
+  /** Adds the AI summary of the request to the email. */
+  withInsight(insight: OrganizerRequestInsight | null | undefined) {
+    this.requestInsight = insight ?? undefined;
+    return this;
+  }
+
   protected async getNodeMailerPayload(): Promise<Record<string, unknown>> {
     const toAddresses = [this.teamMember?.email || this.calEvent.organizer.email];
     const template = await getOrganizerRequestTemplate(this.calEvent.organizer.id);
@@ -50,9 +64,25 @@ ${process.env.NEXT_PUBLIC_WEBAPP_URL} + ${
     calEvent: CalendarEvent,
     attendee: Person
   ) {
+    const t = this.calEvent.organizer.language.translate;
+    const insight = this.requestInsight;
     return await renderEmail(template, {
       calEvent,
       attendee,
+      ...(insight && template === "OrganizerRequestEmail"
+        ? {
+            requestInsightFit: insight.fit.toLowerCase(),
+            requestInsight: {
+              summary: insight.summary,
+              fitLabel: t(`request_insight_fit_${insight.fit.toLowerCase()}`),
+              spam: insight.spamLikely,
+              spamLabel: t("request_insight_spam"),
+              heading: t("request_insight_title"),
+              reviewLabel: t("request_email_review"),
+              reviewUrl: `${WEBAPP_URL}/booking/${calEvent.uid}`,
+            },
+          }
+        : {}),
     });
   }
 }

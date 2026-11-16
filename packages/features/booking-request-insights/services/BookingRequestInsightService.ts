@@ -1,6 +1,6 @@
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
-import { BookingRequestFit } from "@calcom/prisma/enums";
+import { BookingRequestFit, BookingStatus } from "@calcom/prisma/enums";
 import type {
   IBookingRequestInsightRepository,
   InsightRecord,
@@ -151,6 +151,41 @@ export class BookingRequestInsightService {
 
   async getForHost(params: { bookingUid: string; userId: number }) {
     return this.deps.repository.findByBookingUidForHost(params);
+  }
+
+  /** Whether a summary will be written for this host's requests (AI configured and included in their plan). */
+  async isAvailableFor(userId: number) {
+    if (!this.deps.generate) return false;
+    return this.deps.isHostEntitled ? this.deps.isHostEntitled(userId) : true;
+  }
+
+  /**
+   * Returns the summary for one booking request, writing it now if it doesn't exist yet. Returns null when the
+   * request isn't pending, the host isn't entitled, or the model gave nothing usable; it never throws for those.
+   */
+  async analyseBooking(bookingId: number): Promise<InsightRecord | null> {
+    const existing = await this.deps.repository.findInsightByBookingId(bookingId);
+    if (existing) return existing;
+    const booking = await this.deps.repository.findById(bookingId);
+    if (!booking || booking.status !== BookingStatus.PENDING || !this.deps.generate) return null;
+    if (booking.userId && !(await this.isAvailableFor(booking.userId))) return null;
+    try {
+      const result = await this.deps.generate(buildRequestForAnalysis(booking));
+      if (!result) return null;
+      const record: InsightRecord = {
+        summary: result.insight.summary,
+        fit: FIT_MAP[result.insight.fit],
+        spamLikely: result.insight.spamLikely,
+        concerns: result.insight.concerns.slice(0, 5),
+        suggestedReply: result.insight.suggestedReply,
+        model: result.model,
+      };
+      await this.deps.repository.save(booking.id, record);
+      return record;
+    } catch (error) {
+      this.deps.logger?.error("[request-insights] analysis failed", { bookingId, error });
+      return null;
+    }
   }
 
   /** Sends the host's (possibly edited) reply to the requester of one of the host's own booking requests. */
