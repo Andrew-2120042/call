@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { LearnMoreLink } from "@calcom/features/eventtypes/components/LearnMoreLink";
 import type {
   EventTypeSetup,
@@ -87,7 +88,7 @@ export default function DisableReschedulingController({
                 <LearnMoreLink
                   t={t}
                   i18nKey="description_disable_rescheduling"
-                  href="https://cal.com/help/event-types/disable-canceling-rescheduling#disable-rescheduling"
+                  href={`${DOCS_URL}/services`}
                 />
               }
               checked={shouldShowRadioButtons}

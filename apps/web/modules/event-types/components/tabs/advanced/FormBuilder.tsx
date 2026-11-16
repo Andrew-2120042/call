@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useEffect, useState } from "react";
 import type { SubmitHandler, UseFormReturn } from "react-hook-form";
@@ -648,7 +649,7 @@ function FieldEditDialog({
                 <LearnMoreLink
                   t={t}
                   i18nKey="booking_questions_description"
-                  href="https://cal.com/help/event-types/booking-questions"
+                  href={`${DOCS_URL}/services#booking-questions`}
                 />
               }
             />

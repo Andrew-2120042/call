@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { LearnMoreLink } from "@calcom/features/eventtypes/components/LearnMoreLink";
 import type {
   EventTypeSetup,
@@ -90,7 +91,7 @@ export default function RecurringEventController({
                 <LearnMoreLink
                   t={t}
                   i18nKey="recurring_event_description"
-                  href="https://cal.com/help/event-types/recurring-events"
+                  href={`${DOCS_URL}/services`}
                 />
               }
               checked={!!recurringEventState}

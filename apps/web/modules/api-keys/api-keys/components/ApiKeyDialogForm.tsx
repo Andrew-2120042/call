@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import dayjs from "@calcom/dayjs";
 import type { TApiKeys } from "~/api-keys/api-keys/components/ApiKeyListItem";
-import { API_NAME_LENGTH_MAX_LIMIT } from "@calcom/lib/constants";
+import { API_NAME_LENGTH_MAX_LIMIT, DOCS_URL } from "@calcom/lib/constants";
 import { IS_CALCOM } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -163,7 +163,7 @@ export default function ApiKeyDialogForm({
                 <Link
                   target="_blank"
                   rel="noopener noreferrer"
-                  href="https://cal.com/integrate"
+                  href={`${DOCS_URL}/developers#api-keys`}
                   className="border-subtle relative flex w-full items-start rounded-[10px] border p-4 text-sm">
                   {t("api_key_modal_subtitle_platform")}
                 </Link>

@@ -18,8 +18,7 @@ import type {
 import {
   DEFAULT_DARK_BRAND_COLOR,
   DEFAULT_LIGHT_BRAND_COLOR,
-  MAX_SEATS_PER_TIME_SLOT,
-} from "@calcom/lib/constants";
+  MAX_SEATS_PER_TIME_SLOT, DOCS_URL } from "@calcom/lib/constants";
 import { generateHashedLink } from "@calcom/lib/generateHashedLink";
 import { checkWCAGContrastColor } from "@calcom/lib/getBrandColours";
 import { extractHostTimezone } from "@calcom/lib/hashedLinksUtils";
@@ -633,7 +632,7 @@ export const EventAdvancedTab = ({
             <LearnMoreLink
               t={t}
               i18nKey="booking_questions_description"
-              href="https://cal.com/help/event-types/booking-questions"
+              href={`${DOCS_URL}/services#booking-questions`}
             />
           </p>
         </div>
@@ -727,7 +726,7 @@ export const EventAdvancedTab = ({
                   <LearnMoreLink
                     t={t}
                     i18nKey="description_disable_cancelling"
-                    href="https://cal.com/help/event-types/disable-canceling-rescheduling#disable-cancelling"
+                    href={`${DOCS_URL}/services`}
                   />
                 }
                 checked={value}
@@ -871,7 +870,7 @@ export const EventAdvancedTab = ({
               <LearnMoreLink
                 t={t}
                 i18nKey="disable_notes_description"
-                href="https://cal.com/help/event-types/hide-notes"
+                href={`${DOCS_URL}/services`}
               />
             }
             checked={value}
@@ -994,7 +993,7 @@ export const EventAdvancedTab = ({
                   <LearnMoreLink
                     t={t}
                     i18nKey="multiple_private_links_description"
-                    href="https://cal.com/help/event-types/private-links"
+                    href={`${DOCS_URL}/services`}
                   />
                 }
                 tooltip={isManagedEventType ? t("managed_event_field_parent_control_disabled") : ""}
@@ -1047,7 +1046,7 @@ export const EventAdvancedTab = ({
                 <LearnMoreLink
                   t={t}
                   i18nKey="offer_seats_description"
-                  href="https://cal.com/help/event-types/offer-seats"
+                  href={`${DOCS_URL}/services`}
                 />
               }
               checked={value}
@@ -1179,7 +1178,7 @@ export const EventAdvancedTab = ({
               <LearnMoreLink
                 t={t}
                 i18nKey="hide_organizer_email_description"
-                href="https://cal.com/help/event-types/hideorganizersemail#hide-organizers-email"
+                href={`${DOCS_URL}/services`}
               />
             }
             descriptionClassName={customClassNames?.hideOrganizerEmail?.description}
@@ -1215,7 +1214,7 @@ export const EventAdvancedTab = ({
                 <LearnMoreLink
                   t={t}
                   i18nKey="description_lock_timezone_toggle_on_booking_page"
-                  href="https://cal.com/help/event-types/timezone-lock"
+                  href={`${DOCS_URL}/services`}
                 />
               }
               checked={value}
@@ -1268,7 +1267,7 @@ export const EventAdvancedTab = ({
               <LearnMoreLink
                 t={t}
                 i18nKey="allow_rescheduling_past_events_description"
-                href="https://cal.com/help/event-types/allow-rescheduling"
+                href={`${DOCS_URL}/services`}
               />
             }
             checked={value}
@@ -1438,7 +1437,7 @@ export const EventAdvancedTab = ({
                 <LearnMoreLink
                   t={t}
                   i18nKey="show_optimized_slots_description"
-                  href="https://cal.com/help/event-types/optimized-slots#optimized-slots"
+                  href={`${DOCS_URL}/services`}
                 />
               }
               checked={isChecked}

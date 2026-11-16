@@ -8,7 +8,7 @@ import type {
   SettingsToggleClassNames,
 } from "@calcom/features/eventtypes/lib/types";
 import CheckboxField from "@calcom/features/form/components/CheckboxField";
-import { ROLLING_WINDOW_PERIOD_MAX_DAYS_TO_CHECK } from "@calcom/lib/constants";
+import { ROLLING_WINDOW_PERIOD_MAX_DAYS_TO_CHECK, DOCS_URL } from "@calcom/lib/constants";
 import type { DurationType } from "@calcom/lib/convertToNewDurationType";
 import convertToNewDurationType from "@calcom/lib/convertToNewDurationType";
 import findDurationType from "@calcom/lib/findDurationType";
@@ -665,7 +665,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
                 <LearnMoreLink
                   t={t}
                   i18nKey="limit_booking_frequency_description"
-                  href="https://cal.com/help/event-types/booking-frequency"
+                  href={`${DOCS_URL}/availability#limits-and-buffers`}
                 />
               }
               checked={isChecked}
@@ -802,7 +802,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
                 <LearnMoreLink
                   t={t}
                   i18nKey="limit_future_bookings_description"
-                  href="https://cal.com/help/event-types/limit-future-bookings"
+                  href={`${DOCS_URL}/availability#limits-and-buffers`}
                 />
               }
               {...periodTypeLocked}

@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -53,7 +54,7 @@ export default function MaxActiveBookingsPerBookerController({
               <LearnMoreLink
                 t={t}
                 i18nKey="booker_booking_limit_description"
-                href="https://cal.com/help/event-types/booker-active-booking-limit"
+                href={`${DOCS_URL}/availability#limits-and-buffers`}
               />
             }
             checked={isChecked}

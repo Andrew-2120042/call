@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { appStoreMetadata } from "@calcom/app-store/appStoreMetaData";
 import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -424,7 +425,7 @@ function renderResultItem(item: string | Action, active: boolean, t: (key: strin
 
 function NoResultsFound({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useLocale();
-  const helpUrl = `https://cal.com/help/welcome?search=${encodeURIComponent(searchQuery)}`;
+  const helpUrl = `${DOCS_URL}?search=${encodeURIComponent(searchQuery)}`;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {

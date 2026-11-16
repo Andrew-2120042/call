@@ -35,6 +35,8 @@ export const WEBAPP_URL_FOR_OAUTH = IS_PRODUCTION || IS_DEV ? WEBAPP_URL : "http
 /** @deprecated use `WEBAPP_URL` */
 export const BASE_URL = WEBAPP_URL;
 export const WEBSITE_URL = ensureProtocol(process.env.NEXT_PUBLIC_WEBSITE_URL) || WEBAPP_URL;
+/** The public help docs (the marketing site's /docs). Help links in the app point here. */
+export const DOCS_URL = (ensureProtocol(process.env.NEXT_PUBLIC_DOCS_URL) || `${WEBSITE_URL}/docs`).replace(/\/$/, "");
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Slotwise";
 export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS || "support@slotwise.app";
 export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "Slotwise";
@@ -108,10 +110,9 @@ export const MSTILE_ICON = "/mstile-150x150.png";
 export const ANDROID_CHROME_ICON_192 = "/android-chrome-192x192.png";
 export const ANDROID_CHROME_ICON_256 = "/android-chrome-256x256.png";
 export const ROADMAP = "https://cal.com/roadmap";
-export const DESKTOP_APP_LINK = "https://cal.com/download";
-export const POWERED_BY_URL = "https://go.cal.com/booking";
-export const DOCS_URL = "https://cal.com/docs";
-export const DEVELOPER_DOCS = "https://developer.cal.com";
+export const DESKTOP_APP_LINK = WEBSITE_URL;
+export const POWERED_BY_URL = WEBSITE_URL;
+export const DEVELOPER_DOCS = `${DOCS_URL}/developers`;
 export const SEO_IMG_DEFAULT = `${CAL_URL}/og-image.png`;
 // The Dynamic OG Image is passed through Next's Image API to further optimize it.
 // This results in a 80% smaller image 🤯. It is however important that for the query

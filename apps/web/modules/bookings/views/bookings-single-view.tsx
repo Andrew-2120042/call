@@ -22,7 +22,7 @@ import { isWithinMinimumRescheduleNotice as isWithinMinimumRescheduleNoticeUtil 
 import type { nameObjectSchema } from "@calcom/features/eventtypes/lib/eventNaming";
 import { getEventName } from "@calcom/features/eventtypes/lib/eventNaming";
 import { shouldShowFieldInCustomResponses } from "@calcom/lib/bookings/SystemField";
-import { APP_NAME } from "@calcom/lib/constants";
+import { APP_NAME, WEBAPP_URL } from "@calcom/lib/constants";
 import { formatToLocalizedDate, formatToLocalizedTime, formatToLocalizedTimezone } from "@calcom/lib/dayjs";
 import useGetBrandingColours from "@calcom/lib/getBrandColours";
 import { useCompatSearchParams } from "@calcom/lib/hooks/useCompatSearchParams";
@@ -1050,7 +1050,7 @@ export default function Success(props: PageProps) {
                       <>
                         <hr className="border-subtle mt-8" />
                         <div className="text-default pt-8 text-center text-xs">
-                          <a href="https://cal.com/signup">
+                          <a href={`${WEBAPP_URL}/signup`}>
                             {t("create_booking_link_with_calcom", { appName: APP_NAME })}
                           </a>
 
@@ -1060,7 +1060,7 @@ export default function Success(props: PageProps) {
                               const target = e.target as typeof e.target & {
                                 email: { value: string };
                               };
-                              router.push(`https://cal.com/signup?email=${target.email.value}`);
+                              router.push(`${WEBAPP_URL}/signup?email=${encodeURIComponent(target.email.value)}`);
                             }}
                             className="mt-4 flex">
                             <EmailInput
@@ -1152,14 +1152,7 @@ export default function Success(props: PageProps) {
                   message={
                     <div>
                       <p className="font-semibold">{t("google_new_spam_policy")}</p>
-                      <span className="underline">
-                        <a
-                          target="_blank"
-                          href="https://cal.com/blog/google-s-new-spam-policy-may-be-affecting-your-invitations"
-                          rel="noreferrer">
-                          {t("resolve")}
-                        </a>
-                      </span>
+
                     </div>
                   }
                   CustomIcon="circle-alert"

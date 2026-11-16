@@ -1,3 +1,4 @@
+import { DOCS_URL } from "@calcom/lib/constants";
 import { LearnMoreLink } from "@calcom/features/eventtypes/components/LearnMoreLink";
 import type {
   EventTypeSetup,
@@ -103,7 +104,7 @@ export default function RequiresConfirmationController({
                 <LearnMoreLink
                   t={t}
                   i18nKey="requires_confirmation_description"
-                  href="https://cal.com/help/event-types/how-to-requires"
+                  href={`${DOCS_URL}/services#approvals`}
                 />
               }
               checked={requiresConfirmation}

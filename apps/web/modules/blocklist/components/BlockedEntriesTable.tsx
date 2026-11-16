@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 
 import { DataTableSelectionBar, DataTableWrapper } from "@calcom/web/modules/data-table/components";
-import { IS_CALCOM } from "@calcom/lib/constants";
+import { IS_CALCOM, DOCS_URL } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
 import { ConfirmationDialogContent, Dialog } from "@calcom/ui/components/dialog";
@@ -168,7 +168,7 @@ export function BlockedEntriesTable<T extends BlocklistEntry>({
                     StartIcon="book"
                     color="secondary"
                     onClick={() =>
-                      window.open("https://cal.com/help/security/blocklist", "_blank", "noopener,noreferrer")
+                      window.open(`${DOCS_URL}/faq`, "_blank", "noopener,noreferrer")
                     }>
                     {t("docs")}
                   </Button>
