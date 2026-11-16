@@ -13,7 +13,8 @@ export function ServiceTabs({ tabs }: { tabs: VerticalTabItemProps[] }) {
   const current = searchParams?.get("tabName") ?? "setup";
   return (
     <nav
-      className="no-scrollbar bg-subtle -mx-1 flex gap-1 overflow-x-auto rounded-full p-1"
+      // Fits its tabs instead of stretching across the column.
+      className="no-scrollbar bg-subtle -mx-1 inline-flex max-w-full gap-1 overflow-x-auto rounded-full p-1"
       aria-label="Service settings"
       data-testid="service-tabs">
       {tabs

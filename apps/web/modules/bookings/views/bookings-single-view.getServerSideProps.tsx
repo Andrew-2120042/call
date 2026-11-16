@@ -1,3 +1,5 @@
+import { BookingStatus } from "@calcom/prisma/enums";
+import { getBookingRequestInsightService } from "@calcom/features/booking-request-insights/lib/getBookingRequestInsightService";
 import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
 import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
 import getBookingInfo from "@calcom/features/bookings/lib/getBookingInfo";
@@ -240,6 +242,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       : previousBooking;
 
   const isPlatformBooking = eventType.users[0]?.isPlatformManaged || eventType.team?.createdByOAuthClientId;
+  // The host's AI summary is rendered with the page, so it doesn't pop in after load and push the details down.
+  const requestInsight =
+    isLoggedInUserHost && userId && bookingInfo.status === BookingStatus.PENDING
+      ? await getBookingRequestInsightService()
+          .getForHost({ bookingUid: bookingInfo.uid, userId })
+          .then((insight) => (insight ? { ...insight, createdAt: insight.createdAt.toISOString() } : null))
+          .catch(() => null)
+      : null;
+
   return {
     props: {
       orgSlug: currentOrgDomain,
@@ -266,6 +277,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       isLoggedInUserHost,
       canViewHiddenData,
       internalNotePresets: internalNotes,
+      requestInsight,
     },
   };
 }

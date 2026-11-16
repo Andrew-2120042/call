@@ -64,6 +64,14 @@ body:has([data-sw-settings-nav]) {
   }
 }
 
+/* Full-width pages that hide the sidebar (the service editor) get an even margin all round. */
+@media (min-width: 768px) {
+  body:has([data-sw-no-sidebar]) [data-sw-main] {
+    margin: 12px;
+    min-height: calc(100dvh - 24px);
+  }
+}
+
 [data-sw-main] h1,
 [data-sw-main] h2,
 [data-sw-main] h3 {

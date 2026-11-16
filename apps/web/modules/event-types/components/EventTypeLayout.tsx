@@ -331,5 +331,6 @@ export { EventTypeSingleLayout };
 
 /** Stands in for the main sidebar while editing a service; Shell passes it layout props it doesn't need. */
 function NoSidebar(_props: { bannersHeight?: number }) {
-  return null;
+  // A marker for the dashboard styles: without the sidebar beside it, the work panel needs a left margin too.
+  return <span data-sw-no-sidebar hidden />;
 }

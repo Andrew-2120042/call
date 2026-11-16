@@ -586,6 +586,7 @@ export default function Success(props: PageProps) {
                         <RequestInsightPanel
                           bookingUid={bookingInfo.uid}
                           clientName={bookingInfo.attendees[0]?.name?.split(" ")[0]}
+                          initialInsight={props.requestInsight}
                           actions={<HostRequestActions bookingId={bookingInfo.id} />}
                         />
                       )}

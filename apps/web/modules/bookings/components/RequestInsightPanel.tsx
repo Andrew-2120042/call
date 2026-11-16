@@ -33,17 +33,46 @@ export function RequestFitBadges({ fit, spamLikely }: { fit: Fit; spamLikely: bo
  * AI triage for the host. The query is host-scoped server-side, so guests simply get nothing.
  * `actions` lets the request page put Accept / Decline right under the assessment.
  */
+export type InitialRequestInsight = {
+  summary: string;
+  fit: string;
+  spamLikely: boolean;
+  concerns: string[];
+  suggestedReply: string;
+  createdAt: string;
+} | null;
+
 export function RequestInsightPanel({
   bookingUid,
   actions,
   clientName,
+  initialInsight,
 }: {
   bookingUid: string;
   actions?: ReactNode;
   clientName?: string;
+  /** From the server render, so the panel is there on first paint instead of replacing a placeholder. */
+  initialInsight?: InitialRequestInsight;
 }) {
   const { t } = useLocale();
-  const query = trpc.viewer.requestInsights.get.useQuery({ bookingUid }, { retry: false });
+  const query = trpc.viewer.requestInsights.get.useQuery(
+    { bookingUid },
+    {
+      retry: false,
+      ...(initialInsight
+        ? {
+            initialData: {
+              enabled: true,
+              insight: {
+                ...initialInsight,
+                fit: initialInsight.fit as "GOOD" | "UNCLEAR" | "POOR",
+                createdAt: new Date(initialInsight.createdAt),
+              },
+            },
+          }
+        : {}),
+    }
+  );
   const insight = query.data?.insight;
 
   // Hold roughly the panel's space while it loads so the booking details below don't jump.
