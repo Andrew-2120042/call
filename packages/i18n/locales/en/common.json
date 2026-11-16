@@ -5196,5 +5196,12 @@
   "rebook_none": "No open times in the next two weeks. Check back soon.",
   "rebook_book_this": "Book this time",
   "rebook_see_all": "See all available times",
-  "rebook_email_cta": "Pick a new time"
+  "rebook_email_cta": "Pick a new time",
+  "home_demo_today_one": "You have {{count}} booking today.",
+  "home_demo_today_other": "You have {{count}} bookings today.",
+  "home_demo_today": "You have {{count}} bookings today.",
+  "home_demo_ask": "Ask Slotwise to set something up…",
+  "home_demo_needs_you": "Needs you",
+  "home_demo_all_clear": "Nothing waiting for your approval.",
+  "home_demo_back": "Back to the current Home"
 }
