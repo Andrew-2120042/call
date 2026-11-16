@@ -1,3 +1,4 @@
+import { getWaitlistService } from "@calcom/features/waitlist/lib/getWaitlistService";
 import { BookingStatus } from "@calcom/prisma/enums";
 import { getBookingRequestInsightService } from "@calcom/features/booking-request-insights/lib/getBookingRequestInsightService";
 import { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
@@ -251,6 +252,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           .catch(() => null)
       : null;
 
+  // Clients (not the host) with an upcoming booking can ask to be moved earlier if a time opens.
+  const earlierWaitlistAvailable =
+    !isLoggedInUserHost &&
+    !!bookingInfo.eventTypeId &&
+    (bookingInfo.status === BookingStatus.ACCEPTED || bookingInfo.status === BookingStatus.PENDING) &&
+    new Date(bookingInfo.startTime).getTime() > Date.now() + 60 * 60_000
+      ? await getWaitlistService()
+          .isOpenFor(bookingInfo.eventTypeId)
+          .catch(() => false)
+      : false;
+
   return {
     props: {
       orgSlug: currentOrgDomain,
@@ -278,6 +290,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       canViewHiddenData,
       internalNotePresets: internalNotes,
       requestInsight,
+      earlierWaitlistAvailable,
     },
   };
 }

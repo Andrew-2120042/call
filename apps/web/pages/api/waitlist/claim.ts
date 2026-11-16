@@ -16,6 +16,7 @@ const CLAIM_FAILURE_MESSAGES = {
   expired: "This offer has expired and the time was offered to the next person.",
   already_claimed: "This time has already been claimed with this link.",
   slot_unavailable: "Someone else just took this time. You're still on the waitlist.",
+  taken_by_someone_else: "Someone else claimed this time first. You're still on the waitlist.",
 } as const;
 
 // GET only reads the offer so email link scanners that prefetch links can never claim a slot.
@@ -37,6 +38,9 @@ async function handler(req: NextApiRequest) {
       status: offer.entry.status,
       isClaimable: offer.isClaimable,
       isExpired: offer.isExpired,
+      takenBySomeoneElse: offer.takenBySomeoneElse,
+      kind: offer.entry.kind,
+      firstComeFirstServed: offer.eventType.waitlistOfferMode === "EVERYONE",
       startTime: offer.entry.startTime.toISOString(),
       endTime: offer.entry.endTime.toISOString(),
       timeZone: offer.entry.timeZone,

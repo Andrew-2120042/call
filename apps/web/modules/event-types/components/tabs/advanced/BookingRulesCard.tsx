@@ -18,6 +18,7 @@ const REMINDER_CHOICES = [
 
 type Draft = {
   waitlistEnabled: boolean;
+  waitlistOfferMode: "IN_ORDER" | "EVERYONE";
   confirmEnabled: boolean;
   attendeeConfirmationHours: number;
   releaseUnconfirmedBookings: boolean;
@@ -38,6 +39,7 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
     if (!query.data) return;
     setDraft({
       waitlistEnabled: query.data.waitlistEnabled,
+      waitlistOfferMode: query.data.waitlistOfferMode,
       confirmEnabled: query.data.attendeeConfirmationHours != null,
       attendeeConfirmationHours: query.data.attendeeConfirmationHours ?? 24,
       releaseUnconfirmedBookings: query.data.releaseUnconfirmedBookings,
@@ -78,6 +80,7 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
     mutation.mutate({
       id: eventTypeId,
       waitlistEnabled: draft.waitlistEnabled,
+      waitlistOfferMode: draft.waitlistOfferMode,
       attendeeConfirmationHours: draft.confirmEnabled ? draft.attendeeConfirmationHours : null,
       releaseUnconfirmedBookings: draft.releaseUnconfirmedBookings,
       attendeeReminderMinutes: draft.attendeeReminderMinutes,
@@ -115,6 +118,35 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
           )}
         </span>
       </label>
+      {draft.waitlistEnabled && (
+        <fieldset className="ml-7 mt-3 space-y-2" data-testid="waitlist-offer-mode">
+          <legend className="text-emphasis mb-1 text-sm font-medium">{t("waitlist_offer_mode_title")}</legend>
+          {(["IN_ORDER", "EVERYONE"] as const).map((mode) => (
+            <label key={mode} className="flex items-start gap-2 text-sm">
+              <input
+                type="radio"
+                name="waitlistOfferMode"
+                className="mt-1"
+                checked={draft.waitlistOfferMode === mode}
+                onChange={() => setDraft({ ...draft, waitlistOfferMode: mode })}
+                data-testid={`waitlist-offer-mode-${mode}`}
+              />
+              <span>
+                <span className="text-emphasis block">
+                  {t(mode === "IN_ORDER" ? "waitlist_offer_mode_in_order" : "waitlist_offer_mode_everyone")}
+                </span>
+                <span className="text-subtle block">
+                  {t(
+                    mode === "IN_ORDER"
+                      ? "waitlist_offer_mode_in_order_help"
+                      : "waitlist_offer_mode_everyone_help"
+                  )}
+                </span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+      )}
 
       <label className="mt-5 flex items-start gap-3">
         <input

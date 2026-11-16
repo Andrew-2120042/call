@@ -23,6 +23,9 @@ type Offer = {
   offerExpiresAt: string | null;
   eventTitle: string;
   hostName: string | null;
+  takenBySomeoneElse: boolean;
+  kind: "EXACT_TIME" | "ANY_TIME_ON_DAY" | "EARLIER_THAN_BOOKING";
+  firstComeFirstServed: boolean;
 };
 
 type LoadState = { kind: "loading" } | { kind: "error"; message: string } | { kind: "ready"; offer: Offer };
@@ -104,22 +107,29 @@ export default function WaitlistClaimPage() {
         subtitle={
           offer.isClaimable
             ? undefined
-            : offer.status === "CLAIMED"
-              ? t("waitlist_claim_already_claimed")
-              : t("waitlist_claim_expired")
+            : offer.takenBySomeoneElse
+              ? t("waitlist_claim_taken_by_someone_else")
+              : offer.status === "CLAIMED"
+                ? t("waitlist_claim_already_claimed")
+                : t("waitlist_claim_expired")
         }
       />
-      <BookingSummary
-        title={offer.eventTitle}
-        hostName={offer.hostName}
-        startTime={offer.startTime}
-        endTime={offer.endTime}
-        timeZone={offer.timeZone}
-      />
+      {/* Once someone else has the time, the person's entry no longer points at it. */}
+      {!offer.takenBySomeoneElse && (
+        <BookingSummary
+          title={offer.eventTitle}
+          hostName={offer.hostName}
+          startTime={offer.startTime}
+          endTime={offer.endTime}
+          timeZone={offer.timeZone}
+        />
+      )}
       {offer.isClaimable && (
         <div className="mt-6">
+          {offer.kind === "EARLIER_THAN_BOOKING" && <Notice>{t("waitlist_claim_moves_booking")}</Notice>}
+          {offer.firstComeFirstServed && <Notice>{t("waitlist_claim_everyone")}</Notice>}
           <PrimaryButton onClick={claim} loading={claiming} testId="waitlist-claim-button">
-            {t("waitlist_offer_cta")}
+            {t(offer.kind === "EARLIER_THAN_BOOKING" ? "waitlist_offer_cta_move" : "waitlist_offer_cta")}
           </PrimaryButton>
           {offer.offerExpiresAt && (
             <Notice>

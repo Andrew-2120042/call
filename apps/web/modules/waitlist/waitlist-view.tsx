@@ -50,8 +50,17 @@ export default function WaitlistView() {
               <td className="text-default px-4 py-3">
                 {entry.eventType.title}
                 <span className="text-subtle block">
-                  {dayjs(entry.startTime).format("ddd, MMM D, h:mma")}
+                  {entry.kind === "ANY_TIME_ON_DAY" && entry.rangeStart
+                    ? t("waitlist_kind_any_time_on", { day: dayjs(entry.rangeStart).tz(entry.timeZone).format("ddd, MMM D") })
+                    : entry.kind === "EARLIER_THAN_BOOKING" && entry.rangeEnd
+                      ? t("waitlist_kind_earlier_than", { date: dayjs(entry.rangeEnd).format("ddd, MMM D, h:mma") })
+                      : dayjs(entry.startTime).format("ddd, MMM D, h:mma")}
                 </span>
+                {entry.status === "OFFERED" && entry.offerStartTime && entry.kind !== "EXACT_TIME" && (
+                  <span className="text-subtle block">
+                    {t("waitlist_offered_time", { time: dayjs(entry.offerStartTime).format("ddd, MMM D, h:mma") })}
+                  </span>
+                )}
               </td>
               <td className="px-4 py-3">
                 {entry.status === "OFFERED" && entry.offerExpiresAt

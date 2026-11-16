@@ -30,7 +30,10 @@ type Options = {
   defaultLocation: string | null;
   fields: Field[];
   takenTimes: { start: string; end: string; waiting: number }[];
+  waitingAnyTimeThisDay: number;
 };
+
+type Selection = { start: string; end: string; waiting: number; anyTime?: boolean };
 
 const RAW = { interpolation: { escapeValue: false } };
 const DAYS_SHOWN = 21;
@@ -45,7 +48,7 @@ export default function JoinWaitlistPage() {
   const [options, setOptions] = useState<Options | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [notAvailable, setNotAvailable] = useState(false);
-  const [selected, setSelected] = useState<{ start: string; end: string; waiting: number } | null>(null);
+  const [selected, setSelected] = useState<Selection | null>(null);
   const [answers, setAnswers] = useState<Record<string, string | boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ position: number } | null>(null);
@@ -80,6 +83,7 @@ export default function JoinWaitlistPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           eventTypeId,
+          kind: selected.anyTime ? "ANY_TIME_ON_DAY" : "EXACT_TIME",
           start: selected.start,
           end: selected.end,
           timeZone,
@@ -213,7 +217,7 @@ export default function JoinWaitlistPage() {
           title={t("waitlist_joined_title")}
           subtitle={t("waitlist_join_position", { position: result.position })}
         />
-        {selected && (
+        {selected && !selected.anyTime && (
           <BookingSummary
             title={options.title}
             hostName={options.hostName}
@@ -310,10 +314,49 @@ export default function JoinWaitlistPage() {
                 </button>
               );
             })}
+            {(() => {
+              const active = !!selected?.anyTime;
+              const day = dayjs.tz(date, timeZone);
+              const waiting = options.waitingAnyTimeThisDay;
+              return (
+                <button
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() =>
+                    setSelected({
+                      start: day.startOf("day").toISOString(),
+                      end: day.add(1, "day").startOf("day").toISOString(),
+                      waiting,
+                      anyTime: true,
+                    })
+                  }
+                  className={classNames(
+                    "border text-[13px] font-semibold transition",
+                    active ? "border-emphasis bg-inverted text-inverted" : "border-default hover:border-emphasis"
+                  )}
+                  style={{ minHeight: 48, padding: "6px 18px", borderRadius: 16 }}
+                  data-testid="waitlist-any-time">
+                  <span className="block">{t("waitlist_join_any_time_day")}</span>
+                  <span className={classNames("block text-[11px] font-medium", active ? "opacity-70" : "text-subtle")}>
+                    {waiting === 0
+                      ? t("waitlist_nobody_waiting_short")
+                      : t("waitlist_waiting_short", { count: waiting })}
+                  </span>
+                </button>
+              );
+            })()}
           </div>
         )}
         {selected && (
           <p className="text-subtle mt-3 text-sm" data-testid="waitlist-position-preview">
+            {selected.anyTime && (
+              <span className="block">
+                {t("waitlist_join_any_time_day_help", {
+                  day: dayjs.tz(date, timeZone).format("dddd, MMMM D"),
+                  ...RAW,
+                })}
+              </span>
+            )}
             {selected.waiting === 0
               ? t("waitlist_you_would_be_first")
               : t("waitlist_you_would_be_nth", { count: selected.waiting, position: selected.waiting + 1 })}
@@ -337,10 +380,12 @@ export default function JoinWaitlistPage() {
           ))}
           {submitError && <Notice tone="error">{submitError}</Notice>}
           <PrimaryButton type="submit" loading={submitting} testId="waitlist-join-submit">
-            {t("waitlist_join_cta", {
-              time: dayjs(selected.start).tz(timeZone).format("ddd, MMM D h:mma"),
-              ...RAW,
-            })}
+            {selected.anyTime
+              ? t("waitlist_join_cta_day", { day: dayjs.tz(date, timeZone).format("ddd, MMM D"), ...RAW })
+              : t("waitlist_join_cta", {
+                  time: dayjs(selected.start).tz(timeZone).format("ddd, MMM D h:mma"),
+                  ...RAW,
+                })}
           </PrimaryButton>
         </form>
       )}

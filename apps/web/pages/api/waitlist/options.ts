@@ -8,7 +8,7 @@ import { HttpError } from "@calcom/lib/http-error";
 import { defaultResponder } from "@calcom/lib/server/defaultResponder";
 import { piiHasher } from "@calcom/lib/server/PiiHasher";
 import { prisma } from "@calcom/prisma";
-import { BookingStatus, SchedulingType, WaitlistEntryStatus } from "@calcom/prisma/enums";
+import { BookingStatus, SchedulingType, WaitlistEntryKind, WaitlistEntryStatus } from "@calcom/prisma/enums";
 import type { NextApiRequest } from "next";
 import { z } from "zod";
 
@@ -115,6 +115,7 @@ async function handler(req: NextApiRequest) {
         by: ["startTime"],
         where: {
           eventTypeId,
+          kind: WaitlistEntryKind.EXACT_TIME,
           status: { in: [WaitlistEntryStatus.WAITING, WaitlistEntryStatus.OFFERED] },
           startTime: { in: fullTimes.map((t) => t.startTime) },
         },
@@ -122,6 +123,16 @@ async function handler(req: NextApiRequest) {
       })
     : [];
   const waitingAt = new Map(waiting.map((w) => [w.startTime.toISOString(), w._count._all]));
+  // People waiting for "any time this day" are in line for every time on it too.
+  const waitingAnyTimeThisDay = await prisma.waitlistEntry.count({
+    where: {
+      eventTypeId,
+      kind: WaitlistEntryKind.ANY_TIME_ON_DAY,
+      status: { in: [WaitlistEntryStatus.WAITING, WaitlistEntryStatus.OFFERED] },
+      rangeStart: { lt: dayEnd.toDate() },
+      rangeEnd: { gt: dayStart.toDate() },
+    },
+  });
 
   const fields = (
     getBookingFieldsWithSystemFields({
@@ -153,12 +164,13 @@ async function handler(req: NextApiRequest) {
     length: eventType.length,
     defaultLocation: locations[0]?.type ?? null,
     fields,
+    waitingAnyTimeThisDay,
     takenTimes: fullTimes
       .filter((b) => (b.endTime.getTime() - b.startTime.getTime()) / 60_000 === eventType.length)
       .map((b) => ({
         start: b.startTime.toISOString(),
         end: b.endTime.toISOString(),
-        waiting: waitingAt.get(b.startTime.toISOString()) ?? 0,
+        waiting: (waitingAt.get(b.startTime.toISOString()) ?? 0) + waitingAnyTimeThisDay,
       })),
   };
 }

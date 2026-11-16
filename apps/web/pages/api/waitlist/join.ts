@@ -12,6 +12,8 @@ import { z } from "zod";
 
 const joinWaitlistSchema = z.object({
   eventTypeId: z.number().int().positive(),
+  /** EXACT_TIME: start/end are the taken time. ANY_TIME_ON_DAY: start/end are that day in the visitor's zone. */
+  kind: z.enum(["EXACT_TIME", "ANY_TIME_ON_DAY"]).default("EXACT_TIME"),
   start: z.string().datetime(),
   end: z.string().datetime(),
   timeZone: z.string().min(1).max(64),
@@ -42,13 +44,14 @@ async function handler(req: NextApiRequest) {
       parsed.error.issues.map((issue) => issue.message).join(", ")
     );
   }
-  const { eventTypeId, start, end, timeZone, language, responses } = parsed.data;
+  const { eventTypeId, kind, start, end, timeZone, language, responses } = parsed.data;
 
   const validated = await validateWaitlistResponses(eventTypeId, responses);
   if (!validated.ok) throw new ErrorWithCode(ErrorCode.BadRequest, validated.errors.join(", "));
 
   const result = await getWaitlistService().join({
     eventTypeId,
+    kind,
     startTime: new Date(start),
     endTime: new Date(end),
     name: responses.name,

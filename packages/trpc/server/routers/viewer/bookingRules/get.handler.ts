@@ -31,6 +31,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     },
     select: {
       waitlistEnabled: true,
+      waitlistOfferMode: true,
       attendeeConfirmationHours: true,
       releaseUnconfirmedBookings: true,
       attendeeReminderMinutes: true,

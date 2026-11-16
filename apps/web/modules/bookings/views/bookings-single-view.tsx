@@ -62,6 +62,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { z } from "zod";
 import { HostRequestActions } from "../components/HostRequestActions";
+import { EarlierTimeWaitlist } from "../components/EarlierTimeWaitlist";
 import { RebookSuggestions } from "../components/RebookSuggestions";
 import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
@@ -582,6 +583,9 @@ export default function Success(props: PageProps) {
                             hostName={bookingInfo.user.name || bookingInfo.user.username}
                           />
                         )}
+                      {props.earlierWaitlistAvailable && !isCancelled && !isHost && (
+                        <EarlierTimeWaitlist bookingUid={bookingInfo.uid} />
+                      )}
                       {isHostReviewingRequest && (
                         <RequestInsightPanel
                           bookingUid={bookingInfo.uid}
