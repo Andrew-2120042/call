@@ -285,10 +285,44 @@ export const pricing = [
 ];
 
 export const homeFaq = [
-  { q: "What is Slotwise?", a: "Slotwise is an online scheduling tool: a booking link that syncs with your calendar, plus a waitlist that refills cancelled slots, one-click attendance confirmation to stop no-shows, and AI summaries of booking requests. It's free for one person; Pro is $12 a month and Team is $49 a month for up to 10 people." },
-  { q: "Is the free plan really free?", a: "Yes. No trial and no card. You get unlimited services and bookings, calendar sync, video links, approvals and booking questions." },
-  { q: "Can I move from Calendly?", a: "Yes. Paste a Calendly access token in Settings → Import and your services and weekly hours come across." },
-  { q: "Which calendars work?", a: "Google Calendar, Outlook and Office 365, Apple iCloud, and any CalDAV calendar. Slotwise checks them for conflicts and adds new bookings." },
-  { q: "Do my clients need an account?", a: "No. Clients book, confirm, reschedule and claim waitlist slots from links, without signing up." },
-  { q: "Can I cancel Pro any time?", a: "Yes. You keep Pro until the end of the period you paid for, then move back to Free with your setup intact." },
+  {
+    q: "What is Slotwise?",
+    a: "Slotwise is an online booking link. Clients pick a time that suits them, it lands in your calendar, and Slotwise handles what comes after: refilling cancelled slots from a waitlist, asking clients to confirm so you get fewer no-shows, and summarising booking requests you approve.",
+  },
+  {
+    q: "How is Slotwise different from Calendly or Cal.com?",
+    a: "All three get you booked. Slotwise also keeps you booked: a cancelled slot is offered to the next person on the waitlist automatically, and unconfirmed bookings can free themselves up. The free plan includes unlimited services, and Team is one flat price instead of a price per seat.",
+  },
+  {
+    q: "Is the free plan really free?",
+    a: "Yes. No trial and no card. One person gets unlimited services and bookings, calendar sync, video links, approvals and booking questions, for as long as you like.",
+  },
+  {
+    q: "How does the waitlist fill a cancelled slot?",
+    a: "When a time is taken, clients can join its waitlist. If that booking is cancelled, the first person gets a private link to claim the time. If they don't claim it within two hours, it's offered to the next person, so the slot never waits on one inbox.",
+  },
+  {
+    q: "What happens if a client doesn't confirm?",
+    a: "Turn on confirmation for a service and pick a deadline. Clients confirm with one click from their reminder. If they haven't by the deadline, you're told, and you can let the time be released automatically so someone else can book it.",
+  },
+  {
+    q: "Can I move over from Calendly?",
+    a: "Yes. Paste a Calendly personal access token into Settings → Import from Calendly. Your services and weekly hours come across in about a minute, and you can check everything before sharing your new link.",
+  },
+  {
+    q: "Which calendars and video apps work with Slotwise?",
+    a: "Google Calendar, Outlook and Microsoft 365, Apple iCloud and any CalDAV calendar are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom, Microsoft Teams or built-in video link. Zapier, Make and webhooks connect everything else.",
+  },
+  {
+    q: "Do my clients need an account?",
+    a: "No. Clients book, confirm, reschedule, cancel and claim waitlist slots from links in their emails, without signing up.",
+  },
+  {
+    q: "How does team pricing work?",
+    a: "Team is $49 a month for up to 10 people, not a price per seat. It adds round robin and collective services, managed services that copy one setup to every member, a shared team page and a team waitlist.",
+  },
+  {
+    q: "Can I cancel any time?",
+    a: "Yes. You keep your paid plan until the end of the period you paid for, then move back to Free with your services and bookings intact.",
+  },
 ];

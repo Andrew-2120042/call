@@ -1,4 +1,5 @@
 import { articles } from "@/content/articles";
+import { docs } from "@/content/docs";
 import { audiences, comparisons, features, pricing } from "@/content/site-content";
 import { site } from "@/site.config";
 
@@ -28,6 +29,9 @@ export function GET() {
     "",
     "## Guides",
     ...articles.map((a) => `- [${a.title}](${site.url}/blog/${a.slug}): ${a.answer}`),
+    "",
+    "## Docs",
+    ...docs.map((d) => `- [${d.title}](${site.url}${d.slug === "introduction" ? "/docs" : `/docs/${d.slug}`}): ${d.description}`),
     "",
     "## Who it's for",
     ...audiences.map((a) => `- [${a.plural}](${site.url}/for/${a.slug}): ${a.summary}`),

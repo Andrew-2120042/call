@@ -1,19 +1,30 @@
-import { signupUrl } from "@/site.config";
+import { signupUrl, site } from "@/site.config";
 import { ButtonLink, Container, JsonLd } from "./ui";
 
-export function Faq({ items, title = "Questions" }: { items: { q: string; a: string }[]; title?: string }) {
+export function Faq({ items, title = "Questions & answers" }: { items: { q: string; a: string }[]; title?: string }) {
   return (
-    <section className="py-20">
-      <Container className="max-w-3xl">
-        <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">{title}</h2>
-        <div className="mt-8 divide-y divide-line border-y border-line">
+    <section className="border-t border-line py-24">
+      <Container className="grid gap-12 lg:grid-cols-[1fr_1.7fr]">
+        <div>
+          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">{title}</h2>
+          <p className="text-muted mt-3 max-w-[30ch] text-sm leading-relaxed">
+            Anything else? Email{" "}
+            <a href={`mailto:${site.supportEmail}`} className="text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg">
+              {site.supportEmail}
+            </a>{" "}
+            and a person will reply.
+          </p>
+        </div>
+        <div className="divide-y divide-line border-y border-line">
           {items.map((item) => (
-            <details key={item.q} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-medium">
+            <details key={item.q} className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-medium transition hover:text-fg [&::-webkit-details-marker]:hidden">
                 {item.q}
-                <span className="text-faint transition group-open:rotate-45" aria-hidden>+</span>
+                <span className="text-faint grid h-5 w-5 flex-none place-items-center rounded-full border border-line-strong text-xs transition group-open:rotate-45" aria-hidden>
+                  +
+                </span>
               </summary>
-              <p className="text-muted mt-3 text-sm leading-relaxed">{item.a}</p>
+              <p className="text-muted max-w-[62ch] pb-5 text-sm leading-relaxed">{item.a}</p>
             </details>
           ))}
         </div>

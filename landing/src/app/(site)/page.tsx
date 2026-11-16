@@ -6,9 +6,8 @@ import { ApprovalMock, BookingMock, HeroWindows, NoShowMock, TeamMock, WaitlistM
 import { Faq } from "@/components/sections";
 import { type Story, StoryScroller } from "@/components/story-scroller";
 import { Container, JsonLd } from "@/components/ui";
-import { ConstellationGraphic, GrowthCurve, TunnelGraphic } from "@/components/graphics";
+import { ConstellationGraphic, GrowthCurve, HoodPanel } from "@/components/graphics";
 import { Window } from "@/components/window";
-import { articles } from "@/content/articles";
 import { homeFaq } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -79,13 +78,6 @@ const stories: Story[] = [
       { title: "One flat price.", body: "Team is $49 a month for up to 10 people. No per-seat maths.", demo: ["Team · $49 a month", "Up to 10 people · no per-seat maths"] },
     ],
   },
-];
-
-const changelog = [
-  { date: "Nov 2026", title: "Teams", body: "Invite by email or link, roles, a shared team page." },
-  { date: "Nov 2026", title: "Managed services", body: "Set a service up once; every member gets a copy." },
-  { date: "Nov 2026", title: "Team waitlist", body: "One queue across every host on a team service." },
-  { date: "Nov 2026", title: "Coverage view", body: "See who's free this week and where the gaps are." },
 ];
 
 const facts = [
@@ -178,9 +170,11 @@ export default function Home() {
       </section>
 
       {/* Dark centrepiece */}
-      <section className="relative overflow-hidden border-y border-line pt-36">
+      <section className="relative overflow-hidden border-t border-line pt-36 pb-32">
         {/* A wide horizon: a thin multi-colour ring masked from a gradient, with a soft glow under it. */}
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-[300px] h-[1100px] w-[1900px] -translate-x-1/2">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-[300px] h-[1100px] w-[1900px] -translate-x-1/2 [mask-image:linear-gradient(180deg,#000_22%,transparent_42%)]">
           <div className="absolute inset-0 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(37,99,235,0.18),transparent_45%)]" />
           <div
             className="absolute inset-0 bg-[linear-gradient(90deg,#f97316,#ec4899_30%,#8b5cf6_55%,#2563eb_80%,#22d3ee)] blur-[1px]"
@@ -216,28 +210,55 @@ export default function Home() {
             </div>
           ))}
         </Container>
-      </section>
 
-      {/* Signals-style accordion */}
-      <section className="py-28">
-        <Container className="grid items-center gap-16 lg:grid-cols-2">
-          <div>
-            <p className="text-accent text-xs font-medium">Under the hood</p>
-            <h2 data-reveal className="mt-3 max-w-[18ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
-              All the scheduling, none of the busywork. <span className="text-faint">Ready on day one.</span>
-            </h2>
-            <div className="mt-10">
-              <Accordion
-                items={[
-                  { title: "Calendar sync", body: "Busy times from Google, Outlook, Apple and CalDAV are respected, and new bookings land on the calendar you choose." },
-                  { title: "Video and locations", body: "Google Meet, Zoom or built-in video links are added to every booking, or meet in person." },
-                  { title: "Limits and buffers", body: "Minimum notice, buffers, daily limits and how far ahead people can book." },
-                  { title: "Embeds and webhooks", body: "Put booking on your own site and send every booking to your other tools." },
-                ]}
-              />
-            </div>
+        {/* The horizon keeps going: the card dividers carry on down as fading light, into the details below. */}
+        <div aria-hidden className="pointer-events-none relative mx-auto hidden h-28 max-w-6xl px-4 sm:px-6 lg:block">
+          <div className="grid h-full grid-cols-5">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <span key={i} className="border-r border-transparent last:border-r-0">
+                <span className="ms-auto block h-full w-px bg-[linear-gradient(180deg,var(--color-line),transparent)]" />
+              </span>
+            ))}
           </div>
-          <TunnelGraphic />
+        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[620px] bg-[radial-gradient(ellipse_60%_55%_at_50%_0%,rgba(99,102,241,0.13),transparent_70%)]"
+        />
+
+        <Container className="relative mt-10 lg:mt-0">
+          <Accordion
+            header={
+              <>
+                <p className="text-accent text-xs font-medium">Under the hood</p>
+                <h2 data-reveal className="mt-3 max-w-[18ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
+                  All the scheduling, none of the busywork. <span className="text-faint">Ready on day one.</span>
+                </h2>
+              </>
+            }
+            items={[
+              {
+                title: "Calendar sync",
+                body: "Busy times from Google, Outlook, Apple and CalDAV are respected, and new bookings land on the calendar you choose.",
+                visual: <HoodPanel title="Calendars" rows={[["/logos/google-calendar.svg", "Google Calendar", "Checking for conflicts"], ["/logos/outlook.svg", "Outlook", "New bookings go here"], ["/logos/apple-calendar.svg", "Apple Calendar", "Checking for conflicts"]]} />,
+              },
+              {
+                title: "Video and locations",
+                body: "Google Meet, Zoom or built-in video links are added to every booking, or meet in person.",
+                visual: <HoodPanel title="Where you meet" rows={[["/logos/google-meet.webp", "Google Meet", "Link added to every booking"], ["/logos/zoom.svg", "Zoom", "A new meeting each time"], [null, "In person", "12 High Street, studio 2"]]} />,
+              },
+              {
+                title: "Limits and buffers",
+                body: "Minimum notice, buffers, daily limits and how far ahead people can book.",
+                visual: <HoodPanel title="Limits" rows={[[null, "Minimum notice", "4 hours"], [null, "Buffer after", "15 minutes"], [null, "Most per day", "6 bookings"], [null, "Book ahead", "Up to 60 days"]]} />,
+              },
+              {
+                title: "Embeds and webhooks",
+                body: "Put booking on your own site and send every booking to your other tools.",
+                visual: <HoodPanel title="Webhooks" rows={[[null, "booking.created", "200 OK · 84 ms"], [null, "booking.rescheduled", "200 OK · 91 ms"], [null, "booking.cancelled", "200 OK · 77 ms"]]} />,
+              },
+            ]}
+          />
         </Container>
       </section>
 
@@ -247,22 +268,23 @@ export default function Home() {
           <p className="text-accent text-xs font-medium">Connectivity</p>
           <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">Your tools, connected.</h2>
           <p className="text-muted mx-auto mt-3 max-w-[46ch] text-sm">Calendars, video and automation you already use. Bring your services and hours over from Calendly in a minute.</p>
-          <Link href="/features/team-scheduling" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
-            See what it works with <span aria-hidden>→</span>
+          <Link href="/docs/integrations" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
+            See every integration <span aria-hidden>→</span>
           </Link>
-          <div
-            data-reveal
-            className="mx-auto mt-14 flex max-w-5xl flex-wrap justify-center gap-4 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
-            {integrations.map((item) => (
+        </Container>
+        <div className="mt-14 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]">
+          <div className="marquee flex w-max gap-4">
+            {[...integrations, ...integrations, ...integrations, ...integrations].map((item, i) => (
               <span
-                key={item.name}
-                title={item.name}
-                className="grid h-[72px] w-[72px] place-items-center rounded-2xl border border-line-strong bg-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition duration-300 hover:-translate-y-1 hover:border-fg/30">
-                <Image src={item.logo} alt={item.name} width={34} height={34} className="h-[34px] w-[34px] object-contain" />
+                key={`${item.name}-${i}`}
+                aria-hidden={i >= integrations.length}
+                className="flex h-[72px] items-center gap-3 rounded-2xl border border-line-strong bg-surface px-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <Image src={item.logo} alt="" width={30} height={30} className="h-[30px] w-[30px] object-contain" />
+                <span className="text-muted whitespace-nowrap text-sm">{item.name}</span>
               </span>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* Developers */}
@@ -274,9 +296,9 @@ export default function Home() {
               <br />
               <span className="text-faint">Build anything on {site.name}.</span>
             </h2>
-            <a href={signupUrl} className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
-              Get started <span aria-hidden>→</span>
-            </a>
+            <Link href="/docs/developers" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
+              Read the docs <span aria-hidden>→</span>
+            </Link>
           </div>
           <ConstellationGraphic />
         </Container>
@@ -309,62 +331,6 @@ export default function Home() {
               ))}
             </div>
             <GrowthCurve />
-          </div>
-        </Container>
-      </section>
-
-      {/* Guides as stories */}
-      <section className="border-t border-line py-24">
-        <Container>
-          <p className="text-accent text-xs font-medium">Guides</p>
-          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
-            Straight answers. <span className="text-faint">About scheduling tools and full calendars.</span>
-          </h2>
-          <Link href="/blog" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
-            All guides <span aria-hidden>→</span>
-          </Link>
-          <div data-reveal className="mt-10 overflow-hidden rounded-2xl border border-line">
-            <div className="grid gap-px bg-line md:grid-cols-3">
-              {articles.slice(0, 3).map((a, i) => (
-                <Link
-                  key={a.slug}
-                  href={`/blog/${a.slug}`}
-                  className={`px-5 py-4 text-center text-[13px] font-medium transition ${i === 0 ? "bg-surface text-fg" : "bg-bg text-faint hover:text-muted"}`}>
-                  {a.keyword[0].toUpperCase() + a.keyword.slice(1)}
-                </Link>
-              ))}
-            </div>
-            <Link href={`/blog/${articles[0].slug}`} className="group grid border-t border-line md:grid-cols-[1fr_1.2fr]">
-              <div className="flex flex-col justify-end p-8">
-                <p className="text-faint text-[11px] uppercase tracking-[0.12em]">Comparison</p>
-                <p className="mt-3 max-w-[22ch] text-2xl font-medium leading-snug tracking-tight">{articles[0].title}</p>
-                <p className="text-muted mt-4 text-[13px] transition group-hover:text-fg">
-                  Read the guide <span aria-hidden>→</span>
-                </p>
-              </div>
-              <div className="relative min-h-64 overflow-hidden border-line bg-surface md:border-s">
-                <Image src="/shots/booking.png" alt="" fill sizes="(min-width: 768px) 55vw, 100vw" className="object-cover object-left-top opacity-90 transition duration-700 group-hover:scale-[1.03]" />
-              </div>
-            </Link>
-          </div>
-        </Container>
-      </section>
-
-      {/* Changelog */}
-      <section className="border-t border-line py-24">
-        <Container>
-          <p className="text-accent text-xs font-medium">Changelog</p>
-          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
-            Better as you grow. <span className="text-faint">New features to keep pace with you.</span>
-          </h2>
-          <div data-reveal className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-            {changelog.map((c) => (
-              <div key={c.title} className="bg-bg p-6">
-                <p className="text-faint text-[11px]">{c.date}</p>
-                <p className="mt-3 text-sm font-medium">{c.title}</p>
-                <p className="text-muted mt-1 text-[13px]">{c.body}</p>
-              </div>
-            ))}
           </div>
         </Container>
       </section>

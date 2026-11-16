@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import { Footer, Header } from "@/components/site-chrome";
 import { RevealObserver } from "@/components/reveal";
 import { JsonLd } from "@/components/ui";
 import { site } from "@/site.config";
@@ -35,9 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-screen">
         <RevealObserver />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        {children}
         <JsonLd
           data={{
             "@context": "https://schema.org",

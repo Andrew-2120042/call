@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 const STEP_MS = 6000;
 
-/** One-open-at-a-time list that advances on its own; the open item shows a progress line, and clicking pins it. */
-export function Accordion({ items }: { items: { title: string; body: string }[] }) {
+export type AccordionItem = { title: string; body: string; visual?: ReactNode };
+
+/**
+ * One-open-at-a-time list that advances on its own; the open item shows a progress line, and clicking pins it.
+ * When items carry visuals, the open item's visual is shown beside the list.
+ */
+export function Accordion({ items, header }: { items: AccordionItem[]; header?: ReactNode }) {
   const [open, setOpen] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -15,7 +20,7 @@ export function Accordion({ items }: { items: { title: string; body: string }[] 
     return () => clearTimeout(timer);
   }, [open, paused, items.length]);
 
-  return (
+  const list = (
     <ul className="max-w-md">
       {items.map((item, i) => (
         <li key={item.title} className="relative border-b border-line">
@@ -43,5 +48,22 @@ export function Accordion({ items }: { items: { title: string; body: string }[] 
         </li>
       ))}
     </ul>
+  );
+
+  const visual = items[open]?.visual;
+  if (!visual && !header) return list;
+
+  return (
+    <div className="grid items-center gap-16 lg:grid-cols-2">
+      <div>
+        {header}
+        <div className="mt-10">{list}</div>
+      </div>
+      {visual && (
+        <div key={open} className="accordion-visual" aria-hidden>
+          {visual}
+        </div>
+      )}
+    </div>
   );
 }

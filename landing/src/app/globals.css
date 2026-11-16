@@ -45,28 +45,33 @@ body {
   }
 }
 
-/* Particles travelling down the "tunnel" lines in the under-the-hood graphic. */
-.tunnel-dot {
-  offset-rotate: 0deg;
-  animation: tunnel-travel 4.5s cubic-bezier(0.55, 0, 0.9, 0.6) infinite;
+.accordion-visual {
+  animation: accordion-visual-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@keyframes tunnel-travel {
+@keyframes accordion-visual-in {
   from {
-    offset-distance: 0%;
     opacity: 0;
+    transform: translateY(10px);
   }
-  15% {
-    opacity: 1;
-  }
+}
+
+/* The tools strip scrolls sideways forever; the list is rendered twice so the loop is seamless. */
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
   to {
-    offset-distance: 100%;
-    opacity: 0;
+    transform: translateX(-50%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .accordion-progress,
-  .tunnel-dot {
+  .accordion-visual,
+  .marquee {
     animation: none;
   }
   .accordion-progress {
