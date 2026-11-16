@@ -7,6 +7,8 @@ const CommentIE = ({ html = "" }) => <RawHtml html={`<!--[if mso | IE]>${html}<!
 
 const EmailBodyLogo = () => {
   const image = `${WEBAPP_URL}/emails/logo.png`;
+  // A light wordmark for mail apps showing the email in dark mode (swapped in by EmailHead's dark styles).
+  const imageDark = `${WEBAPP_URL}/emails/logo-dark.png`;
 
   return (
     <>
@@ -48,11 +50,28 @@ const EmailBodyLogo = () => {
                     <td style={{ width: "89px" }}>
                       <a href={WEBAPP_URL} target="_blank" rel="noreferrer">
                         <img
+                          className="sw-logo-light"
                           height="19"
                           src={image}
                           style={{
                             border: "0",
                             display: "block",
+                            outline: "none",
+                            textDecoration: "none",
+                            height: "19px",
+                            width: "100%",
+                            fontSize: "13px",
+                          }}
+                          width="62"
+                          alt=""
+                        />
+                        <img
+                          className="sw-logo-dark"
+                          height="19"
+                          src={imageDark}
+                          style={{
+                            border: "0",
+                            display: "none",
                             outline: "none",
                             textDecoration: "none",
                             height: "19px",

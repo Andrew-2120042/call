@@ -10,6 +10,40 @@ const EmailHead = ({ title = "" }) => {
       />
       <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
+      {/* Lets mail apps that follow the reader's light/dark setting (Apple Mail, Outlook for Mac/iOS) use the
+          dark styles below; others keep the light version. */}
+      <meta name="color-scheme" content="light dark" />
+      <meta name="supported-color-schemes" content="light dark" />
+      {/* Raw so the quotes in the attribute selectors aren't HTML-escaped. */}
+      <RawHtml html={`<style type="text/css">
+          @media (prefers-color-scheme: dark) {
+            body, [style*="background-color:#F3F4F6"], [style*="background-color:#f3f4f6"] {
+              background: #0b0b0c !important;
+              background-color: #0b0b0c !important;
+            }
+            [style*="background-color:#FFFFFF"], [style*="background:#FFFFFF"],
+            [style*="background-color:#ffffff"], [style*="background:#ffffff"],
+            [style*="background-color:#fff;"], [style*="background:#fff;"], [bgcolor="#FFFFFF"] {
+              background: #161617 !important;
+              background-color: #161617 !important;
+            }
+            [style*="background:#f9fafb"], [style*="background-color:#f9fafb"] {
+              background: #1f1f21 !important;
+              background-color: #1f1f21 !important;
+            }
+            [style*="border"], hr {
+              border-color: #2e2e31 !important;
+            }
+            body, p, td, div, span, h1, h2, h3, li, strong {
+              color: #e8e8ea !important;
+            }
+            a {
+              color: #93c5fd !important;
+            }
+            .sw-logo-light { display: none !important; }
+            .sw-logo-dark { display: block !important; }
+          }
+        </style>`} />
       <style type="text/css">
         {`
           #outlook a {
