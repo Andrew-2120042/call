@@ -34,4 +34,9 @@ Everything still needed before Slotwise goes live. Tick items off as they're don
 - [ ] `packages/prisma/.env` points at a different database than the root `.env`, so `seed-app-store` fails with P1003 unless run with `DATABASE_URL` set. Fix the file or always pass the URL.
 - [ ] **Dodo:** the existing Dodo account is the business "usuals". Decide whether Slotwise sells under it or gets its own business (its own verification) before products are created.
 - [ ] **Zapier and Make:** accounts are logged in, but the apps can only be connected and published once the app has a public URL (after the domain and hosting).
+- [x] **Help & feedback** in the sidebar (done 2026-11-17): saves to the `Feedback` table and emails `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` with reply-to the sender. **Set that address to a real inbox before launch** (it defaults to `support@slotwise.app`).
+- [x] **Real email delivery, first pass** (2026-11-17): 6 emails sent through Resend (API and SMTP) to the Resend account's own address, all "Delivered". **Still to do by a person:** open them in that inbox and check they didn't land in spam, and how they look in light and dark mode on phone and desktop. Repeat from the real domain once it's verified.
+- [x] **Google, real test** (2026-11-17): calendar connected on the `teampro` test account, booking created an event, Google busy time blocked the slot, cancelling removed the event; "Sign in with Google" created a verified account. Scripts: `scripts/launch-sweep/gcal.cjs`, `google.cjs`.
+- [ ] **All connections need one more pass on the live domain** (owner's note): Google with production redirect URLs, Microsoft once Azure exists, Resend from the real domain, Dodo checkout, Zapier and Make.
+- [ ] Google sign-in asks for calendar access as well as name and email (inherited behaviour). Decide whether sign-in should ask for less.
 

@@ -1,0 +1,21 @@
+const L = require("./lib.cjs"); const { APP, db, check } = L;
+(async () => {
+  const T = await L.start(); const h = await T.login("pro@example.com", "pro"); await h.dismiss();
+  await h.goto(APP + "/bookings/upcoming", { timeout: 300000 }); await h.dismiss();
+  await h.locator("#help_and_feedback").click();
+  await h.getByTestId("feedback-dialog").waitFor({ timeout: 30000 });
+  await h.screenshot({ path: __dirname + "/feedback-dialog.png" });
+  check("Send is disabled until something is written", await h.getByTestId("feedback-send").isDisabled());
+  await h.getByTestId("feedback-kind-problem").click();
+  const msg = `Sweep ${L.RUN}: the week view opens at the wrong hour`;
+  await h.getByTestId("feedback-message").fill(msg);
+  const since = Date.now(); await h.getByTestId("feedback-send").click();
+  await h.getByText(/Thanks, we got it/).waitFor({ timeout: 30000 });
+  check("Sender sees a thank-you and the dialog closes", !(await h.getByTestId("feedback-dialog").isVisible().catch(() => false)));
+  check("Message is saved with its type", db(`select rating from "Feedback" where comment='${msg}'`) === "problem");
+  const m = await L.findMail("support@", since, /problem/i);
+  check("Support inbox gets it, reply-to the sender, with the page", !!m && /Reply-To:.*pro@example\.com/i.test(m.raw) && /Page: \/bookings\/upcoming/.test(m.raw), m?.subject);
+  const anon = await fetch(APP + "/api/feedback", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind: "feedback", message: "hello there" }) });
+  check("Signed-out requests are refused", anon.status === 401, anon.status);
+  L.summary(); await T.browser.close(); process.exit(0);
+})().catch((e) => { console.error("FATAL", e.message.split("\n")[0]); process.exit(1); });
