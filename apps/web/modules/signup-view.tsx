@@ -197,10 +197,15 @@ export default function Signup({
   } = formMethods;
 
   useEffect(() => {
-    if (redirectUrl) {
-      localStorage.setItem("onBoardingRedirect", redirectUrl);
+    // Someone who signed up from a team invite should finish setup on Teams, where their new team is.
+    const destination = redirectUrl || (token ? "/teams" : null);
+    if (!destination) return;
+    try {
+      localStorage.setItem("onBoardingRedirect", destination);
+    } catch {
+      // Without storage they land on Services and can open Teams from the sidebar.
     }
-  }, [redirectUrl]);
+  }, [redirectUrl, token]);
 
   const [userConsentToCookie, setUserConsentToCookie] = useState(false); // No need to be checked for user to proceed
 
