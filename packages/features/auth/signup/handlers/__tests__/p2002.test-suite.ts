@@ -137,6 +137,38 @@ export function runP2002TestSuite(
         });
       });
 
+      it("refuses a personal invite used with a different email address", async () => {
+        const response = await callHandler(
+          createSignupBody({ token: "valid-token", email: "someone-else@example.com" })
+        );
+
+        expect(response.status).toBe(403);
+        expect(prismaMock.user.upsert).not.toHaveBeenCalled();
+      });
+
+      it("a shared invite link doesn't mark the typed email as verified", async () => {
+        setFoundTokenIdentifier("invite-link-for-team-1");
+        prismaMock.user.findUnique.mockResolvedValue(null as never);
+        prismaMock.user.findFirst.mockResolvedValue(null as never);
+        prismaMock.user.upsert.mockResolvedValue(createMockUser() as never);
+
+        const response = await callHandler(createSignupBody({ token: "valid-token" }));
+
+        expect(response.status).toBe(201);
+        const upsertArgs = prismaMock.user.upsert.mock.calls[0][0] as { create: { emailVerified: Date | null } };
+        expect(upsertArgs.create.emailVerified).toBeNull();
+      });
+
+      it("a shared invite link can't claim an account that already exists", async () => {
+        setFoundTokenIdentifier("invite-link-for-team-1");
+        prismaMock.user.findUnique.mockResolvedValue({ id: 99, invitedTo: 1 } as never);
+
+        const response = await callHandler(createSignupBody({ token: "valid-token" }));
+
+        expect(response.status).toBe(409);
+        expect(prismaMock.user.upsert).not.toHaveBeenCalled();
+      });
+
       it("returns 201 when user exists and was invited to this team", async () => {
         prismaMock.user.findUnique.mockResolvedValue({ id: 99, invitedTo: 1 } as never);
         prismaMock.user.findFirst.mockResolvedValue(null as never);

@@ -58,6 +58,10 @@ vi.mock("@calcom/app-store/stripepayment/lib/utils", () => ({ getPremiumMonthlyP
 vi.mock("@calcom/features/auth/lib/getLocaleFromRequest", () => ({
   getLocaleFromRequest: vi.fn().mockResolvedValue("en"),
 }));
+const mockHasSeatAvailable: Mock = vi.fn().mockResolvedValue(true);
+vi.mock("@calcom/features/teams/lib/getTeamService", () => ({
+  getTeamService: () => ({ hasSeatAvailable: (...args: unknown[]) => mockHasSeatAvailable(...args) }),
+}));
 vi.mock("@calcom/features/auth/lib/verifyEmail", () => ({ sendEmailVerification: vi.fn() }));
 vi.mock("@calcom/features/auth/signup/utils/createOrUpdateMemberships", () => ({
   createOrUpdateMemberships: vi.fn(),

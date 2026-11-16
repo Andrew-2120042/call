@@ -29,6 +29,8 @@ export interface ITeamServiceDeps {
 const INVITE_DAYS = 7;
 const LINK_INVITE_DAYS = 30;
 const MAX_INVITES_PER_REQUEST = 20;
+/** The Team plan is a flat price for up to this many people; pending invites hold a seat too. */
+export const TEAM_SEAT_LIMIT = 10;
 const MANAGER_ROLES: MembershipRole[] = [MembershipRole.ADMIN, MembershipRole.OWNER];
 
 export const inviteLinkIdentifier = (teamId: number) => `invite-link-for-team-${teamId}`;
@@ -203,6 +205,22 @@ export class TeamService {
       );
     }
 
+    const newSeats: string[] = [];
+    for (const email of uniqueEmails) {
+      const existingUser = await this.repo.findUserByEmail(email);
+      const hasSeat = existingUser ? await this.repo.findMembership({ userId: existingUser.id, teamId }) : null;
+      if (!hasSeat) newSeats.push(email);
+    }
+    const seatsTaken = await this.repo.countMemberships(teamId);
+    if (seatsTaken + newSeats.length > TEAM_SEAT_LIMIT) {
+      throw ErrorWithCode.Factory.BadRequest(
+        `A team can have up to ${TEAM_SEAT_LIMIT} people, including pending invites. ${Math.max(
+          0,
+          TEAM_SEAT_LIMIT - seatsTaken
+        )} seat(s) left.`
+      );
+    }
+
     const invited: string[] = [];
     const alreadyMembers: string[] = [];
     for (const email of uniqueEmails) {
@@ -271,7 +289,7 @@ export class TeamService {
   }
 
   private joinUrl(token: string) {
-    return `${this.deps.webappUrl}/teams?token=${token}`;
+    return `${this.deps.webappUrl}/join/${token}`;
   }
 
   /** What the join page shows before someone accepts an invite link. */
@@ -295,6 +313,9 @@ export class TeamService {
     }
     const teamId = found.teamId;
     const membership = await this.repo.findMembership({ userId, teamId });
+    if (!membership && !(await this.hasSeatAvailable(teamId))) {
+      throw ErrorWithCode.Factory.BadRequest("team_is_full");
+    }
     if (!membership) {
       await this.repo.createMembership({ userId, teamId, role: MembershipRole.MEMBER, accepted: true });
     } else if (!membership.accepted) {
@@ -302,6 +323,11 @@ export class TeamService {
     }
     if (isPersonalInvite) await this.repo.deleteToken(found.id);
     return { teamId };
+  }
+
+  /** Whether one more person fits on the team (used by the invite link and by sign-up through it). */
+  async hasSeatAvailable(teamId: number) {
+    return (await this.repo.countMemberships(teamId)) < TEAM_SEAT_LIMIT;
   }
 
   async acceptInvite({ userId, teamId }: { userId: number; teamId: number }) {

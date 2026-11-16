@@ -157,6 +157,11 @@ export class TeamManagementRepository {
     });
   }
 
+  /** Everyone holding a seat: members plus invites not yet accepted. */
+  async countMemberships(teamId: number): Promise<number> {
+    return this.prismaClient.membership.count({ where: { teamId } });
+  }
+
   async listMembers(teamId: number): Promise<TeamMemberRow[]> {
     const memberships = await this.prismaClient.membership.findMany({
       where: { teamId },

@@ -38,6 +38,7 @@ import { signupSchema } from "@calcom/prisma/zod-utils";
 import { buildLegacyRequest } from "@calcom/web/lib/buildLegacyCtx";
 import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { getTeamService } from "@calcom/features/teams/lib/getTeamService";
 
 const log = logger.getSubLogger({ prefix: ["signupCalcomHandler"] });
 
@@ -97,6 +98,11 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
   if (token) {
     foundToken = await findTokenByToken({ token });
     throwIfTokenExpired(foundToken?.expires);
+    // A personal invite proves that one address; only that address may use it, and only it counts as verified.
+    if (foundToken.identifier.includes("@") && foundToken.identifier.toLowerCase() !== email) {
+      return NextResponse.json({ message: "This invite was sent to a different email address" }, { status: 403 });
+    }
+
     username = await validateAndGetCorrectedUsernameForTeam({
       username,
       email,
@@ -108,6 +114,15 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
       const existingUser = await userRepository.findByEmailWithInvitedTo({email})
 
       if (existingUser && existingUser.invitedTo !== foundToken.teamId) {
+        return NextResponse.json({ message: SIGNUP_ERROR_CODES.USER_ALREADY_EXISTS }, { status: 409 });
+      }
+      // A personal invite already holds a seat; the shared link needs a free one.
+      if (!foundToken.identifier.includes("@") && !(await getTeamService().hasSeatAvailable(foundToken.teamId))) {
+        return NextResponse.json({ message: "This team is full" }, { status: 403 });
+      }
+      // The shared link proves nothing about the address, so it can't claim an account that already exists
+      // (for example someone invited by email who hasn't signed up yet); they log in or use their own invite.
+      if (existingUser && !foundToken.identifier.includes("@")) {
         return NextResponse.json({ message: SIGNUP_ERROR_CODES.USER_ALREADY_EXISTS }, { status: 409 });
       }
     }
@@ -214,7 +229,7 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
           username,
           hashedPassword,
           organizationId,
-          emailVerified: new Date(),
+          emailVerified: foundToken.identifier.includes("@") ? new Date() : null,
           identityProvider: IdentityProvider.CAL
         })
       } catch (error) {
@@ -303,7 +318,8 @@ const handler: CustomNextApiHandler = async (body, usernameStatus, query) => {
     );
   }
 
-  if (!checkoutSessionId && !token) {
+  const isPersonalInvite = !!foundToken?.identifier.includes("@");
+  if (!checkoutSessionId && !isPersonalInvite) {
     sendEmailVerification({
       email,
       language: await getLocaleFromRequest(buildLegacyRequest(await headers(), await cookies())),

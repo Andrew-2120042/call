@@ -1559,7 +1559,7 @@ export class UserRepository {
     username: string | null;
     hashedPassword: string;
     organizationId: number | null;
-    emailVerified: Date;
+    emailVerified: Date | null;
     identityProvider: IdentityProvider;
   }) {
     return this.prismaClient.user.upsert({

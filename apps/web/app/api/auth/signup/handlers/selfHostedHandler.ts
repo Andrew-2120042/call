@@ -20,6 +20,7 @@ import { prisma } from "@calcom/prisma";
 import { IdentityProvider } from "@calcom/prisma/enums";
 import { signupSchema } from "@calcom/prisma/zod-utils";
 import { NextResponse } from "next/server";
+import { getTeamService } from "@calcom/features/teams/lib/getTeamService";
 import { getUserRepository } from "@calcom/features/di/containers/UserRepository";
 import { CreationSource } from "@calcom/prisma/enums";
 
@@ -40,6 +41,11 @@ export default async function handler(body: Record<string, string>) {
   if (token) {
     foundToken = await findTokenByToken({ token });
     throwIfTokenExpired(foundToken?.expires);
+    // A personal invite proves that one address; only that address may use it, and only it counts as verified.
+    if (foundToken.identifier.includes("@") && foundToken.identifier.toLowerCase() !== userEmail) {
+      return NextResponse.json({ message: "This invite was sent to a different email address" }, { status: 403 });
+    }
+
     correctedUsername = await validateAndGetCorrectedUsernameForTeam({
       username,
       email: userEmail,
@@ -53,6 +59,15 @@ export default async function handler(body: Record<string, string>) {
       })
 
       if (existingUser && existingUser.invitedTo !== foundToken.teamId) {
+        return NextResponse.json({ message: SIGNUP_ERROR_CODES.USER_ALREADY_EXISTS }, { status: 409 });
+      }
+      // A personal invite already holds a seat; the shared link needs a free one.
+      if (!foundToken.identifier.includes("@") && !(await getTeamService().hasSeatAvailable(foundToken.teamId))) {
+        return NextResponse.json({ message: "This team is full" }, { status: 403 });
+      }
+      // The shared link proves nothing about the address, so it can't claim an account that already exists
+      // (for example someone invited by email who hasn't signed up yet); they log in or use their own invite.
+      if (existingUser && !foundToken.identifier.includes("@")) {
         return NextResponse.json({ message: SIGNUP_ERROR_CODES.USER_ALREADY_EXISTS }, { status: 409 });
       }
     }
@@ -121,7 +136,7 @@ export default async function handler(body: Record<string, string>) {
           username: correctedUsername,
           hashedPassword,
           organizationId,
-          emailVerified: new Date(Date.now()),
+          emailVerified: foundToken.identifier.includes("@") ? new Date(Date.now()) : null,
           identityProvider: IdentityProvider.CAL
         })
       } catch (error) {
@@ -151,6 +166,9 @@ export default async function handler(body: Record<string, string>) {
     // A personal invite is single-use; a shared team invite link (no email in it) must keep working for the next person.
     if (foundToken.identifier.includes("@")) {
       await prisma.verificationToken.delete({ where: { id: foundToken.id } });
+    } else {
+      // The shared link says nothing about who owns the address they typed, so it still has to be verified.
+      await sendEmailVerification({ email: userEmail, username: correctedUsername, language });
     }
   } else {
     const isUsernameAvailable = !(await isUsernameReservedDueToMigration(correctedUsername));

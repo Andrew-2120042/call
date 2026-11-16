@@ -41,6 +41,10 @@ vi.mock("@calcom/lib/constants", () => ({ IS_PREMIUM_USERNAME_ENABLED: false }))
 vi.mock("@calcom/lib/server/username", () => ({
   isUsernameReservedDueToMigration: vi.fn().mockResolvedValue(false),
 }));
+const mockHasSeatAvailable: Mock = vi.fn().mockResolvedValue(true);
+vi.mock("@calcom/features/teams/lib/getTeamService", () => ({
+  getTeamService: () => ({ hasSeatAvailable: (...args: unknown[]) => mockHasSeatAvailable(...args) }),
+}));
 vi.mock("@calcom/features/auth/lib/verifyEmail", () => ({ sendEmailVerification: vi.fn() }));
 vi.mock("@calcom/features/auth/signup/utils/createOrUpdateMemberships", () => ({
   createOrUpdateMemberships: vi.fn(),

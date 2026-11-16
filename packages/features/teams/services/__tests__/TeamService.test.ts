@@ -84,6 +84,7 @@ function createFakeRepository() {
       memberships.find((m) => m.userId === userId && m.teamId === teamId) ?? null,
     findMembershipById: async (id: number) => memberships.find((m) => m.id === id) ?? null,
     listMembers: async (teamId: number) => memberships.filter((m) => m.teamId === teamId),
+    countMemberships: async (teamId: number) => memberships.filter((m) => m.teamId === teamId).length,
     findUserByEmail: async (email: string) => users.find((user) => user.email === email) ?? null,
     findUserById: async (id: number) => users.find((user) => user.id === id) ?? null,
     createInvitedUser: async ({ email }: { email: string; teamId: number }) => {
@@ -300,7 +301,7 @@ describe("TeamService", () => {
     it("reuses the active link and lets admins replace it", async () => {
       const team = await service.create({ userId: 1, name: "Sales" });
       const first = await service.getInviteLink({ userId: 1, teamId: team.id });
-      expect(first.link).toBe("https://app.test/teams?token=token-0000000000000001");
+      expect(first.link).toBe("https://app.test/join/token-0000000000000001");
       expect((await service.getInviteLink({ userId: 1, teamId: team.id })).link).toBe(first.link);
       const replaced = await service.getInviteLink({ userId: 1, teamId: team.id, regenerate: true });
       expect(replaced.link).not.toBe(first.link);
@@ -310,7 +311,7 @@ describe("TeamService", () => {
     it("lets anyone with the link join as a member, and the link keeps working", async () => {
       const team = await service.create({ userId: 1, name: "Sales" });
       const { link } = await service.getInviteLink({ userId: 1, teamId: team.id });
-      const token = new URL(link).searchParams.get("token") as string;
+      const token = new URL(link).pathname.split("/").pop() as string;
 
       expect(await service.previewInviteToken(token)).toMatchObject({
         team: { name: "Sales" },
@@ -325,6 +326,27 @@ describe("TeamService", () => {
       expect(await fake.repo.findMembership({ userId: 3, teamId: team.id })).toMatchObject({
         accepted: true,
       });
+    });
+
+    it("stops at 10 people, counting pending invites, for both invites and the link", async () => {
+      const team = await service.create({ userId: 1, name: "Sales" });
+      const eight = Array.from({ length: 8 }, (_, i) => `p${i}@example.com`);
+      await service.invite({ userId: 1, teamId: team.id, emails: eight, role: MembershipRole.MEMBER });
+      // Owner + 8 pending = 9 seats; two more don't fit, one does.
+      await expect(
+        service.invite({
+          userId: 1,
+          teamId: team.id,
+          emails: ["a@example.com", "b@example.com"],
+          role: MembershipRole.MEMBER,
+        })
+      ).rejects.toThrow(/up to 10 people/);
+      await service.invite({ userId: 1, teamId: team.id, emails: ["a@example.com"], role: MembershipRole.MEMBER });
+      expect(await service.hasSeatAvailable(team.id)).toBe(false);
+
+      const { link } = await service.getInviteLink({ userId: 1, teamId: team.id });
+      const token = new URL(link).pathname.split("/").pop() as string;
+      await expect(service.joinWithToken({ userId: 4, token })).rejects.toThrow("team_is_full");
     });
 
     it("refuses an expired link", async () => {
