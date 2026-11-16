@@ -20,7 +20,7 @@ export const ActionEmail = (
       title={props.title}
       headerType="calendarCircle"
       callToAction={props.cta ? <CallToAction label={props.cta.label} href={props.cta.href} /> : null}>
-      <p style={{ fontWeight: 400, lineHeight: "24px", margin: "0 0 16px" }}>{props.body}</p>
+      <p style={{ fontWeight: 400, lineHeight: "24px", margin: "0 0 16px", whiteSpace: "pre-line" }}>{props.body}</p>
       <Info label={props.serviceLabel} description={props.service} withSpacer />
       <Info label={props.whenLabel} description={props.when} withSpacer />
     </BaseEmailHtml>

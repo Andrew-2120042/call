@@ -24,7 +24,8 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
 
   if (declining) {
     return (
-      <div className="space-y-3">
+      <div className="border-subtle space-y-3 border-t pt-4">
+        <p className="text-emphasis text-xs font-semibold">{t("decline_booking")}</p>
         <TextArea
           name="rejectionReason"
           placeholder={t("decline_note_placeholder")}
@@ -45,13 +46,22 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
   }
 
   return (
-    <div className="flex justify-end gap-2">
-      <Button color="secondary" onClick={() => setDeclining(true)} disabled={isPending} data-testid="host-decline">
-        {t("decline")}
-      </Button>
-      <Button onClick={() => decide(true)} loading={isPending} data-testid="host-accept">
-        {t("accept_request")}
-      </Button>
+    <div className="border-subtle border-t pt-4">
+      <p className="text-emphasis text-xs font-semibold">{t("request_decide_title")}</p>
+      <p className="text-subtle mt-0.5 text-xs">{t("request_decide_hint")}</p>
+      <div className="mt-3 flex justify-end gap-2">
+        <Button
+          color="secondary"
+          StartIcon="x"
+          onClick={() => setDeclining(true)}
+          disabled={isPending}
+          data-testid="host-decline">
+          {t("decline_booking")}
+        </Button>
+        <Button StartIcon="check" onClick={() => decide(true)} loading={isPending} data-testid="host-accept">
+          {t("accept_booking")}
+        </Button>
+      </div>
     </div>
   );
 }

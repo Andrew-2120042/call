@@ -84,10 +84,11 @@ export const ToggleGroup = ({
               value={option.value}
               data-testid={option.dataTestId ?? `toggle-group-item-${option.value}`}
               className={classNames(
-                "aria-checked:bg-default aria-checked:border-subtle rounded-lg border border-transparent p-1.5 text-sm leading-none transition aria-checked:shadow-[0px_2px_3px_0px_rgba(0,0,0,0.03),0px_2px_2px_-1px_rgba(0,0,0,0.03)]",
+                // The selected option needs real contrast against the track, especially in dark mode.
+                "aria-checked:bg-default aria-checked:border-subtle aria-checked:text-emphasis aria-checked:font-medium dark:aria-checked:bg-black dark:aria-checked:border-emphasis rounded-lg border border-transparent p-1.5 text-sm leading-none transition aria-checked:shadow-[0px_2px_3px_0px_rgba(0,0,0,0.03),0px_2px_2px_-1px_rgba(0,0,0,0.03)]",
                 option.disabled
                   ? "text-gray-400 hover:cursor-not-allowed"
-                  : "text-default [&[aria-checked='false']]:hover:text-emphasis [&[aria-checked='false']]:hover:bg-subtle cursor-pointer",
+                  : "[&[aria-checked='false']]:text-subtle [&[aria-checked='false']]:hover:text-emphasis [&[aria-checked='false']]:hover:bg-subtle cursor-pointer",
                 isFullWidth && "w-full"
               )}>
               <div

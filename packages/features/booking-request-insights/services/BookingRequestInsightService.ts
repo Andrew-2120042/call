@@ -1,3 +1,5 @@
+import { ErrorCode } from "@calcom/lib/errorCodes";
+import { ErrorWithCode } from "@calcom/lib/errors";
 import { BookingRequestFit } from "@calcom/prisma/enums";
 import type {
   IBookingRequestInsightRepository,
@@ -35,7 +37,19 @@ export interface IBookingRequestInsightServiceDeps {
   logger?: { error: (...args: unknown[]) => void };
   /** Whether the host's plan currently includes AI insights; omitted means always allowed. */
   isHostEntitled?: (userId: number) => Promise<boolean>;
+  /** Delivers the host's message to the person who requested the booking. */
+  sendHostReply?: (reply: HostReply) => Promise<void>;
 }
+
+export type HostReply = {
+  to: { name: string; email: string; timeZone: string; locale: string | null };
+  host: { name: string; email: string };
+  serviceTitle: string;
+  startTime: Date;
+  message: string;
+};
+
+export const MAX_REPLY_LENGTH = 4000;
 
 const MAX_PER_RUN = 20;
 const LOOKBACK_DAYS = 7;
@@ -137,5 +151,30 @@ export class BookingRequestInsightService {
 
   async getForHost(params: { bookingUid: string; userId: number }) {
     return this.deps.repository.findByBookingUidForHost(params);
+  }
+
+  /** Sends the host's (possibly edited) reply to the requester of one of the host's own booking requests. */
+  async sendReply(params: { bookingUid: string; userId: number; message: string }) {
+    const message = params.message.trim();
+    if (!message) throw ErrorWithCode.Factory.BadRequest("Write a message before sending it.");
+    if (message.length > MAX_REPLY_LENGTH)
+      throw ErrorWithCode.Factory.BadRequest(`Keep the message under ${MAX_REPLY_LENGTH} characters.`);
+    if (!this.deps.sendHostReply) throw new ErrorWithCode(ErrorCode.InternalServerError, "Email is not configured.");
+
+    const booking = await this.deps.repository.findByUidForHostIncludeAttendees({
+      bookingUid: params.bookingUid,
+      userId: params.userId,
+    });
+    const attendee = booking?.attendees[0];
+    if (!booking || !attendee || !booking.user?.email) throw ErrorWithCode.Factory.NotFound("Booking not found.");
+
+    await this.deps.sendHostReply({
+      to: { name: attendee.name, email: attendee.email, timeZone: attendee.timeZone, locale: attendee.locale },
+      host: { name: booking.user.name || booking.user.email, email: booking.user.email },
+      serviceTitle: booking.eventType?.title || booking.title,
+      startTime: booking.startTime,
+      message,
+    });
+    return { sentTo: attendee.email };
   }
 }

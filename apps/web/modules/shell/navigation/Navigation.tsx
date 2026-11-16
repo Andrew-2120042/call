@@ -20,7 +20,7 @@ const getNavigationItems = (): NavigationItemType[] => [
   {
     name: "home_page_title",
     href: "/home",
-    icon: "layout-dashboard",
+    icon: "house",
   },
   {
     name: "event_types_page_title",

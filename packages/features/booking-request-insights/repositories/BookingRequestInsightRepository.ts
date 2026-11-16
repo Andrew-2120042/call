@@ -51,6 +51,21 @@ export class BookingRequestInsightRepository {
     }
   }
 
+  async findByUidForHostIncludeAttendees(params: { bookingUid: string; userId: number }) {
+    return this.prismaClient.booking.findFirst({
+      where: { uid: params.bookingUid, userId: params.userId },
+      select: {
+        id: true,
+        status: true,
+        startTime: true,
+        title: true,
+        eventType: { select: { title: true } },
+        user: { select: { name: true, email: true } },
+        attendees: { select: { name: true, email: true, timeZone: true, locale: true }, orderBy: { id: "asc" }, take: 1 },
+      },
+    });
+  }
+
   async findByBookingUidForHost(params: { bookingUid: string; userId: number }) {
     return this.prismaClient.bookingRequestInsight.findFirst({
       where: { booking: { uid: params.bookingUid, userId: params.userId } },
@@ -68,5 +83,5 @@ export class BookingRequestInsightRepository {
 
 export type IBookingRequestInsightRepository = Pick<
   BookingRequestInsightRepository,
-  "findPendingWithoutInsight" | "save" | "findByBookingUidForHost"
+  "findPendingWithoutInsight" | "save" | "findByBookingUidForHost" | "findByUidForHostIncludeAttendees"
 >;

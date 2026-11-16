@@ -490,8 +490,9 @@ export default function Success(props: PageProps) {
           <Link
             href={allRemainingBookings ? "/bookings/recurring" : "/bookings/upcoming"}
             data-testid="back-to-bookings"
-            className="hover:bg-subtle text-subtle hover:text-default mt-2 inline-flex px-1 py-2 text-sm transition dark:hover:bg-transparent">
-            <ChevronLeftIcon className="h-5 w-5 rtl:rotate-180" /> {t("back_to_bookings")}
+            className="hover:bg-subtle text-subtle hover:text-default mt-2 inline-flex items-center gap-1 px-1 py-2 text-sm leading-none transition dark:hover:bg-transparent">
+            <ChevronLeftIcon className="h-4 w-4 shrink-0 rtl:rotate-180" />
+            <span>{t("back_to_bookings")}</span>
           </Link>
         </div>
       )}
@@ -569,6 +570,7 @@ export default function Success(props: PageProps) {
                       {isHostReviewingRequest && (
                         <RequestInsightPanel
                           bookingUid={bookingInfo.uid}
+                          clientName={bookingInfo.attendees[0]?.name?.split(" ")[0]}
                           actions={<HostRequestActions bookingId={bookingInfo.id} />}
                         />
                       )}

@@ -23,6 +23,14 @@ export function getBookingRequestInsightService(): BookingRequestInsightService 
       : null,
     logger: logger.getSubLogger({ prefix: ["[request-insights]"] }),
     isHostEntitled: (userId) => getPlanService().hasFeature(userId, "aiRequestInsights"),
+    sendHostReply: async (reply) => {
+      const [{ HostReplyEmail }, { getTranslation }] = await Promise.all([
+        import("@calcom/emails/templates/host-reply-email"),
+        import("@calcom/i18n/server"),
+      ]);
+      const t = await getTranslation(reply.to.locale || "en", "common");
+      await new HostReplyEmail({ ...reply, t }).sendEmail();
+    },
   });
   return service;
 }

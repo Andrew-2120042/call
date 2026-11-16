@@ -82,6 +82,7 @@ export const lucideIconList = new Set([
   "italic",
   "key",
   "layers",
+  "house",
   "layout-dashboard",
   "link-2",
   "link",

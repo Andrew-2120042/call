@@ -5163,5 +5163,16 @@
   "request_insight_reply_copied": "Reply copied",
   "decline_note_placeholder": "Optional note to the client, e.g. a better time or a link to book something else",
   "decline_request": "Decline request",
-  "accept_request": "Accept"
+  "accept_request": "Accept",
+  "request_reply_send": "Send reply to {{name}}",
+  "request_reply_sent": "Sent to {{email}}. Their answer will come to your email.",
+  "request_reply_sent_short": "Reply sent",
+  "request_reply_hint": "Edit it if you like. It's emailed from Slotwise, and their answer comes to your inbox.",
+  "request_decide_title": "Booking",
+  "request_decide_hint": "Accepting confirms the time and sends calendar invites. Declining frees it up.",
+  "accept_booking": "Accept booking",
+  "decline_booking": "Decline booking",
+  "host_reply_subject": "{{hostName}} replied about {{eventTitle}}",
+  "host_reply_title": "A message from {{hostName}}",
+  "client": "them"
 }

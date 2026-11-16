@@ -1,11 +1,12 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Badge } from "@calcom/ui/components/badge";
 import { Button } from "@calcom/ui/components/button";
+import { TextArea } from "@calcom/ui/components/form";
 import { showToast } from "@calcom/ui/components/toast";
 
 type Fit = "GOOD" | "UNCLEAR" | "POOR";
@@ -32,7 +33,15 @@ export function RequestFitBadges({ fit, spamLikely }: { fit: Fit; spamLikely: bo
  * AI triage for the host. The query is host-scoped server-side, so guests simply get nothing.
  * `actions` lets the request page put Accept / Decline right under the assessment.
  */
-export function RequestInsightPanel({ bookingUid, actions }: { bookingUid: string; actions?: ReactNode }) {
+export function RequestInsightPanel({
+  bookingUid,
+  actions,
+  clientName,
+}: {
+  bookingUid: string;
+  actions?: ReactNode;
+  clientName?: string;
+}) {
   const { t } = useLocale();
   const query = trpc.viewer.requestInsights.get.useQuery({ bookingUid }, { retry: false });
   const insight = query.data?.insight;
@@ -61,23 +70,63 @@ export function RequestInsightPanel({ bookingUid, actions }: { bookingUid: strin
           ))}
         </ul>
       )}
-      <div className="border-subtle bg-default mt-4 rounded-lg border p-3">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-subtle text-xs font-medium">{t("request_insight_reply")}</p>
-          <Button
-            color="minimal"
-            size="sm"
-            StartIcon="copy"
-            onClick={() => {
-              navigator.clipboard.writeText(insight.suggestedReply);
-              showToast(t("request_insight_reply_copied"), "success");
-            }}>
-            {t("copy")}
-          </Button>
-        </div>
-        <p className="text-default mt-1 text-sm leading-relaxed">{insight.suggestedReply}</p>
-      </div>
+      <SuggestedReply bookingUid={bookingUid} initial={insight.suggestedReply} clientName={clientName} />
       {actions && <div className="mt-4">{actions}</div>}
+    </div>
+  );
+}
+
+/** The AI's draft reply: editable, copyable, and sendable to the client by email (replies reach the host). */
+function SuggestedReply({ bookingUid, initial, clientName }: { bookingUid: string; initial: string; clientName?: string }) {
+  const { t } = useLocale();
+  const [message, setMessage] = useState(initial);
+  const [sentTo, setSentTo] = useState<string | null>(null);
+  const send = trpc.viewer.requestInsights.sendReply.useMutation({
+    onSuccess: (result) => {
+      setSentTo(result.sentTo);
+      showToast(t("request_reply_sent", { email: result.sentTo }), "success");
+    },
+    onError: (error) => showToast(error.message, "error"),
+  });
+
+  return (
+    <div className="border-subtle bg-default mt-4 rounded-lg border p-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-emphasis text-xs font-semibold">{t("request_insight_reply")}</p>
+        <Button
+          color="minimal"
+          size="sm"
+          StartIcon="copy"
+          onClick={() => {
+            navigator.clipboard.writeText(message);
+            showToast(t("request_insight_reply_copied"), "success");
+          }}>
+          {t("copy")}
+        </Button>
+      </div>
+      <TextArea
+        name="suggestedReply"
+        value={message}
+        onChange={(e) => {
+          setMessage(e.target.value);
+          setSentTo(null);
+        }}
+        rows={5}
+        className="mt-2 text-sm leading-relaxed"
+      />
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+        <p className="text-subtle text-xs">{sentTo ? t("request_reply_sent", { email: sentTo }) : t("request_reply_hint")}</p>
+        <Button
+          size="sm"
+          color="secondary"
+          StartIcon={sentTo ? "check" : "send"}
+          loading={send.isPending}
+          disabled={!message.trim() || !!sentTo}
+          onClick={() => send.mutate({ bookingUid, message })}
+          data-testid="send-request-reply">
+          {sentTo ? t("request_reply_sent_short") : t("request_reply_send", { name: clientName || t("client") })}
+        </Button>
+      </div>
     </div>
   );
 }
