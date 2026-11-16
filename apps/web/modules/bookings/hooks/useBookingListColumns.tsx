@@ -39,6 +39,18 @@ export function useBookingListColumns({
           },
         },
       }),
+      columnHelper.accessor((row) => row, {
+        id: "aiLabel",
+        header: t("ai_label_filter"),
+        enableColumnFilter: true,
+        enableSorting: false,
+        cell: () => null,
+        meta: {
+          filter: {
+            type: ColumnFilterType.MULTI_SELECT,
+          },
+        },
+      }),
       columnHelper.accessor((row) => !isSeparatorRow(row) && row.booking.eventType.team?.id, {
         id: "teamId",
         header: t("team"),

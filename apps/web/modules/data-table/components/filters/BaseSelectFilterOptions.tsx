@@ -19,7 +19,7 @@ import {
   CommandSeparator,
 } from "@calcom/ui/components/command";
 import { CheckIcon } from "@coss/ui/icons";
-import { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 import { useDataTable, useFilterValue } from "~/data-table/hooks";
 
 type FilterableColumn = Extract<_FilterableColumn, { type: Extract<FilterType, "ms" | "ss"> }>;
@@ -123,16 +123,14 @@ export function BaseSelectFilterOptions<T extends Extract<FilterType, "ms" | "ss
           const { label: optionLabel, value: optionValue, section } = option;
 
           return (
-            <>
+            <Fragment key={String(optionValue)}>
               {section && index !== 0 && <hr className="border-subtle my-1" />}
               {section && (
                 <div className="text-subtle px-4 py-2 text-xs font-medium uppercase leading-none">
                   {section}
                 </div>
               )}
-              <CommandItem
-                key={optionValue}
-                onSelect={() => onOptionSelect(column, filterValue, optionValue)}>
+              <CommandItem onSelect={() => onOptionSelect(column, filterValue, optionValue)}>
                 <div
                   className={classNames(
                     "border-subtle mr-2 flex h-4 w-4 items-center justify-center rounded-sm",
@@ -144,7 +142,7 @@ export function BaseSelectFilterOptions<T extends Extract<FilterType, "ms" | "ss
                 </div>
                 {optionLabel}
               </CommandItem>
-            </>
+            </Fragment>
           );
         })}
       </CommandList>

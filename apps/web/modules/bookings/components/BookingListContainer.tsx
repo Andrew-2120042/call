@@ -141,6 +141,7 @@ function BookingListInner({
     initialState: {
       columnVisibility: {
         eventTypeId: false,
+        aiLabel: false,
         teamId: false,
         userId: false,
         attendeeName: false,
@@ -228,7 +229,7 @@ function BookingListInner({
 
 export function BookingListContainer(props: BookingListContainerProps) {
   const { limit, offset, setPageIndex, isValidatorPending } = useDataTable();
-  const { eventTypeIds, teamIds, userIds, dateRange, attendeeName, attendeeEmail, bookingUid } =
+  const { eventTypeIds, teamIds, userIds, dateRange, attendeeName, attendeeEmail, bookingUid, aiLabels } =
     useBookingFilters();
 
   // Build query input once - shared between query and prefetching
@@ -239,6 +240,7 @@ export function BookingListContainer(props: BookingListContainerProps) {
       filters: {
         statuses: [props.status],
         eventTypeIds,
+        aiLabels,
         teamIds,
         userIds,
         attendeeName,
@@ -255,6 +257,7 @@ export function BookingListContainer(props: BookingListContainerProps) {
       offset,
       props.status,
       eventTypeIds,
+      aiLabels,
       teamIds,
       userIds,
       attendeeName,

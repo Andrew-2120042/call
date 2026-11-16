@@ -99,6 +99,8 @@ function EventTypeSingleLayout({
 
   return (
     <Shell
+      // The editor needs the width; the back arrow returns to Services, so the main sidebar steps aside here.
+      SidebarContainer={isPlatform ? undefined : <NoSidebar />}
       backPath={teamId ? `/event-types?teamId=${teamId}` : "/event-types"}
       title={`${eventType.title} | ${t("event_type")}`}
       heading={
@@ -323,3 +325,8 @@ function EventTypeSingleLayout({
 }
 
 export { EventTypeSingleLayout };
+
+/** Stands in for the main sidebar while editing a service; Shell passes it layout props it doesn't need. */
+function NoSidebar(_props: { bannersHeight?: number }) {
+  return null;
+}

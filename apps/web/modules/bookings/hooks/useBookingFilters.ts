@@ -9,6 +9,9 @@ export function useBookingFilters() {
   const attendeeName = useFilterValue("attendeeName", ZTextFilterValue);
   const attendeeEmail = useFilterValue("attendeeEmail", ZTextFilterValue);
   const bookingUid = useFilterValue("bookingUid", ZTextFilterValue)?.data?.operand as string | undefined;
+  const aiLabels = useFilterValue("aiLabel", ZMultiSelectFilterValue)?.data as
+    | ("GOOD" | "UNCLEAR" | "POOR" | "SPAM")[]
+    | undefined;
 
   return {
     eventTypeIds,
@@ -18,5 +21,6 @@ export function useBookingFilters() {
     attendeeName,
     attendeeEmail,
     bookingUid,
+    aiLabels,
   };
 }

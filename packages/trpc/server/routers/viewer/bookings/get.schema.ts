@@ -11,6 +11,8 @@ type TGetInputSchemaFilters = {
   status?: BookingStatus;
   statuses?: BookingStatus[];
   eventTypeIds?: number[];
+  /** AI triage labels on booking requests; "SPAM" matches anything flagged as spam. */
+  aiLabels?: ("GOOD" | "UNCLEAR" | "POOR" | "SPAM")[];
   attendeeEmail?: string | z.infer<typeof ZTextFilterValue>;
   attendeeName?: string | z.infer<typeof ZTextFilterValue>;
   bookingUid?: string;
@@ -50,6 +52,7 @@ export const ZGetInputSchema: z.ZodType<TGetInputSchema, z.ZodTypeDef, TGetInput
     status: z.enum(["upcoming", "recurring", "past", "cancelled", "unconfirmed"]).optional(),
     statuses: z.enum(["upcoming", "recurring", "past", "cancelled", "unconfirmed"]).array().optional(),
     eventTypeIds: z.number().array().optional(),
+    aiLabels: z.enum(["GOOD", "UNCLEAR", "POOR", "SPAM"]).array().optional(),
     attendeeEmail: z.union([z.string(), ZTextFilterValue]).optional(),
     attendeeName: z.union([z.string(), ZTextFilterValue]).optional(),
     bookingUid: z.string().optional(),

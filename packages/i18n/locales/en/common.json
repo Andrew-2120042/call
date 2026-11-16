@@ -5174,5 +5174,17 @@
   "decline_booking": "Decline booking",
   "host_reply_subject": "{{hostName}} replied about {{eventTitle}}",
   "host_reply_title": "A message from {{hostName}}",
-  "client": "them"
+  "client": "them",
+  "ai_label_filter": "AI label",
+  "home_subtitle": "Here's how your calendar is doing.",
+  "home_next_booking": "Next booking",
+  "home_bookings_chart": "Bookings made",
+  "home_last_8_weeks": "Last 8 weeks",
+  "home_busiest_days": "Busiest days",
+  "home_your_services": "Your services",
+  "home_manage_services": "Manage services",
+  "home_add_first_service": "Add your first service",
+  "home_minutes": "{{count}} min",
+  "home_needs_approval": "Needs approval",
+  "home_booked_30_days": "booked in the last 30 days"
 }

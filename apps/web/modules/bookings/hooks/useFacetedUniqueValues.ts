@@ -1,4 +1,5 @@
 import { convertFacetedValuesToMap, type FacetedValue } from "@calcom/features/data-table";
+import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import useMeQuery from "@calcom/trpc/react/hooks/useMeQuery";
 import type { RowData, Table } from "@tanstack/react-table";
@@ -19,12 +20,20 @@ export function useFacetedUniqueValues({
   const teams = undefined as { id: number; name: string }[] | undefined;
   const members = undefined as { id: number; name: string | null }[] | undefined;
   const { data: currentUser } = useMeQuery();
+  const { t } = useLocale();
 
   return useCallback(
     <TData extends RowData>(_: Table<TData>, columnId: string) =>
       (): Map<FacetedValue, number> => {
         if (columnId === "eventTypeId") {
           return convertFacetedValuesToMap(eventTypes || []);
+        } else if (columnId === "aiLabel") {
+          return convertFacetedValuesToMap([
+            { label: t("request_insight_fit_good"), value: "GOOD" },
+            { label: t("request_insight_fit_unclear"), value: "UNCLEAR" },
+            { label: t("request_insight_fit_poor"), value: "POOR" },
+            { label: t("request_insight_spam"), value: "SPAM" },
+          ]);
         } else if (columnId === "teamId") {
           return convertFacetedValuesToMap(
             (teams || []).map((team) => ({
@@ -55,6 +64,6 @@ export function useFacetedUniqueValues({
         }
         return new Map<FacetedValue, number>();
       },
-    [eventTypes, teams, members, canReadOthersBookings, currentUser]
+    [eventTypes, teams, members, canReadOthersBookings, currentUser, t]
   );
 }

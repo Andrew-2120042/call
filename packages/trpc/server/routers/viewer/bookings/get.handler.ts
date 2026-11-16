@@ -350,6 +350,27 @@ export async function getBookings({
       fullQuery = fullQuery.where("Booking.eventTypeId", "in", eventTypeIdsFromEventTypeIdsFilter);
     }
 
+    // 3b. Filter by AI triage label on booking requests (only bookings that have an assessment can match)
+    const aiLabels = filters?.aiLabels;
+    if (aiLabels && aiLabels.length > 0) {
+      const fits = aiLabels.filter((label) => label !== "SPAM") as ("GOOD" | "UNCLEAR" | "POOR")[];
+      const wantsSpam = aiLabels.includes("SPAM");
+      fullQuery = fullQuery.where((eb) =>
+        eb.exists(
+          eb
+            .selectFrom("BookingRequestInsight")
+            .select("BookingRequestInsight.id")
+            .whereRef("BookingRequestInsight.bookingId", "=", "Booking.id")
+            .where((inner) =>
+              inner.or([
+                ...(fits.length ? [inner("BookingRequestInsight.fit", "in", fits)] : []),
+                ...(wantsSpam ? [inner("BookingRequestInsight.spamLikely", "=", true)] : []),
+              ])
+            )
+        )
+      );
+    }
+
     // 4. Filter by Attendee Name (if provided)
     if (filters?.attendeeName) {
       if (typeof filters.attendeeName === "string") {
