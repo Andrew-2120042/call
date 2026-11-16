@@ -13,6 +13,7 @@ import { z } from "zod";
 const bodySchema = z.object({
   teamSlug: z.string().min(1).max(100),
   message: z.string().trim().min(3).max(1000),
+  timeZone: z.string().max(100).optional(),
 });
 
 // Public: a visitor on a team page describes what they need and is pointed at a service or person.
@@ -26,7 +27,7 @@ async function handler(req: NextRequest) {
   const service = getTeamRoutingService();
   if (!service.isEnabled) return NextResponse.json({ message: "Routing is not available" }, { status: 503 });
   const result = await service.route(parsed.data);
-  if (!result) return NextResponse.json({ service: null, member: null, reason: null });
+  if (!result) return NextResponse.json({ service: null, member: null, reason: null, availability: null });
   return NextResponse.json(result);
 }
 

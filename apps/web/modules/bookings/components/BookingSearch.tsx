@@ -3,7 +3,6 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
 import { useEffect, useState } from "react";
-
 import { useBookingSearch } from "../hooks/useBookingSearch";
 
 /** Type a name, email or service; the list filters as you type (debounced so we don't query every keystroke). */
@@ -23,15 +22,16 @@ export function BookingSearch({ onSearch }: { onSearch?: () => void }) {
   }, [value, search, setSearch, onSearch]);
 
   return (
-    <label className="border-default bg-default focus-within:border-emphasis flex h-9 w-full items-center gap-2 rounded-lg border px-3 transition md:w-64">
-      <Icon name="search" className="text-subtle h-4 w-4 flex-none" />
+    // Same height as the tab strip beside it, and narrower, so the toolbar reads as one row.
+    <label className="border-default bg-default focus-within:border-emphasis flex h-[34px] w-full items-center gap-2 rounded-[10px] border px-2.5 transition md:w-52">
+      <Icon name="search" className="text-subtle h-3.5 w-3.5 flex-none" />
       <input
         type="search"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={t("search_bookings_placeholder")}
         aria-label={t("search_bookings_placeholder")}
-        className="text-emphasis placeholder:text-subtle h-full w-full min-w-0 bg-transparent text-sm outline-none"
+        className="text-emphasis placeholder:text-subtle h-full w-full min-w-0 bg-transparent text-[13px] outline-none"
         data-testid="bookings-search"
       />
     </label>

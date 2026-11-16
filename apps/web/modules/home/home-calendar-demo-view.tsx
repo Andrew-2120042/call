@@ -59,7 +59,9 @@ export default function HomeCalendarDemoView() {
       ...(unconfirmed.data?.bookings ?? []),
     ] as unknown as WeekBooking[];
     const seen = new Set<string>();
-    return all.filter((b) => !seen.has(b.uid) && seen.add(b.uid) && b.status !== "CANCELLED" && b.status !== "REJECTED");
+    return all.filter(
+      (b) => !seen.has(b.uid) && seen.add(b.uid) && b.status !== "CANCELLED" && b.status !== "REJECTED"
+    );
   }, [past.data, upcoming.data, unconfirmed.data]);
 
   const days = Array.from({ length: 7 }, (_, i) => weekStart.add(i, "day"));
@@ -70,7 +72,8 @@ export default function HomeCalendarDemoView() {
     .sort((a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf())[0];
   const todayCount = bookings.filter((b) => dayjs(b.startTime).isSame(now, "day")).length;
   const firstName = (me.data?.name ?? "").split(" ")[0];
-  const greeting = now.hour() < 12 ? "home_good_morning" : now.hour() < 18 ? "home_good_afternoon" : "home_good_evening";
+  const greeting =
+    now.hour() < 12 ? "home_good_morning" : now.hour() < 18 ? "home_good_afternoon" : "home_good_evening";
 
   if (!mounted) return <div className="h-[calc(100dvh-7rem)] min-h-[560px]" aria-hidden />;
 
@@ -115,7 +118,9 @@ export default function HomeCalendarDemoView() {
             const isToday = d.isSame(now, "day");
             return (
               <div key={d.format("YYYY-MM-DD")} className="py-2 text-center text-xs">
-                <span className={isToday ? "text-emphasis font-semibold" : "text-subtle"}>{d.format("ddd")} </span>
+                <span className={isToday ? "text-emphasis font-semibold" : "text-subtle"}>
+                  {d.format("ddd")}{" "}
+                </span>
                 <span
                   className={
                     isToday
@@ -130,7 +135,9 @@ export default function HomeCalendarDemoView() {
         </div>
 
         <div className="relative flex-1 overflow-y-auto">
-          <div className="relative grid grid-cols-[52px_repeat(7,1fr)]" style={{ height: hours.length * HOUR_PX }}>
+          <div
+            className="relative grid grid-cols-[52px_repeat(7,1fr)]"
+            style={{ height: hours.length * HOUR_PX }}>
             <div>
               {hours.map((h) => (
                 <div key={h} className="text-subtle pr-2 text-right text-[10px]" style={{ height: HOUR_PX }}>
@@ -199,7 +206,7 @@ export default function HomeCalendarDemoView() {
             e.preventDefault();
             router.push(`/assistant${ask.trim() ? `?q=${encodeURIComponent(ask.trim())}` : ""}`);
           }}>
-          <Icon name="sparkles" className="text-subtle h-4 w-4 flex-none" />
+          <Icon name="message-circle" className="text-subtle h-4 w-4 flex-none" />
           <input
             value={ask}
             onChange={(e) => setAsk(e.target.value)}
@@ -214,7 +221,9 @@ export default function HomeCalendarDemoView() {
         <div className="mt-6">
           <p className="text-subtle text-xs font-medium uppercase tracking-wide">{t("home_next_booking")}</p>
           {next ? (
-            <Link href={`/booking/${next.uid}`} className="border-subtle hover:bg-subtle mt-2 block rounded-xl border p-3">
+            <Link
+              href={`/booking/${next.uid}`}
+              className="border-subtle hover:bg-subtle mt-2 block rounded-xl border p-3">
               <p className="text-emphasis text-sm font-medium">{next.attendees[0]?.name ?? next.title}</p>
               <p className="text-subtle text-xs">{dayjs(next.startTime).format("ddd D MMM, h:mma")}</p>
             </Link>
@@ -225,7 +234,9 @@ export default function HomeCalendarDemoView() {
 
         <div className="mt-6">
           <div className="flex items-center justify-between">
-            <p className="text-subtle text-xs font-medium uppercase tracking-wide">{t("home_demo_needs_you")}</p>
+            <p className="text-subtle text-xs font-medium uppercase tracking-wide">
+              {t("home_demo_needs_you")}
+            </p>
             <Link href="/bookings/unconfirmed" className="text-subtle text-xs hover:underline">
               {t("home_all_bookings")}
             </Link>
@@ -236,7 +247,9 @@ export default function HomeCalendarDemoView() {
             <ul className="mt-2 space-y-2">
               {requests.slice(0, 5).map((b) => (
                 <li key={b.uid}>
-                  <Link href={`/booking/${b.uid}`} className="border-subtle hover:bg-subtle block rounded-xl border p-3">
+                  <Link
+                    href={`/booking/${b.uid}`}
+                    className="border-subtle hover:bg-subtle block rounded-xl border p-3">
                     <p className="text-emphasis text-sm font-medium">{b.attendees[0]?.name ?? b.title}</p>
                     <p className="text-subtle text-xs">{dayjs(b.startTime).format("ddd D MMM, h:mma")}</p>
                     <RequestInsightLine bookingUid={b.uid} />

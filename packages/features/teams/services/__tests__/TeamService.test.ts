@@ -1,7 +1,7 @@
 import { MembershipRole } from "@calcom/prisma/enums";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { TeamManagementRepository } from "../../repositories/TeamManagementRepository";
-import { inviteLinkIdentifier, TeamService, type TeamInviteMessage } from "../TeamService";
+import { inviteLinkIdentifier, type TeamInviteMessage, TeamService } from "../TeamService";
 
 type User = {
   id: number;
@@ -141,6 +141,8 @@ function createFakeRepository() {
     listPublicServices: async () => [
       { id: 1, title: "Intro", slug: "intro", length: 30, description: null, schedulingType: "ROUND_ROBIN" },
     ],
+    isAiRoutingEnabled: async () => true,
+    setAiRoutingEnabled: async () => {},
     listPublicMembers: async (teamId: number) =>
       memberships
         .filter((m) => m.teamId === teamId && m.accepted)

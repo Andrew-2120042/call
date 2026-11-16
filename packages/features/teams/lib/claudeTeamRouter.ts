@@ -18,6 +18,12 @@ const RoutingSchema = z.object({
       "Username of the best person from the list when one clearly fits better than the others, else null."
     ),
   reason: z.string().describe("One short sentence, addressed to the visitor, explaining the recommendation."),
+  requestedTime: z
+    .string()
+    .nullable()
+    .describe(
+      "Only if the visitor asks about a specific day and time (e.g. 'who's free Sunday 3pm'): that moment in their local time as YYYY-MM-DDTHH:mm, resolved from 'Now'. Otherwise null."
+    ),
 });
 
 const SYSTEM_PROMPT = `You route a visitor on a team's booking page to the right service, and to the right person when that's clear.
@@ -29,7 +35,8 @@ Rules:
 - Prefer a service; only name a person when the visitor's need clearly matches someone's role.
 - Judge fit by what each service is for and how it books (one-on-one, whole team), not only its title.
 - If any service reasonably fits, recommend it. Return null only when nothing could reasonably work, and say so kindly.
-- reason: one sentence, plain, in the visitor's language.`;
+- reason: one sentence, plain, in the visitor's language.
+- If they ask about a time ("who's free Sunday 3pm?", "tomorrow at 10"), set requestedTime from "Now"; the next such day if no date is given. We check availability ourselves, so don't claim anyone is free in the reason; just say you'll show who is.`;
 
 const escapeForTag = (value: string) => value.replace(/</g, "‹").replace(/>/g, "›");
 
@@ -39,7 +46,8 @@ const HOW_IT_BOOKS: Record<string, string> = {
   MANAGED: "with a specific team member",
 };
 
-const render = (input: RouteRequest) => `Team: ${escapeForTag(input.teamName)}
+const render = (input: RouteRequest) => `Now: ${input.now} (${input.timeZone})
+Team: ${escapeForTag(input.teamName)}
 Services:
 ${input.services
   .map(

@@ -1,12 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-import { useBookingConfirmation } from "@calcom/web/components/booking/hooks/useBookingConfirmation";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
 import { TextArea } from "@calcom/ui/components/form";
+import { useBookingConfirmation } from "@calcom/web/components/booking/hooks/useBookingConfirmation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 /** Accept or decline a booking request from its own page; declining can carry an optional note to the client. */
 export function HostRequestActions({ bookingId }: { bookingId: number }) {
@@ -37,7 +36,11 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
           <Button color="secondary" onClick={() => setDeclining(false)} disabled={isPending}>
             {t("cancel")}
           </Button>
-          <Button color="destructive" onClick={() => decide(false)} loading={isPending}>
+          <Button
+            size="lg"
+            onClick={() => decide(false)}
+            loading={isPending}
+            className={`${DECLINE_CLASSES} h-10`}>
             {t("decline_request")}
           </Button>
         </div>
@@ -49,19 +52,30 @@ export function HostRequestActions({ bookingId }: { bookingId: number }) {
     <div className="border-subtle border-t pt-4">
       <p className="text-emphasis text-xs font-semibold">{t("request_decide_title")}</p>
       <p className="text-subtle mt-0.5 text-xs">{t("request_decide_hint")}</p>
-      <div className="mt-3 flex justify-end gap-2">
+      <div className="mt-3 grid grid-cols-2 gap-3">
         <Button
-          color="secondary"
+          size="lg"
           StartIcon="x"
           onClick={() => setDeclining(true)}
           disabled={isPending}
+          className={`${DECLINE_CLASSES} h-11 justify-center text-sm`}
           data-testid="host-decline">
           {t("decline_booking")}
         </Button>
-        <Button StartIcon="check" onClick={() => decide(true)} loading={isPending} data-testid="host-accept">
+        <Button
+          size="lg"
+          StartIcon="check"
+          onClick={() => decide(true)}
+          loading={isPending}
+          className="h-11 justify-center text-sm"
+          data-testid="host-accept">
           {t("accept_booking")}
         </Button>
       </div>
     </div>
   );
 }
+
+// A solid red for the decline action, so it reads as clearly different from the white Accept button.
+const DECLINE_CLASSES =
+  "!border-red-600 !bg-red-600 !text-white !shadow-none hover:!border-red-700 hover:!bg-red-700";

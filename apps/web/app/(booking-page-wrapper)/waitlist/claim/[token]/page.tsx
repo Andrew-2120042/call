@@ -98,7 +98,7 @@ export default function WaitlistClaimPage() {
   return (
     <ClientPageShell testId="waitlist-claim-page">
       <ClientHeader
-        icon={offer.isClaimable ? "sparkles" : "circle-alert"}
+        icon={offer.isClaimable ? "calendar" : "circle-alert"}
         tone={offer.isClaimable ? "success" : "warning"}
         title={offer.isClaimable ? t("waitlist_offer_title") : t("waitlist_claim_unavailable_title")}
         subtitle={

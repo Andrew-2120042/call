@@ -30,14 +30,14 @@ type TranslationWithParams = {
 };
 
 type DisplayFieldValue =
-    | { type: "translationKey"; valueKey: string }
-    | { type: "rawValue"; value: string }
-    | { type: "rawValues"; values: string[] }
-    | { type: "translationsWithParams"; valuesWithParams: TranslationWithParams[] };
+  | { type: "translationKey"; valueKey: string }
+  | { type: "rawValue"; value: string }
+  | { type: "rawValues"; values: string[] }
+  | { type: "translationsWithParams"; valuesWithParams: TranslationWithParams[] };
 
 type DisplayField = {
-    labelKey: string;
-    fieldValue: DisplayFieldValue;
+  labelKey: string;
+  fieldValue: DisplayFieldValue;
 };
 
 type AuditLog = {
@@ -279,7 +279,7 @@ function BookingLogsTimeline({ logs }: BookingLogsTimelineProps) {
               <div className="pt-2 shrink-0">
                 <div className="bg-subtle rounded-[3.556px] p-1 flex items-center justify-center w-4 h-4">
                   <Icon
-                    name={log.hasError ? "triangle-alert" : (ACTION_ICON_MAP[log.action] ?? "sparkles")}
+                    name={log.hasError ? "triangle-alert" : (ACTION_ICON_MAP[log.action] ?? "circle")}
                     className={`h-3 w-3 ${log.hasError ? "text-attention" : "text-subtle"}`}
                   />
                 </div>
@@ -333,15 +333,15 @@ function BookingLogsTimeline({ logs }: BookingLogsTimelineProps) {
                       {/* Render displayFields if available, otherwise show type */}
                       {log.displayFields && log.displayFields.length > 0
                         ? log.displayFields.map((field, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 py-2 border-b px-3 border-subtle">
-                            <span className="font-medium text-emphasis w-[140px]">{t(field.labelKey)}</span>
-                            <span className="font-medium">
-                              <DisplayFieldValueComponent fieldValue={field.fieldValue} />
-                            </span>
-                          </div>
-                        ))
+                            <div
+                              key={idx}
+                              className="flex items-start gap-2 py-2 border-b px-3 border-subtle">
+                              <span className="font-medium text-emphasis w-[140px]">{t(field.labelKey)}</span>
+                              <span className="font-medium">
+                                <DisplayFieldValueComponent fieldValue={field.fieldValue} />
+                              </span>
+                            </div>
+                          ))
                         : null}
                       <div className="flex items-start gap-2 py-2 border-b px-3 border-subtle">
                         <span className="font-medium text-emphasis w-[140px]">{t("actor")}</span>

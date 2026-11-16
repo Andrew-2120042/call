@@ -5189,7 +5189,7 @@
   "home_booked_30_days": "booked in the last 30 days",
   "request_email_review": "Read the full summary and suggested reply",
   "open_menu": "Open menu",
-  "search_bookings_placeholder": "Search by name, email or service",
+  "search_bookings_placeholder": "Search bookings",
   "booking_was_rescheduled": "Rescheduled",
   "rebook_title": "Want a different time instead?",
   "rebook_subtitle": "We picked these from {{name}}'s calendar, based on what you told us.",
@@ -5203,5 +5203,11 @@
   "home_demo_ask": "Ask Slotwise to set something up…",
   "home_demo_needs_you": "Needs you",
   "home_demo_all_clear": "Nothing waiting for your approval.",
-  "home_demo_back": "Back to the current Home"
+  "home_demo_back": "Back to the current Home",
+  "team_routing_free_then": "Free then: {{names}}",
+  "team_routing_nobody_free": "Nobody on the team is free then. Try another time, or pick one below.",
+  "team_routing_time_past": "That time has already passed. Try a time that's still ahead.",
+  "team_routing_book_time": "Book {{time}}",
+  "team_ai_routing": "Help visitors choose",
+  "team_ai_routing_description": "Show a box on your team page where visitors describe what they need (or ask who's free) and get pointed to the right service."
 }

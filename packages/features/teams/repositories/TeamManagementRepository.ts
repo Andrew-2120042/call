@@ -94,6 +94,25 @@ export class TeamManagementRepository {
     return this.prismaClient.team.update({ where: { id: teamId }, data, select: teamProfileSelect });
   }
 
+  /** The "help me choose" AI box on the team page is on unless the team turned it off (stored in metadata). */
+  async isAiRoutingEnabled(teamId: number): Promise<boolean> {
+    const team = await this.prismaClient.team.findUnique({
+      where: { id: teamId },
+      select: { metadata: true },
+    });
+    const metadata = (team?.metadata ?? {}) as Record<string, unknown>;
+    return metadata.aiRoutingDisabled !== true;
+  }
+
+  async setAiRoutingEnabled(teamId: number, enabled: boolean): Promise<void> {
+    const team = await this.prismaClient.team.findUnique({
+      where: { id: teamId },
+      select: { metadata: true },
+    });
+    const metadata = { ...((team?.metadata ?? {}) as Record<string, unknown>), aiRoutingDisabled: !enabled };
+    await this.prismaClient.team.update({ where: { id: teamId }, data: { metadata }, select: { id: true } });
+  }
+
   async delete(teamId: number): Promise<void> {
     await this.prismaClient.$transaction([
       this.prismaClient.verificationToken.deleteMany({ where: { teamId } }),

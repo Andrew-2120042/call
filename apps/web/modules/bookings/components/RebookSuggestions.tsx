@@ -4,7 +4,6 @@ import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
-import { Icon } from "@calcom/ui/components/icon";
 import { useEffect, useMemo, useState } from "react";
 
 type Suggestion = { start: string; reason: string | null };
@@ -99,12 +98,7 @@ export function RebookSuggestions({
                 <p className="text-emphasis text-sm font-medium">
                   {dayjs(s.start).tz(timeZone).format("dddd D MMMM, h:mma")}
                 </p>
-                {s.reason && (
-                  <p className="text-subtle flex items-center gap-1 truncate text-xs">
-                    <Icon name="sparkles" className="h-3 w-3 flex-none" />
-                    {s.reason}
-                  </p>
-                )}
+                {s.reason && <p className="text-subtle truncate text-xs">{s.reason}</p>}
               </div>
               <Button
                 size="sm"

@@ -147,6 +147,7 @@ function TeamProfileCard({ team }: { team: TeamDetail["team"] }) {
   const [slug, setSlug] = useState(team.slug ?? "");
   const [bio, setBio] = useState(team.bio ?? "");
   const [hideBookATeamMember, setHideBookATeamMember] = useState(team.hideBookATeamMember);
+  const [aiRoutingEnabled, setAiRoutingEnabled] = useState(team.aiRoutingEnabled);
   const update = trpc.viewer.teams.update.useMutation({
     onSuccess: async () => {
       showToast(t("teams_saved"), "success");
@@ -161,7 +162,8 @@ function TeamProfileCard({ team }: { team: TeamDetail["team"] }) {
     name !== team.name ||
     slug !== (team.slug ?? "") ||
     bio !== (team.bio ?? "") ||
-    hideBookATeamMember !== team.hideBookATeamMember;
+    hideBookATeamMember !== team.hideBookATeamMember ||
+    aiRoutingEnabled !== team.aiRoutingEnabled;
 
   return (
     <Card title={t("teams_profile")} description={t("teams_profile_body")}>
@@ -209,6 +211,17 @@ function TeamProfileCard({ team }: { team: TeamDetail["team"] }) {
           </span>
           <Switch checked={hideBookATeamMember} onCheckedChange={setHideBookATeamMember} />
         </label>
+        <label className="flex items-start justify-between gap-4">
+          <span>
+            <span className="text-emphasis block text-sm font-medium">{t("team_ai_routing")}</span>
+            <span className="text-subtle block text-xs">{t("team_ai_routing_description")}</span>
+          </span>
+          <Switch
+            checked={aiRoutingEnabled}
+            onCheckedChange={setAiRoutingEnabled}
+            data-testid="team-ai-routing"
+          />
+        </label>
       </div>
       <footer className="border-subtle flex justify-end border-t px-5 py-3">
         <Button
@@ -222,6 +235,7 @@ function TeamProfileCard({ team }: { team: TeamDetail["team"] }) {
               slug: slugify(slug),
               bio: bio || null,
               hideBookATeamMember,
+              aiRoutingEnabled,
             })
           }
           data-testid="save-team">

@@ -24,7 +24,7 @@ const Page = async ({ params }: Params) => {
       team={page.team}
       services={page.services}
       members={page.members}
-      routingEnabled={getTeamRoutingService().isEnabled}
+      routingEnabled={getTeamRoutingService().isEnabled && page.team.aiRoutingEnabled}
     />
   );
 };

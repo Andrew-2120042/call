@@ -77,11 +77,12 @@ export class TeamService {
   async getPublicPage(slug: string) {
     const team = await this.repo.findBySlug(slug);
     if (!team || !(await this.isTeamSchedulingActive(team.id))) return null;
-    const [services, members] = await Promise.all([
+    const [services, members, aiRoutingEnabled] = await Promise.all([
       this.repo.listPublicServices(team.id),
       team.hideBookATeamMember ? Promise.resolve([]) : this.repo.listPublicMembers(team.id),
+      this.repo.isAiRoutingEnabled(team.id),
     ]);
-    return { team, services, members };
+    return { team: { ...team, aiRoutingEnabled }, services, members };
   }
 
   async listForUser(userId: number) {
@@ -129,8 +130,12 @@ export class TeamService {
       MembershipRole.ADMIN,
       MembershipRole.OWNER,
     ]);
-    const [team, members] = await Promise.all([this.requireTeam(teamId), this.repo.listMembers(teamId)]);
-    return { team, members, myRole: membership.role };
+    const [team, members, aiRoutingEnabled] = await Promise.all([
+      this.requireTeam(teamId),
+      this.repo.listMembers(teamId),
+      this.repo.isAiRoutingEnabled(teamId),
+    ]);
+    return { team: { ...team, aiRoutingEnabled }, members, myRole: membership.role };
   }
 
   async update({
@@ -146,9 +151,12 @@ export class TeamService {
       bio?: string | null;
       logoUrl?: string | null;
       hideBookATeamMember?: boolean;
+      aiRoutingEnabled?: boolean;
     };
   }) {
     await this.requireRole(userId, teamId, MANAGER_ROLES);
+    if (data.aiRoutingEnabled !== undefined)
+      await this.repo.setAiRoutingEnabled(teamId, data.aiRoutingEnabled);
     const patch: Parameters<TeamManagementRepository["update"]>[1] = {};
     if (data.name !== undefined) {
       const name = data.name.trim();

@@ -22,6 +22,7 @@ export const ZUpdateTeamInput = z.object({
   /** A data URL from the logo picker, or null to remove the logo. */
   logo: z.string().startsWith("data:image/").max(3_000_000).nullish(),
   hideBookATeamMember: z.boolean().optional(),
+  aiRoutingEnabled: z.boolean().optional(),
 });
 
 export const ZInviteInput = z.object({
