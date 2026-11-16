@@ -1,3 +1,4 @@
+import { RequestInsightLine } from "@calcom/web/modules/bookings/components/RequestInsightPanel";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -419,6 +420,7 @@ function BookingListItem(booking: BookingItemProps) {
                   &quot;{booking.description}&quot;
                 </div>
               )}
+              {isPending && <RequestInsightLine bookingUid={booking.uid} />}
               {booking.attendees.length !== 0 && (
                 <DisplayAttendees
                   attendees={attendeeList}

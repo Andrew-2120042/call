@@ -4831,10 +4831,10 @@
   "waitlist_join_position": "You're number {{position}} in line. We'll email you if the time opens up.",
   "booking_rules_waitlist_link": "Share this link so people can join:",
   "request_insight_title": "AI summary",
-  "request_insight_fit_good": "Looks like a good fit",
-  "request_insight_fit_unclear": "Fit is unclear",
+  "request_insight_fit_good": "Good fit",
+  "request_insight_fit_unclear": "Fit unclear",
   "request_insight_fit_poor": "Probably not a fit",
-  "request_insight_spam": "Looks like spam",
+  "request_insight_spam": "Spam",
   "request_insight_reply": "Suggested reply",
   "booking_rules_reminder_days": "{{count}} days before",
   "booking_rules_reminder_hours": "{{count}} hours before",
@@ -5156,5 +5156,12 @@
   "welcome_feature_calendars": "Sync with Google, Outlook and Apple calendars",
   "welcome_feature_approvals": "Approve requests before they're booked",
   "welcome_feature_video": "Google Meet, Zoom or built-in video on every booking",
-  "welcome_feature_import": "Bring your services over from Calendly"
+  "welcome_feature_import": "Bring your services over from Calendly",
+  "new_booking_request": "New booking request",
+  "host_review_request_description": "{{attendee}} would like to book this time. Accept it, or decline with an optional note.",
+  "request_insight_pending": "An AI summary of this request will appear here in a minute or two.",
+  "request_insight_reply_copied": "Reply copied",
+  "decline_note_placeholder": "Optional note to the client, e.g. a better time or a link to book something else",
+  "decline_request": "Decline request",
+  "accept_request": "Accept"
 }

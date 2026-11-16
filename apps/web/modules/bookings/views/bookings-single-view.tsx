@@ -61,6 +61,7 @@ import { useSession } from "next-auth/react";
 import { Fragment, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import { z } from "zod";
+import { HostRequestActions } from "../components/HostRequestActions";
 import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
 import type { PageProps } from "./bookings-single-view.getServerSideProps";
@@ -282,6 +283,8 @@ export default function Success(props: PageProps) {
   // - EventType has conditionally enabled confirmation option based on how far the booking is scheduled.
   // - It's a paid event and payment is pending.
   const needsConfirmation = bookingInfo.status === BookingStatus.PENDING && eventType.requiresConfirmation;
+  // The host opening their own request sees a review screen, not the "request sent" page meant for the client.
+  const isHostReviewingRequest = isHost && needsConfirmation;
   const userIsOwner = !!(session?.user?.id && eventType.owner?.id === session.user.id);
   const isLoggedIn = session?.user;
   const isCancelled =
@@ -311,6 +314,12 @@ export default function Success(props: PageProps) {
       return t("complete_your_booking_subject", {
         title: eventName,
         date: formatToLocalizedDate(date, undefined, "long", tz),
+      });
+    }
+    if (needsConfirmation && isHostReviewingRequest) {
+      return t("host_review_request_description", {
+        attendee: bookingInfo.attendees[0]?.name || bookingInfo.attendees[0]?.email || "",
+        interpolation: { escapeValue: false },
       });
     }
     if (needsConfirmation) {
@@ -426,6 +435,10 @@ export default function Success(props: PageProps) {
       return props.paymentStatus?.paymentOption === "HOLD"
         ? t("meeting_awaiting_payment_method")
         : t("meeting_awaiting_payment");
+    }
+
+    if (needsConfirmationAndReschedulable && isHostReviewingRequest) {
+      return t("new_booking_request");
     }
 
     if (needsConfirmationAndReschedulable) {
@@ -553,6 +566,12 @@ export default function Success(props: PageProps) {
                       <div className="mt-3">
                         <p className="text-default">{getTitle()}</p>
                       </div>
+                      {isHostReviewingRequest && (
+                        <RequestInsightPanel
+                          bookingUid={bookingInfo.uid}
+                          actions={<HostRequestActions bookingId={bookingInfo.id} />}
+                        />
+                      )}
                       {props.paymentStatus &&
                         (bookingInfo.status === BookingStatus.CANCELLED ||
                           bookingInfo.status === BookingStatus.REJECTED) && <h4>{paymentStatusMessage}</h4>}
@@ -789,7 +808,7 @@ export default function Success(props: PageProps) {
                             </>
                           )}
                       </div>
-                      {isHost && <RequestInsightPanel bookingUid={bookingInfo.uid} />}
+                      {isHost && !isHostReviewingRequest && <RequestInsightPanel bookingUid={bookingInfo.uid} />}
                       <div className="text-bookingdark dark:border-darkgray-200 mt-8 text-left dark:text-gray-300">
                         {eventType.bookingFields.map((field) => {
                           if (!field) return null;
