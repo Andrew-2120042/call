@@ -49,11 +49,14 @@ export function RequestInsightPanel({
   // Hold roughly the panel's space while it loads so the booking details below don't jump.
   if (query.isPending && actions) {
     return (
-      <div className="border-subtle bg-muted mt-6 animate-pulse rounded-xl border p-4" aria-hidden>
+      // Matches the finished panel's height (about 575px), so nothing below it moves when it arrives.
+      <div className="border-subtle bg-muted mt-6 flex h-[575px] animate-pulse flex-col rounded-xl border p-4" aria-hidden>
         <div className="bg-emphasis h-4 w-40 rounded" />
         <div className="bg-emphasis mt-3 h-3 w-full rounded" />
         <div className="bg-emphasis mt-2 h-3 w-5/6 rounded" />
-        <div className="bg-emphasis mt-5 h-28 w-full rounded-lg" />
+        <div className="bg-emphasis mt-5 h-3 w-4/6 rounded" />
+        <div className="bg-emphasis mt-2 h-3 w-3/6 rounded" />
+        <div className="bg-emphasis mt-5 w-full flex-1 rounded-lg" />
         <div className="mt-5 flex justify-end gap-2">
           <div className="bg-emphasis h-9 w-32 rounded-lg" />
           <div className="bg-emphasis h-9 w-32 rounded-lg" />
