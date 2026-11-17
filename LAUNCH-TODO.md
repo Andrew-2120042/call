@@ -39,4 +39,5 @@ Everything still needed before Slotwise goes live. Tick items off as they're don
 - [x] **Google, real test** (2026-11-17): calendar connected on the `teampro` test account, booking created an event, Google busy time blocked the slot, cancelling removed the event; "Sign in with Google" created a verified account. Scripts: `scripts/launch-sweep/gcal.cjs`, `google.cjs`.
 - [ ] **All connections need one more pass on the live domain** (owner's note): Google with production redirect URLs, Microsoft once Azure exists, Resend from the real domain, Dodo checkout, Zapier and Make.
 - [x] Google sign-in asks for calendar access as well as name and email: owner confirmed this is intended (2026-11-17).
-- [ ] **Dedicated security review before launch.** The sweep checked specific protections (see `LAUNCH-SWEEP.md`), but nobody has gone through the code looking for holes on purpose.
+- [x] **Security review** done 2026-11-17 (see "Security review" in `LAUNCH-SWEEP.md`): no leaks, no SQL injection, 44 live security checks passed (26 of them cross-account attacks, all refused); one gap fixed (rate limits on "Send reply" and invites).
+- [ ] Security follow-ups: make sure `UNKEY_ROOT_KEY` is set in production (limits fail open without it); turn on a Content-Security-Policy; add a daily cap on outgoing reply/invite emails; confirm `/api/email` returns 403 on the live site.

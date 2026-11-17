@@ -70,6 +70,32 @@ Also verified:
 2. **"Who's free" can name people who can't take the booking.** The team page AI lists any free team member, but the "Book" button goes to a service whose hosts may be a smaller group. Seen with two new members who weren't hosts of the round-robin service. Fix: limit the list to the suggested service's hosts (`TeamRoutingService.availabilityFor`).
 3. **A held slot can look bookable on a round-robin service.** After killed test runs left slots held, the round-robin page still showed a held time and booking it failed with "This slot is no longer available". Holds expire in minutes, and it didn't reproduce once they were cleared. Worth one deliberate re-test: person A selects a time, person B opens the same service.
 
+## Security review (2026-11-17)
+
+Scope: the code Slotwise added on top of the Cal engine, plus the running app attacked as a second account and as a signed-out visitor. Re-run with `node scripts/launch-sweep/security.cjs` (the victim booking and waitlist ids at the top of the script are local test data; update them if the database is reset).
+
+**Clean:**
+- **Secrets:** no keys in the repository or in git history; `.env` and `.env.launch-keys` are git-ignored; no secret-looking `NEXT_PUBLIC_` variables; no tokens, client secrets or password hashes in API responses for an account with a connected Google calendar; none in public page HTML.
+- **SQL injection:** our code has no hand-written SQL. Every query goes through Prisma or Kysely with values passed separately; the bookings search escapes `%` and `_`. A SQL-style search string returned nothing extra.
+- **One account reaching another's data (26 live attempts, all refused; 44 live security checks in total):** AI summaries, booking rules, waitlist, team pages, team stats and availability, services, bookings, accepting or declining requests, "Send reply", removing waitlist people, renaming/inviting/deleting/promoting in a team, creating a service inside another team.
+- **Plan limits are enforced on the server:** a Free account calling the API directly can't create a team or switch on the waitlist.
+- **Signed-out access:** every account endpoint returns 401; all background-job endpoints refuse calls without their key; a payment webhook with no signature is rejected; guessed waitlist, attendance and invite tokens are rejected.
+- **AI features:** the Assistant can only change the signed-in person's own services and profile (every query is filtered by their id); team routing drops anything the model invents; text from bookers is fenced as data and the summary is advisory only.
+- **Rate limiting works now that the Unkey key is set:** 40 rapid calls to the public AI endpoint and the waitlist form were cut off after 11 (HTTP 429).
+- **Login redirect** can't send people to another site; the session cookie is httpOnly.
+
+**Fixed during the review:**
+- "Send reply" and team invites send email to addresses someone else typed, and had no rate limit. Both are now limited per account (10 a minute).
+
+**Open, in priority order:**
+1. **Rate limits switch off silently if `UNKEY_ROOT_KEY` is missing.** Production must have it set (it's in `.env.launch-keys`), or the public AI endpoints can be hammered at our cost.
+2. **No Content-Security-Policy header.** `apps/web/lib/csp.ts` exists but is switched off (inherited). Turning it on needs testing against embeds and video, so it's a task, not a quick flip.
+3. **A daily cap on outgoing "Send reply" and invite emails** would be stronger than the per-minute limit. Needs a new rate-limit group.
+4. **Suggested replies come from booker text.** A booker could try to get a link into the AI's draft; the host reads and edits it before sending, so the risk is low, but worth a line in the docs.
+5. `/api/email` (a template preview) is open in development and returns 403 in production. Confirm after the first deploy.
+
+**Not covered:** the inherited Cal engine itself (login, two-factor, booking core) beyond the flows tested above; anything that needs production (HTTPS, real headers on the live host); a third-party penetration test.
+
 ## Not tested (needs real accounts or keys)
 
 These can't be checked locally. Test each one as soon as its key exists:
