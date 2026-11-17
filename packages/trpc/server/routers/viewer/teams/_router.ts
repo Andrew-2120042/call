@@ -108,8 +108,8 @@ export const teamsRouter = router({
   }),
   invite: authedProcedure.input(ZInviteInput).mutation(async ({ ctx, input }) => {
     // Invites email arbitrary addresses; the seat limit bounds each team, this bounds how fast one account can send.
-    const { checkRateLimitAndThrowError } = await import("@calcom/lib/checkRateLimitAndThrowError");
-    await checkRateLimitAndThrowError({ rateLimitingType: "core", identifier: `teamInvite:${ctx.user.id}` });
+    const { checkTrpcRateLimit } = await import("../../../lib/checkTrpcRateLimit");
+    await checkTrpcRateLimit(`teamInvite:${ctx.user.id}`);
     return (await loadService()).invite({ userId: ctx.user.id, ...input });
   }),
   inviteLink: authedProcedure.input(ZInviteLinkInput).mutation(async ({ ctx, input }) => {

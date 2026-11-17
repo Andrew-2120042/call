@@ -1,7 +1,7 @@
 import { getDefaultLocations } from "@calcom/app-store/_utils/getDefaultLocations";
 import { isAssistantConfigured, runAssistantTurn } from "@calcom/features/assistant/lib/getAssistant";
 import { AssistantActionsRepository } from "@calcom/features/assistant/repositories/AssistantActionsRepository";
-import { checkRateLimitAndThrowError } from "@calcom/lib/checkRateLimitAndThrowError";
+import { checkTrpcRateLimit } from "../../../lib/checkTrpcRateLimit";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
@@ -26,7 +26,7 @@ export const chatHandler = async ({
       message: "The assistant isn't set up on this server yet.",
     });
   }
-  await checkRateLimitAndThrowError({ rateLimitingType: "core", identifier: `assistant:${ctx.user.id}` });
+  await checkTrpcRateLimit(`assistant:${ctx.user.id}`);
   if (input.messages[input.messages.length - 1].role !== "user") {
     throw new TRPCError({ code: "BAD_REQUEST", message: "The last message must be yours." });
   }
