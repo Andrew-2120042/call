@@ -6,8 +6,8 @@ const Dot = ({ className }: { className: string }) => <span className={`inline-b
 export function BookingMock() {
   return (
     <div className="relative">
-      <Window title="slotwise.example/maya/intro-call">
-        <Image src="/shots/booking.png" alt="A Slotwise booking page" width={2160} height={1120} className="h-auto w-full" />
+      <Window title="nodslot.site/maya/intro-call">
+        <Image src="/shots/booking.png" alt="A Nodslot booking page" width={2160} height={1120} className="h-auto w-full" />
       </Window>
       <FloatCard className="absolute -bottom-5 right-4 w-60 sm:right-8">
         <p className="text-faint">New booking</p>
@@ -179,8 +179,8 @@ export function TeamMock() {
 export function HeroWindows() {
   return (
     <div className="relative mx-auto max-w-6xl">
-      <Window title="Slotwise · Services" className="relative z-10">
-        <Image src="/shots/dashboard.png" alt="The Slotwise dashboard" width={2560} height={1600} priority className="h-auto w-full" />
+      <Window title="Nodslot · Services" className="relative z-10">
+        <Image src="/shots/dashboard.png" alt="The Nodslot dashboard" width={2560} height={1600} priority className="h-auto w-full" />
       </Window>
       <FloatCard className="absolute left-3 top-16 z-20 hidden w-64 md:block xl:-left-16">
         <p className="text-faint">Waitlist</p>

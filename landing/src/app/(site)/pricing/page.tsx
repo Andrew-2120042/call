@@ -7,7 +7,7 @@ import { homeFaq } from "@/content/site-content";
 export const metadata: Metadata = {
   title: "Pricing: free booking link, Pro $12, Team $49 flat",
   description:
-    "Slotwise is free for unlimited services and bookings. Pro adds a waitlist, no-show protection and AI request summaries for $12 a month. Teams of up to 10 pay $49 a month in total.",
+    "Nodslot is free for unlimited services and bookings. Pro adds a waitlist, no-show protection and AI request summaries for $12 a month. Teams of up to 10 pay $49 a month in total.",
   alternates: { canonical: "/pricing" },
 };
 

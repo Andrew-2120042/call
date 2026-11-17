@@ -7,8 +7,8 @@
   "url": "https://marketingplatform.google.com",
   "variant": "analytics",
   "categories": ["analytics"],
-  "publisher": "Slotwise",
-  "email": "support@slotwise.example",
+  "publisher": "Nodslot",
+  "email": "support@nodslot.site",
   "description": "Google Analytics is a web analytics service offered by Google that tracks and reports website traffic, currently as a platform inside the Google Marketing Platform brand.",
   "extendsFeature": "EventType",
   "appData": {

@@ -1,6 +1,6 @@
-# Slotwise: project notes (read first)
+# Nodslot: project notes (read first)
 
-"Slotwise" is a **placeholder name**. Rename by changing `NEXT_PUBLIC_APP_NAME` in `.env` plus the brand assets.
+"Nodslot" is a **placeholder name**. Rename by changing `NEXT_PUBLIC_APP_NAME` in `.env` plus the brand assets.
 
 ## The product
 **A booking tool where you decide who gets on your calendar.** It is built for solo service businesses: consultants, coaches, freelancers, creators, therapists, beauty and wellness pros.
@@ -73,7 +73,7 @@ The name is placeholder until the user picks the real one, which happens before 
 
 To rename:
 1. Set `NEXT_PUBLIC_APP_NAME` in `.env` (and in production env vars).
-2. Optionally set `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` and `EMAIL_FROM_NAME`. Their code defaults in `packages/lib/constants.ts` also say Slotwise.
+2. Optionally set `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` and `EMAIL_FROM_NAME`. Their code defaults in `packages/lib/constants.ts` also say Nodslot.
 3. Replace `apps/web/public/brand/mark.svg` (logo mark, #292929 on transparent) and `brand/app-icon.svg` (512px app icon) if the mark changes.
 4. Run `node scripts/brand/generate-brand-assets.mjs`. It regenerates the wordmarks, every favicon/app icon/mstile, `favicon.ico`, `safari-pinned-tab.svg` and the `site.webmanifest` name.
 5. Restart the app.
@@ -171,7 +171,7 @@ How it works:
 
 ## Custom domains
 - See DEPLOY.md §5b. Code: `packages/features/custom-domains`, `apps/web/lib/customDomainRouting.ts`, `apps/web/proxy.ts`.
-- Local testing: `curl -H 'Host: book.slotwise-demo.test' localhost:3000/` (mark the domain verified in the DB, since a `.test` domain can't hold a TXT record).
+- Local testing: `curl -H 'Host: book.nodslot-demo.test' localhost:3000/` (mark the domain verified in the DB, since a `.test` domain can't hold a TXT record).
 
 ## Calendar health
 - The cron `/api/cron/calendar-health` (every 10 min) checks up to 25 calendar connections per run, each at most hourly, by listing their calendars.
@@ -188,7 +188,7 @@ How it works:
 - **Booking pages:** the shared component `apps/web/modules/booking-page/BookingPageProfile.tsx` is used by the public page and the editor preview.
   - Services show a duration bar and "Instant booking" / "Needs approval".
   - The calendar is styled in `booking-theme.css`, with coral selection.
-- **Page themes** (`packages/features/booking-page-theme/themes.ts`): fog, coral, sky, butter, pine, ink. Shapes: pill, rounded (default), square. Migration `slotwise_own_page_themes` remaps the old ids.
+- **Page themes** (`packages/features/booking-page-theme/themes.ts`): fog, coral, sky, butter, pine, ink. Shapes: pill, rounded (default), square. Migration `nodslot_own_page_themes` remaps the old ids.
 - **Booking page editor** (`/page-editor`): name, bio, look and services (show/hide, reorder), with a live phone preview. Data: tRPC `pageLook.editor`.
 - **Home:** setup checklist (photo, bio, service, hours, calendar, first booking), hidden once done.
 - **Wording:** in English, "event type" → "service" in the copy (values only; the keys are unchanged).
@@ -222,7 +222,7 @@ How it works:
 - Enhance links to `/assistant?prompt=...`, which pre-fills the Assistant box.
 
 ## Local dev
-- Postgres: Homebrew `postgresql@17`, database `slotwise_dev`, user `andrewwilson`, port 5432.
+- Postgres: Homebrew `postgresql@17`, database `nodslot_dev`, user `andrewwilson`, port 5432.
 - `.env` is gitignored and holds generated secrets.
 - Yarn is not installed globally, so always run `corepack yarn …`.
 - The Mac must stay cool: run heavy jobs one at a time with `nice -n 15`. Never run builds in parallel.

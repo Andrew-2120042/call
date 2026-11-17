@@ -99,8 +99,8 @@ export class WebhookService implements IWebhookService {
       method: "POST",
       headers: {
         "Content-Type": contentType,
-        "X-Slotwise-Signature-256": signature,
-        "X-Slotwise-Webhook-Version": subscriber.version,
+        "X-Nodslot-Signature-256": signature,
+        "X-Nodslot-Webhook-Version": subscriber.version,
         // Legacy names kept so receivers built against the upstream format keep working.
         "X-Cal-Signature-256": signature,
         "X-Cal-Webhook-Version": subscriber.version,

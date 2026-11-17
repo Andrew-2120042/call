@@ -37,9 +37,9 @@ export const BASE_URL = WEBAPP_URL;
 export const WEBSITE_URL = ensureProtocol(process.env.NEXT_PUBLIC_WEBSITE_URL) || WEBAPP_URL;
 /** The public help docs (the marketing site's /docs). Help links in the app point here. */
 export const DOCS_URL = (ensureProtocol(process.env.NEXT_PUBLIC_DOCS_URL) || `${WEBSITE_URL}/docs`).replace(/\/$/, "");
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Slotwise";
-export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS || "support@slotwise.app";
-export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "Slotwise";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Nodslot";
+export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS || "support@nodslot.site";
+export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "Nodslot";
 export const SENDER_NAME = process.env.NEXT_PUBLIC_SENDGRID_SENDER_NAME || APP_NAME;
 export const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || APP_NAME;
 
@@ -109,7 +109,7 @@ export const APPLE_TOUCH_ICON = "/apple-touch-icon.png";
 export const MSTILE_ICON = "/mstile-150x150.png";
 export const ANDROID_CHROME_ICON_192 = "/android-chrome-192x192.png";
 export const ANDROID_CHROME_ICON_256 = "/android-chrome-256x256.png";
-export const ROADMAP = "https://cal.com/roadmap";
+export const ROADMAP = `${WEBSITE_URL}/blog`;
 export const DESKTOP_APP_LINK = WEBSITE_URL;
 export const POWERED_BY_URL = WEBSITE_URL;
 export const DEVELOPER_DOCS = `${DOCS_URL}/developers`;
@@ -186,8 +186,8 @@ export const ORG_MINIMUM_PUBLISHED_TEAMS_SELF_SERVE = 0;
 export const ORG_MINIMUM_PUBLISHED_TEAMS_SELF_SERVE_HELPER_DIALOGUE = 1;
 
 export const WEBSITE_PRIVACY_POLICY_URL =
-  process.env.NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL || "https://cal.com/privacy";
-export const WEBSITE_TERMS_URL = process.env.NEXT_PUBLIC_WEBSITE_TERMS_URL || "https://cal.com/terms";
+  process.env.NEXT_PUBLIC_WEBSITE_PRIVACY_POLICY_URL || `${WEBSITE_URL}/privacy`;
+export const WEBSITE_TERMS_URL = process.env.NEXT_PUBLIC_WEBSITE_TERMS_URL || `${WEBSITE_URL}/terms`;
 export const LINGO_DOT_DEV_API_KEY = process.env.LINGO_DOT_DEV_API_KEY;
 
 /**

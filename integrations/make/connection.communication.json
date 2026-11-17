@@ -1,5 +1,5 @@
 {
-  "url": "https://app.slotwise.example/api/integrations/make/me",
+  "url": "https://app.nodslot.site/api/integrations/make/me",
   "method": "GET",
   "qs": { "apiKey": "{{parameters.apiKey}}" },
   "response": {

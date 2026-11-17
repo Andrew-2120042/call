@@ -36,11 +36,11 @@ describe("routeCustomDomainPath", () => {
 });
 
 describe("isAppHost", () => {
-  const urls = ["https://app.slotwise.test", "https://slotwise.test"];
+  const urls = ["https://app.nodslot.test", "https://nodslot.test"];
   it("recognises the app's own hosts", () => {
     for (const host of [
-      "app.slotwise.test",
-      "SLOTWISE.test:443",
+      "app.nodslot.test",
+      "NODSLOT.test:443",
       "localhost:3000",
       "127.0.0.1",
       "x-y.vercel.app",
@@ -52,6 +52,6 @@ describe("isAppHost", () => {
 
   it("treats anything else as a custom domain", () => {
     expect(isAppHost("book.example.com", urls)).toBe(false);
-    expect(isAppHost("app.slotwise.test.evil.com", urls)).toBe(false);
+    expect(isAppHost("app.nodslot.test.evil.com", urls)).toBe(false);
   });
 });

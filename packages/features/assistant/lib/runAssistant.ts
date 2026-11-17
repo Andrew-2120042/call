@@ -6,7 +6,7 @@ import type { AssistantAction, ChatMessage, IAssistantActions } from "./types";
 export const DEFAULT_ASSISTANT_MODEL = "claude-haiku-5-5";
 const MAX_TOOL_ROUNDS = 8;
 
-const SYSTEM_PROMPT = `You are the setup assistant inside Slotwise, a booking page for coaches, creators, consultants and other solo service providers. You set things up for the owner instead of explaining how to.
+const SYSTEM_PROMPT = `You are the setup assistant inside Nodslot, a booking page for coaches, creators, consultants and other solo service providers. You set things up for the owner instead of explaining how to.
 
 What you can do with tools: read their page, create services, edit services (title, length, description, needs-approval, hide/show), and update their display name and bio.
 

@@ -30,10 +30,10 @@ export const docs: DocPage[] = [
     title: "Introduction",
     icon: "home",
     eyebrow: "Overview",
-    description: "What Slotwise is, and what it does for you after someone books.",
+    description: "What Nodslot is, and what it does for you after someone books.",
     blocks: [
-      { type: "p", text: "Slotwise is a booking link. Clients pick a time that suits them, it lands in your calendar, and Slotwise looks after what comes next: cancelled slots refill from a waitlist, unconfirmed bookings can free themselves up, and requests you approve arrive with a short summary." },
-      { type: "image", src: "/shots/dashboard.png", alt: "The Slotwise dashboard", caption: "Your services, each with its own link." },
+      { type: "p", text: "Nodslot is a booking link. Clients pick a time that suits them, it lands in your calendar, and Nodslot looks after what comes next: cancelled slots refill from a waitlist, unconfirmed bookings can free themselves up, and requests you approve arrive with a short summary." },
+      { type: "image", src: "/shots/dashboard.png", alt: "The Nodslot dashboard", caption: "Your services, each with its own link." },
       { type: "h2", text: "What you can do" },
       { type: "list", items: [
         "**Get booked.** Unlimited services, each with its own link, length, questions and location.",
@@ -68,15 +68,15 @@ export const docs: DocPage[] = [
         "Pick a location: built-in video, Google Meet, Zoom, a phone call or an address.",
         "Save. The service gets its own link straight away.",
       ] },
-      { type: "image", src: "/shots/booking.png", alt: "A Slotwise booking page", caption: "What your clients see when they open the link." },
+      { type: "image", src: "/shots/booking.png", alt: "A Nodslot booking page", caption: "What your clients see when they open the link." },
       { type: "h2", text: "Connect your calendar" },
-      { type: "p", text: "Go to **Apps** and connect Google Calendar, Outlook, Apple Calendar or any CalDAV calendar. Slotwise checks it for busy times so you're never double booked, and adds new bookings to the calendar you choose." },
+      { type: "p", text: "Go to **Apps** and connect Google Calendar, Outlook, Apple Calendar or any CalDAV calendar. Nodslot checks it for busy times so you're never double booked, and adds new bookings to the calendar you choose." },
       { type: "h2", text: "Share your link" },
       { type: "p", text: "Your page lives at your username, and each service has its own link under it. Copy either from **Home** or the service's menu, or use **View public page** in the sidebar to see what clients see." },
       { type: "h2", text: "Move from Calendly" },
       { type: "steps", items: [
         "In Calendly, open **Integrations → API & Webhooks** and generate a personal access token.",
-        "In Slotwise, open **Settings → Import from Calendly** and paste it.",
+        "In Nodslot, open **Settings → Import from Calendly** and paste it.",
         "Check the list of services and hours that will come across, then import.",
       ] },
       { type: "note", text: "The token is used once for the import and never saved." },
@@ -195,7 +195,7 @@ export const docs: DocPage[] = [
       { type: "h2", text: "Coverage view" },
       { type: "p", text: "The team page shows who is free hour by hour for the coming week, and flags weekday stretches during working hours when nobody is available, before a client tries to book one." },
       { type: "h2", text: "Help clients choose" },
-      { type: "p", text: "On the team page, clients can describe what they need in a sentence. Slotwise suggests the right service, and the right person when it's clear, with a link to book." },
+      { type: "p", text: "On the team page, clients can describe what they need in a sentence. Nodslot suggests the right service, and the right person when it's clear, with a link to book." },
     ],
   },
   {
@@ -222,7 +222,7 @@ export const docs: DocPage[] = [
     slug: "developers",
     title: "Developers",
     icon: "code",
-    eyebrow: "Build on Slotwise",
+    eyebrow: "Build on Nodslot",
     description: "Webhooks, API keys for Zapier and Make, and embeds.",
     blocks: [
       { type: "h2", text: "Webhooks" },
@@ -250,15 +250,15 @@ export const docs: DocPage[] = [
   }
 }` },
       { type: "h3", text: "Verify the signature" },
-      { type: "p", text: "Add a secret to the webhook and every request carries `X-Slotwise-Signature-256`: an HMAC-SHA256 of the raw body, as hex. Compute the same with your secret and compare." },
+      { type: "p", text: "Add a secret to the webhook and every request carries `X-Nodslot-Signature-256`: an HMAC-SHA256 of the raw body, as hex. Compute the same with your secret and compare." },
       { type: "code", text: `import { createHmac, timingSafeEqual } from "node:crypto";
 
-export function isFromSlotwise(rawBody: string, header: string, secret: string) {
+export function isFromNodslot(rawBody: string, header: string, secret: string) {
   const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
   return header.length === expected.length && timingSafeEqual(Buffer.from(header), Buffer.from(expected));
 }` },
       { type: "h2", text: "API keys" },
-      { type: "p", text: "Zapier and Make sign in to Slotwise with an API key. Create one on the app's setup page (**Apps → Zapier** or **Apps → Make**). Each key covers your own services or one team's; making a new key stops the old one working." },
+      { type: "p", text: "Zapier and Make sign in to Nodslot with an API key. Create one on the app's setup page (**Apps → Zapier** or **Apps → Make**). Each key covers your own services or one team's; making a new key stops the old one working." },
       { type: "note", text: "Keys are shown once. Keep them somewhere safe, like a password manager." },
       { type: "h2", text: "Embed on your site" },
       { type: "p", text: "Open a service's menu in **Services** and choose **Embed**. Pick inline, a floating button or a pop-up, preview it, and copy the code into your website." },
@@ -297,7 +297,7 @@ export function isFromSlotwise(rawBody: string, header: string, secret: string) 
       { type: "h3", text: "Can I cancel any time?" },
       { type: "p", text: "Yes. You keep your plan until the end of the period you paid for, then move to Free with everything intact." },
       { type: "h2", text: "Contact" },
-      { type: "p", text: "Email [support](mailto:support@slotwise.example) and a person will reply, usually within a working day." },
+      { type: "p", text: "Email [support](mailto:support@nodslot.site) and a person will reply, usually within a working day." },
     ],
   },
 ];

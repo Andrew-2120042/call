@@ -2990,29 +2990,31 @@ model BookingRequestInsight {
   createdAt      DateTime          @default(now())
 }
 
-enum SlotwisePlan {
+enum NodslotPlan {
   FREE
   PRO
   TEAM
+
+  @@map("SlotwisePlan")
 }
 
 /// The user's paid plan as last reported by Polar (merchant of record). Written only by verified webhooks.
 model PlanSubscription {
-  id                  Int          @id @default(autoincrement())
-  userId              Int          @unique
-  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan                SlotwisePlan
+  id                  Int         @id @default(autoincrement())
+  userId              Int         @unique
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                NodslotPlan
   /// Polar subscription status (active, trialing, past_due, canceled, revoked, ...)
   status              String
-  polarSubscriptionId String       @unique
+  polarSubscriptionId String      @unique
   polarCustomerId     String
   polarProductId      String
   currentPeriodEnd    DateTime?
-  cancelAtPeriodEnd   Boolean      @default(false)
+  cancelAtPeriodEnd   Boolean     @default(false)
   /// Polar's modified_at of the last applied event, so out-of-order webhooks never overwrite newer state.
   polarModifiedAt     DateTime
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
 }
 
 /// A Pro user's own domain (e.g. book.example.com) serving their booking pages.
@@ -3022,7 +3024,7 @@ model CustomDomain {
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   /// Lowercase hostname without protocol or port
   domain            String    @unique
-  /// Must appear in a TXT record at _slotwise-verify.<domain> to prove ownership
+  /// Must appear in a TXT record at _nodslot-verify.<domain> to prove ownership
   verificationToken String
   verifiedAt        DateTime?
   lastCheckedAt     DateTime?
@@ -3030,7 +3032,7 @@ model CustomDomain {
   updatedAt         DateTime  @updatedAt
 }
 
-/// Result of the periodic "is this calendar connection still working?" check (Slotwise calendar health).
+/// Result of the periodic "is this calendar connection still working?" check (Nodslot calendar health).
 model CalendarConnectionHealth {
   id                  Int        @id @default(autoincrement())
   credentialId        Int        @unique

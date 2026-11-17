@@ -1,6 +1,6 @@
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
-import { SlotwisePlan } from "@calcom/prisma/enums";
+import { NodslotPlan } from "@calcom/prisma/enums";
 import {
   getEffectivePlan,
   type PlanFeature,
@@ -10,7 +10,7 @@ import {
 
 export type StoredSubscription = {
   userId: number;
-  plan: SlotwisePlan;
+  plan: NodslotPlan;
   status: string;
   polarSubscriptionId: string;
   polarCustomerId: string;
@@ -80,7 +80,7 @@ export class PlanService {
     this.now = deps.now ?? (() => new Date());
   }
 
-  async getEffectivePlan(userId: number): Promise<SlotwisePlan> {
+  async getEffectivePlan(userId: number): Promise<NodslotPlan> {
     const subscription = await this.deps.repository.findByUserId(userId);
     return getEffectivePlan(subscription as SubscriptionSnapshot, this.now());
   }
@@ -100,9 +100,9 @@ export class PlanService {
     };
   }
 
-  private planForProduct(productId: string): SlotwisePlan | null {
-    if (productId && productId === this.deps.productIds.pro) return SlotwisePlan.PRO;
-    if (productId && productId === this.deps.productIds.team) return SlotwisePlan.TEAM;
+  private planForProduct(productId: string): NodslotPlan | null {
+    if (productId && productId === this.deps.productIds.pro) return NodslotPlan.PRO;
+    if (productId && productId === this.deps.productIds.team) return NodslotPlan.TEAM;
     return null;
   }
 
@@ -137,7 +137,7 @@ export class PlanService {
       return "ignored_unknown_product";
     }
 
-    const externalId = data.customer?.external_id ?? data.metadata?.slotwiseUserId;
+    const externalId = data.customer?.external_id ?? data.metadata?.nodslotUserId;
     const userId = Number(externalId);
     if (!Number.isInteger(userId) || userId <= 0 || !(await this.deps.repository.userExists(userId))) {
       this.deps.logger?.warn("[plans] subscription for an unknown user", {
@@ -154,7 +154,7 @@ export class PlanService {
       if (sameSubscription && existing.polarModifiedAt.getTime() >= modifiedAt.getTime())
         return "ignored_stale";
       // A late event about an old subscription must not replace the user's current, still-paid one.
-      const existingStillPaid = getEffectivePlan(existing, this.now()) !== SlotwisePlan.FREE;
+      const existingStillPaid = getEffectivePlan(existing, this.now()) !== NodslotPlan.FREE;
       const incomingIsPaid = data.status === "active" || data.status === "trialing";
       if (!sameSubscription && existingStillPaid && !incomingIsPaid) return "ignored_stale";
     }

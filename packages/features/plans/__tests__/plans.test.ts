@@ -1,4 +1,4 @@
-import { SlotwisePlan } from "@calcom/prisma/enums";
+import { NodslotPlan } from "@calcom/prisma/enums";
 import { describe, expect, it, vi } from "vitest";
 import { getEffectivePlan, getPlanLimits, planHasFeature } from "../lib/entitlements";
 import { getEventTypePlanViolations } from "../lib/eventTypePlanGuard";
@@ -15,29 +15,29 @@ const EARLIER = new Date("2026-11-01T12:00:00.000Z");
 
 describe("entitlements", () => {
   it("gives Free approvals and questions, and keeps the income-protecting features for Pro", () => {
-    expect(planHasFeature(SlotwisePlan.FREE, "approvalRequests")).toBe(true);
-    expect(planHasFeature(SlotwisePlan.FREE, "waitlist")).toBe(false);
-    expect(planHasFeature(SlotwisePlan.FREE, "confirmOrRelease")).toBe(false);
-    expect(planHasFeature(SlotwisePlan.FREE, "customDomain")).toBe(false);
-    expect(planHasFeature(SlotwisePlan.PRO, "waitlist")).toBe(true);
-    expect(planHasFeature(SlotwisePlan.PRO, "teamScheduling")).toBe(false);
-    expect(planHasFeature(SlotwisePlan.TEAM, "teamScheduling")).toBe(true);
-    expect(getPlanLimits(SlotwisePlan.FREE)).toEqual({
+    expect(planHasFeature(NodslotPlan.FREE, "approvalRequests")).toBe(true);
+    expect(planHasFeature(NodslotPlan.FREE, "waitlist")).toBe(false);
+    expect(planHasFeature(NodslotPlan.FREE, "confirmOrRelease")).toBe(false);
+    expect(planHasFeature(NodslotPlan.FREE, "customDomain")).toBe(false);
+    expect(planHasFeature(NodslotPlan.PRO, "waitlist")).toBe(true);
+    expect(planHasFeature(NodslotPlan.PRO, "teamScheduling")).toBe(false);
+    expect(planHasFeature(NodslotPlan.TEAM, "teamScheduling")).toBe(true);
+    expect(getPlanLimits(NodslotPlan.FREE)).toEqual({
       maxScreeningQuestionsPerService: 50,
       maxRemindersPerService: 1,
     });
   });
 
   it.each([
-    [null, SlotwisePlan.FREE],
-    [{ plan: SlotwisePlan.PRO, status: "active", currentPeriodEnd: LATER }, SlotwisePlan.PRO],
-    [{ plan: SlotwisePlan.PRO, status: "trialing", currentPeriodEnd: null }, SlotwisePlan.PRO],
-    [{ plan: SlotwisePlan.PRO, status: "canceled", currentPeriodEnd: LATER }, SlotwisePlan.PRO],
-    [{ plan: SlotwisePlan.PRO, status: "canceled", currentPeriodEnd: EARLIER }, SlotwisePlan.FREE],
-    [{ plan: SlotwisePlan.PRO, status: "past_due", currentPeriodEnd: LATER }, SlotwisePlan.PRO],
-    [{ plan: SlotwisePlan.PRO, status: "past_due", currentPeriodEnd: EARLIER }, SlotwisePlan.FREE],
-    [{ plan: SlotwisePlan.PRO, status: "revoked", currentPeriodEnd: LATER }, SlotwisePlan.FREE],
-    [{ plan: SlotwisePlan.PRO, status: "unpaid", currentPeriodEnd: LATER }, SlotwisePlan.FREE],
+    [null, NodslotPlan.FREE],
+    [{ plan: NodslotPlan.PRO, status: "active", currentPeriodEnd: LATER }, NodslotPlan.PRO],
+    [{ plan: NodslotPlan.PRO, status: "trialing", currentPeriodEnd: null }, NodslotPlan.PRO],
+    [{ plan: NodslotPlan.PRO, status: "canceled", currentPeriodEnd: LATER }, NodslotPlan.PRO],
+    [{ plan: NodslotPlan.PRO, status: "canceled", currentPeriodEnd: EARLIER }, NodslotPlan.FREE],
+    [{ plan: NodslotPlan.PRO, status: "past_due", currentPeriodEnd: LATER }, NodslotPlan.PRO],
+    [{ plan: NodslotPlan.PRO, status: "past_due", currentPeriodEnd: EARLIER }, NodslotPlan.FREE],
+    [{ plan: NodslotPlan.PRO, status: "revoked", currentPeriodEnd: LATER }, NodslotPlan.FREE],
+    [{ plan: NodslotPlan.PRO, status: "unpaid", currentPeriodEnd: LATER }, NodslotPlan.FREE],
   ])("effective plan for %j is %s", (subscription, expected) => {
     expect(getEffectivePlan(subscription, NOW)).toBe(expected);
   });
@@ -49,7 +49,7 @@ describe("getEventTypePlanViolations", () => {
 
   it("blocks Free users from turning paid settings on", () => {
     const violations = getEventTypePlanViolations(
-      SlotwisePlan.FREE,
+      NodslotPlan.FREE,
       {
         requiresConfirmation: true,
         waitlistEnabled: true,
@@ -73,10 +73,10 @@ describe("getEventTypePlanViolations", () => {
       attendeeConfirmationHours: 24,
       attendeeReminderMinutes: [1440, 60],
     };
-    expect(getEventTypePlanViolations(SlotwisePlan.FREE, { ...current }, current)).toEqual([]);
+    expect(getEventTypePlanViolations(NodslotPlan.FREE, { ...current }, current)).toEqual([]);
     expect(
       getEventTypePlanViolations(
-        SlotwisePlan.FREE,
+        NodslotPlan.FREE,
         { waitlistEnabled: false, attendeeConfirmationHours: null },
         current
       )
@@ -86,25 +86,25 @@ describe("getEventTypePlanViolations", () => {
   it("caps custom screening questions at the plan limit and ignores system fields", () => {
     const tooMany = [system, ...Array.from({ length: 51 }, () => question)];
     expect(
-      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: tooMany }, { bookingFields: [] })
+      getEventTypePlanViolations(NodslotPlan.FREE, { bookingFields: tooMany }, { bookingFields: [] })
     ).toHaveLength(1);
     expect(
       getEventTypePlanViolations(
-        SlotwisePlan.FREE,
+        NodslotPlan.FREE,
         { bookingFields: [system, system, question, question, question] },
         {}
       )
     ).toEqual([]);
     // Saving a service that is already over the limit is allowed as long as it doesn't grow.
     expect(
-      getEventTypePlanViolations(SlotwisePlan.FREE, { bookingFields: tooMany }, { bookingFields: tooMany })
+      getEventTypePlanViolations(NodslotPlan.FREE, { bookingFields: tooMany }, { bookingFields: tooMany })
     ).toEqual([]);
   });
 
   it("allows everything on Pro", () => {
     expect(
       getEventTypePlanViolations(
-        SlotwisePlan.PRO,
+        NodslotPlan.PRO,
         {
           requiresConfirmation: true,
           waitlistEnabled: true,
@@ -173,7 +173,7 @@ describe("PlanService", () => {
   it("upgrades a user to Pro on an active subscription", async () => {
     const ctx = setup();
     expect(await ctx.service.applySubscriptionEvent(event())).toBe("applied");
-    expect(await ctx.service.getEffectivePlan(4)).toBe(SlotwisePlan.PRO);
+    expect(await ctx.service.getEffectivePlan(4)).toBe(NodslotPlan.PRO);
     expect(await ctx.service.hasFeature(4, "waitlist")).toBe(true);
   });
 
@@ -192,7 +192,7 @@ describe("PlanService", () => {
     await ctx.service.applySubscriptionEvent(
       event({ status: "revoked", modified_at: "2026-11-13T11:00:00.000Z" }, "subscription.revoked")
     );
-    expect(await ctx.service.getEffectivePlan(4)).toBe(SlotwisePlan.FREE);
+    expect(await ctx.service.getEffectivePlan(4)).toBe(NodslotPlan.FREE);
   });
 
   it("switches branding removal back off on downgrade but not while paid", async () => {
@@ -232,7 +232,7 @@ describe("PlanService", () => {
         )
       )
     ).toBe("ignored_stale");
-    expect(await ctx.service.getEffectivePlan(4)).toBe(SlotwisePlan.PRO);
+    expect(await ctx.service.getEffectivePlan(4)).toBe(NodslotPlan.PRO);
   });
 
   it("creates checkout and portal links only when billing is configured", async () => {

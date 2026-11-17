@@ -1,8 +1,8 @@
 {
-  "name": "slotwise-landing",
+  "name": "nodslot-landing",
   "private": true,
   "version": "1.0.0",
-  "description": "Slotwise marketing site. Separate from the app: its own dependencies and its own deploy.",
+  "description": "Nodslot marketing site. Separate from the app: its own dependencies and its own deploy.",
   "scripts": {
     "dev": "next dev --port 3100",
     "build": "next build",

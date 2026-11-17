@@ -38,7 +38,7 @@ export function createPolarGateway(options: {
         customer_email: email,
         success_url: successUrl,
         return_url: returnUrl,
-        metadata: { slotwiseUserId: String(userId) },
+        metadata: { nodslotUserId: String(userId) },
       });
       return checkout.url;
     },

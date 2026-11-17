@@ -1,4 +1,4 @@
-// The short list of integrations Slotwise offers. The underlying app store has 100+ apps; most are
+// The short list of integrations Nodslot offers. The underlying app store has 100+ apps; most are
 // noise for solo creators and coaches, so the Apps page only shows these, in this order.
 
 export type CuratedGroupId = "calendars" | "video" | "crm" | "automations" | "tracking" | "payments";

@@ -4,7 +4,7 @@ import { ErrorWithCode } from "@calcom/lib/errors";
 import { normalizeDomain } from "../lib/normalizeDomain";
 import type { StoredCustomDomain } from "../repositories/CustomDomainRepository";
 
-export const VERIFICATION_RECORD_PREFIX = "_slotwise-verify";
+export const VERIFICATION_RECORD_PREFIX = "_nodslot-verify";
 
 export interface ICustomDomainRepository {
   findByUserId(userId: number): Promise<StoredCustomDomain | null>;
@@ -98,7 +98,7 @@ export class CustomDomainService {
     const previous = await this.deps.repository.findByUserId(userId);
     if (previous?.domain === domain) return this.toStatus(previous);
 
-    const verificationToken = `slotwise-${randomBytes(16).toString("hex")}`;
+    const verificationToken = `nodslot-${randomBytes(16).toString("hex")}`;
     await this.deps.repository.upsertForUser({ userId, domain, verificationToken });
     if (previous && this.deps.host) await this.deps.host.removeDomain(previous.domain).catch(() => undefined);
     if (this.deps.host) await this.deps.host.addDomain(domain);

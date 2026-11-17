@@ -11,7 +11,7 @@ export type TeamInsights = {
   attendance: { confirmed: number; missed: number };
 };
 
-/** What the team got from Slotwise over a period: who is busiest and how much time the waitlist saved. */
+/** What the team got from Nodslot over a period: who is busiest and how much time the waitlist saved. */
 export class TeamInsightsService {
   constructor(
     private readonly repository: TeamInsightsRepository,

@@ -18,7 +18,7 @@ export type AutomationApiKeySetupProps = {
 };
 
 /**
- * Zapier and Make sign in to Slotwise with an API key tied to that app. Each key covers either the user's own
+ * Zapier and Make sign in to Nodslot with an API key tied to that app. Each key covers either the user's own
  * services or one team's; generating a new one replaces the old one so a leaked key can be rotated here.
  */
 export function AutomationApiKeySetup({

@@ -21,7 +21,7 @@ function readEnvAppName() {
   } catch {
     // .env is optional in CI; fall through to the default.
   }
-  return "Slotwise";
+  return "Nodslot";
 }
 
 const escapeXml = (value) =>

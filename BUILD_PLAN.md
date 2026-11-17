@@ -1,4 +1,4 @@
-# Slotwise build plan: autonomous loop checklist
+# Nodslot build plan: autonomous loop checklist
 
 Work through this list top to bottom. A feature is done only when it is built, covered by unit tests,
 type-checked, verified end to end on the running app (real HTTP / browser, emails checked in
@@ -8,7 +8,7 @@ functionality and correctness are. Read `NOTES.md` for decisions and environment
 ## Environment (restart if not running)
 - App: `corepack yarn dev` → http://localhost:3000 (owner login pro@example.com / pro).
 - Mail catcher: `node scripts/dev/smtp-sink.mjs` → `.dev-mail/*.eml`.
-- DB: `psql -h localhost -d slotwise_dev`. Test service: EventType id 3 (`/pro/30min`).
+- DB: `psql -h localhost -d nodslot_dev`. Test service: EventType id 3 (`/pro/30min`).
 - Keep the Mac cool: `nice -n 15`, one heavy job at a time.
 
 ## Checklist

@@ -57,13 +57,13 @@ export async function handleWebhookScheduledTriggers(prisma: PrismaClient) {
     const headers: Record<string, string> = {
       "Content-Type":
         !job.payload || jsonParse(job.payload) ? "application/json" : "application/x-www-form-urlencoded",
-      "X-Slotwise-Webhook-Version": webhook?.version ?? DEFAULT_WEBHOOK_VERSION,
+      "X-Nodslot-Webhook-Version": webhook?.version ?? DEFAULT_WEBHOOK_VERSION,
       "X-Cal-Webhook-Version": webhook?.version ?? DEFAULT_WEBHOOK_VERSION,
     };
 
     if (webhook) {
       const signature = createWebhookSignature({ secret: webhook.secret, body: job.payload });
-      headers["X-Slotwise-Signature-256"] = signature;
+      headers["X-Nodslot-Signature-256"] = signature;
       // Legacy name kept so receivers built against the upstream format keep working.
       headers["X-Cal-Signature-256"] = signature;
     }

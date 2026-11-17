@@ -1,6 +1,6 @@
-# Deploying Slotwise to production
+# Deploying Nodslot to production
 
-Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backed by Postgres.
+Nodslot is a Next.js monorepo (the Cal.diy engine plus Nodslot features) backed by Postgres.
 
 ## 0. Two sites, one repo
 - **Landing site** (`landing/`): the marketing site on the root domain. Separate Vercel project with Root Directory `landing`. See `landing/README.md`.
@@ -8,7 +8,7 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
 - The app's `robots.txt` only lets search engines index public booking pages; account pages and email-link pages are `noindex`.
 
 ## Launch checklist (things only the owner can set up)
-- Real domain: replace `slotwise.example` (landing `src/site.config.ts` or its env vars) and the app URLs above.
+- Real domain: replace `nodslot.site` (landing `src/site.config.ts` or its env vars) and the app URLs above.
 - Google and Microsoft OAuth apps for calendar sync (`GOOGLE_API_CREDENTIALS`, `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET`), plus `ZOOM_CLIENT_ID` / `ZOOM_CLIENT_SECRET` and `DAILY_API_KEY` for video. After setting them, run `corepack yarn workspace @calcom/prisma seed-app-store` once (safe to re-run; it upserts). That stores the keys and turns the apps on, so Google Calendar, Outlook, Google Meet, Zoom and built-in video appear in onboarding and settings. Without it onboarding only offers Apple and CalDAV.
 - CRM and Teams developer apps (all free to register):
   - Microsoft Teams video: uses the same `MS_GRAPH_CLIENT_ID` / `MS_GRAPH_CLIENT_SECRET` as Outlook.
@@ -17,7 +17,7 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
   - Pipedrive: client id and secret from developers.pipedrive.com, entered in Settings → Admin → Apps.
   - Then run `seed-app-store` again. Google Analytics, Tag Manager, Meta Pixel and Make need no keys.
 - Zapier and Make: the restored apps point people at Cal.com's Zapier/Make listings, which talk to Cal's
-  servers. Slotwise needs its own Zapier and Make apps (free on their developer platforms) before these work
+  servers. Nodslot needs its own Zapier and Make apps (free on their developer platforms) before these work
   end to end. Webhooks work today.
 - Email sending domain (SPF, DKIM, DMARC) and `EMAIL_SERVER_*`.
 - Polar products and webhook (section 5), `DAILY_API_KEY` for built-in video, `ANTHROPIC_API_KEY` for AI summaries.
@@ -41,7 +41,7 @@ Slotwise is a Next.js monorepo (the Cal.diy engine plus Slotwise features) backe
 | `NEXT_PUBLIC_APP_NAME`, `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` | Brand |
 | `CRON_API_KEY` | Shared secret for every cron endpoint below |
 | `CRON_SECRET` | Secret for `/api/tasks/cron` (the background task runner) |
-| `NEXT_PUBLIC_DOCS_URL` | Where in-app help links go, e.g. `https://slotwise.com/docs` (defaults to the website URL + `/docs`) |
+| `NEXT_PUBLIC_DOCS_URL` | Where in-app help links go, e.g. `https://nodslot.com/docs` (defaults to the website URL + `/docs`) |
 | `EMAIL_FROM`, `EMAIL_SERVER_HOST`, `EMAIL_SERVER_PORT`, `EMAIL_SERVER_USER`, `EMAIL_SERVER_PASSWORD` | Outgoing email |
 | `POLAR_ACCESS_TOKEN`, `POLAR_WEBHOOK_SECRET`, `POLAR_ENVIRONMENT=production`, `POLAR_PRO_PRODUCT_ID`, `POLAR_TEAM_PRODUCT_ID` | Billing |
 | `ANTHROPIC_API_KEY` (optional), `REQUEST_INSIGHTS_MODEL` (optional) | AI request summaries |
@@ -77,7 +77,7 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
 
 ## 5b. Custom domains (Pro)
 - Owners connect a domain in **Settings → Custom domain**. They add:
-  - a TXT record `_slotwise-verify.<domain>` with their token (proves ownership)
+  - a TXT record `_nodslot-verify.<domain>` with their token (proves ownership)
   - a CNAME to `CUSTOM_DOMAIN_CNAME_TARGET` (on Vercel: `cname.vercel-dns.com`)
 - **On Vercel:** set `VERCEL_DOMAINS_API_TOKEN` and `VERCEL_DOMAINS_PROJECT_ID` (plus `VERCEL_DOMAINS_TEAM_ID` for a team). The domain is then added to the project automatically and Vercel issues its TLS certificate. Without them, add domains to the project by hand.
 - **Elsewhere:** put a reverse proxy in front that issues certificates on demand (for example Caddy with `on_demand_tls`) and forwards the `Host` header.
@@ -88,7 +88,7 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
   - If the owner's plan lapses, visitors are redirected to the regular app URL.
 - If the app is served on other hostnames, list them in `APP_EXTRA_HOSTS`.
 
-## 6. Security notes for the Slotwise endpoints
+## 6. Security notes for the Nodslot endpoints
 - **Public endpoints are rate-limited and validated with zod:**
   - `/api/waitlist/join`, `/api/waitlist/options`, `/api/waitlist/claim`, `/api/attendance/confirm`.
   - Claim and confirm links carry 256-bit random tokens. Only their sha256 hash is stored.

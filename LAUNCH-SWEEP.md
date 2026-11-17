@@ -1,6 +1,6 @@
 # Launch sweep: what was tested and what's left
 
-Full check of Slotwise on 2026-11-16, run against the local app (`localhost:3000`, local Postgres, local mail catcher `.dev-mail`). Read this before re-testing anything: everything under "Verified" was exercised end to end in a real browser, as separate people, and checked against the database and the emails actually sent.
+Full check of Nodslot on 2026-11-16, run against the local app (`localhost:3000`, local Postgres, local mail catcher `.dev-mail`). Read this before re-testing anything: everything under "Verified" was exercised end to end in a real browser, as separate people, and checked against the database and the emails actually sent.
 
 Companion files: `LAUNCH-TODO.md` (what still has to be set up) and `DEPLOY.md` (how).
 
@@ -35,7 +35,7 @@ Notes for whoever runs them:
 |---|---|---|
 | 1 | Sign up | Account created, verify-email page, verification email arrives and works, first-time setup, 3 default services, time zone from the browser, starts on Free |
 | 2 | Log in | Wrong password refused, right one works, signed-out visitors bounced to login |
-| 3 | Instant booking | Confirmed at once, client and host emails, shows in Upcoming, the time disappears for others, Free shows the Slotwise badge |
+| 3 | Instant booking | Confirmed at once, client and host emails, shows in Upcoming, the time disappears for others, Free shows the Nodslot badge |
 | 4 | Reschedule and cancel | New booking made, old one closed and marked rescheduled, rescheduled email, cancel works, cancellation email has "Pick a new time", host told, 3 AI rebook suggestions, "Book this time" opens the pre-filled form |
 | 5 | Approval requests + AI | Booking is pending, client sees "request sent", AI summary written, host email waits for the summary and contains it, AI label in the Unconfirmed list, request page has summary/reply/Accept/Decline, "Send reply" emails the client with reply-to the host, Accept confirms and emails, Decline rejects and emails |
 | 6 | Confirm-or-release | "Are you still coming?" email, opening the link alone doesn't confirm (safe from email scanners), the button confirms, missed deadline recorded, unconfirmed booking released, confirmed one untouched, late link says too late, host told |
@@ -44,7 +44,7 @@ Notes for whoever runs them:
 | 9 | Plans | Free can't switch on the waitlist (server refuses), told to upgrade, billing shows Free / $12 / $49 |
 | 10 | Host screens | All 29 load with no errors: Home, calendar Home demo, Assistant, Services and editor tabs, all 5 booking tabs, search, Availability, Waitlist, Teams, Apps, and every Settings page |
 | 11 | Public pages on a phone | 9 pages at 390px wide: no errors, no sideways scroll. 6 kinds of bad link (unknown person, service, booking, team, waitlist link, invite link) show a friendly not-found |
-| 12 | Webhooks | Booking fires `BOOKING_CREATED` with a valid `X-Slotwise-Signature-256` |
+| 12 | Webhooks | Booking fires `BOOKING_CREATED` with a valid `X-Nodslot-Signature-256` |
 | 13 | Setup Assistant | Asked for a 45-minute service by name: it was created on the right account |
 | 14 | Service editor | Title change saves, public page shows it, live phone preview present |
 | 15 | Forgot password | Reset email, new password works, link is single-use, unknown email reveals nothing |
@@ -66,13 +66,13 @@ Also verified:
 
 ## Found, not fixed
 
-1. **(Fixed 2026-11-16: Daily key added, re-tested with `scripts/launch-sweep/daily.cjs`.)** No video key meant an "[Action Required]" email to the host on every booking. Services default to "Slotwise Video". Without `DAILY_API_KEY` the link can't be made and the host gets a "couldn't create the meeting" email each time. A recurring booking of 12 sessions sent 12. Bookings still go through. This is the video key item in `LAUNCH-TODO.md`; treat it as a hard blocker.
+1. **(Fixed 2026-11-16: Daily key added, re-tested with `scripts/launch-sweep/daily.cjs`.)** No video key meant an "[Action Required]" email to the host on every booking. Services default to "Nodslot Video". Without `DAILY_API_KEY` the link can't be made and the host gets a "couldn't create the meeting" email each time. A recurring booking of 12 sessions sent 12. Bookings still go through. This is the video key item in `LAUNCH-TODO.md`; treat it as a hard blocker.
 2. **"Who's free" can name people who can't take the booking.** The team page AI lists any free team member, but the "Book" button goes to a service whose hosts may be a smaller group. Seen with two new members who weren't hosts of the round-robin service. Fix: limit the list to the suggested service's hosts (`TeamRoutingService.availabilityFor`).
 3. **A held slot can look bookable on a round-robin service.** After killed test runs left slots held, the round-robin page still showed a held time and booking it failed with "This slot is no longer available". Holds expire in minutes, and it didn't reproduce once they were cleared. Worth one deliberate re-test: person A selects a time, person B opens the same service.
 
 ## Security review (2026-11-17)
 
-Scope: the code Slotwise added on top of the Cal engine, plus the running app attacked as a second account and as a signed-out visitor. Re-run with `node scripts/launch-sweep/security.cjs` (the victim booking and waitlist ids at the top of the script are local test data; update them if the database is reset).
+Scope: the code Nodslot added on top of the Cal engine, plus the running app attacked as a second account and as a signed-out visitor. Re-run with `node scripts/launch-sweep/security.cjs` (the victim booking and waitlist ids at the top of the script are local test data; update them if the database is reset).
 
 **Clean:**
 - **Secrets:** no keys in the repository or in git history; `.env` and `.env.launch-keys` are git-ignored; no secret-looking `NEXT_PUBLIC_` variables; no tokens, client secrets or password hashes in API responses for an account with a connected Google calendar; none in public page HTML.

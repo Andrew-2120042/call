@@ -26,7 +26,7 @@ type Draft = {
 };
 
 /**
- * Slotwise booking rules (waitlist, confirm-or-release, reminders). Saves on its own through the
+ * Nodslot booking rules (waitlist, confirm-or-release, reminders). Saves on its own through the
  * guarded event type update, so plan limits are enforced server-side exactly as for any other save.
  */
 export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {

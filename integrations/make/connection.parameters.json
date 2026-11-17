@@ -2,8 +2,8 @@
   {
     "name": "apiKey",
     "type": "password",
-    "label": "Slotwise API key",
+    "label": "Nodslot API key",
     "required": true,
-    "help": "In Slotwise, open Apps → Make and click Generate API key."
+    "help": "In Nodslot, open Apps → Make and click Generate API key."
   }
 ]

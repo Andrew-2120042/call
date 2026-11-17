@@ -52,8 +52,8 @@ function setup(opts: { entitled?: boolean; txt?: string[][] | Error; withHost?: 
     dns,
     host,
     isEntitled: async () => entitled,
-    reservedHosts: ["app.slotwise.test", "localhost", "vercel.app"],
-    cnameTarget: "cname.slotwise.test",
+    reservedHosts: ["app.nodslot.test", "localhost", "vercel.app"],
+    cnameTarget: "cname.nodslot.test",
     now: () => NOW,
   });
   return {
@@ -106,10 +106,10 @@ describe("CustomDomainService", () => {
     expect(status.records).toEqual([
       {
         type: "TXT",
-        name: "_slotwise-verify.book.example.com",
-        value: expect.stringMatching(/^slotwise-[a-f0-9]{32}$/),
+        name: "_nodslot-verify.book.example.com",
+        value: expect.stringMatching(/^nodslot-[a-f0-9]{32}$/),
       },
-      { type: "CNAME", name: "book.example.com", value: "cname.slotwise.test" },
+      { type: "CNAME", name: "book.example.com", value: "cname.nodslot.test" },
     ]);
     expect(ctx.host?.addDomain).toHaveBeenCalledWith("book.example.com");
   });
@@ -117,8 +117,8 @@ describe("CustomDomainService", () => {
   it("refuses invalid, reserved and already-claimed domains", async () => {
     const ctx = setup();
     await expect(ctx.service.add(4, "not a domain")).rejects.toThrow(/Enter a domain/);
-    await expect(ctx.service.add(4, "app.slotwise.test")).rejects.toThrow(/can't be used/);
-    await expect(ctx.service.add(4, "x.app.slotwise.test")).rejects.toThrow(/can't be used/);
+    await expect(ctx.service.add(4, "app.nodslot.test")).rejects.toThrow(/can't be used/);
+    await expect(ctx.service.add(4, "x.app.nodslot.test")).rejects.toThrow(/can't be used/);
     await expect(ctx.service.add(4, "evil.vercel.app")).rejects.toThrow(/can't be used/);
     await ctx.service.add(5, "book.example.com");
     await expect(ctx.service.add(4, "book.example.com")).rejects.toThrow(/another account/);
@@ -142,7 +142,7 @@ describe("CustomDomainService", () => {
     ctx.setTxt([["something-else"]]);
     expect((await ctx.service.verify(4)).verified).toBe(false);
 
-    ctx.setTxt([["slotwise-", token.slice("slotwise-".length)]]); // long TXT values arrive in chunks
+    ctx.setTxt([["nodslot-", token.slice("nodslot-".length)]]); // long TXT values arrive in chunks
     const verified = await ctx.service.verify(4);
     expect(verified.verified).toBe(true);
     expect(verified.verifiedAt).toEqual(NOW);

@@ -1,4 +1,4 @@
-import { SlotwisePlan } from "@calcom/prisma/enums";
+import { NodslotPlan } from "@calcom/prisma/enums";
 
 export type PlanFeature =
   | "approvalRequests"
@@ -32,24 +32,24 @@ const PRO_FEATURES: PlanFeature[] = [
   "customDomain",
 ];
 
-const PLAN_FEATURES: Record<SlotwisePlan, ReadonlySet<PlanFeature>> = {
-  [SlotwisePlan.FREE]: new Set(FREE_FEATURES),
-  [SlotwisePlan.PRO]: new Set(PRO_FEATURES),
-  [SlotwisePlan.TEAM]: new Set<PlanFeature>([...PRO_FEATURES, "teamScheduling"]),
+const PLAN_FEATURES: Record<NodslotPlan, ReadonlySet<PlanFeature>> = {
+  [NodslotPlan.FREE]: new Set(FREE_FEATURES),
+  [NodslotPlan.PRO]: new Set(PRO_FEATURES),
+  [NodslotPlan.TEAM]: new Set<PlanFeature>([...PRO_FEATURES, "teamScheduling"]),
 };
 
-const PLAN_LIMITS: Record<SlotwisePlan, PlanLimits> = {
-  [SlotwisePlan.FREE]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 1 },
-  [SlotwisePlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
-  [SlotwisePlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
+const PLAN_LIMITS: Record<NodslotPlan, PlanLimits> = {
+  [NodslotPlan.FREE]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 1 },
+  [NodslotPlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
+  [NodslotPlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
 };
 
-export const planHasFeature = (plan: SlotwisePlan, feature: PlanFeature) => PLAN_FEATURES[plan].has(feature);
+export const planHasFeature = (plan: NodslotPlan, feature: PlanFeature) => PLAN_FEATURES[plan].has(feature);
 
-export const getPlanLimits = (plan: SlotwisePlan): PlanLimits => PLAN_LIMITS[plan];
+export const getPlanLimits = (plan: NodslotPlan): PlanLimits => PLAN_LIMITS[plan];
 
 export type SubscriptionSnapshot = {
-  plan: SlotwisePlan;
+  plan: NodslotPlan;
   status: string;
   currentPeriodEnd: Date | null;
 } | null;
@@ -58,13 +58,13 @@ export type SubscriptionSnapshot = {
  * The plan a user is entitled to right now. Paid access continues while a subscription is active or
  * trialing, and until the paid period ends when it was cancelled or a renewal payment is failing.
  */
-export const getEffectivePlan = (subscription: SubscriptionSnapshot, now: Date): SlotwisePlan => {
-  if (!subscription) return SlotwisePlan.FREE;
+export const getEffectivePlan = (subscription: SubscriptionSnapshot, now: Date): NodslotPlan => {
+  if (!subscription) return NodslotPlan.FREE;
   if (subscription.status === "active" || subscription.status === "trialing") return subscription.plan;
   const paidThrough = subscription.currentPeriodEnd?.getTime() ?? 0;
   const inPaidPeriod = paidThrough > now.getTime();
   if (inPaidPeriod && (subscription.status === "canceled" || subscription.status === "past_due")) {
     return subscription.plan;
   }
-  return SlotwisePlan.FREE;
+  return NodslotPlan.FREE;
 };

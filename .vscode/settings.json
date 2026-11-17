@@ -22,7 +22,7 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "files.exclude": {
-    "// Slotwise: folders from the Cal.com base we don't use (hidden, not deleted). Delete this block to see them again.": false,
+    "// Nodslot: folders from the Cal.com base we don't use (hidden, not deleted). Delete this block to see them again.": false,
     "apps/api": true,
     "apps/docs": true,
     "example-apps": true,

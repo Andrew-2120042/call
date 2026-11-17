@@ -1,4 +1,4 @@
-import type { SlotwisePlan } from "@calcom/prisma/enums";
+import type { NodslotPlan } from "@calcom/prisma/enums";
 import { getPlanLimits, planHasFeature } from "./entitlements";
 
 export type EventTypePlanSettings = {
@@ -26,7 +26,7 @@ const countCustomQuestions = (bookingFields: unknown) =>
  * unrelated changes and turn paid settings off.
  */
 export const getEventTypePlanViolations = (
-  plan: SlotwisePlan,
+  plan: NodslotPlan,
   update: EventTypePlanSettings,
   current: EventTypePlanSettings
 ): PlanViolation[] => {

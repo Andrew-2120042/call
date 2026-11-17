@@ -42,7 +42,7 @@ export const articles: Article[] = [
       {
         heading: "Side-by-side",
         table: {
-          head: ["", "Calendly", "Cal.com", "Slotwise"],
+          head: ["", "Calendly", "Cal.com", "Nodslot"],
           rows: [
             ["Free plan", "1 event type, 1 calendar, one-on-one only", "1 user, unlimited links and calendars", "1 user, unlimited services and calendars"],
             ["Approve bookings first", "Not built in", "Yes (free)", "Yes (free)"],
@@ -71,22 +71,22 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Choose Slotwise if",
+        heading: "Choose Nodslot if",
         paragraphs: [
-          "Your calendar is full and the problem is what happens afterwards: cancellations that leave gaps, clients who don't show, and requests you want to read before accepting. Slotwise keeps scheduling free and adds a waitlist that offers freed slots automatically, one-click attendance confirmation that can release the time, and AI summaries of booking requests.",
+          "Your calendar is full and the problem is what happens afterwards: cancellations that leave gaps, clients who don't show, and requests you want to read before accepting. Nodslot keeps scheduling free and adds a waitlist that offers freed slots automatically, one-click attendance confirmation that can release the time, and AI summaries of booking requests.",
         ],
       },
       {
         heading: "Switching is quick",
         paragraphs: [
-          "Slotwise imports your Calendly services and weekly hours from an access token in about a minute. Booking links change, so update the link in your email signature and website.",
+          "Nodslot imports your Calendly services and weekly hours from an access token in about a minute. Booking links change, so update the link in your email signature and website.",
         ],
       },
     ],
     faq: [
       { q: "Is Cal.com really free?", a: "Yes for one person. Cal.com's free plan covers one user with unlimited booking links and calendars. Teams start at $12 per user per month." },
       { q: "Does Calendly's free plan include round robin?", a: "No. Round robin is part of Calendly's Teams plan, billed per seat." },
-      { q: "Which is cheaper for a team of 5?", a: "At list prices with yearly billing, Calendly Teams is about $80 a month (5 × $16) and Cal.com Teams about $60 (5 × $12). Slotwise Team is $49 a month for up to 10 people." },
+      { q: "Which is cheaper for a team of 5?", a: "At list prices with yearly billing, Calendly Teams is about $80 a month (5 × $16) and Cal.com Teams about $60 (5 × $12). Nodslot Team is $49 a month for up to 10 people." },
     ],
     sources: [calendlyPricing, calPricing],
   },
@@ -94,12 +94,12 @@ export const articles: Article[] = [
     slug: "best-scheduling-software-2027",
     title: "The best scheduling software for 2027, and who each one is for",
     description:
-      "An honest guide to the best online scheduling tools for 2027: Calendly, Cal.com, SavvyCal, Acuity, Zoho Bookings and Slotwise, with the job each one does best.",
+      "An honest guide to the best online scheduling tools for 2027: Calendly, Cal.com, SavvyCal, Acuity, Zoho Bookings and Nodslot, with the job each one does best.",
     keyword: "best scheduling software 2027",
     published: "2026-11-15",
     updated: "2026-11-15",
     answer:
-      "There is no single best scheduling tool for 2027; pick by the job. Calendly for companies standardised on it, Cal.com for a generous free plan and self-hosting, SavvyCal for a polished booker experience, Acuity for paid appointments, Zoho Bookings for Zoho users, and Slotwise if cancellations and no-shows cost you money.",
+      "There is no single best scheduling tool for 2027; pick by the job. Calendly for companies standardised on it, Cal.com for a generous free plan and self-hosting, SavvyCal for a polished booker experience, Acuity for paid appointments, Zoho Bookings for Zoho users, and Nodslot if cancellations and no-shows cost you money.",
     sections: [
       {
         heading: "What changed going into 2027",
@@ -119,7 +119,7 @@ export const articles: Article[] = [
             ["SavvyCal", "A polished experience for the person booking", "Paid only"],
             ["Acuity Scheduling", "Paid appointments for service businesses", "Built around Squarespace's ecosystem"],
             ["Zoho Bookings", "Businesses already using Zoho", "Best value inside the Zoho suite"],
-            ["Slotwise", "Professionals losing time to cancellations and no-shows", "Newer, with a smaller app catalogue"],
+            ["Nodslot", "Professionals losing time to cancellations and no-shows", "Newer, with a smaller app catalogue"],
           ],
         },
       },
@@ -133,15 +133,15 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Why we built Slotwise",
+        heading: "Why we built Nodslot",
         paragraphs: [
-          "Most booking tools stop helping once a time is booked. Slotwise adds a waitlist for taken times, a confirm-or-release step that frees time when clients don't confirm, and AI summaries so you can approve requests quickly. Scheduling itself is free.",
+          "Most booking tools stop helping once a time is booked. Nodslot adds a waitlist for taken times, a confirm-or-release step that frees time when clients don't confirm, and AI summaries so you can approve requests quickly. Scheduling itself is free.",
         ],
       },
     ],
     faq: [
-      { q: "What is the best free scheduling tool?", a: "For one person, Cal.com and Slotwise both offer unlimited booking links on their free plans. Calendly's free plan is limited to one event type." },
-      { q: "What is the best scheduling tool for small teams?", a: "If price per seat matters, compare totals: Calendly Teams is $16 per seat and Cal.com Teams $12 per user (yearly billing). Slotwise Team is $49 a month for up to 10 people." },
+      { q: "What is the best free scheduling tool?", a: "For one person, Cal.com and Nodslot both offer unlimited booking links on their free plans. Calendly's free plan is limited to one event type." },
+      { q: "What is the best scheduling tool for small teams?", a: "If price per seat matters, compare totals: Calendly Teams is $16 per seat and Cal.com Teams $12 per user (yearly billing). Nodslot Team is $49 a month for up to 10 people." },
     ],
     sources: [calendlyPricing, calPricing],
   },
@@ -167,7 +167,7 @@ export const articles: Article[] = [
       {
         heading: "Free alternatives with more",
         paragraphs: [
-          "If one event type isn't enough, Cal.com and Slotwise both offer unlimited booking links for one person on their free plans. Slotwise also includes approvals and unlimited booking questions for free.",
+          "If one event type isn't enough, Cal.com and Nodslot both offer unlimited booking links for one person on their free plans. Nodslot also includes approvals and unlimited booking questions for free.",
         ],
       },
     ],
@@ -208,7 +208,7 @@ export const articles: Article[] = [
         },
       },
       {
-        heading: "Setting it up in Slotwise",
+        heading: "Setting it up in Nodslot",
         bullets: [
           "Create a team and invite people by email or invite link.",
           "Create a team service and choose Round robin.",
@@ -217,7 +217,7 @@ export const articles: Article[] = [
       },
     ],
     faq: [
-      { q: "Does round robin cost extra?", a: "On most tools it's a team feature billed per seat. In Slotwise it's part of the Team plan, $49 a month for up to 10 people." },
+      { q: "Does round robin cost extra?", a: "On most tools it's a team feature billed per seat. In Nodslot it's part of the Team plan, $49 a month for up to 10 people." },
     ],
     sources: [calendlyPricing, calPricing],
   },
@@ -250,7 +250,7 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Doing it with Slotwise",
+        heading: "Doing it with Nodslot",
         paragraphs: [
           "Turn on Waitlist for a service under Booking rules. Your booking page then shows 'Time you want is taken? Join the waitlist'. When a booking is cancelled, the first person in line gets an email to claim it, with two hours to respond by default.",
         ],
@@ -283,7 +283,7 @@ export const articles: Article[] = [
         ],
       },
       {
-        heading: "Doing it with Slotwise",
+        heading: "Doing it with Nodslot",
         paragraphs: [
           "Under Booking rules, choose reminder times and turn on 'Ask clients to confirm they're coming'. Clients get a confirm button by email; if the deadline passes you're alerted, and with release on the booking is cancelled and offered to your waitlist.",
         ],

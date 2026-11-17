@@ -19,7 +19,7 @@ const server = net.createServer((socket) => {
   let inData = false;
   let envelope = { from: "", to: [] };
   const reply = (line) => socket.write(`${line}\r\n`);
-  reply("220 slotwise-dev-smtp ready");
+  reply("220 nodslot-dev-smtp ready");
 
   socket.on("data", (chunk) => {
     buffer += chunk.toString("utf8");
@@ -47,7 +47,7 @@ const server = net.createServer((socket) => {
       buffer = buffer.slice(lineEnd + 2);
       const command = line.slice(0, 4).toUpperCase();
       if (command === "EHLO" || command === "HELO") {
-        socket.write("250-slotwise-dev-smtp\r\n250 8BITMIME\r\n");
+        socket.write("250-nodslot-dev-smtp\r\n250 8BITMIME\r\n");
       } else if (command === "MAIL") {
         envelope.from = line.replace(/^MAIL FROM:\s*/i, "");
         reply("250 OK");

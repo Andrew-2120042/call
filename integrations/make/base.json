@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://app.slotwise.example/api/integrations/make",
+  "baseUrl": "https://app.nodslot.site/api/integrations/make",
   "qs": { "apiKey": "{{connection.apiKey}}" },
   "response": { "error": { "message": "[{{statusCode}}] {{body.message}}" } },
   "log": { "sanitize": ["request.qs.apiKey"] }
