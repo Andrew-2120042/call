@@ -20,7 +20,7 @@ const productMenu = [
   ...features.map((f) => ({ href: `/features/${f.slug}`, label: f.name, hint: f.title })),
 ];
 const resourcesMenu = [
-  { href: "/docs", label: "Docs", hint: "How every part of Nodslot works" },
+  { href: "/docs", label: "Docs", hint: `How every part of ${site.name} works` },
   { href: "/docs/changelog", label: "Changelog", hint: "What's new, every week" },
   { href: "/blog", label: "Guides", hint: "Comparisons, pricing explained, how-tos" },
   ...comparisons.map((c) => ({ href: `/compare/${c.slug}`, label: `${c.competitor} alternative`, hint: c.title })),

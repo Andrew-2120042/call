@@ -71,7 +71,9 @@ async function handler(req: NextRequest, { params }: { params: Promise<Params> }
     headers: {
       "Content-Type": "image/png",
       "Content-Length": imageResp.length.toString(),
-      "Cache-Control": "max-age=86400",
+      // Avatar URLs change whenever the image does (a fresh key or ?v= version), so they're safe to cache for a year
+      // at the CDN; repeat views then never reach a server function.
+      "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable",
     },
     status: 200,
   });

@@ -163,7 +163,7 @@ export default function Home() {
           </a>
           <div data-reveal className="mx-auto mt-14 max-w-4xl">
             <Window title="Bookings">
-              <Image src="/shots/bookings.png" alt="The Nodslot bookings list" width={2560} height={1600} className="h-auto w-full" />
+              <Image src="/shots/bookings.png" alt={`The ${site.name} bookings list`} width={2560} height={1600} className="h-auto w-full" />
             </Window>
           </div>
         </Container>

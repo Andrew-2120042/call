@@ -1,3 +1,4 @@
+import { site } from "@/site.config";
 // All marketing copy lives here so it can be edited without touching layout code.
 // Every claim on the site should match what the product actually does today.
 
@@ -87,7 +88,7 @@ export const features: Feature[] = [
       "Long intake answers are slow to read when you have a dozen requests waiting.",
     how: [
       { title: "A request comes in", body: "The client answers your booking questions as usual." },
-      { title: "Nodslot writes a summary", body: "Within a minute, a few lines appear: who they are, what they want, anything that needs your attention." },
+      { title: `${site.name} writes a summary`, body: "Within a minute, a few lines appear: who they are, what they want, anything that needs your attention." },
       { title: "You decide faster", body: "Accept or decline straight from the request." },
     ],
     plan: "Pro",
@@ -131,7 +132,7 @@ export const comparisons: Comparison[] = [
     competitor: "Calendly",
     title: "A Calendly alternative with a built-in waitlist",
     summary:
-      "Calendly is the best-known booking link. Nodslot covers the everyday scheduling you use it for, then adds the pieces Calendly users keep asking for: a real waitlist and a way to stop no-shows.",
+      `Calendly is the best-known booking link. ${site.name} covers the everyday scheduling you use it for, then adds the pieces Calendly users keep asking for: a real waitlist and a way to stop no-shows.`,
     rows: [
       { label: "Free plan", us: "Unlimited services and calendars", them: "1 event type, 1 calendar, one-on-one only" },
       { label: "Waitlist that refills cancellations", us: "Built in (Pro)", them: "Not built in; needs webhooks or another tool" },
@@ -141,14 +142,14 @@ export const comparisons: Comparison[] = [
       { label: "Calendar sync, video links, reminders", us: "Yes", them: "Yes" },
     ],
     verdict:
-      "If cancellations and no-shows are what cost you money, Nodslot was built for exactly that. You can import your Calendly services and hours in a minute.",
+      `If cancellations and no-shows are what cost you money, ${site.name} was built for exactly that. You can import your Calendly services and hours in a minute.`,
   },
   {
     slug: "cal-com-alternative",
     competitor: "Cal.com",
     title: "A Cal.com alternative for people who just want a link",
     summary:
-      "Cal.com is powerful and very configurable. Nodslot keeps the scheduling core and drops the setup work, with a calm dashboard and features aimed at filling your calendar.",
+      `Cal.com is powerful and very configurable. ${site.name} keeps the scheduling core and drops the setup work, with a calm dashboard and features aimed at filling your calendar.`,
     rows: [
       { label: "Approvals and unlimited questions", us: "Free", them: "Free" },
       { label: "Waitlist for taken times", us: "Built in (Pro)", them: "Not built in" },
@@ -157,7 +158,7 @@ export const comparisons: Comparison[] = [
       { label: "Round robin for teams", us: "$49/month flat, up to 10 people", them: "Teams plan, $12 per user/month" },
     ],
     verdict:
-      "Choose Nodslot if you want a booking link that works out of the box and actively protects your time.",
+      `Choose ${site.name} if you want a booking link that works out of the box and actively protects your time.`,
   },
 ];
 
@@ -202,7 +203,7 @@ export const audiences: Audience[] = [
     summary: "Read every request before it reaches your calendar, and keep prospects from booking calls you don't want.",
     pains: ["Prospects booking calls without context", "Back-to-back meetings with no buffer", "Time zones with international clients"],
     highlights: ["booking-approval", "ai-booking-summaries", "team-scheduling"],
-    example: "A prospect in another time zone requests a call. Nodslot shows them your hours in their time, and you approve it after a ten-second read.",
+    example: `A prospect in another time zone requests a call. ${site.name} shows them your hours in their time, and you approve it after a ten-second read.`,
   },
   {
     slug: "salons-and-studios",
@@ -265,7 +266,7 @@ export const pricing = [
       "Confirm-or-release for no-shows",
       "AI summaries of booking requests",
       "Multiple reminder emails",
-      "Your own domain and no Nodslot badge",
+      `Your own domain and no ${site.name} badge`,
     ],
   },
   {
@@ -286,12 +287,12 @@ export const pricing = [
 
 export const homeFaq = [
   {
-    q: "What is Nodslot?",
-    a: "Nodslot is an online booking link. Clients pick a time that suits them, it lands in your calendar, and Nodslot handles what comes after: refilling cancelled slots from a waitlist, asking clients to confirm so you get fewer no-shows, and summarising booking requests you approve.",
+    q: `What is ${site.name}?`,
+    a: `${site.name} is an online booking link. Clients pick a time that suits them, it lands in your calendar, and ${site.name} handles what comes after: refilling cancelled slots from a waitlist, asking clients to confirm so you get fewer no-shows, and summarising booking requests you approve.`,
   },
   {
-    q: "How is Nodslot different from Calendly or Cal.com?",
-    a: "All three get you booked. Nodslot also keeps you booked: a cancelled slot is offered to the next person on the waitlist automatically, and unconfirmed bookings can free themselves up. The free plan includes unlimited services, and Team is one flat price instead of a price per seat.",
+    q: `How is ${site.name} different from Calendly or Cal.com?`,
+    a: `All three get you booked. ${site.name} also keeps you booked: a cancelled slot is offered to the next person on the waitlist automatically, and unconfirmed bookings can free themselves up. The free plan includes unlimited services, and Team is one flat price instead of a price per seat.`,
   },
   {
     q: "Is the free plan really free?",
@@ -310,7 +311,7 @@ export const homeFaq = [
     a: "Yes. Paste a Calendly personal access token into Settings → Import from Calendly. Your services and weekly hours come across in about a minute, and you can check everything before sharing your new link.",
   },
   {
-    q: "Which calendars and video apps work with Nodslot?",
+    q: `Which calendars and video apps work with ${site.name}?`,
     a: "Google Calendar, Outlook and Microsoft 365, Apple iCloud and any CalDAV calendar are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom, Microsoft Teams or built-in video link. Zapier, Make and webhooks connect everything else.",
   },
   {

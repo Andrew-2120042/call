@@ -41,7 +41,9 @@ export const uploadAvatar = async ({ userId, avatar: data }: { userId: number; a
     },
   });
 
-  return `/api/avatar/${objectKey}.png`;
+  // The object key is kept across uploads, so the version makes each new photo a new URL; that lets the CDN cache
+  // photos for a year without ever serving an old one.
+  return `/api/avatar/${objectKey}.png?v=${Date.now().toString(36)}`;
 };
 
 export const uploadLogo = async ({

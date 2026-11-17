@@ -1,3 +1,6 @@
+// The product name and domain live in /brand.json; change them there to rename everything.
+import BRAND from "../../brand.json";
+
 /**
  * Ensures URL has a protocol prefix. If the URL doesn't start with http:// or https://,
  * prepends https:// to make it valid for URL parsing.
@@ -37,9 +40,9 @@ export const BASE_URL = WEBAPP_URL;
 export const WEBSITE_URL = ensureProtocol(process.env.NEXT_PUBLIC_WEBSITE_URL) || WEBAPP_URL;
 /** The public help docs (the marketing site's /docs). Help links in the app point here. */
 export const DOCS_URL = (ensureProtocol(process.env.NEXT_PUBLIC_DOCS_URL) || `${WEBSITE_URL}/docs`).replace(/\/$/, "");
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Nodslot";
-export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS || "support@nodslot.site";
-export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || "Nodslot";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || BRAND.name;
+export const SUPPORT_MAIL_ADDRESS = process.env.NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS || `support@${BRAND.domain}`;
+export const COMPANY_NAME = process.env.NEXT_PUBLIC_COMPANY_NAME || BRAND.name;
 export const SENDER_NAME = process.env.NEXT_PUBLIC_SENDGRID_SENDER_NAME || APP_NAME;
 export const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || APP_NAME;
 

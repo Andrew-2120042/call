@@ -21,7 +21,7 @@ function readEnvAppName() {
   } catch {
     // .env is optional in CI; fall through to the default.
   }
-  return "Nodslot";
+  return JSON.parse(readFileSync(join(repoRoot, "brand.json"), "utf8")).name;
 }
 
 const escapeXml = (value) =>

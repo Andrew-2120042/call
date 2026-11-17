@@ -460,7 +460,8 @@ function DangerZone({ teamId, teamName, isOwner }: { teamId: number; teamName: s
   );
 }
 
-const LIVE_REFRESH_MS = 4000;
+// Live enough to feel instant, while keeping server calls down; it also pauses when the tab is hidden.
+const LIVE_REFRESH_MS = 6000;
 const JUST_JOINED_MS = 6000;
 
 /**
