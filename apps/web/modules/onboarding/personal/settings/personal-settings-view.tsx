@@ -16,8 +16,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { OnboardingCard } from "../../components/OnboardingCard";
 import { OnboardingLayout } from "../../components/OnboardingLayout";
-import { OnboardingBrowserView } from "../../components/onboarding-browser-view";
 import { OnboardingContinuationPrompt } from "../../components/onboarding-continuation-prompt";
+import { SetupPreviewCard } from "../../components/SetupPreviewCard";
 import { useOnboardingStore } from "../../store/onboarding-store";
 
 type PersonalSettingsViewProps = {
@@ -112,7 +112,7 @@ export const PersonalSettingsView = ({
 
   return (
     <>
-      <OnboardingLayout userEmail={userEmail} currentStep={1} totalSteps={2}>
+      <OnboardingLayout userEmail={userEmail} currentStep={2} totalSteps={4}>
         {/* Left column - Main content */}
         <OnboardingCard
           title={t("add_your_details")}
@@ -210,7 +210,7 @@ export const PersonalSettingsView = ({
         </OnboardingCard>
 
         {/* Right column - Browser view */}
-        <OnboardingBrowserView
+        <SetupPreviewCard
           avatar={imageSrc || personalDetails.avatar || user.avatar}
           name={form.watch("name") || personalDetails.name || user.name || undefined}
           bio={form.watch("bio") || personalDetails.bio || undefined}

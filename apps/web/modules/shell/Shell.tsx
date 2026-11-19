@@ -1,8 +1,5 @@
 "use client";
 
-import { AssistantPanel } from "~/assistant/AssistantPanel";
-import { PeekPanel } from "~/peek/PeekPanel";
-import { AppTopBar } from "./AppTopBar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { Button } from "@calcom/ui/components/button";
@@ -18,11 +15,15 @@ import type React from "react";
 import type { Dispatch, ReactElement, ReactNode, SetStateAction } from "react";
 import { cloneElement } from "react";
 import { Toaster } from "sonner";
+import { AssistantPanel } from "~/assistant/AssistantPanel";
+import { PeekPanel } from "~/peek/PeekPanel";
+import { AppTopBar } from "./AppTopBar";
 import { BannerContainer } from "./banners/LayoutBanner";
 import { useBanners } from "./banners/useBanners";
 import { DynamicModals } from "./DynamicModals";
 import { KBarContent, KBarRoot } from "./Kbar";
 import { MobileNavigationContainer } from "./navigation/Navigation";
+import { PageIntro } from "./PageIntro";
 import { SideBarContainer } from "./SideBar";
 import { TopNavContainer } from "./TopNav";
 import { useAppTheme } from "./useAppTheme";
@@ -38,6 +39,7 @@ const Layout = (props: LayoutProps) => {
         <Toaster position="bottom-right" />
       </div>
       <PeekPanel />
+      <PageIntro />
 
       <TimezoneChangeDialog />
       <DynamicModals />

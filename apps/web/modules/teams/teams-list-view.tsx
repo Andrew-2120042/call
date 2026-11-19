@@ -108,7 +108,7 @@ function EmptyTeams({ canCreate, onCreate }: { canCreate: boolean; onCreate: () 
             {t("teams_new_team")}
           </Button>
         ) : (
-          <Button href="/settings/billing" color="secondary" data-testid="teams-upgrade">
+          <Button href="/upgrade" color="secondary" data-testid="teams-upgrade">
             {t("teams_upgrade_to_create")}
           </Button>
         )}

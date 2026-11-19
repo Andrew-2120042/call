@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
-
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { OnboardingCard } from "../../components/OnboardingCard";
 import { OnboardingLayout } from "../../components/OnboardingLayout";
 import { OnboardingCalendarBrowserView } from "../../components/onboarding-calendar-browser-view";
@@ -96,7 +94,7 @@ export const PersonalCalendarView = ({ userEmail }: PersonalCalendarViewProps) =
   };
 
   return (
-    <OnboardingLayout userEmail={userEmail} currentStep={2} totalSteps={2}>
+    <OnboardingLayout userEmail={userEmail} currentStep={4} totalSteps={4}>
       {/* Left column - Main content */}
       <OnboardingCard
         title={t("connect_your_calendar")}

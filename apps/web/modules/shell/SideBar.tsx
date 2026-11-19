@@ -1,5 +1,4 @@
 import { IS_VISUAL_REGRESSION_TESTING, WEBAPP_URL } from "@calcom/lib/constants";
-import { useSidebar } from "./sidebarStore";
 import { useIsStandalone } from "@calcom/lib/hooks/useIsStandalone";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
@@ -10,12 +9,13 @@ import { Logo } from "@calcom/ui/components/logo";
 import { SkeletonText } from "@calcom/ui/components/skeleton";
 import { Tooltip } from "@calcom/ui/components/tooltip";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import type { User as UserAuth } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { FeedbackDialog } from "~/feedback/FeedbackDialog";
 import { SidebarSetupCard } from "../home/SidebarSetupCard";
 import { Navigation } from "./navigation/Navigation";
-import { FeedbackDialog } from "~/feedback/FeedbackDialog";
+import { useSidebar } from "./sidebarStore";
 import { useBottomNavItems } from "./useBottomNavItems";
 
 export type SideBarContainerProps = {
@@ -110,7 +110,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
         <div className="md:px-2 md:pb-3 lg:px-0 lg:pb-3">
           {plan && plan !== "TEAM" && (
             <Link
-              href="/settings/billing"
+              href="/upgrade"
               data-testid="sidebar-upgrade"
               className="bg-inverted text-inverted mb-3 hidden h-8 items-center justify-center rounded-md text-[13px] font-semibold lg:flex">
               {t("upgrade")}
@@ -145,7 +145,9 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
                 {isLocaleReady ? (
                   <span className="hidden w-full items-center justify-between lg:flex">
                     <span>{t(item.name)}</span>
-                    {item.href?.startsWith("/settings") && <Icon name="chevron-right" className="h-3 w-3 opacity-60" />}
+                    {item.href?.startsWith("/settings") && (
+                      <Icon name="chevron-right" className="h-3 w-3 opacity-60" />
+                    )}
                   </span>
                 ) : (
                   <SkeletonText className="h-[20px] w-full" />

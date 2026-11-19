@@ -43,7 +43,7 @@ export default function CustomDomainView() {
     return (
       <div className="bg-default border-subtle rounded-lg border p-6" data-testid="custom-domain-upgrade">
         <p className="text-default text-sm">{t("custom_domain_pro_only")}</p>
-        <Link href="/settings/billing" className="mt-4 inline-block">
+        <Link href="/upgrade" className="mt-4 inline-block">
           <Button type="button">{t("custom_domain_upgrade")}</Button>
         </Link>
       </div>

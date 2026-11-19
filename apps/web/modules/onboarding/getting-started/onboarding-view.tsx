@@ -137,7 +137,7 @@ export const OnboardingView = ({ userEmail }: OnboardingViewProps) => {
   // Show loading state while checking for team membership or if redirecting
   if (isPendingMembership || hasTeamMembership) {
     return (
-      <OnboardingLayout userEmail={userEmail}>
+      <OnboardingLayout userEmail={userEmail} currentStep={1} totalSteps={4}>
         <OnboardingCard title={t("loading")} subtitle="" />
       </OnboardingLayout>
     );
@@ -146,7 +146,7 @@ export const OnboardingView = ({ userEmail }: OnboardingViewProps) => {
   return (
     <>
       <OnboardingContinuationPrompt />
-      <OnboardingLayout userEmail={userEmail}>
+      <OnboardingLayout userEmail={userEmail} currentStep={1} totalSteps={4}>
         {/* Left column - Main content */}
         <OnboardingCard
           title={t("onboarding_select_plan")}
@@ -218,7 +218,7 @@ export const OnboardingView = ({ userEmail }: OnboardingViewProps) => {
         </OnboardingCard>
 
         {/* Right column - Icon display */}
-        <div className="hidden h-full w-full rounded-l-2xl border-subtle border-t border-b border-l bg-cal-muted xl:flex xl:items-center xl:justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           <AnimatePresence mode="wait">
             {selectedPlanData && (
               <PlanIcon
