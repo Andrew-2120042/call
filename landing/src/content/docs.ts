@@ -39,6 +39,7 @@ export const docs: DocPage[] = [
       { type: "list", items: [
         "**Get booked.** Unlimited services, each with its own link, length, questions and location.",
         "**Fill cancellations.** Clients join a waitlist for times that are taken; the first in line is offered any slot that frees up.",
+        "**Win them back.** When a client cancels, they're offered new times on the spot, and ten minutes later an email with one open time they can book in a click.",
         "**Stop no-shows.** Clients confirm in one click before your deadline, or the time can be released.",
         "**Approve requests.** Read every request before it's booked; on Pro each one comes with a summary.",
         "**Run a team.** Round robin, collective and managed services, a shared team page and a weekly coverage view.",

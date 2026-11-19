@@ -66,11 +66,11 @@ export function StoryScroller({ stories }: { stories: Story[] }) {
                     <div
                       data-reveal
                       aria-hidden
-                      className="mb-5 flex h-36 flex-col justify-center gap-2 rounded-xl border border-line bg-[radial-gradient(circle_at_1px_1px,var(--color-line)_1px,transparent_0)] bg-[length:14px_14px] p-5">
+                      className="mb-5 flex h-36 flex-col items-center justify-center gap-2 rounded-xl border border-line bg-[radial-gradient(circle_at_1px_1px,var(--color-line)_1px,transparent_0)] bg-[length:14px_14px] p-5">
                       {p.demo.map((line, i) => (
                         <span
                           key={line}
-                          className={`w-fit rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs shadow-lg shadow-black/40 ${i % 2 ? "ms-6 text-muted" : ""}`}>
+                          className={`w-fit rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs shadow-lg shadow-black/40 ${i % 2 ? "translate-x-3 text-muted" : "-translate-x-3"}`}>
                           {line}
                         </span>
                       ))}

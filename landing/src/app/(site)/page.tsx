@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { PricingCards } from "@/components/pricing-cards";
-import { ApprovalMock, BookingMock, HeroWindows, NoShowMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
+import { ApprovalMock, BookingMock, HeroWindows, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
 import { Faq } from "@/components/sections";
 import { type Story, StoryScroller } from "@/components/story-scroller";
 import { Container, JsonLd } from "@/components/ui";
@@ -43,6 +43,17 @@ const stories: Story[] = [
     points: [
       { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books the slot.", demo: ["Priya N. · offered Sat 10:00am", "Claim link sent · 2 hours to accept"] },
       { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person automatically.", demo: ["Offer expired · Priya N.", "Offered to Tom R. instead"] },
+    ],
+  },
+  {
+    id: "win-back",
+    nav: "Win them back",
+    lead: "Your personal retention agent.",
+    rest: "When a client cancels, AI offers them new times on the spot, then follows up by email with an opening they can take in one click.",
+    visual: <RebookMock />,
+    points: [
+      { title: "New times, right away.", body: "The cancel page suggests three open times, picked around when they like to meet.", demo: ["Cancelled · Tue 3:00pm", "3 new times suggested"] },
+      { title: "A follow-up that books.", body: "Ten minutes later they get one open time by email. One click and they're booked again.", demo: ["Want to rebook with Maya?", "Book Thu 11:00am · See other times"] },
     ],
   },
   {

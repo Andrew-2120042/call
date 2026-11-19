@@ -61,6 +61,40 @@ export function WaitlistMock() {
   );
 }
 
+export function RebookMock() {
+  const steps = [
+    { when: "Tue 9:02am", what: "Sam cancelled Tue 3:00pm · “Work came up”", tone: "text-muted" },
+    { when: "Tue 9:02am", what: "3 new times offered on the cancel page", tone: "text-muted" },
+    { when: "Tue 9:12am", what: "Follow-up email with Thu 11:00am", tone: "text-muted" },
+    { when: "Tue 9:40am", what: "Sam booked Thu 11:00am", tone: "text-emerald-400" },
+  ];
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <Window title="After a cancellation">
+        <ol className="space-y-4 p-5 text-xs">
+          {steps.map((s) => (
+            <li key={s.what} className="flex gap-3">
+              <span className="text-faint w-20 flex-none tabular-nums">{s.when}</span>
+              <span className={s.tone}>{s.what}</span>
+            </li>
+          ))}
+        </ol>
+      </Window>
+      <div className="flex flex-col justify-center gap-3">
+        <FloatCard>
+          <p className="text-faint">Email to Sam</p>
+          <p className="mt-1 text-sm font-medium">Want to rebook with Maya?</p>
+          <p className="text-muted mt-1 leading-relaxed">Sorry the last time didn&apos;t work out. Maya has another opening: Thu 11:00am. Want me to book it?</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="bg-fg text-bg inline-block rounded-full px-3 py-1 font-medium">Book Thu 11:00am</span>
+            <span className="inline-block rounded-full border border-line-strong px-3 py-1">See other times</span>
+          </div>
+        </FloatCard>
+      </div>
+    </div>
+  );
+}
+
 export function NoShowMock() {
   const steps = [
     { when: "Mon 9:00am", what: "Booked", tone: "text-muted" },
@@ -86,7 +120,7 @@ export function NoShowMock() {
           <p className="mt-1 text-sm font-medium">Booking released · 3:00pm Friday</p>
           <p className="text-muted mt-1">You were told, and the time went to the next person on the waitlist.</p>
         </FloatCard>
-        <FloatCard className="sm:ms-10">
+        <FloatCard>
           <p className="text-faint">Reminders</p>
           <p className="mt-1">1 day before · 1 hour before</p>
         </FloatCard>
@@ -179,7 +213,7 @@ export function TeamMock() {
 
 export function HeroWindows() {
   return (
-    <div className="relative mx-auto max-w-6xl">
+    <div className="relative mx-auto max-w-[78rem]">
       <Window title={`${site.name} · Services`} className="relative z-10">
         <Image src="/shots/dashboard.png" alt={`The ${site.name} dashboard`} width={2560} height={1600} priority className="h-auto w-full" />
       </Window>
