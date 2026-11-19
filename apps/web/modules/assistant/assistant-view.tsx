@@ -57,7 +57,13 @@ export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
         { role: "assistant", content: result.reply, actions: result.actions },
       ]);
       if (result.actions.length) {
-        await utils.viewer.home.get.invalidate();
+        // The page behind the chat may show what just changed (waitlist, requests, services).
+        await Promise.all([
+          utils.viewer.home.invalidate(),
+          utils.viewer.waitlist.list.invalidate(),
+          utils.viewer.bookings.invalidate(),
+          utils.viewer.eventTypes.invalidate(),
+        ]);
       }
     },
     onError: (error) => setTurns((current) => [...current, { role: "assistant", content: error.message }]),

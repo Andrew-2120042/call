@@ -1,4 +1,5 @@
 import { IS_VISUAL_REGRESSION_TESTING, WEBAPP_URL } from "@calcom/lib/constants";
+import { useSidebar } from "./sidebarStore";
 import { useIsStandalone } from "@calcom/lib/hooks/useIsStandalone";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
@@ -56,6 +57,10 @@ function useCurrentPlan() {
 export function SideBar({ bannersHeight, user }: SideBarProps) {
   const { t, isLocaleReady } = useLocale();
   const plan = useCurrentPlan();
+  const hidden = useSidebar((state) => state.hidden);
+  const toggleSidebar = useSidebar((state) => state.toggle);
+  const hydrateSidebar = useSidebar((state) => state.hydrate);
+  useEffect(() => hydrateSidebar(), [hydrateSidebar]);
 
   const publicPageUrl = `${WEBAPP_URL}/${user?.orgAwareUsername}`;
 
@@ -68,6 +73,8 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
     top: `${bannersHeight}px`,
   };
 
+  if (hidden) return null;
+
   return (
     <div className="relative">
       <aside
@@ -78,7 +85,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
           "max-h-screen"
         )}>
         <div className="flex h-full flex-col py-2.5">
-          <header className="flex h-8 items-center justify-center px-1 lg:justify-start">
+          <header className="flex h-8 items-center justify-center gap-2 px-1 lg:justify-between">
             <Link href="/home" className="flex items-center gap-2" aria-label={t("home_page_title")}>
               <span className="lg:hidden">
                 <Logo small icon />
@@ -87,6 +94,15 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
                 <Logo small />
               </span>
             </Link>
+            <button
+              type="button"
+              onClick={toggleSidebar}
+              aria-label={t("hide_sidebar")}
+              title={t("hide_sidebar")}
+              data-testid="sidebar-hide"
+              className="text-subtle hover:text-emphasis hover:bg-subtle hidden h-6 w-6 place-items-center rounded-md lg:grid">
+              <Icon name="chevrons-left" className="h-3.5 w-3.5" />
+            </button>
           </header>
           <Navigation />
         </div>

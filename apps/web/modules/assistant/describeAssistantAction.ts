@@ -1,7 +1,11 @@
 export type AssistantAction =
   | { type: "service_created"; title: string; minutes: number; url: string }
   | { type: "service_updated"; title: string }
-  | { type: "profile_updated"; fields: string[] };
+  | { type: "profile_updated"; fields: string[] }
+  | { type: "request_accepted"; name: string }
+  | { type: "request_declined"; name: string }
+  | { type: "request_reported"; name: string }
+  | { type: "waitlist_removed"; name: string };
 
 export function describeAssistantAction(
   action: AssistantAction,
@@ -18,5 +22,13 @@ export function describeAssistantAction(
         : action.fields.includes("name")
           ? t("assistant_did_name")
           : t("assistant_did_bio");
+    case "request_accepted":
+      return t("assistant_did_accept", { name: action.name });
+    case "request_declined":
+      return t("assistant_did_decline", { name: action.name });
+    case "request_reported":
+      return t("assistant_did_report", { name: action.name });
+    case "waitlist_removed":
+      return t("assistant_did_waitlist_remove", { name: action.name });
   }
 }

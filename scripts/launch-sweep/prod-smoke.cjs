@@ -31,7 +31,8 @@ const hostEmail = `delivered+host${RUN}@resend.dev`, user = `qa${RUN}`, pw = cry
     await h.waitForURL((u) => !u.pathname.startsWith("/auth/login"), { timeout: 90000 });
     await h.waitForURL((u) => u.pathname.startsWith("/onboarding") || u.pathname.startsWith("/event-types"), { timeout: 90000 }).catch(() => {});
     await h.waitForTimeout(3000);
-    for (let i = 0; i < 6 && h.url().includes("/onboarding"); i++) {
+    for (let i = 0; i < 10 && h.url().includes("/onboarding"); i++) {
+      if (h.url().includes("/personal/questions")) { await h.getByText(/Skip, I.ll set it up myself/).click(); await h.waitForTimeout(5000); continue; }
       if (h.url().includes("getting-started")) await h.getByText("For personal use").first().click().catch(() => {});
       const n = h.locator('input[name="name"]').first(); if (await n.count()) await n.fill("QA Host");
       const btn = h.getByTestId("onboarding-continue-btn");
@@ -41,7 +42,7 @@ const hostEmail = `delivered+host${RUN}@resend.dev`, user = `qa${RUN}`, pw = cry
       await h.waitForTimeout(7000);
     }
     await h.waitForTimeout(4000);
-    if (h.url().includes("/onboarding")) { await h.screenshot({ path: __dirname + "/onb-stuck.png" }); console.log("     page errors:", h.errs.join(" | ").slice(0, 300)); }
+    if (h.url().includes("/onboarding")) { await h.screenshot({ path: require("os").tmpdir() + "/onb-stuck.png" }); console.log("     page errors:", h.errs.join(" | ").slice(0, 300)); }
     check("Login and first-time setup work", !h.url().includes("/onboarding") && !h.url().includes("/auth/"), new URL(h.url()).pathname);
     check("Default services were created", db(`select count(*) from "EventType" e join users u on u.id=e."userId" where u.email='${hostEmail}'`) === "3");
     console.log("--- Booking ---");

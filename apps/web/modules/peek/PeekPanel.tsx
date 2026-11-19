@@ -137,6 +137,13 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
               {data.cancellationReason && <Row label={t("peek_cancel_reason")} value={data.cancellationReason} />}
             </Rows>
 
+            {data.insight?.spamLikely && (
+              <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3" data-testid="peek-spam-warning">
+                <p className="text-[13px] font-medium text-red-300">{t("peek_spam_title")}</p>
+                <p className="mt-0.5 text-[12px] text-red-200/80">{t("peek_spam_body")}</p>
+              </div>
+            )}
+
             {data.insight && (
               <section className="border-subtle rounded-lg border p-3">
                 <p className="text-subtle text-[11px] uppercase tracking-[0.06em]">{t("peek_ai_summary")}</p>
@@ -153,8 +160,8 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
               {data.answers.length ? (
                 <dl className="mt-2 space-y-3">
                   {data.answers.map((answer) => (
-                    <div key={answer.label}>
-                      <dt className="text-subtle text-[12px]">{answer.label}</dt>
+                    <div key={answer.labelKey ?? answer.label}>
+                      <dt className="text-subtle text-[12px]">{answer.labelKey ? t(answer.labelKey) : answer.label}</dt>
                       <dd className="text-default mt-0.5 whitespace-pre-line text-[13px]">{answer.value}</dd>
                     </div>
                   ))}

@@ -5,9 +5,9 @@ import { checkTrpcRateLimit } from "../../../lib/checkTrpcRateLimit";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";
-import type { TrpcSessionUser } from "@calcom/trpc/server/types";
 import { TRPCError } from "@trpc/server";
 import type { TAssistantChatInputSchema } from "./assistant.schema";
+import { type AssistantCtx, createAssistantInbox } from "./assistantInbox";
 
 const log = logger.getSubLogger({ prefix: ["[assistant]"] });
 
@@ -17,7 +17,7 @@ export const chatHandler = async ({
   ctx,
   input,
 }: {
-  ctx: { user: NonNullable<TrpcSessionUser> };
+  ctx: AssistantCtx;
   input: TAssistantChatInputSchema;
 }) => {
   if (!isAssistantConfigured()) {
@@ -38,7 +38,12 @@ export const chatHandler = async ({
     defaultLocations: await getDefaultLocations(ctx.user),
   });
   try {
-    const result = await runAssistantTurn({ actions, userId: ctx.user.id, messages: input.messages });
+    const result = await runAssistantTurn({
+      actions,
+      inbox: createAssistantInbox(ctx),
+      userId: ctx.user.id,
+      messages: input.messages,
+    });
     if (!result) throw new Error("assistant not configured");
     return result;
   } catch (error) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSidebar } from "./sidebarStore";
 import { useAssistantPanel } from "~/assistant/assistant-view";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
@@ -18,23 +19,37 @@ export function AppTopBar() {
 function AppTopBarContent() {
   const { t } = useLocale();
   const { query } = useKBar();
+  const sidebarHidden = useSidebar((state) => state.hidden);
+  const toggleSidebar = useSidebar((state) => state.toggle);
   const assistantOpen = useAssistantPanel((state) => state.open);
   const toggleAssistant = useAssistantPanel((state) => state.toggle);
   return (
     <div
       data-sw-topbar
-      className="border-subtle sticky top-0 z-30 hidden h-11 grid-cols-[1fr_minmax(0,420px)_1fr] items-center gap-2 border-b px-4 md:grid lg:px-6">
-      <div />
+      className="border-subtle sticky top-0 z-30 hidden h-11 items-center gap-2 border-b px-4 md:flex lg:px-6">
+      <div className="flex flex-1 items-center">
+        {sidebarHidden && (
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label={t("show_sidebar")}
+            title={t("show_sidebar")}
+            data-testid="sidebar-show"
+            className="text-subtle hover:text-emphasis hover:bg-subtle grid h-7 w-7 place-items-center rounded-md">
+            <Icon name="chevrons-right" className="h-4 w-4" />
+          </button>
+        )}
+      </div>
       <button
         type="button"
         onClick={() => query?.toggle()}
         data-testid="topbar-search"
-        className="border-subtle text-muted hover:text-default hover:border-default flex h-7 w-full items-center gap-2 rounded-md border px-2.5 text-[12px] transition">
+        className="border-subtle text-muted hover:text-default hover:border-default flex h-7 w-full max-w-[420px] items-center gap-2 rounded-md border px-2.5 text-[12px] transition">
         <Icon name="search" className="h-3.5 w-3.5 shrink-0" />
         <span className="flex-1 truncate text-left">{t("topbar_search_placeholder")}</span>
         <kbd className="border-subtle rounded border px-1 font-sans text-[10px]">⌘K</kbd>
       </button>
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex flex-1 items-center justify-end gap-2">
         <button
           type="button"
           onClick={toggleAssistant}

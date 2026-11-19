@@ -31,8 +31,10 @@ function answersFrom(responses: unknown, bookingFields: unknown) {
     .filter(([name]) => !HIDDEN_FIELDS.has(name))
     .map(([name, value]) => {
       const field = fields.find((f) => f.name === name);
-      const label = field?.label || field?.defaultLabel || (name === "notes" ? "Notes" : name);
-      return { label, value: asText(value) };
+      // Built-in fields only carry a translation key (e.g. "additional_notes"); the client translates it.
+      if (field?.label) return { label: field.label, labelKey: null, value: asText(value) };
+      const labelKey = field?.defaultLabel || (name === "notes" ? "additional_notes" : null);
+      return { label: labelKey ? null : name.replace(/[_-]+/g, " "), labelKey, value: asText(value) };
     })
     .filter((answer) => answer.value);
 }

@@ -12,7 +12,7 @@ type IToast = {
 export const SuccessToast = ({ message, onClose, toastId }: IToast) => (
   <button
     className={classNames(
-      "data-testid-toast-success bg-default dark:bg-inverted text-emphasis dark:text-inverted shadow-elevation-low border-subtle mb-2 flex h-auto items-center justify-between space-x-2 rounded-lg border px-3 py-2.5 text-sm font-semibold rtl:space-x-reverse md:max-w-sm"
+      "data-testid-toast-success bg-default dark:bg-inverted text-emphasis dark:text-inverted shadow-elevation-low border-subtle mb-2 flex h-auto items-center justify-between space-x-2 rounded-md border px-3 py-2 text-[13px] font-medium rtl:space-x-reverse md:max-w-sm"
     )}
     onClick={() => onClose(toastId)}>
     <span>
@@ -86,10 +86,13 @@ export function showToast(
     toast.dismiss(toastId);
   };
 
+  // The toast library gives every toast a fixed-width slot; centre the (often shorter) toast inside it so a
+  // bottom-centre toast really sits in the middle of the screen.
+  const centred = (element: JSX.Element) => <div className="flex w-full justify-center">{element}</div>;
   const toastElements: { [x in ToastVariants]: (t: number | string) => JSX.Element } = {
-    success: (toastId) => <SuccessToast message={message} onClose={onClose} toastId={toastId} />,
-    error: (toastId) => <ErrorToast message={message} onClose={onClose} toastId={toastId} />,
-    warning: (toastId) => <WarningToast message={message} onClose={onClose} toastId={toastId} />,
+    success: (toastId) => centred(<SuccessToast message={message} onClose={onClose} toastId={toastId} />),
+    error: (toastId) => centred(<ErrorToast message={message} onClose={onClose} toastId={toastId} />),
+    warning: (toastId) => centred(<WarningToast message={message} onClose={onClose} toastId={toastId} />),
   };
 
   return toast.custom(
