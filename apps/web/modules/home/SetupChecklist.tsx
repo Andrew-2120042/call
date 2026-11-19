@@ -19,34 +19,60 @@ const SECTIONS: { id: string; steps: string[] }[] = [
 /** The home page's getting-started list: short sections, one button per step, a progress bar on top. */
 export function SetupChecklist({ setup, pageUrl }: { setup: readonly Step[]; pageUrl: string }) {
   const { t } = useLocale();
+  const [expanded, setExpanded] = useState(false);
   const byId = new Map(setup.map((step) => [step.id, step]));
   const done = setup.filter((step) => step.done).length;
   if (done === setup.length) return null;
-  const nextId = setup.find((step) => !step.done)?.id;
+  const next = setup.find((step) => !step.done);
+  const nextId = next?.id;
 
   return (
-    <section className="mb-8" data-testid="setup-checklist">
-      <h2 className="text-emphasis text-lg font-semibold tracking-[-0.01em]">{t("setup_checklist_title")}</h2>
-      <p className="text-subtle mt-0.5 text-[13px]">{t("setup_checklist_subtitle", { done, total: setup.length })}</p>
-      <div className="bg-emphasis mt-3 h-1 overflow-hidden rounded-full" aria-hidden>
-        <div className="bg-inverted h-full rounded-full transition-all" style={{ width: `${(done / setup.length) * 100}%` }} />
+    <section className="mb-6" data-testid="setup-checklist">
+      <div className="border-subtle flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border px-4 py-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-emphasis text-[13px]">{t("setup_checklist_title")}</p>
+          <p className="text-subtle text-[12px]">
+            {t("setup_checklist_subtitle", { done, total: setup.length })}
+          </p>
+        </div>
+        <div className="bg-emphasis hidden h-[2px] w-40 overflow-hidden rounded-full sm:block" aria-hidden>
+          <div
+            className="bg-inverted h-full rounded-full"
+            style={{ width: `${(done / setup.length) * 100}%` }}
+          />
+        </div>
+        {next && !expanded && (
+          <Link href={next.href} className={actionClass(true)} data-testid="setup-next">
+            {t(`setup_step_${next.id}`)}
+          </Link>
+        )}
+        <button
+          type="button"
+          onClick={() => setExpanded((was) => !was)}
+          aria-expanded={expanded}
+          className="text-subtle hover:text-emphasis inline-flex items-center gap-1 text-[12px]">
+          {t(expanded ? "setup_hide_steps" : "setup_show_steps")}
+          <Icon name={expanded ? "chevron-up" : "chevron-down"} className="h-3 w-3" />
+        </button>
       </div>
-      <div className="mt-4 space-y-2">
-        {SECTIONS.map((section) => {
-          const steps = section.steps.map((id) => byId.get(id)).filter((step): step is Step => !!step);
-          if (!steps.length) return null;
-          return (
-            <ChecklistSection
-              key={section.id}
-              id={section.id}
-              steps={steps}
-              nextId={nextId}
-              pageUrl={pageUrl}
-              defaultOpen={steps.some((step) => step.id === nextId)}
-            />
-          );
-        })}
-      </div>
+      {expanded && (
+        <div className="mt-2 space-y-2">
+          {SECTIONS.map((section) => {
+            const steps = section.steps.map((id) => byId.get(id)).filter((step): step is Step => !!step);
+            if (!steps.length) return null;
+            return (
+              <ChecklistSection
+                key={section.id}
+                id={section.id}
+                steps={steps}
+                nextId={nextId}
+                pageUrl={pageUrl}
+                defaultOpen={steps.some((step) => step.id === nextId)}
+              />
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }
@@ -79,13 +105,17 @@ function ChecklistSection({
           <span className="text-emphasis block text-sm font-semibold">{t(`setup_section_${id}`)}</span>
           <span className="text-subtle block text-[12px]">{t(`setup_section_${id}_hint`)}</span>
         </span>
-        <span className="text-subtle shrink-0 text-[12px]">{t("setup_section_progress", { done, total: steps.length })}</span>
+        <span className="text-subtle shrink-0 text-[12px]">
+          {t("setup_section_progress", { done, total: steps.length })}
+        </span>
         <Icon name={open ? "chevron-down" : "chevron-right"} className="text-subtle h-3.5 w-3.5 shrink-0" />
       </button>
       {open && (
         <ul className="border-subtle border-t">
           {steps.map((step) => (
-            <li key={step.id} className="border-subtle flex items-center gap-3 border-b px-4 py-2.5 last:border-b-0">
+            <li
+              key={step.id}
+              className="border-subtle flex items-center gap-3 border-b px-4 py-2.5 last:border-b-0">
               <span
                 className={classNames(
                   "grid h-4 w-4 shrink-0 place-items-center rounded border",
@@ -94,7 +124,11 @@ function ChecklistSection({
                 aria-hidden>
                 {step.done && <Icon name="check" className="text-inverted h-3 w-3" />}
               </span>
-              <span className={classNames("min-w-0 flex-1 text-[13px]", step.done ? "text-muted line-through" : "text-default")}>
+              <span
+                className={classNames(
+                  "min-w-0 flex-1 text-[13px]",
+                  step.done ? "text-muted line-through" : "text-default"
+                )}>
                 {t(`setup_step_${step.id}`)}
               </span>
               {!step.done &&
@@ -113,7 +147,10 @@ function ChecklistSection({
                     {t("setup_action_first_booking")}
                   </button>
                 ) : (
-                  <Link href={step.href} className={actionClass(step.id === nextId)} data-testid={`setup-action-${step.id}`}>
+                  <Link
+                    href={step.href}
+                    className={actionClass(step.id === nextId)}
+                    data-testid={`setup-action-${step.id}`}>
                     {t(`setup_action_${step.id}`)}
                   </Link>
                 ))}

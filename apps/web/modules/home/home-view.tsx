@@ -1,16 +1,20 @@
 "use client";
 
-import { SetupChecklist } from "./SetupChecklist";
 import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import type { RouterOutputs } from "@calcom/trpc/react";
 import { trpc } from "@calcom/trpc/react";
+import classNames from "@calcom/ui/classNames";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import type { ReactNode } from "react";
 import { HomeSkeleton } from "~/shell/skeletons";
+import { HomeCalendar } from "./HomeCalendar";
+import { SetupChecklist } from "./SetupChecklist";
 
-const greetingKey = (hour: number) =>
-  hour < 12 ? "home_good_morning" : hour < 18 ? "home_good_afternoon" : "home_good_evening";
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const copy = async (text: string, done: string) => {
   try {
@@ -23,282 +27,258 @@ const copy = async (text: string, done: string) => {
 
 export default function HomeView() {
   const { t } = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const view = searchParams?.get("view") === "calendar" ? "calendar" : "overview";
   const { data } = trpc.viewer.home.get.useQuery();
   if (!data) return <HomeSkeleton />;
 
-  const firstName = data.name.split(" ")[0];
-  const delta = data.bookingsThisWeek - data.bookingsLastWeek;
-  const pageLabel = data.pageUrl.replace(/^https?:\/\//, "");
-  const next = data.upcoming[0];
+  const setView = (next: "overview" | "calendar") =>
+    router.replace(next === "overview" ? (pathname ?? "/home") : `${pathname}?view=calendar`, { scroll: false });
 
   return (
     <div className="mx-auto max-w-6xl" data-testid="home">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-emphasis text-lg font-semibold tracking-[-0.01em]">
-            {t(greetingKey(new Date().getHours()), { name: firstName })}
-          </h1>
-          <p className="text-subtle mt-0.5 text-[13px]">{t("home_subtitle")}</p>
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-emphasis text-xl font-medium tracking-[-0.01em]">{t("home_overview_title")}</h1>
+        <div className="flex items-center gap-2">
+          <div className="border-subtle flex rounded-md border p-0.5" role="tablist" data-testid="home-view-switch">
+            {(["overview", "calendar"] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                role="tab"
+                aria-selected={view === option}
+                onClick={() => setView(option)}
+                className={classNames(
+                  "rounded px-2.5 py-1 text-[12px] transition",
+                  view === option ? "bg-emphasis text-emphasis" : "text-subtle hover:text-emphasis"
+                )}>
+                {t(`home_view_${option}`)}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => copy(data.pageUrl, t("home_link_copied"))}
+            className="border-subtle text-default hover:text-emphasis inline-flex h-7 max-w-[260px] items-center gap-1.5 rounded-md border px-2.5 text-[12px] transition"
+            data-testid="home-page-url"
+            title={t("home_copy_link")}>
+            <span className="truncate">{data.pageUrl.replace(/^https?:\/\//, "")}</span>
+            <Icon name="copy" className="h-3 w-3 flex-none" />
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => copy(data.pageUrl, t("home_link_copied"))}
-          className="border-subtle text-emphasis hover:bg-subtle inline-flex h-8 max-w-full items-center gap-2 rounded-md border px-3 text-[13px] font-medium transition-colors"
-          data-testid="home-page-url"
-          title={t("home_copy_link")}>
-          <span className="truncate">{pageLabel}</span>
-          <Icon name="share-2" className="h-3.5 w-3.5 flex-none" />
-        </button>
       </header>
 
       <div className="mt-6">
         <SetupChecklist setup={data.setup} pageUrl={data.pageUrl} />
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat
-          icon="calendar"
-          label={t("home_bookings_week")}
-          value={String(data.bookingsThisWeek)}
-          note={
-            delta === 0
-              ? t("home_same_as_last_week")
-              : t(delta > 0 ? "home_more_than_last_week" : "home_fewer_than_last_week", { count: Math.abs(delta) })
-          }
-          tone={delta > 0 ? "up" : delta < 0 ? "down" : undefined}
-          testId="home-stat-week"
-        />
-        <Stat
-          icon="mail"
-          label={t("home_waiting_approval")}
-          value={String(data.waitingApproval)}
-          href="/bookings/unconfirmed"
-          note={t("home_review")}
-          testId="home-stat-requests"
-        />
-        <Stat
-          icon="users"
-          label={t("home_waitlist")}
-          value={String(data.waitlistCount)}
-          href="/waitlist"
-          note={t("home_view_waitlist")}
-          testId="home-stat-waitlist"
-        />
-        <Stat
-          icon="clock"
-          label={t("home_next_booking")}
-          value={next ? dayjs(next.startTime).format("ddd h:mma") : "–"}
-          href={next ? `/booking/${next.uid}` : "/bookings/upcoming"}
-          note={next ? (next.attendeeName ?? next.title) : t("home_nothing_coming_up")}
-          testId="home-stat-next"
-        />
-      </div>
-
-      <div className="mt-3 grid gap-3 lg:grid-cols-[1.6fr_1fr]">
-        <section className="bg-default border-subtle rounded-lg border p-5">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-emphasis font-semibold">{t("home_bookings_chart")}</h2>
-            <span className="text-subtle text-xs">{t("home_last_8_weeks")}</span>
-          </div>
-          <WeeklyChart weeks={data.weekly} />
-          <div className="border-subtle mt-5 border-t pt-4">
-            <p className="text-subtle text-xs font-medium">{t("home_busiest_days")}</p>
-            <WeekdayBars counts={data.byWeekday} />
-          </div>
-        </section>
-
-        <section className="bg-default border-subtle rounded-lg border p-5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
-            <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
-              {t("home_all_bookings")}
-            </Link>
-          </div>
-          {data.upcoming.length === 0 ? (
-            <p className="text-subtle mt-3 text-sm">{t("home_nothing_coming_up")}</p>
-          ) : (
-            <ul className="mt-2 divide-y divide-[var(--cal-border-subtle)]">
-              {data.upcoming.map((booking) => (
-                <li key={booking.uid}>
-                  <Link href={`/booking/${booking.uid}`} className="flex items-center gap-3 py-3">
-                    <span className="bg-subtle text-emphasis grid h-9 w-9 flex-none place-items-center rounded-full text-xs font-semibold">
-                      {(booking.attendeeName ?? "?").slice(0, 2).toUpperCase()}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="text-emphasis block truncate text-sm font-medium">
-                        {booking.attendeeName ?? booking.title}
-                      </span>
-                      <span className="text-subtle block text-xs">
-                        {dayjs(booking.startTime).format("ddd D MMM, h:mma")}
-                      </span>
-                    </span>
-                    <span
-                      className={
-                        booking.isRequest
-                          ? "rounded-md bg-orange-500/15 px-2.5 py-1 text-[11px] font-medium text-orange-300"
-                          : "text-subtle border-subtle rounded-md border px-2.5 py-1 text-[11px] font-medium"
-                      }>
-                      {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
-
-      <section className="mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-emphasis text-lg font-medium">{t("home_your_services")}</h2>
-          <Link href="/event-types" className="text-subtle text-sm hover:underline">
-            {t("home_manage_services")}
-          </Link>
-        </div>
-        {data.services.length === 0 ? (
-          <Link
-            href="/event-types"
-            className="border-subtle text-subtle mt-4 block rounded-lg border border-dashed p-8 text-center text-sm hover:text-emphasis">
-            {t("home_add_first_service")}
-          </Link>
-        ) : (
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-testid="home-services">
-            {data.services.map((service) => {
-              const link = `${data.pageUrl}/${service.slug}`;
-              return (
-                <div
-                  key={service.id}
-                  className="bg-default border-subtle group flex flex-col rounded-lg border p-5 transition hover:border-[var(--cal-border-emphasis)]">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-emphasis truncate font-medium">{service.title}</p>
-                      <p className="text-subtle mt-0.5 truncate text-xs">/{service.slug}</p>
-                    </div>
-                    {service.hidden && (
-                      <span className="text-subtle border-subtle rounded-md border px-2 py-0.5 text-[11px]">
-                        {t("hidden")}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-subtle mt-4 flex flex-wrap gap-2 text-xs">
-                    <span className="bg-subtle inline-flex items-center gap-1 rounded-md px-2 py-1">
-                      <Icon name="clock" className="h-3 w-3" />
-                      {t("home_minutes", { count: service.length })}
-                    </span>
-                    {service.requiresConfirmation && (
-                      <span className="bg-subtle inline-flex items-center gap-1 rounded-md px-2 py-1">
-                        <Icon name="check" className="h-3 w-3" />
-                        {t("home_needs_approval")}
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-5 flex items-end justify-between gap-3">
-                    <div>
-                      <p className="text-emphasis text-xl font-semibold leading-none">{service.bookedLast30Days}</p>
-                      <p className="text-subtle mt-1 text-xs">{t("home_booked_30_days")}</p>
-                    </div>
-                    <div className="flex gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => copy(link, t("home_link_copied"))}
-                        className="border-subtle text-default hover:bg-subtle grid h-8 w-8 place-items-center rounded-lg border transition"
-                        title={t("home_copy_link")}>
-                        <Icon name="link" className="h-3.5 w-3.5" />
-                      </button>
-                      <Link
-                        href={`/event-types/${service.id}?tabName=setup`}
-                        className="border-subtle text-default hover:bg-subtle grid h-8 w-8 place-items-center rounded-lg border transition"
-                        title={t("edit")}>
-                        <Icon name="pencil" className="h-3.5 w-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      {view === "calendar" ? <HomeCalendar /> : <Overview data={data} />}
     </div>
   );
 }
 
-function WeeklyChart({ weeks }: { weeks: { weekStart: string; count: number }[] }) {
-  const max = Math.max(1, ...weeks.map((w) => w.count));
-  const total = weeks.reduce((sum, w) => sum + w.count, 0);
-  return (
-    <div className="mt-4">
-      <p className="text-emphasis text-2xl font-semibold leading-none">{total}</p>
-      <div className="mt-5 flex h-36 items-end gap-2" role="img" aria-label={`${total} bookings in 8 weeks`}>
-        {weeks.map((week, i) => {
-          const isCurrent = i === weeks.length - 1;
-          return (
-            <div key={week.weekStart} className="group flex h-full flex-1 flex-col justify-end gap-1.5">
-              <span className="text-subtle text-center text-[10px] opacity-0 transition group-hover:opacity-100">
-                {week.count}
-              </span>
-              <div
-                className={`w-full rounded-md transition-all ${isCurrent ? "bg-blue-500" : "bg-[var(--cal-bg-emphasis)] group-hover:bg-blue-500/60"}`}
-                style={{ height: `${Math.max(4, (week.count / max) * 100)}%` }}
-              />
-              <span className="text-subtle text-center text-[10px]">{dayjs(week.weekStart).format("D MMM")}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+type HomeData = RouterOutputs["viewer"]["home"]["get"];
 
-function WeekdayBars({ counts }: { counts: number[] }) {
-  const max = Math.max(1, ...counts);
-  // Monday first, which is how people read a working week.
-  const order = [1, 2, 3, 4, 5, 6, 0];
+function Overview({ data }: { data: HomeData }) {
+  const { t } = useLocale();
+  const tz = data.timeZone;
+  const fmt = (date: Date | string, pattern = "ddd D MMM, h:mma") => dayjs(date).tz(tz).format(pattern);
+  const next = data.upcoming[0];
+  const weeks = data.weekly.slice(-5).reverse();
+  const weekMax = Math.max(1, ...weeks.map((week) => week.count));
+  const booked30 = data.services.reduce((sum, service) => sum + service.bookedLast30Days, 0);
+  const topServices = [...data.services].sort((a, b) => b.bookedLast30Days - a.bookedLast30Days).slice(0, 5);
+  const weekdayOrder = [1, 2, 3, 4, 5, 6, 0];
+  const dayMax = Math.max(1, ...data.byWeekday);
+  const busiest = data.byWeekday.indexOf(Math.max(...data.byWeekday));
+
   return (
-    <div className="mt-3 grid grid-cols-7 gap-2">
-      {order.map((day) => (
-        <div key={day} className="flex flex-col items-center gap-1.5">
-          <div className="bg-subtle flex h-14 w-full items-end overflow-hidden rounded-md">
-            <div
-              className="w-full rounded-md bg-blue-500/70"
-              style={{ height: `${(counts[day] / max) * 100}%` }}
-              title={String(counts[day])}
+    <div className="space-y-6" data-testid="home-overview">
+      <Grid>
+        <Cell
+          title={t("home_cell_bookings")}
+          href="/bookings/upcoming"
+          value={String(weeks[0]?.count ?? 0)}
+          caption={t("home_this_week")}
+          testId="home-stat-week">
+          {weeks.map((week, index) => (
+            <BarRow
+              key={week.weekStart}
+              label={index === 0 ? t("home_this_week_short") : fmt(week.weekStart, "D MMM")}
+              ratio={week.count / weekMax}
+              value={String(week.count)}
+              strong={index === 0}
             />
-          </div>
-          <span className="text-subtle text-[10px]">{dayjs().day(day).format("dd")}</span>
-        </div>
-      ))}
+          ))}
+        </Cell>
+        <Cell
+          title={t("home_cell_requests")}
+          href="/bookings/unconfirmed"
+          value={String(data.waitingApproval)}
+          caption={t("home_waiting_for_you")}
+          testId="home-stat-requests"
+          empty={!data.requests.length && <Empty title={t("home_no_requests")} body={t("home_no_requests_body")} />}>
+          {data.requests.map((request) => (
+            <ListRow
+              key={request.uid}
+              href={`/booking/${request.uid}`}
+              name={request.attendeeName ?? t("unknown")}
+              value={fmt(request.startTime, "ddd D MMM")}
+            />
+          ))}
+        </Cell>
+        <Cell
+          title={t("home_cell_waitlist")}
+          href="/waitlist"
+          value={String(data.waitlistCount)}
+          caption={t("home_people_waiting")}
+          testId="home-stat-waitlist"
+          empty={!data.waitlistPreview.length && <Empty title={t("home_no_waitlist")} body={t("home_no_waitlist_body")} />}>
+          {data.waitlistPreview.map((entry) => (
+            <ListRow
+              key={entry.id}
+              name={entry.name}
+              detail={entry.offered ? t("home_offered") : entry.serviceTitle}
+              value={fmt(entry.startTime, "ddd D MMM")}
+            />
+          ))}
+        </Cell>
+      </Grid>
+
+      <Grid>
+        <Cell
+          title={t("home_cell_next")}
+          href="/bookings/upcoming"
+          value={next ? fmt(next.startTime, "ddd h:mma") : "–"}
+          caption={next?.attendeeName ?? undefined}
+          testId="home-stat-next"
+          empty={!data.upcoming.length && <Empty title={t("home_nothing_booked")} body={t("home_nothing_booked_body")} />}>
+          {data.upcoming.slice(1).map((booking) => (
+            <ListRow
+              key={booking.uid}
+              href={`/booking/${booking.uid}`}
+              name={booking.attendeeName ?? booking.title}
+              detail={booking.isRequest ? t("home_request") : undefined}
+              value={fmt(booking.startTime, "ddd D, h:mma")}
+            />
+          ))}
+        </Cell>
+        <Cell
+          title={t("home_cell_services")}
+          href="/event-types"
+          value={String(booked30)}
+          caption={t("home_booked_30_days")}
+          testId="home-stat-services">
+          {topServices.map((service) => (
+            <ListRow
+              key={service.id}
+              href={`/event-types/${service.id}`}
+              name={service.title}
+              detail={`${service.length} min`}
+              value={String(service.bookedLast30Days)}
+            />
+          ))}
+        </Cell>
+        <Cell
+          title={t("home_cell_busiest")}
+          value={data.byWeekday.some(Boolean) ? WEEKDAYS[busiest] : "–"}
+          caption={t("home_busiest_day")}
+          testId="home-stat-days">
+          {weekdayOrder.map((day) => (
+            <BarRow
+              key={day}
+              label={WEEKDAYS[day]}
+              ratio={data.byWeekday[day] / dayMax}
+              value={String(data.byWeekday[day])}
+              strong={day === busiest}
+            />
+          ))}
+        </Cell>
+      </Grid>
     </div>
   );
 }
 
-function Stat(props: {
-  icon: "calendar" | "mail" | "users" | "clock";
-  label: string;
-  value: string;
-  note: string;
-  href?: string;
-  tone?: "up" | "down";
-  testId: string;
-}) {
-  const body = (
-    <div className="bg-default border-subtle h-full rounded-lg border p-5" data-testid={props.testId}>
-      <div className="flex items-center justify-between">
-        <p className="text-subtle text-sm">{props.label}</p>
-        <Icon name={props.icon} className="text-subtle h-4 w-4" />
-      </div>
-      <p className="text-emphasis mt-2 truncate text-2xl font-semibold leading-none">{props.value}</p>
-      <p
-        className={`mt-2 truncate text-xs ${props.tone === "up" ? "text-emerald-400" : props.tone === "down" ? "text-orange-300" : "text-subtle"}`}>
-        {props.note}
-      </p>
+/** Cells share hairline borders, like one sheet divided into panes. */
+function Grid({ children }: { children: ReactNode }) {
+  return (
+    <div className="border-subtle grid overflow-hidden rounded-lg border md:grid-cols-3 [&>*]:border-subtle [&>*:not(:first-child)]:border-t md:[&>*:not(:first-child)]:border-l md:[&>*:not(:first-child)]:border-t-0">
+      {children}
     </div>
   );
-  return props.href ? (
-    <Link href={props.href} className="block transition-transform hover:scale-[1.01]">
+}
+
+function Cell(props: {
+  title: string;
+  href?: string;
+  value: string;
+  caption?: string;
+  testId: string;
+  empty?: ReactNode;
+  children?: ReactNode;
+}) {
+  const { t } = useLocale();
+  return (
+    <section className="flex min-h-[300px] min-w-0 flex-col p-6" data-testid={props.testId}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-emphasis text-[13px]">{props.title}</h2>
+        {props.href && (
+          <Link
+            href={props.href}
+            className="text-subtle hover:text-emphasis inline-flex items-center gap-1 text-[12px] transition">
+            {t("view_all")}
+            <Icon name="arrow-right" className="h-3 w-3" />
+          </Link>
+        )}
+      </div>
+      <p className="mt-3 flex min-w-0 items-baseline gap-2">
+        <span className="text-emphasis truncate text-[32px] font-light leading-none tracking-[-0.02em]">{props.value}</span>
+        {props.caption && <span className="text-subtle truncate text-[13px]">{props.caption}</span>}
+      </p>
+      <div className="mt-6 flex flex-1 flex-col gap-3">{props.empty || props.children}</div>
+    </section>
+  );
+}
+
+function BarRow({ label, ratio, value, strong }: { label: string; ratio: number; value: string; strong?: boolean }) {
+  return (
+    <div className="flex items-center gap-3 text-[13px]">
+      <span className={classNames("w-14 shrink-0", strong ? "text-emphasis" : "text-subtle")}>{label}</span>
+      <span className="relative h-[2px] flex-1 rounded-full bg-[var(--cal-border-subtle)]">
+        <span
+          className={classNames("absolute inset-y-0 left-0 rounded-full", strong ? "bg-inverted" : "bg-[var(--cal-text-subtle)]")}
+          style={{ width: `${Math.round(ratio * 100)}%` }}
+        />
+      </span>
+      <span className={classNames("w-8 shrink-0 text-right tabular-nums", strong ? "text-emphasis" : "text-subtle")}>{value}</span>
+    </div>
+  );
+}
+
+function ListRow({ name, detail, value, href }: { name: string; detail?: string; value: string; href?: string }) {
+  const body = (
+    <>
+      <span className="text-emphasis truncate">{name}</span>
+      {detail && <span className="text-subtle truncate">{detail}</span>}
+      <span className="text-default ml-auto shrink-0 tabular-nums">{value}</span>
+    </>
+  );
+  return href ? (
+    <Link href={href} className="hover:text-emphasis flex min-w-0 items-baseline gap-2 text-[13px]">
       {body}
     </Link>
   ) : (
-    body
+    <div className="flex min-w-0 items-baseline gap-2 text-[13px]">{body}</div>
+  );
+}
+
+function Empty({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="mt-auto">
+      <p className="text-emphasis text-[13px]">{title}</p>
+      <p className="text-subtle mt-0.5 text-[13px]">{body}</p>
+    </div>
   );
 }

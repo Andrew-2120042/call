@@ -62,7 +62,8 @@ export const getHandler = async ({ ctx }: Ctx) => {
 
   const chartStart = dayjs(now).tz(ctx.user.timeZone).startOf("week").subtract(CHART_WEEKS - 1, "week");
   const monthAgo = new Date(now.getTime() - 30 * DAY_MS);
-  const [calendarCount, videoCount, everBooked, recentBookings, services, servicesBooked] = await Promise.all([
+  const [calendarCount, videoCount, everBooked, recentBookings, services, servicesBooked, waitlistPreview, requests] =
+    await Promise.all([
     prisma.credential.count({ where: { userId, type: { endsWith: "_calendar" } } }),
     prisma.credential.count({ where: { userId, type: { endsWith: "_video" } } }),
     prisma.booking.count({ where: { userId } }),
@@ -81,6 +82,22 @@ export const getHandler = async ({ ctx }: Ctx) => {
       by: ["eventTypeId"],
       where: { userId, createdAt: { gte: monthAgo }, status: { in: madeBookings } },
       _count: { _all: true },
+    }),
+    prisma.waitlistEntry.findMany({
+      where: {
+        eventType: { userId },
+        status: { in: [WaitlistEntryStatus.WAITING, WaitlistEntryStatus.OFFERED] },
+        startTime: { gte: now },
+      },
+      orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
+      take: 5,
+      select: { id: true, name: true, startTime: true, status: true, eventType: { select: { title: true } } },
+    }),
+    prisma.booking.findMany({
+      where: { userId, status: BookingStatus.PENDING, startTime: { gte: now } },
+      orderBy: { startTime: "asc" },
+      take: 5,
+      select: { uid: true, startTime: true, attendees: { select: { name: true }, take: 1 } },
     }),
   ]);
 
@@ -124,6 +141,19 @@ export const getHandler = async ({ ctx }: Ctx) => {
     services: services.map((service) => ({
       ...service,
       bookedLast30Days: bookedCount.get(service.id) ?? 0,
+    })),
+    timeZone: ctx.user.timeZone,
+    waitlistPreview: waitlistPreview.map((entry) => ({
+      id: entry.id,
+      name: entry.name,
+      startTime: entry.startTime,
+      offered: entry.status === WaitlistEntryStatus.OFFERED,
+      serviceTitle: entry.eventType.title,
+    })),
+    requests: requests.map((booking) => ({
+      uid: booking.uid,
+      startTime: booking.startTime,
+      attendeeName: booking.attendees[0]?.name ?? null,
     })),
     upcoming: upcoming.map((booking) => ({
       uid: booking.uid,

@@ -93,10 +93,10 @@ type NavGroup = { name?: string; icon?: IconName; items: string[] };
 
 // Grouped like a work tool: a couple of everyday pages on top, then sections that fold open.
 const NAV_GROUPS: NavGroup[] = [
-  { items: ["home_page_title", "assistant_page_title"] },
+  { items: ["home_page_title"] },
   { name: "nav_group_scheduling", icon: "calendar-days", items: ["event_types_page_title", "bookings", "availability"] },
-  { name: "nav_group_fill", icon: "sparkles", items: ["waitlist_page_title"] },
-  { name: "nav_group_team", icon: "users", items: ["teams"] },
+  { name: "nav_group_fill", icon: "users", items: ["waitlist_page_title"] },
+  { name: "nav_group_team", icon: "building", items: ["teams"] },
   { name: "nav_group_connect", icon: "blocks", items: ["apps"] },
 ];
 

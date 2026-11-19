@@ -36,7 +36,6 @@ function AppTopBarContent() {
         href="/assistant"
         data-testid="topbar-assistant"
         className="bg-inverted text-inverted flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium">
-        <Icon name="sparkles" className="h-3.5 w-3.5" />
         {t("assistant_page_title")}
       </Link>
       <button

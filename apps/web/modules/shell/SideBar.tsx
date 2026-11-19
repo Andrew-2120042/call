@@ -111,7 +111,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
                 target={item.target}
                 className={classNames(
                   "text-left",
-                  "group flex w-full items-center rounded-md px-2 py-1.5 text-[13px] text-default transition [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis",
+                  "group flex w-full items-center rounded-md px-2 py-1.5 text-[12px] text-default transition [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis",
                   isLocaleReady ? "hover:bg-subtle hover:text-emphasis" : ""
                 )}
                 onClick={item.onClick}>
