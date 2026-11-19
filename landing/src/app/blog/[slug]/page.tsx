@@ -111,7 +111,7 @@ export default async function ArticlePage({ params }: Params) {
         <div className="mt-10 rounded-lg border border-line px-4 py-4 text-[13px]">
           <p className="font-medium">Try {site.name} free</p>
           <p className="text-muted mt-1 text-xs">A booking link that refills cancellations and stops no-shows. Free for one person, no card.</p>
-          <a href={signupUrl} className="bg-fg text-bg mt-3 inline-block rounded-full px-3.5 py-1.5 text-xs font-medium transition hover:bg-white">
+          <a href={signupUrl} className="bg-fg text-bg mt-3 inline-block rounded-full px-3.5 py-1.5 text-xs font-medium transition hover:bg-fg/85">
             Start for free
           </a>
         </div>

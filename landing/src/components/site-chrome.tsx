@@ -37,7 +37,7 @@ function Menu({ label, items }: { label: string; items: { href: string; label: s
         </svg>
       </button>
       <div className="invisible absolute left-1/2 top-full z-50 w-80 -translate-x-1/2 pt-1 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-        <div className="rounded-2xl border border-line-strong bg-surface p-2 shadow-2xl shadow-black/60">
+        <div className="rounded-2xl border border-line-strong bg-surface p-2 shadow-2xl shadow-black/10">
           {items.map((item) => (
             <Link key={item.href} href={item.href} className="hover:bg-raised block rounded-xl px-3 py-2.5 transition">
               <span className="block text-[13px] font-medium">{item.label}</span>
@@ -60,7 +60,7 @@ export function Header() {
           </Link>
         </Container>
       </div>
-      <header className="sticky top-0 z-40 border-b border-line/70 bg-bg/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-line-strong/60 bg-[#dcdcd6]/90 backdrop-blur-xl">
         <Container className="flex h-14 items-center justify-between gap-4">
           <div className="flex items-center gap-8">
             <Logo />
@@ -75,10 +75,10 @@ export function Header() {
             <a href={loginUrl} className="text-muted hover:text-fg hidden px-2 py-1.5 text-[13px] transition sm:inline">
               Log in
             </a>
-            <a href={signupUrl} className="hidden rounded-md border border-line-strong px-3 py-1.5 text-[13px] transition hover:bg-raised sm:inline">
+            <a href={signupUrl} className="hidden rounded-md border border-fg/40 px-3 py-1.5 text-[13px] transition hover:bg-white/60 sm:inline">
               Sign up for free
             </a>
-            <a href={signupUrl} className="bg-fg text-bg rounded-md px-3 py-1.5 text-[13px] font-medium transition hover:bg-white">
+            <a href={signupUrl} className="bg-brand text-fg rounded-md px-3 py-1.5 text-[13px] font-medium transition hover:brightness-95">
               Get started
             </a>
             <details className="group relative md:hidden">
@@ -125,7 +125,7 @@ export function Footer() {
     },
   ];
   return (
-    <footer className="border-t border-line">
+    <footer className="border-t border-line bg-[#dcdcd6]">
       <Container className="grid gap-12 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)]">
         <div className="flex flex-col justify-between gap-10">
           <svg viewBox="0 0 24 24" className="h-36 w-36 sm:h-48 sm:w-48" fill="none" aria-hidden>

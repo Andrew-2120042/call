@@ -75,7 +75,7 @@ export function GrowthCurve() {
 /** A small settings-style panel: a title and rows of label + value, with an optional logo per row. */
 export function HoodPanel({ title, rows }: { title: string; rows: [string | null, string, string][] }) {
   return (
-    <div className="rounded-2xl border border-line-strong bg-surface/80 p-2 shadow-2xl shadow-black/50 backdrop-blur">
+    <div className="rounded-2xl border border-line-strong bg-surface/80 p-2 shadow-2xl shadow-black/10 backdrop-blur">
       <p className="text-faint px-3 pt-2 pb-3 text-[11px]">{title}</p>
       <ul className="divide-y divide-line rounded-xl border border-line bg-bg">
         {rows.map(([logo, label, value]) => (

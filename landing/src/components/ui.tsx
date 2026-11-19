@@ -18,7 +18,7 @@ export function ButtonLink({
 }) {
   const styles =
     variant === "primary"
-      ? "bg-fg text-bg hover:bg-white"
+      ? "bg-fg text-bg hover:bg-fg/85"
       : "border border-line-strong text-fg hover:bg-raised";
   const external = href.startsWith("http");
   const cls = `inline-flex h-10 items-center justify-center rounded-md px-5 text-sm font-medium transition ${styles} ${className}`;

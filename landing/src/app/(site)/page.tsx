@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { AudienceCarousel } from "@/components/audience-carousel";
 import { HoodPanel } from "@/components/graphics";
-import { BookedChip, ClockChip, FaceStack, FeatureRow, JobIllustration } from "@/components/home-parts";
+import { FeatureRow, JobIllustration, StageMarkers } from "@/components/home-parts";
 import { PricingCards } from "@/components/pricing-cards";
 import { ApprovalMock, HeroWindows, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
 import { Faq } from "@/components/sections";
@@ -35,12 +35,12 @@ function EmailSignup({ light = false }: { light?: boolean }) {
         className={`h-11 w-full rounded-md border px-3.5 sm:flex-1 text-sm outline-none transition ${
           light
             ? "border-black/15 bg-white text-black placeholder:text-black/40 focus:border-black/40"
-            : "border-line-strong bg-surface text-fg placeholder:text-faint focus:border-fg/40"
+            : "border-line-strong bg-white text-fg placeholder:text-faint focus:border-fg/40"
         }`}
       />
       <button
         type="submit"
-        className={`h-11 rounded-md px-5 text-sm font-medium transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-fg text-bg hover:bg-white"}`}>
+        className={`h-11 rounded-md px-5 text-sm font-medium transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-brand text-fg hover:brightness-95"}`}>
         Sign up for free
       </button>
     </form>
@@ -53,29 +53,30 @@ export default function Home() {
       {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
         <Container className="relative pt-16 pb-12 text-center sm:pt-24">
-          <Link
-            href="/blog/fill-last-minute-cancellations"
-            className="text-muted hover:text-fg inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition">
-            <span className="rounded-full bg-raised px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">New</span>
-            Waitlists that refill cancelled times
-          </Link>
-          <h1 className="mx-auto mt-7 max-w-[17ch] text-[40px] font-semibold leading-[1.08] tracking-[-0.04em] sm:text-[76px] sm:leading-[1.02]">
-            Where clients <FaceStack /> find
-            <br className="hidden sm:block" /> <ClockChip /> the time to meet <BookedChip />
+          <h1 className="mx-auto max-w-[15ch] text-[42px] font-normal leading-[1.05] tracking-[-0.035em] sm:text-[68px]">
+            Fill your calendar with one booking link
           </h1>
-          <p className="text-muted mx-auto mt-6 max-w-[50ch] text-base leading-relaxed sm:text-lg">
-            One booking link that gets you booked, refills cancelled slots from a waitlist, and stops no-shows before they
-            happen.
+          <p className="text-muted mx-auto mt-5 max-w-[52ch] text-[15px] leading-relaxed sm:text-base">
+            Spend your time with clients, not chasing them. {site.name} books you, refills cancelled slots from a waitlist and
+            stops no-shows, all from one link.
           </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-2.5">
+            <a href={signupUrl} className="bg-fg text-bg inline-flex h-11 items-center rounded-md px-6 text-sm font-medium transition hover:bg-fg/85">
+              Sign up for free
+            </a>
+            <Link href="/#product" className="inline-flex h-11 items-center rounded-md border border-line-strong bg-white px-6 text-sm transition hover:bg-raised">
+              See how it works
+            </Link>
+          </div>
+          <p className="text-faint mt-3 text-xs">No credit card required</p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />
           </div>
-          <p className="text-faint mt-3 text-xs">Free forever plan. No credit card required.</p>
         </Container>
         <div className="relative pb-6">
           <Container className="max-w-7xl!">
-            <div className="relative overflow-hidden rounded-2xl border border-line bg-[radial-gradient(ellipse_at_50%_0%,#1d1d1d,#0b0b0b_70%)] px-3 pt-10 sm:px-20 sm:pt-16">
-              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(transparent_95%,rgba(255,255,255,0.04)_95%),linear-gradient(90deg,transparent_95%,rgba(255,255,255,0.04)_95%)] bg-[size:48px_48px]" />
+            <div className="aurora relative overflow-hidden rounded-2xl px-3 pt-10 sm:px-20 sm:pt-16">
+              <StageMarkers />
               <div className="relative">
                 <HeroWindows />
               </div>
@@ -166,7 +167,7 @@ export default function Home() {
         <Container>
           <div className="rounded-2xl border border-line bg-surface px-5 py-14 sm:px-10">
             <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">How it works</p>
-            <h2 className="mt-3 text-center text-3xl font-medium tracking-[-0.025em] sm:text-5xl">One link. Three jobs.</h2>
+            <h2 className="mt-3 text-center text-3xl font-normal tracking-[-0.025em] sm:text-5xl">One link. Three jobs.</h2>
             <p className="text-muted mx-auto mt-4 max-w-[52ch] text-center text-[15px]">
               Getting booked is the start. {site.name} keeps the calendar full after that, without you chasing anyone.
             </p>
@@ -200,7 +201,7 @@ export default function Home() {
       <section className="bg-surface border-y border-line py-24">
         <Container>
           <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">Why {site.name}</p>
-          <h2 className="mt-3 text-center text-3xl font-medium tracking-[-0.025em] sm:text-5xl">Scheduling that keeps you booked</h2>
+          <h2 className="mt-3 text-center text-3xl font-normal tracking-[-0.025em] sm:text-5xl">Scheduling that keeps you booked</h2>
           <p className="text-muted mx-auto mt-4 max-w-[54ch] text-center text-[15px]">
             Most booking tools stop at the booking. Ours keeps working on your calendar after it.
           </p>
@@ -230,7 +231,7 @@ export default function Home() {
             header={
               <>
                 <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Under the hood</p>
-                <h2 data-reveal className="mt-3 max-w-[16ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+                <h2 data-reveal className="mt-3 max-w-[16ch] text-3xl font-normal leading-tight tracking-[-0.025em] sm:text-5xl">
                   Don&apos;t change how you work. Just add {site.name}.
                 </h2>
               </>
@@ -284,7 +285,7 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
           <div>
-            <h2 className="max-w-[16ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+            <h2 className="max-w-[16ch] text-3xl font-normal leading-tight tracking-[-0.025em] sm:text-5xl">
               Everything you need to get booked costs
             </h2>
             <p className="text-muted mt-4 max-w-[44ch] text-[15px]">
@@ -292,7 +293,7 @@ export default function Home() {
               calendar, for $12 a month.
             </p>
           </div>
-          <p className="text-[120px] font-semibold leading-[0.85] tracking-[-0.06em] sm:text-[220px]">$0</p>
+          <p className="text-ink text-[120px] font-normal leading-[0.85] tracking-[-0.06em] sm:text-[240px]">$0</p>
         </Container>
       </section>
 
@@ -300,7 +301,7 @@ export default function Home() {
       <section className="border-t border-line py-24">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <h2 className="max-w-[18ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+            <h2 className="max-w-[18ch] text-3xl font-normal leading-tight tracking-[-0.025em] sm:text-5xl">
               Made for people whose calendar is their income
             </h2>
             <Link href="/pricing" className="text-muted hover:text-fg text-[13px] transition">
@@ -316,7 +317,7 @@ export default function Home() {
       {/* Pricing */}
       <section className="border-t border-line py-24" id="pricing">
         <Container>
-          <h2 data-reveal className="text-3xl font-medium tracking-[-0.025em] sm:text-5xl">
+          <h2 data-reveal className="text-3xl font-normal tracking-[-0.025em] sm:text-5xl">
             Simple pricing. <span className="text-faint">Start free, upgrade when it pays for itself.</span>
           </h2>
           <PricingCards />
@@ -328,14 +329,14 @@ export default function Home() {
       {/* Closing banner: the one white block on the page, like Apollo's bright one. */}
       <section className="pb-24 pt-8">
         <Container>
-          <div className="relative overflow-hidden rounded-2xl bg-[#f4f4f2] px-6 py-16 text-black sm:px-14 sm:py-20">
+          <div className="aurora-yellow relative overflow-hidden rounded-2xl px-6 py-16 text-black sm:px-14 sm:py-20">
             <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.07),transparent_65%)]" />
             <div aria-hidden className="pointer-events-none absolute bottom-0 right-0 hidden grid-cols-7 gap-1.5 p-10 opacity-60 lg:grid">
               {Array.from({ length: 35 }, (_, i) => (
                 <span key={i} className={`h-8 w-8 rounded-md ${[9, 10, 16, 18, 23, 24, 25, 31].includes(i) ? "bg-black/80" : "bg-black/[0.06]"}`} />
               ))}
             </div>
-            <h2 className="relative max-w-[14ch] text-4xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-6xl">
+            <h2 className="relative max-w-[14ch] text-4xl font-normal leading-[1.05] tracking-[-0.035em] sm:text-6xl">
               Stop losing hours to empty slots.
             </h2>
             <p className="relative mt-5 max-w-[42ch] text-[15px] text-black/60">

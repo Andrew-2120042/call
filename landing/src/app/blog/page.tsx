@@ -20,7 +20,7 @@ export default function BlogIndex() {
           <li key={a.slug}>
             <Link href={`/blog/${a.slug}`} className="group block py-4">
               <p className="text-faint text-[11px]">{a.keyword[0].toUpperCase() + a.keyword.slice(1)}</p>
-              <p className="mt-0.5 text-[13px] font-medium transition group-hover:text-white">{a.title}</p>
+              <p className="mt-0.5 text-[13px] font-medium transition group-hover:text-fg">{a.title}</p>
               <p className="text-muted mt-1 text-xs leading-relaxed">{a.description}</p>
             </Link>
           </li>
