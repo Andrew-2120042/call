@@ -1,13 +1,15 @@
+import dayjs from "@calcom/dayjs";
 import type { IAssistantInbox } from "@calcom/features/assistant/lib/types";
 import { getWaitlistService } from "@calcom/features/waitlist/lib/getWaitlistService";
-import dayjs from "@calcom/dayjs";
 import { prisma } from "@calcom/prisma";
 import { BookingReportReason, BookingStatus, WaitlistEntryStatus } from "@calcom/prisma/enums";
 import type { TrpcSessionUser } from "@calcom/trpc/server/types";
 import { confirmHandler } from "../bookings/confirm.handler";
 import { reportBookingHandler } from "../bookings/reportBooking.handler";
 
-export type AssistantCtx = Parameters<typeof confirmHandler>[0]["ctx"] & { user: NonNullable<TrpcSessionUser> };
+export type AssistantCtx = Parameters<typeof confirmHandler>[0]["ctx"] & {
+  user: NonNullable<TrpcSessionUser>;
+};
 
 /**
  * The assistant's view of requests and the waitlist. Every lookup is limited to the signed-in owner, and the
@@ -21,7 +23,7 @@ export function createAssistantInbox(ctx: AssistantCtx): IAssistantInbox {
   const findOwnBooking = (bookingUid: string, status?: BookingStatus) =>
     prisma.booking.findFirst({
       where: { uid: bookingUid, userId, ...(status ? { status } : {}) },
-      select: { id: true, attendees: { select: { name: true }, take: 1 } },
+      select: { id: true, recurringEventId: true, attendees: { select: { name: true }, take: 1 } },
     });
 
   return {
@@ -53,7 +55,16 @@ export function createAssistantInbox(ctx: AssistantCtx): IAssistantInbox {
     async decideRequest(bookingUid, accept, reason) {
       const booking = await findOwnBooking(bookingUid, BookingStatus.PENDING);
       if (!booking) return null;
-      await confirmHandler({ ctx, input: { bookingId: booking.id, confirmed: accept, reason, emailsEnabled: true } });
+      await confirmHandler({
+        ctx,
+        input: {
+          bookingId: booking.id,
+          confirmed: accept,
+          reason,
+          emailsEnabled: true,
+          recurringEventId: booking.recurringEventId ?? undefined,
+        },
+      });
       return { name: booking.attendees[0]?.name ?? "" };
     },
 

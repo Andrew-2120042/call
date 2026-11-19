@@ -1,6 +1,5 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
-
 import { RejectionReasonDialog } from "../dialog/RejectionReasonDialog";
 import { useBookingConfirmation } from "./hooks/useBookingConfirmation";
 
@@ -36,7 +35,7 @@ export function RejectBookingButton({
       isTabUnconfirmed,
     });
 
-  const rejectLabel = (isTabRecurring || isTabUnconfirmed) && isRecurring ? t("reject_all") : t("reject");
+  const rejectLabel = isRecurring ? t("reject_all") : t("reject");
 
   return (
     <>

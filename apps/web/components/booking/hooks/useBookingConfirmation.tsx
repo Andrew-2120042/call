@@ -1,14 +1,15 @@
-import { useState } from "react";
-
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { BookingStatus } from "@calcom/prisma/enums";
 import { trpc } from "@calcom/trpc/react";
 import { showToast } from "@calcom/ui/components/toast";
+import { useState } from "react";
 
 interface UseBookingConfirmationOptions {
   isRecurring?: boolean;
   isTabRecurring?: boolean;
   isTabUnconfirmed?: boolean;
+  /** A client asks for a weekly series in one go, so a yes or no from their request answers every session. */
+  wholeSeries?: boolean;
 }
 
 interface BookingConfirmParams {
@@ -23,7 +24,7 @@ export function useBookingConfirmation(options: UseBookingConfirmationOptions = 
   const utils = trpc.useUtils();
   const [rejectionDialogIsOpen, setRejectionDialogIsOpen] = useState(false);
 
-  const { isRecurring = false, isTabRecurring = false, isTabUnconfirmed = false } = options;
+  const { isRecurring = false, wholeSeries = false } = options;
 
   const mutation = trpc.viewer.bookings.confirm.useMutation({
     onSuccess: (data) => {
@@ -35,6 +36,7 @@ export function useBookingConfirmation(options: UseBookingConfirmationOptions = 
       }
       utils.viewer.bookings.invalidate();
       utils.viewer.me.bookingUnconfirmedCount.invalidate();
+      utils.viewer.home.invalidate();
     },
     onError: (error) => {
       showToast(error.message || t("booking_confirmation_failed"), "error");
@@ -49,11 +51,8 @@ export function useBookingConfirmation(options: UseBookingConfirmationOptions = 
       reason: reason || "",
     };
 
-    /**
-     * Only pass down the recurring event id when we need to confirm the entire series, which happens in
-     * the "Recurring" tab and "Unconfirmed" tab, to support confirming discretionally in the "Recurring" tab.
-     */
-    if ((isTabRecurring || isTabUnconfirmed) && isRecurring && recurringEventId) {
+    // A request for a weekly series is answered for every session, wherever the host answers it.
+    if (recurringEventId && (wholeSeries || isRecurring)) {
       body = Object.assign({}, body, { recurringEventId });
     }
 

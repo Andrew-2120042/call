@@ -76,7 +76,9 @@ export function RebookSuggestions({
   };
 
   return (
-    <div className="border-subtle mt-8 rounded-xl border p-4 text-left" data-testid="rebook-suggestions">
+    <div
+      className="border-subtle mt-8 rounded-xl border p-3 text-left sm:p-4"
+      data-testid="rebook-suggestions">
       <p className="text-emphasis font-semibold">{t("rebook_title")}</p>
       <p className="text-subtle mt-0.5 text-sm">{t("rebook_subtitle", { name: hostName })}</p>
       {!result ? (
@@ -93,15 +95,16 @@ export function RebookSuggestions({
           {result.suggestions.map((s) => (
             <li
               key={s.start}
-              className="border-subtle flex min-h-[60px] items-center justify-between gap-3 rounded-lg border px-3 py-2">
+              className="border-subtle flex min-h-[60px] flex-col gap-2 rounded-lg border px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
               <div className="min-w-0">
                 <p className="text-emphasis text-sm font-medium">
                   {dayjs(s.start).tz(timeZone).format("dddd D MMMM, h:mma")}
                 </p>
-                {s.reason && <p className="text-subtle truncate text-xs">{s.reason}</p>}
+                {s.reason && <p className="text-subtle text-xs sm:truncate">{s.reason}</p>}
               </div>
               <Button
                 size="sm"
+                className="w-full justify-center sm:w-auto"
                 // A full page load: client-side navigation into the booker keeps its old state and drops the slot.
                 onClick={() => window.location.assign(bookHref(s.start))}
                 data-testid="rebook-accept">

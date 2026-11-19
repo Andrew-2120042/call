@@ -8,15 +8,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 /** Accept or decline a booking request from its own page; declining can carry an optional note to the client. */
-export function HostRequestActions({ bookingId }: { bookingId: number }) {
+export function HostRequestActions({
+  bookingId,
+  recurringEventId,
+}: {
+  bookingId: number;
+  recurringEventId?: string | null;
+}) {
   const { t } = useLocale();
   const router = useRouter();
   const [declining, setDeclining] = useState(false);
   const [reason, setReason] = useState("");
-  const { bookingConfirm, isPending } = useBookingConfirmation({});
+  const { bookingConfirm, isPending } = useBookingConfirmation({ wholeSeries: true });
 
   const decide = (confirmed: boolean) => {
-    bookingConfirm({ bookingId, confirmed, reason: confirmed ? undefined : reason });
+    bookingConfirm({ bookingId, confirmed, recurringEventId, reason: confirmed ? undefined : reason });
     // The page is server-rendered; refresh once the change has had a moment to land.
     setTimeout(() => router.refresh(), 1200);
   };

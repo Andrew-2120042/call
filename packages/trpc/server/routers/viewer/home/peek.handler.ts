@@ -8,7 +8,14 @@ import type { TPeekInputSchema } from "./peek.schema";
 type Options = { ctx: { user: NonNullable<TrpcSessionUser> }; input: TPeekInputSchema };
 
 // The booker's name, email and the system's own fields are shown elsewhere in the panel, not as "answers".
-const HIDDEN_FIELDS = new Set(["name", "email", "location", "guests", "rescheduleReason", "attendeePhoneNumber"]);
+const HIDDEN_FIELDS = new Set([
+  "name",
+  "email",
+  "location",
+  "guests",
+  "rescheduleReason",
+  "attendeePhoneNumber",
+]);
 
 type Field = { name?: string; label?: string; defaultLabel?: string };
 
@@ -55,17 +62,20 @@ export const peekHandler = async ({ ctx, input }: Options) => {
         location: true,
         responses: true,
         cancellationReason: true,
+        recurringEventId: true,
         eventType: { select: { title: true, bookingFields: true } },
         attendees: { select: { name: true, email: true, timeZone: true, phoneNumber: true }, take: 1 },
         requestInsight: { select: { summary: true, fit: true, spamLikely: true, concerns: true } },
       },
     });
-    if (!booking) throw new TRPCError({ code: "NOT_FOUND", message: "This booking isn't yours or no longer exists." });
+    if (!booking)
+      throw new TRPCError({ code: "NOT_FOUND", message: "This booking isn't yours or no longer exists." });
     const attendee = booking.attendees[0];
     return {
       kind: "booking" as const,
       id: booking.id,
       uid: booking.uid,
+      recurringEventId: booking.recurringEventId,
       status: booking.status,
       isRequest: booking.status === BookingStatus.PENDING,
       startTime: booking.startTime,
@@ -106,7 +116,11 @@ export const peekHandler = async ({ ctx, input }: Options) => {
       eventType: { select: { title: true, bookingFields: true } },
     },
   });
-  if (!entry) throw new TRPCError({ code: "NOT_FOUND", message: "This waitlist entry isn't yours or no longer exists." });
+  if (!entry)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "This waitlist entry isn't yours or no longer exists.",
+    });
   const ahead = await prisma.waitlistEntry.count({
     where: {
       eventTypeId: entry.eventTypeId,
@@ -118,6 +132,7 @@ export const peekHandler = async ({ ctx, input }: Options) => {
   return {
     kind: "waitlist" as const,
     id: null,
+    recurringEventId: null,
     uid: entry.uid,
     status: entry.status,
     isRequest: false,
@@ -125,7 +140,12 @@ export const peekHandler = async ({ ctx, input }: Options) => {
     endTime: entry.endTime,
     service: entry.eventType.title,
     location: null,
-    person: { name: entry.name, email: entry.email, phone: null, timeZone: timeZoneLabel(entry.timeZone, entry.startTime) },
+    person: {
+      name: entry.name,
+      email: entry.email,
+      phone: null,
+      timeZone: timeZoneLabel(entry.timeZone, entry.startTime),
+    },
     answers: answersFrom(entry.responses, entry.eventType.bookingFields),
     insight: null,
     cancellationReason: null,

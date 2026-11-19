@@ -58,11 +58,11 @@ import classNames from "classnames";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Toaster } from "sonner";
 import { z } from "zod";
-import { HostRequestActions } from "../components/HostRequestActions";
 import { EarlierTimeWaitlist } from "../components/EarlierTimeWaitlist";
+import { HostRequestActions } from "../components/HostRequestActions";
 import { RebookSuggestions } from "../components/RebookSuggestions";
 import { RequestInsightPanel } from "../components/RequestInsightPanel";
 import { usePaymentStatus } from "../hooks/usePaymentStatus";
@@ -178,7 +178,8 @@ export default function Success(props: PageProps) {
     props?.userTimeFormat ? props.userTimeFormat === 24 : isBrowserLocale24h()
   );
   const { data: session } = useSession();
-  const isHost = props.isLoggedInUserHost;
+  // Right after booking, whoever booked sees the client's confirmation, even when the host books their own page.
+  const isHost = props.isLoggedInUserHost && !isSuccessBookingPage;
 
   const [showUtmParams, setShowUtmParams] = useState(false);
 
@@ -300,6 +301,13 @@ export default function Success(props: PageProps) {
     setIs24h(props?.userTimeFormat ? props.userTimeFormat === 24 : !!getIs24hClockFromLocalStorage());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventType, needsConfirmation]);
+
+  // Cancelling happens at the bottom of the page, but the result (and new times to rebook) shows at the top.
+  const wasCancelled = useRef(isCancelled);
+  useEffect(() => {
+    if (isCancelled && !wasCancelled.current) window.scrollTo({ top: 0, behavior: "smooth" });
+    wasCancelled.current = isCancelled;
+  }, [isCancelled]);
 
   useEffect(() => {
     setCalculatedDuration(dayjs(bookingInfo.endTime).diff(dayjs(bookingInfo.startTime), "minutes"));
@@ -471,9 +479,7 @@ export default function Success(props: PageProps) {
   })();
 
   return (
-    <div
-      className={isEmbed ? "" : "min-h-screen"}
-      data-testid="success-page">
+    <div className={isEmbed ? "" : "min-h-screen"} data-testid="success-page">
       {!isEmbed && !isFeedbackMode && (
         <EventReservationSchema
           reservationId={bookingInfo.uid}
@@ -489,7 +495,7 @@ export default function Success(props: PageProps) {
       )}
       {/* The server already knows the host is signed in; waiting for the client session would make the whole
           page jump down when this link appears. */}
-      {(isLoggedIn || isHost) && !isEmbed && !isFeedbackMode && (
+      {(isLoggedIn || isHost) && !isEmbed && !isFeedbackMode && !isSuccessBookingPage && (
         <div className="-mb-4 ml-4 mt-2">
           <Link
             href={allRemainingBookings ? "/bookings/recurring" : "/bookings/upcoming"}
@@ -508,7 +514,7 @@ export default function Success(props: PageProps) {
           <div
             className={classNames(
               shouldAlignCentrally ? "text-center" : "",
-              "flex items-end justify-center px-4 pb-20 pt-4 sm:flex sm:p-0"
+              "flex items-end justify-center px-3 pb-20 pt-4 sm:flex sm:p-0"
             )}>
             <div
               className={classNames(
@@ -521,7 +527,7 @@ export default function Success(props: PageProps) {
                   "inline-block transform overflow-hidden rounded-lg border sm:my-8 sm:max-w-xl",
                   !isBackgroundTransparent &&
                     " bg-default dark:bg-cal-muted border-booker border-booker-width",
-                  "px-8 pb-4 pt-5 text-left align-bottom transition-all sm:w-full sm:py-8 sm:align-middle"
+                  "px-5 pb-4 pt-5 text-left align-bottom transition-all sm:w-full sm:px-8 sm:py-8 sm:align-middle"
                 )}
                 role="dialog"
                 aria-modal="true"
@@ -543,12 +549,8 @@ export default function Success(props: PageProps) {
                           "mx-auto flex h-12 w-12 items-center justify-center rounded-full",
                           isRoundRobin &&
                             "border-cal-bg dark:border-cal-bg-muted absolute bottom-0 right-0 z-10 h-12 w-12 border-8",
-                          isReschedulable && !needsConfirmation && !isAwaitingPayment
-                            ? "bg-cal-success"
-                            : "",
-                          isReschedulable && (needsConfirmation || isAwaitingPayment)
-                            ? "bg-subtle"
-                            : "",
+                          isReschedulable && !needsConfirmation && !isAwaitingPayment ? "bg-cal-success" : "",
+                          isReschedulable && (needsConfirmation || isAwaitingPayment) ? "bg-subtle" : "",
                           isCancelled ? "bg-error" : ""
                         )}>
                         {!needsConfirmation && !isAwaitingPayment && isReschedulable && (
@@ -591,7 +593,12 @@ export default function Success(props: PageProps) {
                           bookingUid={bookingInfo.uid}
                           clientName={bookingInfo.attendees[0]?.name?.split(" ")[0]}
                           initialInsight={props.requestInsight}
-                          actions={<HostRequestActions bookingId={bookingInfo.id} />}
+                          actions={
+                            <HostRequestActions
+                              bookingId={bookingInfo.id}
+                              recurringEventId={bookingInfo.recurringEventId}
+                            />
+                          }
                         />
                       )}
                       {props.paymentStatus &&
@@ -830,7 +837,9 @@ export default function Success(props: PageProps) {
                             </>
                           )}
                       </div>
-                      {isHost && !isHostReviewingRequest && <RequestInsightPanel bookingUid={bookingInfo.uid} />}
+                      {isHost && !isHostReviewingRequest && (
+                        <RequestInsightPanel bookingUid={bookingInfo.uid} />
+                      )}
                       <div className="text-bookingdark dark:border-darkgray-200 mt-8 text-left dark:text-gray-300">
                         {eventType.bookingFields.map((field) => {
                           if (!field) return null;
@@ -1080,7 +1089,9 @@ export default function Success(props: PageProps) {
                               const target = e.target as typeof e.target & {
                                 email: { value: string };
                               };
-                              router.push(`${WEBAPP_URL}/signup?email=${encodeURIComponent(target.email.value)}`);
+                              router.push(
+                                `${WEBAPP_URL}/signup?email=${encodeURIComponent(target.email.value)}`
+                              );
                             }}
                             className="mt-4 flex">
                             <EmailInput
@@ -1172,7 +1183,6 @@ export default function Success(props: PageProps) {
                   message={
                     <div>
                       <p className="font-semibold">{t("google_new_spam_policy")}</p>
-
                     </div>
                   }
                   CustomIcon="circle-alert"

@@ -1,6 +1,5 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
-
 import { useBookingConfirmation } from "./hooks/useBookingConfirmation";
 
 interface AcceptBookingButtonProps {
@@ -34,7 +33,7 @@ export function AcceptBookingButton({
     isTabUnconfirmed,
   });
 
-  const confirmLabel = (isTabRecurring || isTabUnconfirmed) && isRecurring ? t("confirm_all") : t("confirm");
+  const confirmLabel = isRecurring ? t("confirm_all") : t("confirm");
 
   return (
     <Button

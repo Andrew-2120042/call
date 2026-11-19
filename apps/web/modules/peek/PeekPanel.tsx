@@ -27,7 +27,12 @@ export function PeekPanel() {
   if (!target) return null;
   return (
     <div className="fixed inset-0 z-50" data-testid="peek">
-      <button type="button" aria-label="Close" className="absolute inset-0 h-full w-full bg-black/50" onClick={close} />
+      <button
+        type="button"
+        aria-label="Close"
+        className="absolute inset-0 h-full w-full bg-black/50"
+        onClick={close}
+      />
       <aside
         role="dialog"
         aria-modal="true"
@@ -38,7 +43,15 @@ export function PeekPanel() {
   );
 }
 
-function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid: string; onClose: () => void }) {
+function PeekContent({
+  kind,
+  uid,
+  onClose,
+}: {
+  kind: "booking" | "waitlist";
+  uid: string;
+  onClose: () => void;
+}) {
   const { t } = useLocale();
   const utils = trpc.useUtils();
   const { data, isPending, error } = trpc.viewer.home.peek.useQuery({ kind, uid });
@@ -86,8 +99,14 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
   return (
     <>
       <header className="border-subtle flex h-12 shrink-0 items-center gap-2 border-b px-4">
-        {status && <span className={classNames("rounded border px-1.5 py-0.5 text-[11px]", status.tone)}>{status.label}</span>}
-        <span className="text-subtle text-[12px]">{t(kind === "booking" ? "peek_title_booking" : "peek_title_waitlist")}</span>
+        {status && (
+          <span className={classNames("rounded border px-1.5 py-0.5 text-[11px]", status.tone)}>
+            {status.label}
+          </span>
+        )}
+        <span className="text-subtle text-[12px]">
+          {t(kind === "booking" ? "peek_title_booking" : "peek_title_waitlist")}
+        </span>
         <button
           type="button"
           onClick={onClose}
@@ -121,24 +140,36 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
               {data.location && <Row label={t("peek_where")} value={data.location} />}
               {data.waitlist && (
                 <>
-                  <Row label={t("peek_place_in_line")} value={t("peek_position", { position: data.waitlist.position })} />
-                  <Row label={t("peek_joined")} value={dayjs(data.waitlist.joinedAt).format("ddd D MMM, h:mma")} />
+                  <Row
+                    label={t("peek_place_in_line")}
+                    value={t("peek_position", { position: data.waitlist.position })}
+                  />
+                  <Row
+                    label={t("peek_joined")}
+                    value={dayjs(data.waitlist.joinedAt).format("ddd D MMM, h:mma")}
+                  />
                   {data.waitlist.offerExpiresAt && (
                     <Row
                       label={t("peek_offer")}
                       value={t("peek_offer_until", {
-                        slot: dayjs(data.waitlist.offerStartTime ?? data.startTime).format("ddd D MMM, h:mma"),
+                        slot: dayjs(data.waitlist.offerStartTime ?? data.startTime).format(
+                          "ddd D MMM, h:mma"
+                        ),
                         time: dayjs(data.waitlist.offerExpiresAt).format("h:mma"),
                       })}
                     />
                   )}
                 </>
               )}
-              {data.cancellationReason && <Row label={t("peek_cancel_reason")} value={data.cancellationReason} />}
+              {data.cancellationReason && (
+                <Row label={t("peek_cancel_reason")} value={data.cancellationReason} />
+              )}
             </Rows>
 
             {data.insight?.spamLikely && (
-              <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3" data-testid="peek-spam-warning">
+              <div
+                className="rounded-lg border border-red-500/40 bg-red-500/10 p-3"
+                data-testid="peek-spam-warning">
                 <p className="text-[13px] font-medium text-red-300">{t("peek_spam_title")}</p>
                 <p className="mt-0.5 text-[12px] text-red-200/80">{t("peek_spam_body")}</p>
               </div>
@@ -161,7 +192,9 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
                 <dl className="mt-2 space-y-3">
                   {data.answers.map((answer) => (
                     <div key={answer.labelKey ?? answer.label}>
-                      <dt className="text-subtle text-[12px]">{answer.labelKey ? t(answer.labelKey) : answer.label}</dt>
+                      <dt className="text-subtle text-[12px]">
+                        {answer.labelKey ? t(answer.labelKey) : answer.label}
+                      </dt>
                       <dd className="text-default mt-0.5 whitespace-pre-line text-[13px]">{answer.value}</dd>
                     </div>
                   ))}
@@ -187,7 +220,9 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
           )}
           <div className="flex items-center gap-2">
             {data.kind === "booking" && (
-              <Link href={`/booking/${data.uid}`} className="text-subtle hover:text-emphasis mr-auto text-[12px]">
+              <Link
+                href={`/booking/${data.uid}`}
+                className="text-subtle hover:text-emphasis mr-auto text-[12px]">
                 {t("peek_open_full")}
               </Link>
             )}
@@ -197,7 +232,12 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
                 <FooterButton
                   onClick={() =>
                     declining
-                      ? confirm.mutate({ bookingId: data.id as number, confirmed: false, reason: reason || undefined })
+                      ? confirm.mutate({
+                          bookingId: data.id as number,
+                          confirmed: false,
+                          reason: reason || undefined,
+                          recurringEventId: data.recurringEventId ?? undefined,
+                        })
                       : setDeclining(true)
                   }
                   disabled={confirm.isPending}
@@ -207,7 +247,13 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
                 {!declining && (
                   <FooterButton
                     primary
-                    onClick={() => confirm.mutate({ bookingId: data.id as number, confirmed: true })}
+                    onClick={() =>
+                      confirm.mutate({
+                        bookingId: data.id as number,
+                        confirmed: true,
+                        recurringEventId: data.recurringEventId ?? undefined,
+                      })
+                    }
                     disabled={confirm.isPending}
                     testId="peek-accept">
                     {t("accept")}
@@ -216,7 +262,10 @@ function PeekContent({ kind, uid, onClose }: { kind: "booking" | "waitlist"; uid
               </>
             )}
             {data.kind === "waitlist" && (
-              <FooterButton onClick={() => remove.mutate({ uid: data.uid })} disabled={remove.isPending} testId="peek-remove">
+              <FooterButton
+                onClick={() => remove.mutate({ uid: data.uid })}
+                disabled={remove.isPending}
+                testId="peek-remove">
                 {t("waitlist_remove_from")}
               </FooterButton>
             )}
@@ -252,7 +301,13 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-function FooterButton(props: { children: ReactNode; onClick: () => void; disabled?: boolean; primary?: boolean; testId: string }) {
+function FooterButton(props: {
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  primary?: boolean;
+  testId: string;
+}) {
   return (
     <button
       type="button"
