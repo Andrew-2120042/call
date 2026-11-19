@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Hanken_Grotesk, Instrument_Serif } from "next/font/google";
 import type { ReactNode } from "react";
 import { RevealObserver } from "@/components/reveal";
 import { JsonLd } from "@/components/ui";
 import { site } from "@/site.config";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Apollo's fonts (Founders Grotesk, ABC Diatype, Söhne Mono) are paid; these are the closest free matches.
+const display = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-display-face", display: "swap" });
+const inter = Geist({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono-face", display: "swap" });
 const serif = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--font-instrument-serif", display: "swap" });
 
 export const metadata: Metadata = {
@@ -20,12 +23,12 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport: Viewport = { themeColor: "#fbfbf8", colorScheme: "light" };
+export const viewport: Viewport = { themeColor: "#ffffff", colorScheme: "light" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // The reveal script tags <html> before React loads, so its class list is expected to differ.
-    <html lang="en" className={`${inter.variable} ${serif.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${serif.variable} ${display.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         {/* Marks the page before first paint so revealed sections don't flash in and out. */}
         <script

@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { AudienceCarousel } from "@/components/audience-carousel";
 import { HoodPanel } from "@/components/graphics";
-import { FeatureRow, JobIllustration, StageMarkers } from "@/components/home-parts";
+import { FeatureRow, JobIllustration } from "@/components/home-parts";
 import { PricingCards } from "@/components/pricing-cards";
-import { ApprovalMock, HeroWindows, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
+import { ApprovalMock, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
 import { Faq } from "@/components/sections";
 import { Container, JsonLd } from "@/components/ui";
 import { audiences, homeFaq } from "@/content/site-content";
@@ -25,12 +25,12 @@ const integrations = [
 /** Email box that carries the address into sign-up, like Apollo's hero and closing banner. */
 function EmailSignup({ light = false }: { light?: boolean }) {
   return (
-    <form action={signupUrl} method="get" className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
+    <form action={signupUrl} method="get" className="flex w-full max-w-[360px] flex-col gap-2 sm:flex-row">
       <input
         type="email"
         name="email"
         required
-        placeholder="Enter your work email"
+        placeholder="Enter email"
         aria-label="Email"
         className={`h-11 w-full rounded-md border px-3.5 sm:flex-1 text-sm outline-none transition ${
           light
@@ -40,7 +40,7 @@ function EmailSignup({ light = false }: { light?: boolean }) {
       />
       <button
         type="submit"
-        className={`h-11 rounded-md px-5 text-sm font-medium transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-brand text-fg hover:brightness-95"}`}>
+        className={`h-10 rounded-md px-5 text-[13px] transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-brand text-fg hover:brightness-95"}`}>
         Sign up for free
       </button>
     </form>
@@ -52,37 +52,40 @@ export default function Home() {
     <div className="relative">
       {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
-        <Container className="relative pt-16 pb-12 text-center sm:pt-24">
-          <h1 className="mx-auto max-w-[15ch] text-[42px] font-normal leading-[1.05] tracking-[-0.035em] sm:text-[68px]">
+        <Container className="relative pt-16 pb-16 text-center sm:pt-24">
+          <h1 className="mx-auto max-w-[16ch] text-[44px] leading-[1.02] tracking-[-0.035em] sm:text-[72px]">
             Fill your calendar with one booking link
           </h1>
-          <p className="text-muted mx-auto mt-5 max-w-[52ch] text-[15px] leading-relaxed sm:text-base">
+          <p className="text-fg/80 mx-auto mt-5 max-w-[46ch] text-[15px] leading-snug">
             Spend your time with clients, not chasing them. {site.name} books you, refills cancelled slots from a waitlist and
             stops no-shows, all from one link.
           </p>
-          <div className="mt-7 flex flex-wrap justify-center gap-2.5">
-            <a href={signupUrl} className="bg-fg text-bg inline-flex h-11 items-center rounded-md px-6 text-sm font-medium transition hover:bg-fg/85">
-              Sign up for free
-            </a>
-            <Link href="/#product" className="inline-flex h-11 items-center rounded-md border border-line-strong bg-white px-6 text-sm transition hover:bg-raised">
-              See how it works
-            </Link>
+          <div className="mt-7 flex justify-center">
+            <div className="inline-flex overflow-hidden rounded-md border border-fg">
+              <a href={signupUrl} className="bg-fg text-bg inline-flex h-10 items-center px-6 text-[14px] transition hover:bg-fg/85 sm:px-10">
+                Sign up for free
+              </a>
+              <Link href="/#product" className="inline-flex h-10 items-center bg-white px-6 text-[14px] transition hover:bg-surface sm:px-10">
+                See how it works
+              </Link>
+            </div>
           </div>
-          <p className="text-faint mt-3 text-xs">No credit card required</p>
-          <div className="mt-8 flex justify-center">
+          <p className="text-faint mt-3 inline-flex items-center gap-1.5 text-[12px]">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <rect x="3" y="6" width="18" height="13" rx="2" />
+              <path d="M3 10h18M4 4l16 16" />
+            </svg>
+            No credit card required
+          </p>
+          <div className="mt-6 flex justify-center">
             <EmailSignup />
           </div>
+          <p className="text-faint mt-4 text-[11px]">
+            By signing up, I agree to {site.name}&apos;s{" "}
+            <Link href="/terms" className="underline">Terms of Service</Link> and{" "}
+            <Link href="/privacy" className="underline">Privacy Policy</Link>.
+          </p>
         </Container>
-        <div className="relative pb-6">
-          <Container className="max-w-7xl!">
-            <div className="aurora relative overflow-hidden rounded-2xl px-3 pt-10 sm:px-20 sm:pt-16">
-              <StageMarkers />
-              <div className="relative">
-                <HeroWindows />
-              </div>
-            </div>
-          </Container>
-        </div>
       </section>
 
       {/* Works with: Apollo's logo strip, as the tools people already use. */}

@@ -1,31 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-const STAGE_MARKERS = [
-  { label: "Checking your calendar", className: "left-[6%] top-[9%]" },
-  { label: "Offering a freed slot", className: "left-[44%] top-[5%]" },
-  { label: "Reading a new request", className: "right-[5%] top-[14%]" },
-  { label: "Sending reminders", className: "left-[3%] bottom-[30%]" },
-  { label: "Confirming tomorrow", className: "right-[3%] bottom-[38%]" },
-];
-
-/** Labelled pulses around the hero stage, like the steps Apollo shows running across its product. */
-export function StageMarkers() {
-  return (
-    <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden>
-      {STAGE_MARKERS.map((marker, index) => (
-        <span key={marker.label} className={`absolute flex items-center gap-3 ${marker.className}`}>
-          <span className="relative grid h-9 w-9 place-items-center">
-            <span className="stage-pulse absolute inset-0 rounded-full border border-black/25" style={{ animationDelay: `${index * 0.6}s` }} />
-            <span className="h-2.5 w-2.5 rounded-full bg-black/80" />
-          </span>
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-black/35">{marker.label}</span>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 /** A feature told Apollo-style: a grey stage with the product on one side, the words and a few points on the other. */
 export function FeatureRow({
   eyebrow,
@@ -47,29 +22,36 @@ export function FeatureRow({
   flip?: boolean;
 }) {
   return (
-    <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-      <div className={`rounded-xl border border-line bg-surface p-5 sm:p-8 ${flip ? "lg:order-2" : ""}`} data-reveal>
-        {visual}
+    <div className="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+      <div className={`flex min-h-[420px] items-center rounded-lg bg-surface p-5 sm:p-10 ${flip ? "lg:order-2" : ""}`} data-reveal>
+        <div className="w-full">{visual}</div>
       </div>
-      <div className={flip ? "lg:order-1" : ""}>
-        <p className="text-faint font-mono text-[11px] uppercase tracking-[0.14em]">{eyebrow}</p>
-        <h3 className="mt-3 max-w-[18ch] text-3xl font-normal leading-[1.1] tracking-[-0.025em] sm:text-[40px]">{title}</h3>
-        <p className="text-muted mt-4 max-w-[46ch] text-[15px] leading-relaxed">{body}</p>
-        <ul className="mt-8 space-y-3">
-          {points.map((point) => (
-            <li key={point.title} className="flex gap-3 text-[14px]">
-              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-fg/70" />
-              <span>
-                <span className="font-medium">{point.title}</span> <span className="text-muted">{point.body}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <Link
-          href={href}
-          className="mt-8 inline-flex h-10 items-center rounded-md border border-line-strong bg-white px-4 text-[13px] transition hover:bg-raised">
-          {cta}
-        </Link>
+      <div className={`flex flex-col justify-between gap-10 py-2 ${flip ? "lg:order-1" : ""}`}>
+        <div>
+          <p className="text-faint font-mono text-[11px] uppercase tracking-[0.12em]">{eyebrow}</p>
+          <h3 className="mt-3 max-w-[18ch] text-[30px] leading-[1.1] sm:text-[34px]">{title}</h3>
+          <p className="text-fg/75 mt-3 max-w-[48ch] text-[14px] leading-snug">{body}</p>
+        </div>
+        <div>
+          <ul className="space-y-2.5">
+            {points.map((point) => (
+              <li key={point.title} className="flex gap-2.5 text-[13px] leading-snug">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="mt-[2px] shrink-0" aria-hidden>
+                  <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>
+                  <span className="font-medium underline decoration-fg/30 underline-offset-2">{point.title}</span>{" "}
+                  <span className="text-fg/70">{point.body}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={href}
+            className="mt-6 inline-flex h-9 items-center rounded-md border border-fg bg-white px-4 text-[13px] transition hover:bg-surface">
+            {cta}
+          </Link>
+        </div>
       </div>
     </div>
   );
