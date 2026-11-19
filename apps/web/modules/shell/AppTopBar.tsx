@@ -1,9 +1,9 @@
 "use client";
 
+import { useAssistantPanel } from "~/assistant/assistant-view";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
 import { useKBar } from "kbar";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { OPEN_FEEDBACK_EVENT } from "~/feedback/FeedbackDialog";
 import { UserDropdown } from "./user-dropdown/UserDropdown";
@@ -18,6 +18,8 @@ export function AppTopBar() {
 function AppTopBarContent() {
   const { t } = useLocale();
   const { query } = useKBar();
+  const assistantOpen = useAssistantPanel((state) => state.open);
+  const toggleAssistant = useAssistantPanel((state) => state.toggle);
   return (
     <div
       data-sw-topbar
@@ -33,12 +35,14 @@ function AppTopBarContent() {
         <kbd className="border-subtle rounded border px-1 font-sans text-[10px]">⌘K</kbd>
       </button>
       <div className="flex items-center justify-end gap-2">
-        <Link
-          href="/assistant"
+        <button
+          type="button"
+          onClick={toggleAssistant}
+          aria-pressed={assistantOpen}
           data-testid="topbar-assistant"
           className="bg-inverted text-inverted flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium">
           {t("assistant_page_title")}
-        </Link>
+        </button>
         <button
           type="button"
           onClick={() => window.dispatchEvent(new Event(OPEN_FEEDBACK_EVENT))}

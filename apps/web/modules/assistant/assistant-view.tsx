@@ -7,6 +7,7 @@ import { Icon } from "@calcom/ui/components/icon";
 import classNames from "classnames";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { create } from "zustand";
 import { describeAssistantAction, type AssistantAction } from "./describeAssistantAction";
 
 type Turn = { role: "user" | "assistant"; content: string; actions?: AssistantAction[] };
@@ -17,12 +18,33 @@ const EXAMPLES: { icon: IconName; titleKey: string; promptKey: string }[] = [
   { icon: "pencil", titleKey: "assistant_ex_bio_title", promptKey: "assistant_ex_bio_prompt" },
 ];
 
+/** The conversation survives navigation, so the side panel and the full page show the same chat. */
+export const useAssistantChat = create<{
+  turns: Turn[];
+  setTurns: (update: Turn[] | ((current: Turn[]) => Turn[])) => void;
+}>((set) => ({
+  turns: [],
+  setTurns: (update) => set((state) => ({ turns: typeof update === "function" ? update(state.turns) : update })),
+}));
+
+export const useAssistantPanel = create<{ open: boolean; toggle: () => void; close: () => void }>((set) => ({
+  open: false,
+  toggle: () => set((state) => ({ open: !state.open })),
+  close: () => set({ open: false }),
+}));
+
 /** Assistant page: owners describe what they want and it sets it up (services, bio). */
 export default function AssistantView() {
+  return <AssistantChat variant="page" />;
+}
+
+export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
   const { t } = useLocale();
   const utils = trpc.useUtils();
   const status = trpc.viewer.assistant.status.useQuery();
-  const [turns, setTurns] = useState<Turn[]>([]);
+  const turns = useAssistantChat((state) => state.turns);
+  const setTurns = useAssistantChat((state) => state.setTurns);
+  const panel = variant === "panel";
   const searchParams = useSearchParams();
   const [draft, setDraft] = useState(() => searchParams?.get("prompt") ?? "");
   const listRef = useRef<HTMLDivElement>(null);
@@ -103,12 +125,19 @@ export default function AssistantView() {
   if (turns.length === 0) {
     return (
       <div
-        className="mx-auto flex min-h-[calc(100dvh-120px)] max-w-[680px] flex-col justify-center py-10"
-        data-testid="assistant-page">
+        className={classNames(
+          "mx-auto flex flex-col",
+          panel ? "h-full justify-end px-4 pb-4" : "min-h-[calc(100dvh-120px)] max-w-[680px] justify-center py-10"
+        )}
+        data-testid={panel ? "assistant-panel-chat" : "assistant-page"}>
         <div className="bg-default border-subtle mx-auto grid h-12 w-12 place-items-center rounded-lg border">
           <Icon name="message-circle" className="text-emphasis h-5 w-5" />
         </div>
-        <h1 className="text-emphasis mt-5 text-center text-[28px] font-semibold leading-tight tracking-[-0.025em]">
+        <h1
+          className={classNames(
+            "text-emphasis mt-5 text-center font-semibold leading-tight tracking-[-0.025em]",
+            panel ? "text-[17px]" : "text-[28px]"
+          )}>
           {t("assistant_page_heading")}
         </h1>
         <p className="text-subtle mx-auto mt-2 max-w-[440px] text-center text-[14px] leading-relaxed">
@@ -129,7 +158,7 @@ export default function AssistantView() {
 
         <div className={configured ? "mt-8" : "mt-4"}>{composer}</div>
 
-        <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
+        <div className={classNames("mt-6 grid gap-2.5", !panel && "sm:grid-cols-2")}>
           {EXAMPLES.map((example) => (
             <button
               key={example.titleKey}
@@ -154,8 +183,10 @@ export default function AssistantView() {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100dvh-120px)] max-w-[720px] flex-col" data-testid="assistant-page">
-      <div className="border-subtle flex items-center justify-between border-b pb-3">
+    <div
+      className={classNames("mx-auto flex flex-col", panel ? "h-full w-full px-4" : "h-[calc(100dvh-120px)] max-w-[720px]")}
+      data-testid={panel ? "assistant-panel-chat" : "assistant-page"}>
+      <div className={classNames("border-subtle flex items-center justify-between border-b pb-3", panel && "hidden")}>
         <div className="flex items-center gap-2">
           <Icon name="message-circle" className="text-emphasis h-4 w-4" />
           <h1 className="text-emphasis text-base font-semibold">{t("assistant_page_title")}</h1>

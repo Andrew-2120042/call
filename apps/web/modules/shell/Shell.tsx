@@ -1,5 +1,6 @@
 "use client";
 
+import { AssistantPanel } from "~/assistant/AssistantPanel";
 import { PeekPanel } from "~/peek/PeekPanel";
 import { AppTopBar } from "./AppTopBar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -53,6 +54,7 @@ const Layout = (props: LayoutProps) => {
           <div className="flex w-0 flex-1 flex-col">
             <MainContainer {...props} />
           </div>
+          <AssistantPanel />
         </div>
       </div>
     </>

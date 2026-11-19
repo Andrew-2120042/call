@@ -103,7 +103,7 @@ export const PersonalSettingsView = ({
       bio: data.bio || "",
     });
 
-    router.push("/onboarding/personal/calendar");
+    router.push("/onboarding/personal/questions");
   });
 
   if (!user) {
