@@ -1,12 +1,13 @@
 "use client";
 
-import { useSidebar } from "./sidebarStore";
-import { useAssistantPanel } from "~/assistant/assistant-view";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
 import { useKBar } from "kbar";
 import { useSession } from "next-auth/react";
+import { useAssistantPanel } from "~/assistant/assistant-view";
 import { OPEN_FEEDBACK_EVENT } from "~/feedback/FeedbackDialog";
+import { NotificationsBell } from "./NotificationsBell";
+import { useSidebar } from "./sidebarStore";
 import { UserDropdown } from "./user-dropdown/UserDropdown";
 
 /** Desktop top bar: search (⌘K), the Assistant, help and the account menu, above every page. */
@@ -58,6 +59,7 @@ function AppTopBarContent() {
           className="bg-inverted text-inverted flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium">
           {t("assistant_page_title")}
         </button>
+        <NotificationsBell />
         <button
           type="button"
           onClick={() => window.dispatchEvent(new Event(OPEN_FEEDBACK_EVENT))}

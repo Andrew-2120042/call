@@ -29,7 +29,7 @@ export function SetupChecklist({ setup, pageUrl }: { setup: readonly Step[]; pag
   return (
     <section className="mb-6" data-testid="setup-checklist">
       <div className="border-subtle flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border px-4 py-3">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-[220px] flex-1">
           <p className="text-emphasis text-[13px]">{t("setup_checklist_title")}</p>
           <p className="text-subtle text-[12px]">
             {t("setup_checklist_subtitle", { done, total: setup.length })}

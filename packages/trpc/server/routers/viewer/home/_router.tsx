@@ -1,8 +1,8 @@
 import authedProcedure from "../../../procedures/authedProcedure";
 import { router } from "../../../trpc";
+import { ZApplySetupInputSchema } from "./applySetup.schema";
 import { ZHomeCalendarInputSchema } from "./calendar.schema";
 import { ZPeekInputSchema } from "./peek.schema";
-import { ZApplySetupInputSchema } from "./applySetup.schema";
 
 export const homeRouter = router({
   get: authedProcedure.query(async ({ ctx }) => {
@@ -16,6 +16,10 @@ export const homeRouter = router({
   peek: authedProcedure.input(ZPeekInputSchema).query(async ({ ctx, input }) => {
     const { peekHandler } = await import("./peek.handler");
     return peekHandler({ ctx, input });
+  }),
+  notifications: authedProcedure.query(async ({ ctx }) => {
+    const { notificationsHandler } = await import("./notifications.handler");
+    return notificationsHandler({ ctx });
   }),
   applySetup: authedProcedure.input(ZApplySetupInputSchema).mutation(async ({ ctx, input }) => {
     const { applySetupHandler } = await import("./applySetup.handler");

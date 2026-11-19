@@ -1,4 +1,5 @@
 import dayjs from "@calcom/dayjs";
+import { WEBAPP_URL } from "@calcom/lib/constants";
 import { prisma } from "@calcom/prisma";
 import { BookingStatus, WaitlistEntryStatus } from "@calcom/prisma/enums";
 import type { TrpcSessionUser } from "@calcom/trpc/server/types";
@@ -17,7 +18,7 @@ export const calendarHandler = async ({ ctx, input }: Options) => {
   const from = monthStart.startOf("week").subtract(1, "day").toDate();
   const to = monthStart.endOf("month").endOf("week").add(1, "day").toDate();
 
-  const [bookings, waiting] = await Promise.all([
+  const [bookings, waiting, services] = await Promise.all([
     prisma.booking.findMany({
       where: { userId, startTime: { gte: from, lt: to }, status: { in: SHOWN } },
       orderBy: { startTime: "asc" },
@@ -37,8 +38,15 @@ export const calendarHandler = async ({ ctx, input }: Options) => {
         status: { in: [WaitlistEntryStatus.WAITING, WaitlistEntryStatus.OFFERED] },
         startTime: { gte: from, lt: to },
       },
-      select: { startTime: true },
+      orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
+      select: { uid: true, name: true, startTime: true, status: true },
       take: 2000,
+    }),
+    prisma.eventType.findMany({
+      where: { userId, teamId: null, hidden: false },
+      orderBy: [{ position: "desc" }, { id: "asc" }],
+      take: 20,
+      select: { id: true, title: true, slug: true, length: true },
     }),
   ]);
 
@@ -59,5 +67,16 @@ export const calendarHandler = async ({ ctx, input }: Options) => {
       service: booking.eventType?.title ?? "",
     })),
     waitlistByDay,
+    waitlist: waiting.map((entry) => ({
+      uid: entry.uid,
+      day: dayjs(entry.startTime).tz(timeZone).format("YYYY-MM-DD"),
+      time: dayjs(entry.startTime).tz(timeZone).format("h:mma"),
+      name: entry.name,
+      offered: entry.status === WaitlistEntryStatus.OFFERED,
+    })),
+    // The host adds a booking by booking their own page for the client, so the page links are all that's needed.
+    username: ctx.user.username ?? "",
+    bookingPageUrl: `${WEBAPP_URL}/${ctx.user.username ?? ""}`,
+    services,
   };
 };

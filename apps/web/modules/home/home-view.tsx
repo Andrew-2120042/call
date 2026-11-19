@@ -32,20 +32,26 @@ export default function HomeView() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const view = searchParams?.get("view") === "calendar" ? "calendar" : "overview";
+  // The calendar is what hosts open the app for, so it's the default; the numbers are one click away.
+  const view = searchParams?.get("view") === "overview" ? "overview" : "calendar";
   const { data } = trpc.viewer.home.get.useQuery();
   if (!data) return <HomeSkeleton />;
 
   const setView = (next: "overview" | "calendar") =>
-    router.replace(next === "overview" ? (pathname ?? "/home") : `${pathname}?view=calendar`, { scroll: false });
+    router.replace(next === "calendar" ? (pathname ?? "/home") : `${pathname}?view=overview`, {
+      scroll: false,
+    });
 
   return (
     <div className="mx-auto max-w-6xl" data-testid="home">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-emphasis text-xl font-medium tracking-[-0.01em]">{t("home_overview_title")}</h1>
+        <h1 className="text-emphasis text-xl font-medium tracking-[-0.01em]">{t(`home_view_${view}`)}</h1>
         <div className="flex items-center gap-2">
-          <div className="border-subtle flex rounded-md border p-0.5" role="tablist" data-testid="home-view-switch">
-            {(["overview", "calendar"] as const).map((option) => (
+          <div
+            className="border-subtle flex rounded-md border p-0.5"
+            role="tablist"
+            data-testid="home-view-switch">
+            {(["calendar", "overview"] as const).map((option) => (
               <button
                 key={option}
                 type="button"
@@ -121,7 +127,9 @@ function Overview({ data }: { data: HomeData }) {
           value={String(data.waitingApproval)}
           caption={t("home_waiting_for_you")}
           testId="home-stat-requests"
-          empty={!data.requests.length && <Empty title={t("home_no_requests")} body={t("home_no_requests_body")} />}>
+          empty={
+            !data.requests.length && <Empty title={t("home_no_requests")} body={t("home_no_requests_body")} />
+          }>
           {data.requests.map((request) => (
             <ListRow
               key={request.uid}
@@ -137,7 +145,11 @@ function Overview({ data }: { data: HomeData }) {
           value={String(data.waitlistCount)}
           caption={t("home_people_waiting")}
           testId="home-stat-waitlist"
-          empty={!data.waitlistPreview.length && <Empty title={t("home_no_waitlist")} body={t("home_no_waitlist_body")} />}>
+          empty={
+            !data.waitlistPreview.length && (
+              <Empty title={t("home_no_waitlist")} body={t("home_no_waitlist_body")} />
+            )
+          }>
           {data.waitlistPreview.map((entry) => (
             <ListRow
               key={entry.id}
@@ -157,7 +169,11 @@ function Overview({ data }: { data: HomeData }) {
           value={next ? fmt(next.startTime, "ddd h:mma") : "–"}
           caption={next?.attendeeName ?? undefined}
           testId="home-stat-next"
-          empty={!data.upcoming.length && <Empty title={t("home_nothing_booked")} body={t("home_nothing_booked_body")} />}>
+          empty={
+            !data.upcoming.length && (
+              <Empty title={t("home_nothing_booked")} body={t("home_nothing_booked_body")} />
+            )
+          }>
           {data.upcoming.slice(1).map((booking) => (
             <ListRow
               key={booking.uid}
@@ -237,7 +253,9 @@ function Cell(props: {
         )}
       </div>
       <p className="mt-3 flex min-w-0 items-baseline gap-2">
-        <span className="text-emphasis truncate text-[32px] font-light leading-none tracking-[-0.02em]">{props.value}</span>
+        <span className="text-emphasis truncate text-[32px] font-light leading-none tracking-[-0.02em]">
+          {props.value}
+        </span>
         {props.caption && <span className="text-subtle truncate text-[13px]">{props.caption}</span>}
       </p>
       <div className="mt-6 flex flex-1 flex-col gap-3">{props.empty || props.children}</div>
@@ -245,17 +263,36 @@ function Cell(props: {
   );
 }
 
-function BarRow({ label, ratio, value, strong }: { label: string; ratio: number; value: string; strong?: boolean }) {
+function BarRow({
+  label,
+  ratio,
+  value,
+  strong,
+}: {
+  label: string;
+  ratio: number;
+  value: string;
+  strong?: boolean;
+}) {
   return (
     <div className="flex items-center gap-3 text-[13px]">
       <span className={classNames("w-14 shrink-0", strong ? "text-emphasis" : "text-subtle")}>{label}</span>
       <span className="relative h-[2px] flex-1 rounded-full bg-[var(--cal-border-subtle)]">
         <span
-          className={classNames("absolute inset-y-0 left-0 rounded-full", strong ? "bg-inverted" : "bg-[var(--cal-text-subtle)]")}
+          className={classNames(
+            "absolute inset-y-0 left-0 rounded-full",
+            strong ? "bg-inverted" : "bg-[var(--cal-text-subtle)]"
+          )}
           style={{ width: `${Math.round(ratio * 100)}%` }}
         />
       </span>
-      <span className={classNames("w-8 shrink-0 text-right tabular-nums", strong ? "text-emphasis" : "text-subtle")}>{value}</span>
+      <span
+        className={classNames(
+          "w-8 shrink-0 text-right tabular-nums",
+          strong ? "text-emphasis" : "text-subtle"
+        )}>
+        {value}
+      </span>
     </div>
   );
 }
