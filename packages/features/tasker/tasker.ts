@@ -24,6 +24,9 @@ type TaskPayloads = {
   sendHostRequestEmail: z.infer<
     typeof import("./tasks/sendHostRequestEmail").sendHostRequestEmailPayloadSchema
   >;
+  sendRebookOfferEmail: z.infer<
+    typeof import("./tasks/sendRebookOfferEmail").sendRebookOfferEmailPayloadSchema
+  >;
   webhookDelivery: z.infer<
     typeof import("@calcom/features/webhooks/lib/types/webhookTask").webhookTaskPayloadSchema
   >;

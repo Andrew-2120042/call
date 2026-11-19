@@ -1,5 +1,6 @@
 "use client";
 
+import process from "node:process";
 import { ErrorCode } from "@calcom/features/auth/lib/ErrorCode";
 import { APP_NAME, HOSTED_CAL_FEATURES, WEBAPP_URL, WEBSITE_URL } from "@calcom/lib/constants";
 import { emailRegex } from "@calcom/lib/emailSchema";
@@ -27,6 +28,7 @@ import { signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import { AuthSplitLayout } from "./components/AuthSplitLayout";
 
 interface LoginValues {
   email: string;
@@ -171,7 +173,7 @@ export default function Login({
     process.env.NEXT_PUBLIC_DISABLE_SIGNUP !== "true" && searchParams?.get("register") !== "false";
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-default/80 px-4 py-10">
+    <AuthSplitLayout>
       <BackgroundGrid />
 
       <div className="relative z-10 flex w-full max-w-md flex-col items-center">
@@ -380,6 +382,6 @@ export default function Login({
       </div>
 
       <AddToHomescreen />
-    </div>
+    </AuthSplitLayout>
   );
 }

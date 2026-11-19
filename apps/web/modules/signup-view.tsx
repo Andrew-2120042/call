@@ -1,5 +1,6 @@
 "use client";
 
+import process from "node:process";
 import getStripe from "@calcom/app-store/stripepayment/lib/client";
 import { getPremiumPlanPriceValue } from "@calcom/app-store/stripepayment/lib/utils";
 import {
@@ -49,6 +50,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm, useFormContext } from "react-hook-form";
 import { Toaster } from "sonner";
 import { z } from "zod";
+import { AuthSplitLayout } from "./auth/components/AuthSplitLayout";
 
 const signupSchema = apiSignupSchema.extend({
   apiError: z.string().optional(), // Needed to display API errors doesn't get passed to the API
@@ -315,7 +317,7 @@ export default function Signup({
 
   return (
     <>
-      <div className="bg-cal-muted flex min-h-screen w-full flex-col items-center justify-center px-4 py-10">
+      <AuthSplitLayout>
         <div className="border-subtle bg-default w-full max-w-md rounded-2xl border p-8 sm:p-10">
           <div className="flex w-full flex-col">
             {accountUnderReview ? (
@@ -700,7 +702,7 @@ export default function Signup({
           </div>
         </div>
         <Toaster position="bottom-right" />
-      </div>
+      </AuthSplitLayout>
     </>
   );
 }

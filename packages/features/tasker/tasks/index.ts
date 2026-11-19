@@ -20,16 +20,20 @@ const tasks: Record<TaskTypes, () => Promise<TaskHandler>> = {
     import("./analytics/sendAnalyticsEvent").then((module) => module.sendAnalyticsEvent),
   sendAwaitingPaymentEmail: () =>
     import("./sendAwaitingPaymentEmail").then((module) => module.sendAwaitingPaymentEmail),
-  sendHostRequestEmail: () =>
-    import("./sendHostRequestEmail").then((module) => module.sendHostRequestEmail),
+  sendHostRequestEmail: () => import("./sendHostRequestEmail").then((module) => module.sendHostRequestEmail),
   bookingAudit: () => import("./bookingAudit").then((module) => module.bookingAudit),
   webhookDelivery: () => import("./webhookDelivery").then((module) => module.webhookDelivery),
+  sendRebookOfferEmail: () => import("./sendRebookOfferEmail").then((module) => module.sendRebookOfferEmail),
 };
 
 export const tasksConfig = {
   createCRMEvent: {
     minRetryIntervalMins: IS_PRODUCTION ? 10 : 1,
     maxAttempts: 10,
+  },
+  sendRebookOfferEmail: {
+    minRetryIntervalMins: IS_PRODUCTION ? 10 : 1,
+    maxAttempts: 2,
   },
   webhookDelivery: {
     minRetryIntervalMins: IS_PRODUCTION ? 5 : 1,
