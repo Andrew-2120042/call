@@ -848,6 +848,7 @@ const UseTeamEventScheduleSettingsToggle = ({
           checked={!useHostSchedulesForTeamEvent}
           onCheckedChange={toggleScheduleState}
           title={t("choose_common_schedule_team_event")}
+            help={t("help_choose_common_schedule_team_event")}
           description={t("choose_common_schedule_team_event_description")}>
           <EventTypeSchedule
             customClassNames={customClassNames?.userAvailability}
@@ -872,6 +873,7 @@ const UseTeamEventScheduleSettingsToggle = ({
             checked={restrictScheduleForHosts}
             onCheckedChange={toggleRestrictScheduleState}
             title={t("choose_restriction_schedule")}
+            help={t("help_choose_restriction_schedule")}
             description={t("restriction_schedule_description")}>
             <EventTypeSchedule
               customClassNames={customClassNames?.userAvailability}

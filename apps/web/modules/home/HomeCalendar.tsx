@@ -7,6 +7,7 @@ import classNames from "@calcom/ui/classNames";
 import { Icon } from "@calcom/ui/components/icon";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { usePeek } from "~/peek/peekStore";
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const SHOWN_PER_DAY = 3;
@@ -14,6 +15,7 @@ const SHOWN_PER_DAY = 3;
 /** The host's month: who's booked, which are requests, and how many people wait for each day. */
 export function HomeCalendar() {
   const { t } = useLocale();
+  const openPeek = usePeek((state) => state.open);
   const [month, setMonth] = useState(() => dayjs().format("YYYY-MM"));
   const { data, isPending } = trpc.viewer.home.calendar.useQuery({ month }, { placeholderData: (previous) => previous });
 
@@ -123,10 +125,13 @@ export function HomeCalendar() {
                   </div>
                   <ul className="mt-1.5 space-y-1">
                     {list.slice(0, SHOWN_PER_DAY).map((booking) => (
-                      <li key={booking.uid}>
-                        <Link
-                          href={`/booking/${booking.uid}`}
+                      <li key={booking.uid} className="group/chip relative">
+                        <button
+                          type="button"
+                          onClick={() => openPeek({ kind: "booking", uid: booking.uid })}
+                          data-testid="home-calendar-chip"
                           className={classNames(
+                            "w-full text-left",
                             "flex items-center gap-1.5 rounded border px-1.5 py-0.5 text-[11px] transition",
                             booking.isRequest
                               ? "border-amber-400/30 bg-amber-400/10 text-amber-200 hover:bg-amber-400/20"
@@ -134,7 +139,21 @@ export function HomeCalendar() {
                           )}>
                           <span className="min-w-0 flex-1 truncate">{booking.attendeeName}</span>
                           <span className="shrink-0 opacity-70">{booking.time}</span>
-                        </Link>
+                        </button>
+                        {/* Hover card: a quick look before opening the full panel. */}
+                        <div
+                          role="tooltip"
+                          className="bg-default border-subtle pointer-events-none absolute left-0 top-full z-20 mt-1 hidden w-56 rounded-md border p-2.5 shadow-xl group-hover/chip:block">
+                          <p className="text-emphasis text-[12px] font-medium">{booking.attendeeName}</p>
+                          <p className="text-subtle text-[11px]">{booking.service}</p>
+                          <p className="text-default mt-1.5 text-[11px]">
+                            {dayjs(day).format("ddd D MMM")}, {booking.time}
+                          </p>
+                          <p className={classNames("mt-1 text-[11px]", booking.isRequest ? "text-amber-300" : "text-emerald-300")}>
+                            {t(booking.isRequest ? "home_calendar_hover_request" : "home_calendar_hover_booked")}
+                          </p>
+                          <p className="text-subtle mt-1.5 text-[11px]">{t("home_calendar_hover_hint")}</p>
+                        </div>
                       </li>
                     ))}
                     {list.length > SHOWN_PER_DAY && (

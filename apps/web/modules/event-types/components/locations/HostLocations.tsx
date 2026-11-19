@@ -856,6 +856,7 @@ export const HostLocations = ({ eventTypeId, locationOptions }: HostLocationsPro
       <div className="space-y-4">
         <SettingsToggle
           title={t("enable_custom_host_locations")}
+            help={t("help_enable_custom_host_locations")}
           description={t("enable_custom_host_locations_description")}
           checked={enablePerHostLocations}
           onCheckedChange={handleToggle}

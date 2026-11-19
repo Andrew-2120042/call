@@ -1,5 +1,6 @@
 "use client";
 
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
@@ -157,7 +158,7 @@ export default function CalendlyImportView() {
                         onChange={() => setScheduleUri(schedule.uri)}
                       />
                       <span>
-                        {schedule.name} <span className="text-subtle">({schedule.timeZone})</span>
+                        {schedule.name} <span className="text-subtle">({timeZoneLabel(schedule.timeZone)})</span>
                         <span className="text-subtle block">{schedule.summary}</span>
                       </span>
                     </label>

@@ -1,5 +1,4 @@
 import SectionBottomActions from "@calcom/features/settings/SectionBottomActions";
-import ServerTrans from "@calcom/lib/components/ServerTrans";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import {
   type BookerLayoutSettings,
@@ -13,7 +12,7 @@ import { Button } from "@calcom/ui/components/button";
 import { CheckboxField, Label } from "@calcom/ui/components/form";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 type BookerLayoutSelectorProps = {
@@ -128,10 +127,10 @@ const BookerLayoutFields = ({
   isUserLoading,
 }: BookerLayoutFieldsProps) => {
   const { t } = useLocale();
-  const [isOverridingSettings, setIsOverridingSettings] = useState(false);
-
-  const disableFields = showUserSettings && !isOverridingSettings;
-  const shownSettings = disableFields ? user?.defaultBookerLayouts : settings;
+  // Inside a service's editor the layout is edited right there: it starts from the account default and saves
+  // for this service, instead of pointing people to another settings page first.
+  const disableFields = false;
+  const shownSettings = settings ?? (showUserSettings ? user?.defaultBookerLayouts : settings);
   const defaultLayout = shownSettings?.defaultLayout || BookerLayouts.MONTH_VIEW;
 
   // Converts the settings array into a boolean object, which can be used as form values.
@@ -176,11 +175,6 @@ const BookerLayoutFields = ({
     [toggleValues, onChange]
   );
 
-  const onOverrideSettings = () => {
-    setIsOverridingSettings(true);
-    // Sent default layout settings to form, otherwise it would still have 'null' as it's value.
-    if (user?.defaultBookerLayouts) onChange(user.defaultBookerLayouts);
-  };
   return (
     <div className={classNames("stack-y-5", !isOuterBorder && "px-6 pb-7 pt-5")}>
       <div
@@ -233,30 +227,6 @@ const BookerLayoutFields = ({
           ))}
         </RadioGroup.Root>
       </div>
-      {disableFields && (
-        <p className="text-sm">
-          <ServerTrans
-            t={t}
-            i18nKey="bookerlayout_override_global_settings"
-            components={[
-              <Link
-                key="appearance-link"
-                target="_blank"
-                href="/settings/my-account/appearance"
-                className="underline">
-                Appearance
-              </Link>,
-              <Button
-                key="override-button"
-                onClick={onOverrideSettings}
-                color="minimal"
-                className="h-fit p-0 font-normal underline hover:bg-transparent focus-visible:bg-transparent">
-                Override
-              </Button>,
-            ]}
-          />
-        </p>
-      )}
     </div>
   );
 };

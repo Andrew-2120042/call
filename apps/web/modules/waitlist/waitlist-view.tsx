@@ -8,6 +8,7 @@ import classNames from "@calcom/ui/classNames";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
 import { useMemo, useState } from "react";
+import { usePeek } from "~/peek/peekStore";
 import { ListSkeleton } from "~/shell/skeletons";
 
 type Entry = RouterOutputs["viewer"]["waitlist"]["list"][number];
@@ -38,6 +39,7 @@ export default function WaitlistView() {
   const utils = trpc.useUtils();
   const list = trpc.viewer.waitlist.list.useQuery();
   const [filter, setFilter] = useState<"all" | "offered">("all");
+  const openPeek = usePeek((state) => state.open);
   const remove = trpc.viewer.waitlist.remove.useMutation({
     onSuccess: async () => {
       showToast(t("waitlist_removed"), "success");
@@ -139,7 +141,13 @@ export default function WaitlistView() {
                         )}>
                         {index + 1}
                       </span>
-                      <span className="text-emphasis">{entry.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => openPeek({ kind: "waitlist", uid: entry.uid })}
+                        className="text-emphasis hover:underline"
+                        data-testid="waitlist-person">
+                        {entry.name}
+                      </button>
                       {entry.status === "OFFERED" && entry.offerExpiresAt && (
                         <span className="text-sky-200">
                           {t("waitlist_chip_offered", {

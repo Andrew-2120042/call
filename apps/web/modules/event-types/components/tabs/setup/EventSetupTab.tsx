@@ -340,6 +340,7 @@ export const EventSetupTab = (
             <div className="mt-4! [&_label]:my-1 [&_label]:font-normal">
               <SettingsToggle
                 title={t("allow_multiple_durations")}
+            help={t("help_allow_multiple_durations")}
                 checked={multipleDuration !== undefined}
                 disabled={seatsEnabled}
                 tooltip={seatsEnabled ? t("seat_options_doesnt_multiple_durations") : undefined}

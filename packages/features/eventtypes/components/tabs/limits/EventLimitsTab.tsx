@@ -655,6 +655,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
               toggleSwitchAtTheEnd={true}
               labelClassName={classNames("text-sm", customClassNames?.bookingFrequencyLimit?.label)}
               title={t("limit_booking_frequency")}
+            help={t("help_limit_booking_frequency")}
               Badge={
                 hasTeamLimits()
                   ? TeamLimitsBadge({ isManagedChild: !!eventType.parent, teamId: eventType.team?.id })
@@ -715,6 +716,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
               toggleSwitchAtTheEnd={true}
               labelClassName={classNames("text-sm", customClassNames?.firstAvailableSlotOnly?.label)}
               title={t("only_show_first_available_slot")}
+            help={t("help_only_show_first_available_slot")}
               description={t("only_show_first_available_slot_description")}
               checked={isChecked}
               {...onlyFirstAvailableSlotLocked}
@@ -748,6 +750,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
               childrenClassName={classNames("lg:ml-0", customClassNames?.totalDurationLimit?.children)}
               descriptionClassName={customClassNames?.totalDurationLimit?.description}
               title={t("limit_total_booking_duration")}
+            help={t("help_limit_total_booking_duration")}
               description={t("limit_total_booking_duration_description")}
               {...durationLimitsLocked}
               checked={isChecked}
@@ -798,6 +801,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
               childrenClassName={classNames("lg:ml-0", customClassNames?.futureBookingLimit?.children)}
               descriptionClassName={customClassNames?.futureBookingLimit?.description}
               title={t("limit_future_bookings")}
+            help={t("help_limit_future_bookings")}
               description={
                 <LearnMoreLink
                   t={t}
@@ -868,6 +872,7 @@ export const EventLimitsTab = ({ eventType, customClassNames }: EventLimitsTabPr
           )}
           childrenClassName={classNames("lg:ml-0", customClassNames?.offsetStartTimes?.children)}
           title={t("offset_toggle")}
+            help={t("help_offset_toggle")}
           descriptionClassName={customClassNames?.offsetStartTimes?.description}
           description={t("offset_toggle_description")}
           {...offsetStartLockedProps}

@@ -1,5 +1,6 @@
 "use client";
 
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import dayjs from "@calcom/dayjs";
 import { Dialog } from "@calcom/features/components/controlled-dialog";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -24,7 +25,7 @@ const TimezoneChangeDialogContent = () => {
 
   const utils = trpc.useUtils();
 
-  const formattedCurrentTz = CURRENT_TIMEZONE.replace("_", " ");
+  const formattedCurrentTz = timeZoneLabel(CURRENT_TIMEZONE);
 
   const onMutationSuccess = async () => {
     showToast(

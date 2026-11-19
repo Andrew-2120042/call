@@ -81,6 +81,7 @@ export default function DisableReschedulingController({
               childrenClassName={classNames("lg:ml-0", customClassNames?.children)}
               descriptionClassName={customClassNames?.description}
               title={t("disable_rescheduling")}
+            help={t("help_disable_rescheduling")}
               data-testid="disable-rescheduling-toggle"
               disabled={disableReschedulingLocked.disabled}
               LockedIcon={disableReschedulingLocked.LockedIcon}

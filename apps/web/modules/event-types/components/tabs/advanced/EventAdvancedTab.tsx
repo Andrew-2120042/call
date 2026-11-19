@@ -720,6 +720,7 @@ export const EventAdvancedTab = ({
                 toggleSwitchAtTheEnd={true}
                 switchContainerClassName="border-subtle rounded-lg border py-6 px-4 sm:px-6"
                 title={t("disable_cancelling")}
+            help={t("help_disable_cancelling")}
                 data-testid="disable-cancelling-toggle"
                 {...disableCancellingLocked}
                 description={
@@ -804,6 +805,7 @@ export const EventAdvancedTab = ({
               childrenClassName="lg:ml-0"
               data-testid="event-interface-language-toggle"
               title={t("interface_language")}
+            help={t("help_interface_language")}
               description={t("interface_language_description")}
               checked={interfaceLanguageVisible}
               {...shouldLockIndicator("interfaceLanguage")}
@@ -843,6 +845,7 @@ export const EventAdvancedTab = ({
               customClassNames?.bookerEmailVerification?.container
             )}
             title={t("requires_booker_email_verification")}
+            help={t("help_requires_booker_email_verification")}
             data-testid="requires-booker-email-verification"
             {...requiresBookerEmailVerificationProps}
             description={t("description_requires_booker_email_verification")}
@@ -865,6 +868,7 @@ export const EventAdvancedTab = ({
             descriptionClassName={customClassNames?.calendarNotes?.description}
             data-testid="disable-notes"
             title={t("disable_notes")}
+            help={t("help_disable_notes")}
             {...hideCalendarNotesLocked}
             description={
               <LearnMoreLink
@@ -890,6 +894,7 @@ export const EventAdvancedTab = ({
             )}
             descriptionClassName={customClassNames?.eventDetailsVisibility?.description}
             title={t("hide_calendar_event_details")}
+            help={t("help_hide_calendar_event_details")}
             {...hideCalendarEventDetailsLocked}
             description={t("description_hide_calendar_event_details")}
             checked={value}
@@ -912,6 +917,7 @@ export const EventAdvancedTab = ({
               childrenClassName={classNames("lg:ml-0", customClassNames?.bookingRedirect?.children)}
               descriptionClassName={customClassNames?.bookingRedirect?.description}
               title={t("redirect_success_booking")}
+            help={t("help_redirect_success_booking")}
               data-testid="redirect-success-booking"
               {...successRedirectUrlLocked}
               description={t("redirect_url_description")}
@@ -988,6 +994,7 @@ export const EventAdvancedTab = ({
                 childrenClassName="lg:ml-0"
                 data-testid="multiplePrivateLinksCheck"
                 title={t("multiple_private_links_title")}
+            help={t("help_multiple_private_links_title")}
                 {...multiplePrivateLinksLocked}
                 description={
                   <LearnMoreLink
@@ -1041,6 +1048,7 @@ export const EventAdvancedTab = ({
               descriptionClassName={customClassNames?.seatsOptions?.description}
               data-testid="offer-seats-toggle"
               title={t("offer_seats")}
+            help={t("help_offer_seats")}
               {...seatsLocked}
               description={
                 <LearnMoreLink
@@ -1173,6 +1181,7 @@ export const EventAdvancedTab = ({
               customClassNames?.hideOrganizerEmail?.container
             )}
             title={t("hide_organizer_email")}
+            help={t("help_hide_organizer_email")}
             {...hideOrganizerEmailLocked}
             description={
               <LearnMoreLink
@@ -1209,6 +1218,7 @@ export const EventAdvancedTab = ({
                 showSelector && "rounded-b-none"
               )}
               title={t("lock_timezone_toggle_on_booking_page")}
+            help={t("help_lock_timezone_toggle_on_booking_page")}
               {...lockTimeZoneToggleOnBookingPageLocked}
               description={
                 <LearnMoreLink
@@ -1262,6 +1272,7 @@ export const EventAdvancedTab = ({
             toggleSwitchAtTheEnd={true}
             switchContainerClassName={classNames("border-subtle rounded-lg border py-6 px-4 sm:px-6")}
             title={t("allow_rescheduling_past_events")}
+            help={t("help_allow_rescheduling_past_events")}
             {...reschedulingPastBookingsLocked}
             description={
               <LearnMoreLink
@@ -1284,6 +1295,7 @@ export const EventAdvancedTab = ({
             toggleSwitchAtTheEnd={true}
             switchContainerClassName="border-subtle rounded-lg border py-6 px-4 sm:px-6"
             title={t("allow_rescheduling_cancelled_bookings")}
+            help={t("help_allow_rescheduling_cancelled_bookings")}
             data-testid="allow-rescheduling-cancelled-bookings-toggle"
             {...allowReschedulingCancelledBookingsLocked}
             description={t("description_allow_rescheduling_cancelled_bookings")}
@@ -1310,6 +1322,7 @@ export const EventAdvancedTab = ({
               descriptionClassName={customClassNames?.customReplyToEmail?.description}
               childrenClassName={classNames("lg:ml-0", customClassNames?.customReplyToEmail?.children)}
               title={t("custom_reply_to_email_title")}
+            help={t("help_custom_reply_to_email_title")}
               {...customReplyToEmailLocked}
               data-testid="custom-reply-to-email"
               description={t("custom_reply_to_email_description")}
@@ -1350,6 +1363,7 @@ export const EventAdvancedTab = ({
               customClassNames?.eventTypeColors?.container
             )}
             title={t("event_type_color")}
+            help={t("help_event_type_color")}
             {...eventTypeColorLocked}
             description={t("event_type_color_description")}
             descriptionClassName={customClassNames?.eventTypeColors?.description}
@@ -1433,6 +1447,7 @@ export const EventAdvancedTab = ({
               toggleSwitchAtTheEnd={true}
               labelClassName="text-sm"
               title={t("show_optimized_slots")}
+            help={t("help_show_optimized_slots")}
               description={
                 <LearnMoreLink
                   t={t}
@@ -1465,6 +1480,7 @@ export const EventAdvancedTab = ({
                 customClassNames?.roundRobinReschedule?.container
               )}
               title={t("reschedule_with_same_round_robin_host_title")}
+            help={t("help_reschedule_with_same_round_robin_host_title")}
               description={t("reschedule_with_same_round_robin_host_description")}
               descriptionClassName={customClassNames?.roundRobinReschedule?.description}
               checked={value}

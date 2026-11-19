@@ -1,3 +1,5 @@
+import { Tooltip } from "../../tooltip/Tooltip";
+import { Icon } from "../../icon/Icon";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import type { ReactNode } from "react";
 
@@ -17,6 +19,8 @@ type Props = {
   onCheckedChange?: (checked: boolean) => void;
   "data-testid"?: string;
   tooltip?: string;
+  /** Plain-language explanation shown behind a small "?" next to the title. */
+  help?: string;
   toggleSwitchAtTheEnd?: boolean;
   childrenClassName?: string;
   switchContainerClassName?: string;
@@ -36,6 +40,7 @@ export function SettingsToggle({
   children,
   disabled,
   tooltip,
+  help,
   toggleSwitchAtTheEnd = false,
   childrenClassName,
   switchContainerClassName,
@@ -66,6 +71,7 @@ export function SettingsToggle({
                     {title}
                     {LockedIcon}
                   </Label>
+                  {help && <HelpTip text={help} />}
                   {Badge && <div className="mb-2">{Badge}</div>}
                 </div>
                 {description && (
@@ -108,6 +114,7 @@ export function SettingsToggle({
                   className={classNames("text-emphasis text-sm font-semibold leading-none", labelClassName)}>
                   {title} {Badge ? Badge : null}
                   {LockedIcon}
+                  {help && <HelpTip text={help} />}
                 </Label>
                 {description && <p className="text-default -mt-1.5 text-sm leading-normal">{description}</p>}
               </div>
@@ -121,5 +128,19 @@ export function SettingsToggle({
         </fieldset>
       </div>
     </>
+  );
+}
+
+function HelpTip({ text }: { text: string }) {
+  return (
+    <Tooltip side="top" content={<span className="block max-w-xs whitespace-normal text-left">{text}</span>}>
+      <button
+        type="button"
+        aria-label={text}
+        onClick={(event) => event.preventDefault()}
+        className="text-subtle hover:text-emphasis inline-grid h-4 w-4 place-items-center align-middle">
+        <Icon name="circle-help" className="h-3.5 w-3.5" />
+      </button>
+    </Tooltip>
   );
 }

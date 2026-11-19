@@ -1,5 +1,6 @@
 "use client";
 
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import SettingsHeader from "@calcom/features/settings/appDir/SettingsHeader";
 import SectionBottomActions from "@calcom/features/settings/SectionBottomActions";
 import { formatLocalizedDateTime } from "@calcom/lib/dayjs";
@@ -241,7 +242,7 @@ const GeneralView = ({ user, travelSchedules }: GeneralViewProps) => {
                                 )}`
                               : ``
                           }`}</div>
-                          <div className="text-subtle">{schedule.timeZone.replace(/_/g, " ")}</div>
+                          <div className="text-subtle">{timeZoneLabel(schedule.timeZone)}</div>
                         </div>
                         <Button
                           color="destructive"

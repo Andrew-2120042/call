@@ -27,6 +27,7 @@ export const calendarHandler = async ({ ctx, input }: Options) => {
         title: true,
         startTime: true,
         status: true,
+        eventType: { select: { title: true } },
         attendees: { select: { name: true }, take: 1 },
       },
     }),
@@ -55,6 +56,7 @@ export const calendarHandler = async ({ ctx, input }: Options) => {
       time: dayjs(booking.startTime).tz(timeZone).format("h:mma"),
       attendeeName: booking.attendees[0]?.name ?? booking.title,
       isRequest: booking.status === BookingStatus.PENDING,
+      service: booking.eventType?.title ?? "",
     })),
     waitlistByDay,
   };

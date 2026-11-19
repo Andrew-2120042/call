@@ -86,6 +86,7 @@ export default function RecurringEventController({
               childrenClassName={classNames("lg:ml-0", customClassNames?.recurringToggle?.children)}
               descriptionClassName={customClassNames?.recurringToggle?.description}
               title={t("recurring_event")}
+            help={t("help_recurring_event")}
               {...recurringLocked}
               description={
                 <LearnMoreLink

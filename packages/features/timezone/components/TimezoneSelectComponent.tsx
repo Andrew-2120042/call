@@ -1,5 +1,6 @@
 "use client";
 
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import type { Timezones } from "@calcom/lib/timezone";
 import { addTimezonesToDropdown, filterBySearchText, handleOptionLabel } from "@calcom/lib/timezone";
 import classNames from "@calcom/ui/classNames";
@@ -82,7 +83,7 @@ export function TimezoneSelectComponent({
   );
 
   const formatOption = useCallback(
-    (option: unknown) => <p className="truncate">{(option as ITimezoneOption).value.replace(/_/g, " ")}</p>,
+    (option: unknown) => <p className="truncate">{timeZoneLabel((option as ITimezoneOption).value)}</p>,
     []
   );
 

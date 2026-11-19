@@ -10,6 +10,8 @@ import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
+import type { PeekTarget } from "~/peek/peekStore";
+import { usePeek } from "~/peek/peekStore";
 import { HomeSkeleton } from "~/shell/skeletons";
 import { HomeCalendar } from "./HomeCalendar";
 import { SetupChecklist } from "./SetupChecklist";
@@ -123,7 +125,7 @@ function Overview({ data }: { data: HomeData }) {
           {data.requests.map((request) => (
             <ListRow
               key={request.uid}
-              href={`/booking/${request.uid}`}
+              peek={{ kind: "booking", uid: request.uid }}
               name={request.attendeeName ?? t("unknown")}
               value={fmt(request.startTime, "ddd D MMM")}
             />
@@ -139,6 +141,7 @@ function Overview({ data }: { data: HomeData }) {
           {data.waitlistPreview.map((entry) => (
             <ListRow
               key={entry.id}
+              peek={{ kind: "waitlist", uid: entry.uid }}
               name={entry.name}
               detail={entry.offered ? t("home_offered") : entry.serviceTitle}
               value={fmt(entry.startTime, "ddd D MMM")}
@@ -158,7 +161,7 @@ function Overview({ data }: { data: HomeData }) {
           {data.upcoming.slice(1).map((booking) => (
             <ListRow
               key={booking.uid}
-              href={`/booking/${booking.uid}`}
+              peek={{ kind: "booking", uid: booking.uid }}
               name={booking.attendeeName ?? booking.title}
               detail={booking.isRequest ? t("home_request") : undefined}
               value={fmt(booking.startTime, "ddd D, h:mma")}
@@ -257,7 +260,20 @@ function BarRow({ label, ratio, value, strong }: { label: string; ratio: number;
   );
 }
 
-function ListRow({ name, detail, value, href }: { name: string; detail?: string; value: string; href?: string }) {
+function ListRow({
+  name,
+  detail,
+  value,
+  href,
+  peek,
+}: {
+  name: string;
+  detail?: string;
+  value: string;
+  href?: string;
+  peek?: PeekTarget;
+}) {
+  const openPeek = usePeek((state) => state.open);
   const body = (
     <>
       <span className="text-emphasis truncate">{name}</span>
@@ -265,6 +281,15 @@ function ListRow({ name, detail, value, href }: { name: string; detail?: string;
       <span className="text-default ml-auto shrink-0 tabular-nums">{value}</span>
     </>
   );
+  if (peek)
+    return (
+      <button
+        type="button"
+        onClick={() => openPeek(peek)}
+        className="hover:text-emphasis -mx-1.5 flex min-w-0 items-baseline gap-2 rounded px-1.5 text-left text-[13px] hover:bg-subtle">
+        {body}
+      </button>
+    );
   return href ? (
     <Link href={href} className="hover:text-emphasis flex min-w-0 items-baseline gap-2 text-[13px]">
       {body}

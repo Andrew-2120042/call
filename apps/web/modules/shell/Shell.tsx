@@ -1,5 +1,6 @@
 "use client";
 
+import { PeekPanel } from "~/peek/PeekPanel";
 import { AppTopBar } from "./AppTopBar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
@@ -35,6 +36,7 @@ const Layout = (props: LayoutProps) => {
       <div>
         <Toaster position="bottom-right" />
       </div>
+      <PeekPanel />
 
       <TimezoneChangeDialog />
       <DynamicModals />

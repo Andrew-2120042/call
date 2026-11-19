@@ -1,4 +1,5 @@
 import { RequestInsightLine } from "@calcom/web/modules/bookings/components/RequestInsightPanel";
+import { usePeek } from "~/peek/peekStore";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -90,16 +91,21 @@ function buildParsedBooking(booking: BookingItemProps) {
 
 const ConditionalLink = ({
   children,
-  onClick,
+  onClick: onClickProp,
   bookingLink,
+  bookingUid,
   className,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
   bookingLink: string;
+  bookingUid?: string;
   className?: string;
 }) => {
   const { t } = useLocale();
+  const openPeek = usePeek((state) => state.open);
+  // Without the engine's own details sheet, a row opens our quick-view panel instead of leaving the list.
+  const onClick = onClickProp ?? (bookingUid ? () => openPeek({ kind: "booking", uid: bookingUid }) : undefined);
 
   if (onClick) {
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -294,7 +300,7 @@ function BookingListItem(booking: BookingItemProps) {
         <div className="sm:min-w-48 hidden align-top ltr:pl-3 rtl:pr-6 sm:table-cell">
           <div className="flex h-full items-center">
             {eventTypeColor && <div className="h-[70%] w-0.5" style={{ backgroundColor: eventTypeColor }} />}
-            <ConditionalLink onClick={onClick} bookingLink={bookingLink} className="ml-3">
+            <ConditionalLink onClick={onClick} bookingLink={bookingLink} bookingUid={booking.uid} className="ml-3">
               <div className="cursor-pointer py-4">
                 <div className="text-emphasis text-sm leading-6">{startTime}</div>
                 <div className="text-subtle text-sm">
@@ -346,7 +352,7 @@ function BookingListItem(booking: BookingItemProps) {
         <div
           data-testid="title-and-attendees"
           className={classNames("flex-1 px-4", isRejected && "line-through")}>
-          <ConditionalLink onClick={onClick} bookingLink={bookingLink} className="flex h-full flex-col">
+          <ConditionalLink onClick={onClick} bookingLink={bookingLink} bookingUid={booking.uid} className="flex h-full flex-col">
             {/* Time and Badges for mobile */}
             <div className="w-full pb-2 pt-4 sm:hidden">
               <div className="flex w-full items-center justify-between sm:hidden">

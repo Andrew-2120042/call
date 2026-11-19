@@ -1,5 +1,6 @@
 "use client";
 
+import { usePeek } from "~/peek/peekStore";
 import { type ReactNode, useState } from "react";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
@@ -191,18 +192,31 @@ function SuggestedReply({ bookingUid, initial, clientName }: { bookingUid: strin
 
 /** One line for the bookings list: the fit, a spam flag and the start of the summary. */
 export function RequestInsightLine({ bookingUid }: { bookingUid: string }) {
+  const { t } = useLocale();
+  const openPeek = usePeek((state) => state.open);
   const query = trpc.viewer.requestInsights.get.useQuery({ bookingUid }, { retry: false, staleTime: 60_000 });
   const insight = query.data?.insight;
   // The line keeps its height whether it's loading, empty or filled, so list rows never change size.
-  if (!insight) return <div className="mt-1.5 h-5" aria-hidden />;
+  if (!insight) return <div className="mb-2.5 mt-2 h-5" aria-hidden />;
   return (
     <div
-      className="mt-1.5 flex h-5 min-w-0 max-w-[16rem] items-center gap-1.5 sm:max-w-56 md:max-w-80 xl:max-w-md"
+      className="mb-2.5 mt-2 flex h-5 min-w-0 max-w-[18rem] items-center gap-2 sm:max-w-64 md:max-w-96 xl:max-w-xl"
       data-testid="request-insight-line">
       <RequestFitBadges fit={insight.fit as Fit} spamLikely={insight.spamLikely} />
       <span className="text-subtle min-w-0 truncate text-xs" title={insight.summary}>
         {insight.summary}
       </span>
+      <button
+        type="button"
+        onClick={(event) => {
+          // The row itself also opens the panel; stop here so it opens once.
+          event.stopPropagation();
+          openPeek({ kind: "booking", uid: bookingUid });
+        }}
+        className="text-default hover:text-emphasis shrink-0 text-xs underline underline-offset-2"
+        data-testid="request-view-message">
+        {t("request_view_message")}
+      </button>
     </div>
   );
 }

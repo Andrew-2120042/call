@@ -1,5 +1,6 @@
 "use client";
 
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 
@@ -95,7 +96,7 @@ export function ScheduleListItem({
             {(schedule.timeZone || displayOptions?.timeZone) && (
               <span className="my-1 flex items-center first-letter:text-xs">
                 <GlobeIcon className="h-3.5 w-3.5" />
-                &nbsp;{schedule.timeZone ?? displayOptions?.timeZone}
+                &nbsp;{timeZoneLabel(schedule.timeZone ?? displayOptions?.timeZone ?? "")}
               </span>
             )}
           </p>

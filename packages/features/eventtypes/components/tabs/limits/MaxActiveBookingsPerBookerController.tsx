@@ -50,6 +50,7 @@ export default function MaxActiveBookingsPerBookerController({
             )}
             childrenClassName={classNames("lg:ml-0")}
             title={t("booker_upcoming_limit")}
+            help={t("help_booker_upcoming_limit")}
             description={
               <LearnMoreLink
                 t={t}

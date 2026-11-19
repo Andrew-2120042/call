@@ -91,7 +91,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
       },
       orderBy: [{ startTime: "asc" }, { createdAt: "asc" }],
       take: 5,
-      select: { id: true, name: true, startTime: true, status: true, eventType: { select: { title: true } } },
+      select: { id: true, uid: true, name: true, startTime: true, status: true, eventType: { select: { title: true } } },
     }),
     prisma.booking.findMany({
       where: { userId, status: BookingStatus.PENDING, startTime: { gte: now } },
@@ -145,6 +145,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
     timeZone: ctx.user.timeZone,
     waitlistPreview: waitlistPreview.map((entry) => ({
       id: entry.id,
+      uid: entry.uid,
       name: entry.name,
       startTime: entry.startTime,
       offered: entry.status === WaitlistEntryStatus.OFFERED,
