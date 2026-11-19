@@ -67,7 +67,7 @@ export const docs: DocPage[] = [
       { type: "steps", items: [
         "Open **Services** and click **New**.",
         "Give it a title and a length, for example *Intro call · 15 minutes*.",
-        "Pick a location: built-in video, Google Meet, Zoom, a phone call or an address.",
+        "Pick a location: Google Meet, Zoom, Microsoft Teams, a phone call or an address.",
         "Save. The service gets its own link straight away.",
       ] },
       { type: "image", src: "/shots/booking.png", alt: `A ${site.name} booking page`, caption: "What your clients see when they open the link." },
@@ -211,7 +211,7 @@ export const docs: DocPage[] = [
       { type: "h2", text: "Calendars" },
       { type: "list", items: ["Google Calendar", "Outlook and Microsoft 365", "Apple iCloud (with an app-specific password)", "Any CalDAV calendar, like Fastmail or Nextcloud"] },
       { type: "h2", text: "Video" },
-      { type: "list", items: ["Built-in video, nothing to install", "Google Meet", "Zoom", "Microsoft Teams"] },
+      { type: "list", items: ["Google Meet", "Zoom", "Microsoft Teams"] },
       { type: "h2", text: "CRM" },
       { type: "p", text: "HubSpot, Salesforce and Pipedrive. New bookings create or update the contact and log the meeting." },
       { type: "h2", text: "Automation" },

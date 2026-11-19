@@ -247,7 +247,7 @@ export const pricing = [
     items: [
       "Unlimited services and bookings",
       "Google, Outlook and Apple calendar sync",
-      "Google Meet, Zoom and built-in video",
+      "Google Meet, Zoom and Microsoft Teams",
       "Approvals and unlimited booking questions",
       "One reminder email per booking",
       "Embed on your website",
@@ -312,7 +312,7 @@ export const homeFaq = [
   },
   {
     q: `Which calendars and video apps work with ${site.name}?`,
-    a: "Google Calendar, Outlook and Microsoft 365, Apple iCloud and any CalDAV calendar are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom, Microsoft Teams or built-in video link. Zapier, Make and webhooks connect everything else.",
+    a: "Google Calendar, Outlook and Microsoft 365, Apple iCloud and any CalDAV calendar are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom or Microsoft Teams link. Zapier, Make and webhooks connect everything else.",
   },
   {
     q: "Do my clients need an account?",

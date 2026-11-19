@@ -247,7 +247,7 @@ export default function Home() {
               },
               {
                 title: "Video and locations",
-                body: "Google Meet, Zoom or built-in video links are added to every booking, or meet in person.",
+                body: "Google Meet, Zoom or Microsoft Teams links are added to every booking, or meet in person.",
                 visual: <HoodPanel title="Where you meet" rows={[["/logos/google-meet.webp", "Google Meet", "Link added to every booking"], ["/logos/zoom.svg", "Zoom", "A new meeting each time"], [null, "In person", "12 High Street, studio 2"]]} />,
               },
               {

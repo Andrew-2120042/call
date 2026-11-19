@@ -18,7 +18,7 @@ export function GET() {
     `- Category: online scheduling / appointment booking software`,
     ...pricing.map((p) => `- ${p.name} plan: ${p.price} ${p.period}. ${p.blurb} Includes: ${p.items.join("; ")}.`),
     "- Calendars: Google Calendar, Outlook/Office 365, Apple iCloud, CalDAV.",
-    "- Video: Google Meet, Zoom, built-in video.",
+    "- Video: Google Meet, Zoom, Microsoft Teams.",
     "- Import: Calendly services and hours can be imported with an access token.",
     "",
     "## Features",
