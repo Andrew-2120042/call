@@ -1,5 +1,4 @@
 import process from "node:process";
-import { offerFreedSlotSafely } from "@calcom/features/waitlist/lib/getWaitlistService";
 import processExternalId from "@calcom/app-store/_utils/calendars/processExternalId";
 import { getPaymentAppData } from "@calcom/app-store/_utils/payments/getPaymentAppData";
 import { metadata as GoogleMeetMetadata } from "@calcom/app-store/googlevideo/_metadata";
@@ -44,6 +43,7 @@ import { ProfileRepository } from "@calcom/features/profile/repositories/Profile
 import { handleAnalyticsEvents } from "@calcom/features/tasker/tasks/analytics/handleAnalyticsEvents";
 import type { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import { UsersRepository } from "@calcom/features/users/users.repository";
+import { offerFreedSlotSafely } from "@calcom/features/waitlist/lib/getWaitlistService";
 import type { GetSubscriberOptions } from "@calcom/features/webhooks/lib/getWebhooks";
 import getWebhooks from "@calcom/features/webhooks/lib/getWebhooks";
 import type { IWebhookProducerService } from "@calcom/features/webhooks/lib/interface/WebhookProducerService";
@@ -1195,14 +1195,15 @@ async function handler(
 
       const mainHostCalendar = eventType.destinationCalendar || organizerUser.destinationCalendar;
 
+      // Nodslot has no built-in video, so a missing Meet connection or default app means no video link.
       if (locationBodyString === MeetLocationType && mainHostCalendar?.integration !== "google_calendar") {
-        locationBodyString = "integrations:daily";
+        locationBodyString = "";
         organizerOrFirstDynamicGroupMemberDefaultLocationUrl = undefined;
       } else if (isManagedEventType || isTeamEventType) {
         organizerOrFirstDynamicGroupMemberDefaultLocationUrl = defaultApp?.appLink;
       }
     } else {
-      locationBodyString = "integrations:daily";
+      locationBodyString = "";
     }
   }
 

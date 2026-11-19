@@ -1,7 +1,3 @@
-import short from "short-uuid";
-import { v5 as uuidv5 } from "uuid";
-
-import { DailyLocationType } from "@calcom/app-store/constants";
 import { getDailyAppKeys } from "@calcom/app-store/dailyvideo/lib/getDailyAppKeys";
 import { getVideoAdapters } from "@calcom/app-store/getVideoAdapters";
 import { sendBrokenIntegrationEmail } from "@calcom/emails/integration-email-service";
@@ -11,11 +7,13 @@ import logger from "@calcom/lib/logger";
 import { getPiiFreeCalendarEvent, getPiiFreeCredential } from "@calcom/lib/piiFreeData";
 import { safeStringify } from "@calcom/lib/safeStringify";
 import { prisma } from "@calcom/prisma";
-import type { GetRecordingsResponseSchema, GetAccessLinkResponseSchema } from "@calcom/prisma/zod-utils";
+import type { GetAccessLinkResponseSchema, GetRecordingsResponseSchema } from "@calcom/prisma/zod-utils";
 import type { CalendarEvent, EventBusyDate } from "@calcom/types/Calendar";
-import type { CredentialPayload, CredentialForCalendarService } from "@calcom/types/Credential";
+import type { CredentialForCalendarService, CredentialPayload } from "@calcom/types/Credential";
 import type { EventResult, PartialReference } from "@calcom/types/EventManager";
 import type { VideoCallData } from "@calcom/types/VideoApiAdapter";
+import short from "short-uuid";
+import { v5 as uuidv5 } from "uuid";
 
 const log = logger.getSubLogger({ prefix: ["[features/conferencing/lib] videoClient"] });
 
@@ -90,13 +88,8 @@ const createMeeting = async (
       safeStringify(err),
       safeStringify({ calEvent: getPiiFreeCalendarEvent(calEvent) })
     );
-    // Default to calVideo
-    const defaultMeeting = await createMeetingWithCalVideo(calEvent);
-    if (defaultMeeting) {
-      calEvent.location = DailyLocationType;
-    }
-
-    returnObject = { ...returnObject, originalEvent: calEvent, createdEvent: defaultMeeting };
+    // No built-in video to fall back to; the host was emailed above that the link couldn't be made.
+    returnObject = { ...returnObject, originalEvent: calEvent };
   }
 
   return returnObject;
@@ -161,31 +154,6 @@ const deleteMeeting = async (
   }
 
   return Promise.resolve({});
-};
-
-// @TODO: This is a temporary solution to create a meeting with cal.com video as fallback url
-const createMeetingWithCalVideo = async (calEvent: CalendarEvent) => {
-  let dailyAppKeys: Awaited<ReturnType<typeof getDailyAppKeys>>;
-  try {
-    dailyAppKeys = await getDailyAppKeys();
-  } catch {
-    return;
-  }
-  const [videoAdapter] = await getVideoAdapters([
-    {
-      id: 0,
-      appId: CAL_VIDEO,
-      type: CAL_VIDEO_TYPE,
-      userId: null,
-      user: { email: "" },
-      teamId: null,
-      key: dailyAppKeys,
-      encryptedKey: null,
-      invalid: false,
-      delegationCredentialId: null,
-    },
-  ]);
-  return videoAdapter?.createMeeting(calEvent);
 };
 
 export const createInstantMeetingWithCalVideo = async (endTime: string) => {

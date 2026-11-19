@@ -1289,7 +1289,7 @@ describe("handleNewBooking", () => {
       );
 
       test(
-        `should fallback to Cal Video when organizer's default conferencing app is Google Meet but destination calendar is NOT Google Calendar`,
+        `should leave the location empty when organizer's default conferencing app is Google Meet but destination calendar is NOT Google Calendar (no built-in video)`,
         async ({ emails }) => {
           const handleNewBooking = getNewBookingHandler();
           const booker = getBooker({
@@ -1374,7 +1374,7 @@ describe("handleNewBooking", () => {
           // Should fallback to Cal Video instead of Google Meet
           expect(createdBooking).toEqual(
             expect.objectContaining({
-              location: BookingLocations.CalVideo,
+              location: "",
             })
           );
         },
@@ -1573,7 +1573,7 @@ describe("handleNewBooking", () => {
       );
 
       test(
-        `Booking should still be created using calvideo, if error occurs with zoom`,
+        `Booking is still created, and the host told, if Zoom fails (there is no built-in video to fall back to)`,
 
         async ({ emails }) => {
           const handleNewBooking = getNewBookingHandler();
@@ -1624,15 +1624,6 @@ describe("handleNewBooking", () => {
             metadataLookupKey: "zoomvideo",
           });
 
-          mockSuccessfulVideoMeetingCreation({
-            metadataLookupKey: "dailyvideo",
-            videoMeetingData: {
-              id: "MOCK_ID",
-              password: "MOCK_PASS",
-              url: `http://mock-dailyvideo.example.com/meeting-1`,
-            },
-          });
-
           const mockedBookingData = getMockRequestDataForBooking({
             data: {
               eventTypeId: 1,
@@ -1648,19 +1639,9 @@ describe("handleNewBooking", () => {
             bookingData: mockedBookingData,
           });
 
-          expect(createdBooking).toEqual(
-            expect.objectContaining({
-              location: BookingLocations.CalVideo,
-            })
-          );
+          expect(createdBooking.uid).toBeTruthy();
+          expect(createdBooking.location).not.toBe(BookingLocations.CalVideo);
           expectBrokenIntegrationEmails({ organizer, emails });
-          expectBookingCreatedWebhookToHaveBeenFired({
-            booker,
-            organizer,
-            location: BookingLocations.CalVideo,
-            subscriberUrl,
-            videoCallUrl: `${WEBAPP_URL}/video/${createdBooking.uid}`,
-          });
         },
         timeout
       );

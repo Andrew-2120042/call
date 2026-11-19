@@ -6,6 +6,7 @@ import { EventTypeRepository } from "@calcom/features/eventtypes/repositories/ev
 import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import { prisma } from "@calcom/prisma";
 import { beforeEach, describe, expect, test } from "vitest";
+
 const testUser = {
   email: "test@test.com",
   username: "test-user",
@@ -58,10 +59,9 @@ describe("deleteCredential", () => {
       const eventTypeRepo = new EventTypeRepository(prisma);
       const eventTypeQuery = await eventTypeRepo.findAllByUserId({ userId: user.id });
 
-      // Ensure that the event type with the deleted app was converted back to daily
+      // The deleted app's location is dropped; there is no built-in video to swap in
       const changedEventType = eventTypeQuery.find((eventType) => eventType.id === 1)?.locations;
-      expect(changedEventType).toBeDefined();
-      expect(changedEventType![0]).toEqual({ type: "integrations:daily" });
+      expect(changedEventType).toEqual([]);
 
       const nonChangedEventType = eventTypeQuery.find((eventType) => eventType.id === 2)?.locations;
       expect(nonChangedEventType).toBeDefined();

@@ -3,7 +3,6 @@ import {
   eventTypeLocations as eventTypeLocationsSchema,
   eventTypeMetaDataSchemaWithoutApps,
 } from "@calcom/prisma/zod-utils";
-
 import { getAppFromLocationValue } from "../utils";
 
 /**
@@ -14,12 +13,8 @@ const processEventTypes = (eventTypes: { id: number; title: string; locations: u
   const eventTypesWithLogo = eventTypes.map((eventType) => {
     const locationParsed = eventTypeLocationsSchema.safeParse(eventType.locations);
 
-    // some events has null as location for legacy reasons, so this fallbacks to daily video
-    const app = getAppFromLocationValue(
-      locationParsed.success && locationParsed.data?.[0]?.type
-        ? locationParsed.data[0].type
-        : "integrations:daily"
-    );
+    const firstType = locationParsed.success ? locationParsed.data?.[0]?.type : undefined;
+    const app = firstType ? getAppFromLocationValue(firstType) : undefined;
     return {
       ...eventType,
       logo: app?.logo,

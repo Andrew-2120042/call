@@ -1,10 +1,7 @@
 import prismaMock from "@calcom/testing/lib/__mocks__/prisma";
-
 import { getGoogleMeetCredential, TestData } from "@calcom/testing/lib/bookingScenario/bookingScenario";
-
 import { describe, expect, it } from "vitest";
-
-import { DailyLocationType, MeetLocationType } from "../locations";
+import { MeetLocationType } from "../locations";
 import { getDefaultLocations } from "./getDefaultLocations";
 
 type User = {
@@ -50,7 +47,7 @@ describe("getDefaultLocation ", async () => {
       type: MeetLocationType,
     });
   });
-  it("should return calvideo when default conferencing app is not set", async () => {
+  it("returns no location when no conferencing app is set (there is no built-in video)", async () => {
     const user: User = {
       id: 101,
       email: "test@example.com",
@@ -65,11 +62,7 @@ describe("getDefaultLocation ", async () => {
       },
     });
     const res = await getDefaultLocations(user);
-    expect(res[0]).toEqual(
-      expect.objectContaining({
-        type: DailyLocationType,
-      })
-    );
+    expect(res).toEqual([]);
   });
 });
 

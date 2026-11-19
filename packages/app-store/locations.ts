@@ -9,7 +9,6 @@ import type { Ensure, Optional } from "@calcom/types/utils";
 import type { TFunction } from "i18next";
 import { isValidPhoneNumber } from "libphonenumber-js/max";
 import { z } from "zod";
-
 import type { EventLocationTypeFromAppMeta } from "../types/App";
 import {
   DailyLocationType as importedDailyLocationType,
@@ -432,11 +431,8 @@ export const getLocationValueForDB = (
     }
   });
 
-  if (bookingLocation.trim().length === 0) {
-    bookingLocation = DailyLocationType;
-  }
-
-  return { bookingLocation, conferenceCredentialId };
+  // Nodslot has no built-in video, so an empty location stays empty instead of becoming a video room.
+  return { bookingLocation: bookingLocation.trim(), conferenceCredentialId };
 };
 
 export const getEventLocationValue = (eventLocations: LocationObject[], bookingLocation: LocationObject) => {

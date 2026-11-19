@@ -1,7 +1,5 @@
-import { describe, expect, it, beforeEach, vi } from "vitest";
-
 import type { Prisma } from "@calcom/prisma/client";
-
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { filterEventTypesWhereLocationUpdateIsAllowed, getBulkUserEventTypes } from "./getBulkEventTypes";
 
 vi.mock("@calcom/prisma", () => ({
@@ -358,6 +356,6 @@ describe("getBulkUserEventTypes", () => {
 
     expect(result.eventTypes).toHaveLength(1);
     expect(result.eventTypes[0].id).toBe(30);
-    expect(result.eventTypes[0].logo).toBe("/daily-logo.svg");
+    expect(result.eventTypes[0].logo).toBeUndefined();
   });
 });
