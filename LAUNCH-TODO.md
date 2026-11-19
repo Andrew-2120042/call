@@ -2,6 +2,11 @@
 
 Everything still needed before Nodslot goes live. Tick items off as they're done. How to set each one up is in `DEPLOY.md`.
 
+## Main (do these first)
+1. [ ] **Zoom**: the owner signs in at marketplace.zoom.us (Ego tab "Zoom app for Nodslot"); then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds its keys to production.
+2. [ ] **Polar**: the owner gives the Polar access key so billing turns on. Until then everyone is on Free.
+3. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
+
 ## Live status (2026-11-19)
 Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.site (Vercel Hobby, team `andrew-0da0`, projects `nodslot` and `nodslot-landing`). Database: Neon (`nodslot-db`, iad1, Free) via the Vercel Marketplace. Live smoke test: `node scripts/launch-sweep/prod-smoke.cjs` (11 checks). How deploys work is in the memory note "deploy-process" and `DEPLOY.md`.
 
