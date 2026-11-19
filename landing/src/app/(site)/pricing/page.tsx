@@ -6,9 +6,9 @@ import { Container } from "@/components/ui";
 import { homeFaq } from "@/content/site-content";
 
 export const metadata: Metadata = {
-  title: "Pricing: free booking link, Pro $12, Team $49 flat",
+  title: "Pricing: free booking link, Pro $12, Team $69 for 10 people",
   description:
-    `${site.name} is free for unlimited services and bookings. Pro adds a waitlist, no-show protection and AI request summaries for $12 a month. Teams of up to 10 pay $49 a month in total.`,
+    `${site.name} is free for unlimited services and bookings. Pro adds a waitlist, no-show protection and AI request summaries for $12 a month. Teams of up to 10 pay $69 a month in total, then $10 per extra person.`,
   alternates: { canonical: "/pricing" },
 };
 

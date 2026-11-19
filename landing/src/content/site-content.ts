@@ -98,9 +98,9 @@ export const features: Feature[] = [
     slug: "team-scheduling",
     name: "Team scheduling",
     keyword: "Round robin scheduling for small teams",
-    title: "One link for your whole team, at one flat price",
+    title: "One link for your whole team, at one simple price",
     summary:
-      "Create a team, invite people by email or link, and share services that book whoever is free (round robin) or everyone together (collective). $49 a month covers up to 10 people.",
+      "Create a team, invite people by email or link, and share services that book whoever is free (round robin) or everyone together (collective). $69 a month covers up to 10 people; each extra person is $10.",
     problem:
       "Team plans elsewhere are priced per seat, so every new hire makes scheduling more expensive.",
     how: [
@@ -138,7 +138,7 @@ export const comparisons: Comparison[] = [
       { label: "Waitlist that refills cancellations", us: "Built in (Pro)", them: "Not built in; needs webhooks or another tool" },
       { label: "Approve bookings before confirming", us: "Free", them: "Not built in" },
       { label: "Confirm-or-release for no-shows", us: "Built in (Pro)", them: "Reminders on paid plans" },
-      { label: "Round robin for teams", us: "$49/month flat, up to 10 people", them: "Teams plan, $16 per seat/month" },
+      { label: "Round robin for teams", us: "$69/month for up to 10 people", them: "Teams plan, $16 per seat/month" },
       { label: "Calendar sync, video links, reminders", us: "Yes", them: "Yes" },
     ],
     verdict:
@@ -155,7 +155,7 @@ export const comparisons: Comparison[] = [
       { label: "Waitlist for taken times", us: "Built in (Pro)", them: "Not built in" },
       { label: "Confirm-or-release", us: "Built in (Pro)", them: "Not built in" },
       { label: "AI summaries of booking requests", us: "Built in (Pro)", them: "Not built in" },
-      { label: "Round robin for teams", us: "$49/month flat, up to 10 people", them: "Teams plan, $12 per user/month" },
+      { label: "Round robin for teams", us: "$69/month for up to 10 people", them: "Teams plan, $12 per user/month" },
     ],
     verdict:
       `Choose ${site.name} if you want a booking link that works out of the box and actively protects your time.`,
@@ -229,7 +229,7 @@ export const audiences: Audience[] = [
     slug: "agencies",
     name: "Agency",
     plural: "agencies",
-    title: "Team scheduling for small agencies, one flat price",
+    title: "Team scheduling for small agencies, one simple price",
     summary: "Route client calls across your team with round robin, or book everyone together for kick-offs.",
     pains: ["Per-seat pricing as the team grows", "Client calls landing on the wrong person", "Finding a time when the whole team is free"],
     highlights: ["team-scheduling", "booking-approval", "ai-booking-summaries"],
@@ -271,16 +271,16 @@ export const pricing = [
   },
   {
     name: "Team",
-    price: "$49",
+    price: "$69",
     period: "per month",
-    blurb: "One flat price for up to 10 people.",
+    blurb: "$69 for up to 10 people, then $10 per extra person.",
     cta: "Start a team",
     items: [
       "Everything in Pro",
       "Round robin and collective services",
       "Invite by email or link, with roles",
       "A shared team booking page",
-      "No per-seat pricing",
+      "10 people included, then $10 each",
     ],
   },
 ];
@@ -292,7 +292,7 @@ export const homeFaq = [
   },
   {
     q: `How is ${site.name} different from Calendly or Cal.com?`,
-    a: `All three get you booked. ${site.name} also keeps you booked: a cancelled slot is offered to the next person on the waitlist automatically, and unconfirmed bookings can free themselves up. The free plan includes unlimited services, and Team is one flat price instead of a price per seat.`,
+    a: `All three get you booked. ${site.name} also keeps you booked: a cancelled slot is offered to the next person on the waitlist automatically, and unconfirmed bookings can free themselves up. The free plan includes unlimited services, and Team is $69 for up to 10 people instead of a price per seat.`,
   },
   {
     q: "Is the free plan really free?",
@@ -320,7 +320,7 @@ export const homeFaq = [
   },
   {
     q: "How does team pricing work?",
-    a: "Team is $49 a month for up to 10 people, not a price per seat. It adds round robin and collective services, managed services that copy one setup to every member, a shared team page and a team waitlist.",
+    a: "Team is $69 a month for up to 10 people, then $10 a month for each extra person. It adds round robin and collective services, managed services that copy one setup to every member, a shared team page and a team waitlist.",
   },
   {
     q: "Can I cancel any time?",

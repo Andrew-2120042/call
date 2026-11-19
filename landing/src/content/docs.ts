@@ -48,7 +48,7 @@ export const docs: DocPage[] = [
       { type: "table", head: ["Plan", "Price", "For"], rows: [
         ["Free", "$0", "One person: unlimited services and bookings, calendar sync, video links, approvals"],
         ["Pro", "$12 a month", "Adds the waitlist, confirm-or-release, request summaries and your own domain"],
-        ["Team", "$49 a month", "Up to 10 people: round robin, collective and managed services, team waitlist"],
+        ["Team", "$69 a month", "Up to 10 people, then $10 per extra person: round robin, collective and managed services, team waitlist"],
       ] },
       { type: "h2", text: "Where to next" },
       { type: "list", items: ["[Get started](/docs/get-started) to make your first service and share your link.", "[Coming from Calendly?](/docs/get-started#move-from-calendly) Bring your services over in a minute."] },

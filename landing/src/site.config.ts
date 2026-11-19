@@ -10,7 +10,7 @@ export const site = {
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? `support@${BRAND.domain}`,
   tagline: "The booking link that fills its own cancellations",
   description:
-    `${BRAND.name} is a booking link for professionals. Free scheduling with approvals, plus a waitlist that refills cancelled slots, confirm-or-release for no-shows, and team scheduling at a flat price.`,
+    `${BRAND.name} is a booking link for professionals. Free scheduling with approvals, plus a waitlist that refills cancelled slots, confirm-or-release for no-shows, and simple team pricing.`,
 };
 
 export const signupUrl = `${site.appUrl}/signup`;

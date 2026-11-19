@@ -48,7 +48,7 @@ export const articles: Article[] = [
             ["Free plan", "1 event type, 1 calendar, one-on-one only", "1 user, unlimited links and calendars", "1 user, unlimited services and calendars"],
             ["Approve bookings first", "Not built in", "Yes (free)", "Yes (free)"],
             ["Automated reminders", "Paid plans", "Free plan includes notifications", "1 free; more on Pro"],
-            ["Round robin", "Teams, $16/seat/month", "Teams, $12/user/month", "Team, $49/month for up to 10"],
+            ["Round robin", "Teams, $16/seat/month", "Teams, $12/user/month", "Team, $69/month for up to 10"],
             ["Waitlist that refills cancellations", "No", "No", "Yes (Pro)"],
             ["Confirm-or-release for no-shows", "No", "No", "Yes (Pro)"],
           ],
@@ -87,7 +87,7 @@ export const articles: Article[] = [
     faq: [
       { q: "Is Cal.com really free?", a: "Yes for one person. Cal.com's free plan covers one user with unlimited booking links and calendars. Teams start at $12 per user per month." },
       { q: "Does Calendly's free plan include round robin?", a: "No. Round robin is part of Calendly's Teams plan, billed per seat." },
-      { q: "Which is cheaper for a team of 5?", a: `At list prices with yearly billing, Calendly Teams is about $80 a month (5 × $16) and Cal.com Teams about $60 (5 × $12). ${site.name} Team is $49 a month for up to 10 people.` },
+      { q: "Which is cheaper for a team of 5?", a: `At list prices with yearly billing, Calendly Teams is about $80 a month (5 × $16) and Cal.com Teams about $60 (5 × $12). ${site.name} Team is $69 a month for up to 10 people, so it's cheaper than both from 6 people up.` },
     ],
     sources: [calendlyPricing, calPricing],
   },
@@ -142,7 +142,7 @@ export const articles: Article[] = [
     ],
     faq: [
       { q: "What is the best free scheduling tool?", a: `For one person, Cal.com and ${site.name} both offer unlimited booking links on their free plans. Calendly's free plan is limited to one event type.` },
-      { q: "What is the best scheduling tool for small teams?", a: `If price per seat matters, compare totals: Calendly Teams is $16 per seat and Cal.com Teams $12 per user (yearly billing). ${site.name} Team is $49 a month for up to 10 people.` },
+      { q: "What is the best scheduling tool for small teams?", a: `If price per seat matters, compare totals: Calendly Teams is $16 per seat and Cal.com Teams $12 per user (yearly billing). ${site.name} Team is $69 a month for up to 10 people, then $10 per extra person.` },
     ],
     sources: [calendlyPricing, calPricing],
   },
@@ -218,7 +218,7 @@ export const articles: Article[] = [
       },
     ],
     faq: [
-      { q: "Does round robin cost extra?", a: `On most tools it's a team feature billed per seat. In ${site.name} it's part of the Team plan, $49 a month for up to 10 people.` },
+      { q: "Does round robin cost extra?", a: `On most tools it's a team feature billed per seat. In ${site.name} it's part of the Team plan, $69 a month for up to 10 people.` },
     ],
     sources: [calendlyPricing, calPricing],
   },

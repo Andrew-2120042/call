@@ -86,7 +86,7 @@ const stories: Story[] = [
     visual: <TeamMock />,
     points: [
       { title: "See the gaps early.", body: "A weekly heatmap shows where nobody is free during working hours.", demo: ["Nobody free · Tue 1pm–3pm", "Spotted before anyone tries to book"] },
-      { title: "One flat price.", body: "Team is $49 a month for up to 10 people. No per-seat maths.", demo: ["Team · $49 a month", "Up to 10 people · no per-seat maths"] },
+      { title: "One simple price.", body: "Team is $69 a month for up to 10 people, then $10 per extra person.", demo: ["Team · $69 a month", "Up to 10 people · $10 per extra"] },
     ],
   },
 ];
@@ -377,7 +377,7 @@ export default function Home() {
           offers: [
             { "@type": "Offer", name: "Free", price: "0", priceCurrency: "USD" },
             { "@type": "Offer", name: "Pro", price: "12", priceCurrency: "USD" },
-            { "@type": "Offer", name: "Team", price: "49", priceCurrency: "USD" },
+            { "@type": "Offer", name: "Team", price: "69", priceCurrency: "USD" },
           ],
         }}
       />

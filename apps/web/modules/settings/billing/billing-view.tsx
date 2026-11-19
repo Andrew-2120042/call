@@ -98,7 +98,7 @@ export default function BillingView() {
     },
     {
       id: "TEAM",
-      price: "$49",
+      price: "$69",
       per: t("billing_per_month"),
       features: [
         t("billing_f_everything_pro"),
@@ -112,14 +112,14 @@ export default function BillingView() {
 
   return (
     <div className="space-y-6" data-testid="billing-view">
-      <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
+      <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-lg border p-6">
         <div>
           <p className="text-subtle text-sm">{t("billing_current_plan")}</p>
           <div className="mt-1 flex items-center gap-2.5">
             <p className="text-emphasis text-2xl font-semibold">
               {t(`billing_plan_${current.toLowerCase()}`)}
             </p>
-            <span className="bg-subtle text-emphasis rounded-full px-2.5 py-0.5 text-xs font-medium">
+            <span className="bg-subtle text-emphasis rounded-md px-2.5 py-0.5 text-xs font-medium">
               {summary.cancelAtPeriodEnd || summary.status === "canceled"
                 ? t("billing_status_ending")
                 : t("billing_status_active")}
@@ -156,8 +156,8 @@ export default function BillingView() {
               key={plan.id}
               className={
                 isPro
-                  ? "bg-inverted text-inverted flex flex-col rounded-[22px] p-6"
-                  : "bg-default border-subtle text-emphasis flex flex-col rounded-[22px] border p-6"
+                  ? "bg-inverted text-inverted flex flex-col rounded-lg p-6"
+                  : "bg-default border-subtle text-emphasis flex flex-col rounded-lg border p-6"
               }>
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">{t(`billing_plan_${plan.id.toLowerCase()}`)}</p>
@@ -165,14 +165,14 @@ export default function BillingView() {
                   <span
                     className={
                       isPro
-                        ? "rounded-full bg-white/15 px-2.5 py-0.5 text-xs"
-                        : "bg-subtle rounded-full px-2.5 py-0.5 text-xs"
+                        ? "rounded-md bg-white/15 px-2.5 py-0.5 text-xs"
+                        : "bg-subtle rounded-md px-2.5 py-0.5 text-xs"
                     }>
                     {t("billing_current_badge")}
                   </span>
                 )}
                 {plan.soon && !isCurrent && (
-                  <span className="bg-subtle rounded-full px-2.5 py-0.5 text-xs">{t("billing_soon")}</span>
+                  <span className="bg-subtle rounded-md px-2.5 py-0.5 text-xs">{t("billing_soon")}</span>
                 )}
               </div>
               <p className="mt-3 flex items-baseline" style={{ columnGap: 6 }}>
@@ -192,7 +192,7 @@ export default function BillingView() {
                   type="button"
                   disabled={!summary.billingConfigured || busy === "pro"}
                   onClick={() => go("pro", "/api/billing/checkout", { plan: "pro" })}
-                  className="mt-6 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-[#121212] transition hover:opacity-90 disabled:opacity-50">
+                  className="mt-6 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-[#121212] transition hover:opacity-90 disabled:opacity-50">
                   {busy === "pro" ? t("loading") : t("billing_upgrade_pro")}
                 </button>
               )}

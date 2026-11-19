@@ -15,7 +15,7 @@ The scheduling space is crowded: Calendly, Cal.com, SavvyCal, TidyCal, Acuity, z
 | Waitlist that fills cancellations | Acuity, Square Appointments, Picktime (paid), and many healthcare tools (SimplePractice, Luma, BookingPro). Not found in Calendly, Cal.com, SavvyCal, TidyCal. | Rare among tools for consultants and coaches. Ours has four modes (in order, first come first served, any time that day, earlier than my booking) and shows your place in line before joining. |
 | Confirm-or-release ("are you still coming?") | Not found in the generalist tools in this research (not searched exhaustively). | Likely our most unusual feature. Releases the slot to the waitlist. |
 | AI | Calendly: "Callie" email scheduling assistant (beta) and Notetaker, on Plus tiers (~$18/user). Others: mostly voice agents for clinics. | Ours is aimed at the host's decisions: request triage, rebook suggestions after a cancel, team "who's free" routing, setup assistant. Different job from Calendly's. |
-| Team plan | Calendly Teams $16/seat, Cal.com ~$12/seat, SavvyCal $10–17/seat. | Flat $49 for up to 10 people. At 5+ people we're cheaper than all three. |
+| Team plan | Calendly Teams $16/seat, Cal.com ~$12/seat, SavvyCal $10–17/seat. | $69 for up to 10 people, then $10 per extra (decided 2026-11-19). Cheaper than Calendly from 5 people and Cal.com from 6. |
 
 ## So are we different?
 
