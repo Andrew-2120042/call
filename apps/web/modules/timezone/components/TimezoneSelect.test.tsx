@@ -1,4 +1,5 @@
 /* eslint-disable playwright/missing-playwright-await */
+import { timeZoneLabel } from "@calcom/lib/timeZoneLabel";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import type { Props as SelectProps } from "react-timezone-select";
 import { vi } from "vitest";
@@ -107,7 +108,7 @@ describe("Test TimezoneSelect", () => {
       renderSelect({ value: timezoneMockValues[0], classNames });
       openMenu();
 
-      const dawsonEl = screen.getByText(timezoneMockValues[0]);
+      const dawsonEl = screen.getByText(timeZoneLabel(timezoneMockValues[0]));
 
       expect(dawsonEl).toBeInTheDocument();
 
@@ -144,7 +145,7 @@ describe("Test TimezoneSelect", () => {
       renderSelect({ value: timezoneMockValues[0], isMulti: true, classNames });
       openMenu();
 
-      const dawsonEl = screen.getByText(timezoneMockValues[0]);
+      const dawsonEl = screen.getByText(timeZoneLabel(timezoneMockValues[0]));
       const multiValueEl = dawsonEl.parentElement?.parentElement;
       expect(multiValueEl).toHaveClass(classNames.multiValue());
 
