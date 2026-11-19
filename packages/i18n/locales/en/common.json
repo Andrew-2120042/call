@@ -4929,7 +4929,7 @@
   "hide_sidebar": "Hide sidebar",
   "show_sidebar": "Show sidebar",
   "peek_spam_title": "This looks like spam",
-  "peek_spam_body": "It reads like a sales pitch, and it may try to trick automated tools. Nothing in it is acted on; it is only shown so you can see what they sent.",
+  "peek_spam_body": "It reads like a sales pitch, and it may try to trick automated tools. Nothing in it is acted on. Report it (the flag button) to cancel it and stop this email booking you again.",
   "setup_q_page_title": "Set up your booking page",
   "setup_q_counter": "Question {{current}} of {{total}}",
   "setup_q_select": "Select",

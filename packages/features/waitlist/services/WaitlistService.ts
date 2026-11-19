@@ -1,3 +1,4 @@
+import { checkIfReportedAsSpam } from "@calcom/features/bookings/lib/handleNewBooking/checkIfReportedAsSpam";
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
 import type { Prisma } from "@calcom/prisma/client";
@@ -127,6 +128,7 @@ export class WaitlistService {
     }
 
     const email = input.email.trim().toLowerCase();
+    await checkIfReportedAsSpam({ bookerEmail: email, hostUserIds: [accountId] });
     const responses = { ...input.responses, name: input.name, email } as Prisma.InputJsonValue;
     const existing = await this.deps.repository.findByEventTypeStartAndEmail({
       eventTypeId: input.eventTypeId,
@@ -263,7 +265,10 @@ export class WaitlistService {
     });
 
     const untilSlot = slotStart.getTime() - now.getTime();
-    const windowMs = !everyone && untilSlot < SOON_MS ? Math.min(this.offerWindowMs, SOON_OFFER_WINDOW_MINUTES * 60_000) : this.offerWindowMs;
+    const windowMs =
+      !everyone && untilSlot < SOON_MS
+        ? Math.min(this.offerWindowMs, SOON_OFFER_WINDOW_MINUTES * 60_000)
+        : this.offerWindowMs;
     // Never let an offer outlive the slot itself.
     const offerExpiresAt = new Date(Math.min(now.getTime() + windowMs, slotStart.getTime()));
 
@@ -315,7 +320,10 @@ export class WaitlistService {
     if (entry.kind !== WaitlistEntryKind.EARLIER_THAN_BOOKING) return true;
     if (!entry.rangeEnd || slotEnd.getTime() > entry.rangeEnd.getTime()) return false;
     // Their booking was cancelled or moved some other way: nothing left to move earlier.
-    if (!entry.rescheduleBookingUid || !(await this.deps.repository.isBookingActive(entry.rescheduleBookingUid))) {
+    if (
+      !entry.rescheduleBookingUid ||
+      !(await this.deps.repository.isBookingActive(entry.rescheduleBookingUid))
+    ) {
       await this.deps.repository.transition({
         id: entry.id,
         from: WaitlistEntryStatus.WAITING,
@@ -340,7 +348,10 @@ export class WaitlistService {
       });
       if (!moved) continue;
       const startTime = entry.offerStartTime ?? entry.startTime;
-      freed.set(`${entry.eventTypeId}|${startTime.toISOString()}`, { eventTypeId: entry.eventTypeId, startTime });
+      freed.set(`${entry.eventTypeId}|${startTime.toISOString()}`, {
+        eventTypeId: entry.eventTypeId,
+        startTime,
+      });
     }
     for (const slot of Array.from(freed.values())) {
       const offered = await this.offerFreedSlot(slot);

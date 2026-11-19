@@ -91,6 +91,7 @@ import getBookingDataSchema from "../getBookingDataSchema";
 import type { LuckyUserService } from "../getLuckyUser";
 import { checkActiveBookingsLimitForBooker } from "../handleNewBooking/checkActiveBookingsLimitForBooker";
 import { checkIfBookerEmailIsBlocked } from "../handleNewBooking/checkIfBookerEmailIsBlocked";
+import { checkIfReportedAsSpam } from "../handleNewBooking/checkIfReportedAsSpam";
 import type { Booking } from "../handleNewBooking/createBooking";
 import { createBooking } from "../handleNewBooking/createBooking";
 import { ensureAvailableUsers } from "../handleNewBooking/ensureAvailableUsers";
@@ -585,6 +586,12 @@ async function handler(
       bookerEmail,
       verificationCode: reqBody.verificationCode,
       isReschedule: !!rawBookingData.rescheduleUid,
+    });
+    await checkIfReportedAsSpam({
+      bookerEmail,
+      hostUserIds: [eventType.userId, ...eventType.users.map((user) => user.id)].filter(
+        (id): id is number => typeof id === "number"
+      ),
     });
   } catch (error) {
     if (error instanceof ErrorWithCode) {
