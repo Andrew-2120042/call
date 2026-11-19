@@ -38,7 +38,7 @@ export function useBottomNavItems({ publicPageUrl }: BottomNavItemsProps): Navig
     },
     {
       name: "settings",
-      href: "/settings/my-account/profile",
+      href: "/settings/overview",
       icon: "settings",
     },
   ].filter(Boolean) as NavigationItemType[];

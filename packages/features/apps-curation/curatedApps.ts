@@ -40,7 +40,6 @@ export const CURATED_APP_GROUPS: {
       { slug: "google-meet", descriptionKey: "apps_desc_google_meet" },
       { slug: "zoom", descriptionKey: "apps_desc_zoom" },
       { slug: "msteams", descriptionKey: "apps_desc_msteams", name: "Microsoft Teams" },
-      { slug: "daily-video", descriptionKey: "apps_desc_daily" },
     ],
   },
   {

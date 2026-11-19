@@ -82,7 +82,7 @@ export const Select = <
                 ? "h-7 px-2 py-0.5"
                 : "h-8 px-3 py-1",
             state.isDisabled && "bg-subtle !cursor-not-allowed !pointer-events-auto hover:border-subtle",
-            "rounded-[10px]",
+            "rounded-md",
             "[&:focus-within]:border-emphasis [&:focus-within]:shadow-outline-gray-focused focus-within:ring-0 flex! **:[input]:leading-none text-sm",
             innerClassNames?.control
           ),
@@ -96,7 +96,7 @@ export const Select = <
           ),
         menu: () =>
           cx(
-            "rounded-lg bg-default text-sm leading-4 text-default mt-1 border border-subtle shadow-dropdown p-1",
+            "rounded-md bg-default text-[13px] leading-4 text-default mt-1 border border-subtle shadow-dropdown p-1",
             innerClassNames?.menu
           ),
         groupHeading: () => "leading-none text-xs text-muted p-2 font-medium ml-1",

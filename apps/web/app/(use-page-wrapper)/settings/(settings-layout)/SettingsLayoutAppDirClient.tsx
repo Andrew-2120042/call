@@ -4,7 +4,6 @@ import { HAS_ORG_OPT_IN_FEATURES } from "@calcom/features/feature-opt-in/config"
 import type { TeamFeatures } from "@calcom/features/flags/config";
 import { IS_CALCOM, WEBAPP_URL } from "@calcom/lib/constants";
 import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
-import { getUserAvatarUrl } from "@calcom/lib/getAvatarUrl";
 import { useIsStandalone } from "@calcom/lib/hooks/useIsStandalone";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { IdentityProvider, UserPermissionRole } from "@calcom/prisma/enums";
@@ -37,7 +36,7 @@ const getTabs = (
 ) => {
   const tabs: VerticalTabItemProps[] = [
     {
-      name: "my_account",
+      name: "settings_group_personal",
       href: "/settings/my-account",
       icon: "user",
       children: [
@@ -52,31 +51,9 @@ const getTabs = (
           trackingMetadata: { section: "my_account", page: "general" },
         },
         {
-          name: "calendars",
-          href: "/settings/my-account/calendars",
-          trackingMetadata: { section: "my_account", page: "calendars" },
-        },
-        {
-          name: "conferencing",
-          href: "/settings/my-account/conferencing",
-          trackingMetadata: { section: "my_account", page: "conferencing" },
-        },
-        {
           name: "appearance",
           href: "/settings/my-account/appearance",
           trackingMetadata: { section: "my_account", page: "appearance" },
-        },
-        {
-          name: "billing_page_title",
-          href: "/settings/billing",
-        },
-        {
-          name: "custom_domain_page_title",
-          href: "/settings/domain",
-        },
-        {
-          name: "calendly_import_page_title",
-          href: "/settings/import",
         },
         {
           name: "out_of_office",
@@ -88,9 +65,39 @@ const getTabs = (
           href: "/settings/my-account/push-notifications",
           trackingMetadata: { section: "my_account", page: "push_notifications" },
         },
-        // TODO
-        // { name: "referrals", href: "/settings/my-account/referrals" },
       ],
+    },
+    {
+      name: "settings_group_calendars",
+      href: "/settings/my-account/calendars#group",
+      icon: "calendar",
+      children: [
+        {
+          name: "calendars",
+          href: "/settings/my-account/calendars",
+          trackingMetadata: { section: "my_account", page: "calendars" },
+        },
+        {
+          name: "conferencing",
+          href: "/settings/my-account/conferencing",
+          trackingMetadata: { section: "my_account", page: "conferencing" },
+        },
+      ],
+    },
+    {
+      name: "settings_group_billing",
+      href: "/settings/billing#group",
+      icon: "credit-card",
+      children: [
+        { name: "billing_page_title", href: "/settings/billing" },
+        { name: "custom_domain_page_title", href: "/settings/domain" },
+      ],
+    },
+    {
+      name: "settings_group_import",
+      href: "/settings/import#group",
+      icon: "download",
+      children: [{ name: "calendly_import_page_title", href: "/settings/import" }],
     },
     {
       name: "security",
@@ -280,14 +287,7 @@ const useTabs = ({
 
   const processTabsMemod = useMemo(() => {
     const processedTabs = getTabs(orgBranding).map((tab) => {
-      if (tab.href === "/settings/my-account") {
-        return {
-          ...tab,
-          name: user?.name || "my_account",
-          icon: undefined,
-          avatar: getUserAvatarUrl(user),
-        };
-      } else if (tab.href === "/settings/organizations") {
+      if (tab.href === "/settings/organizations") {
         const newArray = (tab?.children ?? []).filter(
           (child) => permissions?.canUpdateOrganization || !organizationAdminKeys.includes(child.name)
         );
@@ -378,10 +378,10 @@ const useTabs = ({
 const BackButtonInSidebar = ({ name }: { name: string }) => {
   return (
     <Link
-      href="/event-types"
-      className="group my-6 todesktop:mt-10 flex h-6 max-h-6 w-full flex-row items-center rounded-md px-3 py-2 font-medium text-emphasis text-sm leading-4 transition hover:bg-subtle group-hover:text-default [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis"
+      href="/home"
+      className="group mb-3 mt-3 todesktop:mt-10 flex h-7 max-h-7 w-full flex-row items-center rounded-md px-2 py-1.5 text-default text-[13px] leading-4 transition hover:bg-subtle group-hover:text-default [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis"
       data-testid={`vertical-tab-${name}`}>
-      <ArrowLeftIcon className="h-4 w-4 stroke-[2px] md:mt-0 ltr:mr-[10px] rtl:ml-[10px] rtl:rotate-180" />
+      <ArrowLeftIcon className="h-3.5 w-3.5 md:mt-0 ltr:mr-2 rtl:ml-2 rtl:rotate-180" />
       <Skeleton title={name} as="p" className="min-h-4 max-w-36 truncate" loadingClassName="ms-3">
         {name}
       </Skeleton>
@@ -411,6 +411,9 @@ const SettingsSidebarContainer = ({
     isPbacEnabled: false,
     permissions,
   });
+  const pathname = usePathname();
+  const [query, setQuery] = useState("");
+  const needle = query.trim().toLowerCase();
 
   return (
     <nav
@@ -425,62 +428,89 @@ const SettingsSidebarContainer = ({
       data-sw-settings-nav
       aria-label={t("settings_navigation")}>
       <BackButtonInSidebar name={t("back")} />
+      <div className="px-1 pb-2">
+        <label className="border-subtle focus-within:border-emphasis flex h-7 items-center gap-2 rounded-md border px-2">
+          <Icon name="search" className="text-muted h-3.5 w-3.5 shrink-0" />
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t("settings_search_placeholder")}
+            aria-label={t("settings_search_placeholder")}
+            data-testid="settings-search"
+            className="text-default placeholder:text-muted w-full bg-transparent text-[13px] outline-none"
+          />
+        </label>
+      </div>
+      {!needle && (
+        <Link
+          href="/settings/overview"
+          aria-current={pathname === "/settings/overview" ? "page" : undefined}
+          data-testid="settings-overview-link"
+          className="text-default hover:bg-subtle flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px]">
+          <Icon name="layout-dashboard" className="h-3.5 w-3.5 shrink-0" />
+          {t("settings_overview")}
+        </Link>
+      )}
       {tabsWithPermissions.map((tab) => {
+        const children = (tab.children ?? []).filter((child) => !needle || t(child.name).toLowerCase().includes(needle));
+        if (needle && !children.length) return null;
         return (
-          <React.Fragment key={tab.href}>
-            <div className={`${!tab.children?.length ? "mb-3!" : ""}`}>
-              <div className="group flex h-7 w-full flex-row items-center rounded-md px-2 font-medium text-default text-sm leading-none [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis">
-                {tab?.icon && (
-                  <Icon
-                    name={tab.icon}
-                    className="h-[16px] w-[16px] stroke-[2px] text-subtle md:mt-0 ltr:mr-3 rtl:ml-3"
-                  />
+          <SettingsNavGroup
+            key={tab.href}
+            name={t(tab.name)}
+            icon={tab.icon}
+            forceOpen={!!needle || children.some((child) => pathname?.startsWith(child.href ?? "-"))}>
+            {children.map((child) => (
+              <div key={child.href} className="flex items-start gap-2">
+                <VerticalTabItem
+                  name={t(child.name)}
+                  isExternalLink={child.isExternalLink}
+                  href={child.href || "/"}
+                  trackingMetadata={child.trackingMetadata}
+                  textClassNames="text-[13px]"
+                  className="h-auto min-h-7 w-full px-2! py-1!"
+                  disableChevron
+                />
+                {child.isBadged && (
+                  <Badge variant="blue" className="mt-0.5 text-xs">
+                    New
+                  </Badge>
                 )}
-                {}
-                {!tab.icon && tab?.avatar && (
-                  <Image
-                    width={16}
-                    height={16}
-                    className="rounded-full ltr:mr-3 rtl:ml-3"
-                    src={tab?.avatar}
-                    alt="Organization Logo"
-                  />
-                )}
-                <Skeleton
-                  title={tab.name}
-                  as="p"
-                  className="truncate font-medium text-sm text-subtle leading-5"
-                  loadingClassName="ms-3">
-                  {t(tab.name)}
-                </Skeleton>
               </div>
-            </div>
-            <div className="flex flex-col space-y-1">
-              {tab.children?.map((child, index) => (
-                <div key={child.href} className="flex items-start gap-2">
-                  <VerticalTabItem
-                    name={t(child.name)}
-                    isExternalLink={child.isExternalLink}
-                    href={child.href || "/"}
-                    trackingMetadata={child.trackingMetadata}
-                    textClassNames="text-emphasis font-medium text-sm"
-                    className={`h-auto min-h-7 w-fit px-2! py-1! ${
-                      tab.children && index === tab.children?.length - 1 && "mb-3!"
-                    }`}
-                    disableChevron
-                  />
-                  {child.isBadged && (
-                    <Badge variant="blue" className="mt-0.5 text-xs">
-                      New
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-          </React.Fragment>
+            ))}
+          </SettingsNavGroup>
         );
       })}
     </nav>
+  );
+};
+
+const SettingsNavGroup = ({
+  name,
+  icon,
+  forceOpen,
+  children,
+}: {
+  name: string;
+  icon?: VerticalTabItemProps["icon"];
+  forceOpen: boolean;
+  children: React.ReactNode;
+}) => {
+  const [open, setOpen] = useState(true);
+  const expanded = open || forceOpen;
+  return (
+    <div className="pt-1">
+      <button
+        type="button"
+        onClick={() => setOpen((was) => !was)}
+        aria-expanded={expanded}
+        className="text-subtle hover:text-emphasis flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px]">
+        {icon && <Icon name={icon} className="h-3.5 w-3.5 shrink-0" />}
+        <span className="flex-1 truncate">{name}</span>
+        <Icon name={expanded ? "chevron-down" : "chevron-right"} className="h-3 w-3 shrink-0 opacity-70" />
+      </button>
+      {expanded && <div className="flex flex-col pl-3">{children}</div>}
+    </div>
   );
 };
 

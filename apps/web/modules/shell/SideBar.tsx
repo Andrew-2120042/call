@@ -1,26 +1,21 @@
-import { ENABLE_PROFILE_SWITCHER, IS_VISUAL_REGRESSION_TESTING, WEBAPP_URL } from "@calcom/lib/constants";
-import { getPlaceholderAvatar } from "@calcom/lib/defaultAvatarImage";
+import { IS_VISUAL_REGRESSION_TESTING, WEBAPP_URL } from "@calcom/lib/constants";
 import { useIsStandalone } from "@calcom/lib/hooks/useIsStandalone";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
-import { Avatar } from "@calcom/ui/components/avatar";
 import { Credits } from "@calcom/ui/components/credits";
 import { ButtonOrLink } from "@calcom/ui/components/dropdown";
 import { Icon } from "@calcom/ui/components/icon";
 import { Logo } from "@calcom/ui/components/logo";
 import { SkeletonText } from "@calcom/ui/components/skeleton";
 import { Tooltip } from "@calcom/ui/components/tooltip";
-import { ArrowLeftIcon, ArrowRightIcon } from "@coss/ui/icons";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { User as UserAuth } from "next-auth";
 import { useSession } from "next-auth/react";
 import { SidebarSetupCard } from "../home/SidebarSetupCard";
-import { KBarTrigger } from "./Kbar";
 import { Navigation } from "./navigation/Navigation";
 import { FeedbackDialog } from "~/feedback/FeedbackDialog";
 import { useBottomNavItems } from "./useBottomNavItems";
-import { ProfileDropdown } from "./user-dropdown/ProfileDropdown";
-import { UserDropdown } from "./user-dropdown/UserDropdown";
 
 export type SideBarContainerProps = {
   bannersHeight: number;
@@ -43,8 +38,24 @@ export function SideBarContainer({ bannersHeight }: SideBarContainerProps) {
   return <SideBar bannersHeight={bannersHeight} user={data?.user} />;
 }
 
+function useCurrentPlan() {
+  const [plan, setPlan] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/billing/plan")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((summary) => !cancelled && setPlan(summary?.plan ?? null))
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return plan;
+}
+
 export function SideBar({ bannersHeight, user }: SideBarProps) {
   const { t, isLocaleReady } = useLocale();
+  const plan = useCurrentPlan();
 
   const publicPageUrl = `${WEBAPP_URL}/${user?.orgAwareUsername}`;
 
@@ -63,70 +74,35 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
         data-sw-sidebar
         style={sidebarStylingAttributes}
         className={classNames(
-          "fixed left-0 hidden h-full w-14 flex-col overflow-y-auto overflow-x-hidden border-muted border-r bg-cal-muted md:sticky md:flex lg:w-56 lg:px-3",
+          "fixed left-0 hidden h-full w-14 flex-col overflow-y-auto overflow-x-hidden border-subtle border-r md:sticky md:flex lg:w-[224px] lg:px-2.5",
           "max-h-screen"
         )}>
-        <div className="flex h-full flex-col justify-between py-3 lg:pt-4">
-          <header className="todesktop:-mt-3 todesktop:flex-col-reverse items-center justify-between todesktop:[-webkit-app-region:drag] md:hidden lg:flex">
-            {user?.org ? (
-              !ENABLE_PROFILE_SWITCHER ? (
-                <Link href="/settings/organizations/profile" className="w-full px-1.5">
-                  <div className="flex items-center gap-2 font-medium">
-                    <Avatar
-                      alt={`${user.org.name} logo`}
-                      imageSrc={getPlaceholderAvatar(user.org.logoUrl, user.org.name)}
-                      size="xsm"
-                    />
-                    <p className="text line-clamp-1 text-sm">
-                      <span>{user.org.name}</span>
-                    </p>
-                  </div>
-                </Link>
-              ) : (
-                <ProfileDropdown />
-              )
-            ) : (
-              <div data-testid="user-dropdown-trigger" className="todesktop:mt-4 w-full">
-                <span className="hidden lg:inline">
-                  <UserDropdown />
-                </span>
-                <span className="hidden md:inline lg:hidden">
-                  <UserDropdown small />
-                </span>
-              </div>
-            )}
-            <div className="flex w-full justify-end rtl:space-x-reverse">
-              <button
-                color="minimal"
-                onClick={() => window.history.back()}
-                className="group todesktop:block hidden font-medium text-sm text-subtle hover:text-emphasis">
-                <ArrowLeftIcon className="h-4 w-4 shrink-0 text-subtle group-hover:text-emphasis" />
-              </button>
-              <button
-                color="minimal"
-                onClick={() => window.history.forward()}
-                className="group todesktop:block hidden font-medium text-sm text-subtle hover:text-emphasis">
-                <ArrowRightIcon className="h-4 w-4 shrink-0 text-subtle group-hover:text-emphasis" />
-              </button>
-              {!!user?.org && (
-                <div data-testid="user-dropdown-trigger" className="flex items-center">
-                  <UserDropdown small />
-                </div>
-              )}
-              <KBarTrigger />
-            </div>
+        <div className="flex h-full flex-col py-2.5">
+          <header className="flex h-8 items-center justify-center px-1 lg:justify-start">
+            <Link href="/home" className="flex items-center gap-2" aria-label={t("home_page_title")}>
+              <span className="lg:hidden">
+                <Logo small icon />
+              </span>
+              <span className="hidden lg:inline">
+                <Logo small />
+              </span>
+            </Link>
           </header>
-          {/* logo icon for tablet */}
-          <Link href="/event-types" className="text-center md:inline lg:hidden">
-            <Logo small icon />
-          </Link>
           <Navigation />
         </div>
 
-        <div className="md:px-2 md:pb-4 lg:p-0">
+        <div className="md:px-2 md:pb-3 lg:px-0 lg:pb-3">
+          {plan && plan !== "TEAM" && (
+            <Link
+              href="/settings/billing"
+              data-testid="sidebar-upgrade"
+              className="bg-inverted text-inverted mb-3 hidden h-8 items-center justify-center rounded-md text-[13px] font-semibold lg:flex">
+              {t("upgrade")}
+            </Link>
+          )}
           <SidebarSetupCard />
           <FeedbackDialog />
-          {bottomNavItems.map((item, index) => (
+          {bottomNavItems.map((item) => (
             <Tooltip side="right" content={t(item.name)} className="lg:hidden" key={item.name}>
               <ButtonOrLink
                 id={item.name}
@@ -135,26 +111,25 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
                 target={item.target}
                 className={classNames(
                   "text-left",
-                  "justify-right group flex items-center rounded-md px-2 py-1.5 font-medium text-default text-sm transition [&[aria-current='page']]:bg-emphasis",
-                  "mt-0.5 w-full text-sm [&[aria-current='page']]:text-emphasis",
-                  isLocaleReady ? "hover:bg-subtle hover:text-emphasis" : "",
-                  index === 0 && "mt-3"
+                  "group flex w-full items-center rounded-md px-2 py-1.5 text-[13px] text-default transition [&[aria-current='page']]:bg-emphasis [&[aria-current='page']]:text-emphasis",
+                  isLocaleReady ? "hover:bg-subtle hover:text-emphasis" : ""
                 )}
                 onClick={item.onClick}>
                 {!!item.icon && (
                   <Icon
                     name={item.isLoading ? "rotate-cw" : item.icon}
                     className={classNames(
-                      "h-4 w-4 shrink-0 aria-[aria-current='page']:text-inherit",
-                      "ml-3 md:mx-auto lg:ltr:mr-2 lg:rtl:ml-2",
+                      "h-3.5 w-3.5 shrink-0",
+                      "md:mx-auto lg:ltr:mr-2 lg:rtl:ml-2",
                       item.isLoading && "animate-spin"
                     )}
                     aria-hidden="true"
                   />
                 )}
                 {isLocaleReady ? (
-                  <span className="hidden w-full justify-between lg:flex">
-                    <div className="flex">{t(item.name)}</div>
+                  <span className="hidden w-full items-center justify-between lg:flex">
+                    <span>{t(item.name)}</span>
+                    {item.href?.startsWith("/settings") && <Icon name="chevron-right" className="h-3 w-3 opacity-60" />}
                   </span>
                 ) : (
                   <SkeletonText className="h-[20px] w-full" />

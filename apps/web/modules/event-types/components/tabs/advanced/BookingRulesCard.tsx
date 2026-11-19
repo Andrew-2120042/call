@@ -201,7 +201,7 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
                 type="button"
                 aria-pressed
                 onClick={() => toggleReminder(minutes)}
-                className="bg-inverted text-inverted rounded-full border border-transparent px-3 py-1 text-sm">
+                className="bg-inverted text-inverted rounded-md border border-transparent px-3 py-1 text-sm">
                 {minutes % 1440 === 0
                   ? t("booking_rules_reminder_days", { count: minutes / 1440 })
                   : minutes % 60 === 0
@@ -217,7 +217,7 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => toggleReminder(choice.minutes)}
-                className={`rounded-full border px-3 py-1 text-sm ${
+                className={`rounded-md border px-3 py-1 text-sm ${
                   selected ? "bg-inverted text-inverted border-transparent" : "border-default text-default"
                 }`}>
                 {t(choice.key)}

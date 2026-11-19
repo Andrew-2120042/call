@@ -14,7 +14,7 @@ import type { InputFieldProps, InputProps } from "./types";
 export const inputStyles = cva(
   [
     // Base styles
-    "rounded-[10px] border",
+    "rounded-md border",
     "leading-none font-normal",
 
     // Colors

@@ -54,7 +54,7 @@ export function SettingsToggle({
           {toggleSwitchAtTheEnd ? (
             <div
               className={classNames(
-                "border-subtle flex justify-between space-x-3 rounded-lg border px-4 py-6 sm:px-6",
+                "border-subtle flex justify-between space-x-3 rounded-lg border px-4 py-4 sm:px-5",
                 checked && children && "rounded-b-none",
                 switchContainerClassName
               )}>

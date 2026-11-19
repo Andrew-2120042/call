@@ -79,7 +79,7 @@ export default function HomeCalendarDemoView() {
 
   return (
     <div className="flex h-[calc(100dvh-7rem)] min-h-[560px] gap-4" data-testid="home-calendar-demo">
-      <section className="border-subtle bg-default flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border">
+      <section className="border-subtle bg-default flex min-w-0 flex-1 flex-col overflow-hidden rounded-lg border">
         <header className="border-subtle flex items-center gap-2 border-b px-4 py-3">
           <button
             type="button"
@@ -195,7 +195,7 @@ export default function HomeCalendarDemoView() {
         </div>
       </section>
 
-      <aside className="border-subtle bg-default hidden w-[340px] flex-none flex-col overflow-y-auto rounded-2xl border p-5 lg:flex">
+      <aside className="border-subtle bg-default hidden w-[340px] flex-none flex-col overflow-y-auto rounded-lg border p-5 lg:flex">
         <p className="text-subtle text-xs">{now.format("dddd D MMMM")}</p>
         <h2 className="text-emphasis mt-1 text-xl font-semibold">{t(greeting, { name: firstName })}</h2>
         <p className="text-subtle mt-1 text-sm">{t("home_demo_today", { count: todayCount })}</p>

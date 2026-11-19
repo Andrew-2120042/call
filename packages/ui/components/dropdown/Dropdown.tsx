@@ -37,7 +37,7 @@ export const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuConten
         {...props}
         sideOffset={sideOffset}
         className={classNames(
-          "shadow-dropdown bg-default border-subtle relative z-50 origin-top-right stack-y-px rounded-xl border p-1 text-sm",
+          "shadow-dropdown bg-default border-subtle relative z-50 origin-top-right stack-y-px rounded-lg border p-1 text-[13px]",
           "w-[220px]",
           props.className
         )}
@@ -117,7 +117,7 @@ export const DropdownMenuSubTrigger = forwardRef<HTMLDivElement, DropdownMenuSub
   ({ className = "", children, ...props }, forwardedRef) => (
     <DropdownMenuPrimitive.SubTrigger
       className={classNames(
-        "hover:bg-subtle hover:text-emphasis text-default flex cursor-pointer select-none items-center justify-between rounded-lg p-2 text-sm font-medium outline-none ring-inset first-of-type:rounded-t-[inherit] last-of-type:rounded-b-[inherit] focus:bg-subtle focus:text-emphasis",
+        "hover:bg-subtle hover:text-emphasis text-default flex cursor-pointer select-none items-center justify-between rounded-md px-2 py-1.5 text-[13px] font-medium outline-none ring-inset first-of-type:rounded-t-[inherit] last-of-type:rounded-b-[inherit] focus:bg-subtle focus:text-emphasis",
         className
       )}
       {...props}
@@ -138,7 +138,7 @@ export const DropdownMenuSubContent = forwardRef<HTMLDivElement, DropdownMenuSub
         alignOffset={alignOffset}
         {...props}
         className={classNames(
-          "shadow-dropdown bg-default border-subtle relative z-50 min-w-[180px] origin-top-left stack-y-px rounded-xl border p-1 text-sm",
+          "shadow-dropdown bg-default border-subtle relative z-50 min-w-[180px] origin-top-left stack-y-px rounded-lg border p-1 text-[13px]",
           props.className
         )}
         ref={forwardedRef}>
@@ -197,7 +197,7 @@ export const DropdownItem = (props: DropdownItemProps) => {
     <ButtonOrLink
       {...rest}
       className={classNames(
-        "hover:text-emphasis text-default inline-flex w-full items-center space-x-1 rounded-lg  p-2 disabled:cursor-not-allowed",
+        "hover:text-emphasis text-default inline-flex w-full items-center space-x-1 rounded-md px-2 py-1.5 disabled:cursor-not-allowed",
         color === "destructive" ? "hover:bg-error hover:text-error text-error" : "hover:bg-subtle",
         props.className
       )}>

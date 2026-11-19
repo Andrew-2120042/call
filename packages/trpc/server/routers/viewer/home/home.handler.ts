@@ -62,8 +62,9 @@ export const getHandler = async ({ ctx }: Ctx) => {
 
   const chartStart = dayjs(now).tz(ctx.user.timeZone).startOf("week").subtract(CHART_WEEKS - 1, "week");
   const monthAgo = new Date(now.getTime() - 30 * DAY_MS);
-  const [calendarCount, everBooked, recentBookings, services, servicesBooked] = await Promise.all([
+  const [calendarCount, videoCount, everBooked, recentBookings, services, servicesBooked] = await Promise.all([
     prisma.credential.count({ where: { userId, type: { endsWith: "_calendar" } } }),
+    prisma.credential.count({ where: { userId, type: { endsWith: "_video" } } }),
     prisma.booking.count({ where: { userId } }),
     prisma.booking.findMany({
       where: { userId, createdAt: { gte: chartStart.toDate() }, status: { in: madeBookings } },
@@ -102,6 +103,7 @@ export const getHandler = async ({ ctx }: Ctx) => {
     { id: "service", done: serviceCount > 0, href: "/event-types" },
     { id: "hours", done: !!user?.defaultScheduleId, href: "/availability" },
     { id: "calendar", done: calendarCount > 0, href: "/apps/categories/calendar" },
+    { id: "video", done: videoCount > 0, href: "/apps/categories/conferencing" },
     { id: "first_booking", done: everBooked > 0, href: "/event-types" },
   ] as const;
 

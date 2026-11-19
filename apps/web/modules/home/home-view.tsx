@@ -1,5 +1,6 @@
 "use client";
 
+import { SetupChecklist } from "./SetupChecklist";
 import dayjs from "@calcom/dayjs";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
@@ -34,23 +35,27 @@ export default function HomeView() {
     <div className="mx-auto max-w-6xl" data-testid="home">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-emphasis text-2xl font-medium">
+          <h1 className="text-emphasis text-lg font-semibold tracking-[-0.01em]">
             {t(greetingKey(new Date().getHours()), { name: firstName })}
           </h1>
-          <p className="text-subtle mt-1 text-sm">{t("home_subtitle")}</p>
+          <p className="text-subtle mt-0.5 text-[13px]">{t("home_subtitle")}</p>
         </div>
         <button
           type="button"
           onClick={() => copy(data.pageUrl, t("home_link_copied"))}
-          className="bg-subtle text-emphasis hover:bg-emphasis inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
+          className="border-subtle text-emphasis hover:bg-subtle inline-flex h-8 max-w-full items-center gap-2 rounded-md border px-3 text-[13px] font-medium transition-colors"
           data-testid="home-page-url"
           title={t("home_copy_link")}>
           <span className="truncate">{pageLabel}</span>
-          <Icon name="share-2" className="h-4 w-4 flex-none" />
+          <Icon name="share-2" className="h-3.5 w-3.5 flex-none" />
         </button>
       </header>
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6">
+        <SetupChecklist setup={data.setup} pageUrl={data.pageUrl} />
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
           icon="calendar"
           label={t("home_bookings_week")}
@@ -90,7 +95,7 @@ export default function HomeView() {
       </div>
 
       <div className="mt-3 grid gap-3 lg:grid-cols-[1.6fr_1fr]">
-        <section className="bg-default border-subtle rounded-2xl border p-5">
+        <section className="bg-default border-subtle rounded-lg border p-5">
           <div className="flex items-baseline justify-between gap-3">
             <h2 className="text-emphasis font-semibold">{t("home_bookings_chart")}</h2>
             <span className="text-subtle text-xs">{t("home_last_8_weeks")}</span>
@@ -102,7 +107,7 @@ export default function HomeView() {
           </div>
         </section>
 
-        <section className="bg-default border-subtle rounded-2xl border p-5">
+        <section className="bg-default border-subtle rounded-lg border p-5">
           <div className="flex items-center justify-between">
             <h2 className="text-emphasis font-semibold">{t("home_coming_up")}</h2>
             <Link href="/bookings/upcoming" className="text-subtle text-sm hover:underline">
@@ -130,8 +135,8 @@ export default function HomeView() {
                     <span
                       className={
                         booking.isRequest
-                          ? "rounded-full bg-orange-500/15 px-2.5 py-1 text-[11px] font-medium text-orange-300"
-                          : "text-subtle border-subtle rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                          ? "rounded-md bg-orange-500/15 px-2.5 py-1 text-[11px] font-medium text-orange-300"
+                          : "text-subtle border-subtle rounded-md border px-2.5 py-1 text-[11px] font-medium"
                       }>
                       {booking.isRequest ? t("service_kind_request") : t("home_confirmed")}
                     </span>
@@ -153,7 +158,7 @@ export default function HomeView() {
         {data.services.length === 0 ? (
           <Link
             href="/event-types"
-            className="border-subtle text-subtle mt-4 block rounded-2xl border border-dashed p-8 text-center text-sm hover:text-emphasis">
+            className="border-subtle text-subtle mt-4 block rounded-lg border border-dashed p-8 text-center text-sm hover:text-emphasis">
             {t("home_add_first_service")}
           </Link>
         ) : (
@@ -163,14 +168,14 @@ export default function HomeView() {
               return (
                 <div
                   key={service.id}
-                  className="bg-default border-subtle group flex flex-col rounded-2xl border p-5 transition hover:border-[var(--cal-border-emphasis)]">
+                  className="bg-default border-subtle group flex flex-col rounded-lg border p-5 transition hover:border-[var(--cal-border-emphasis)]">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-emphasis truncate font-medium">{service.title}</p>
                       <p className="text-subtle mt-0.5 truncate text-xs">/{service.slug}</p>
                     </div>
                     {service.hidden && (
-                      <span className="text-subtle border-subtle rounded-full border px-2 py-0.5 text-[11px]">
+                      <span className="text-subtle border-subtle rounded-md border px-2 py-0.5 text-[11px]">
                         {t("hidden")}
                       </span>
                     )}
@@ -189,7 +194,7 @@ export default function HomeView() {
                   </div>
                   <div className="mt-5 flex items-end justify-between gap-3">
                     <div>
-                      <p className="text-emphasis text-2xl leading-none">{service.bookedLast30Days}</p>
+                      <p className="text-emphasis text-xl font-semibold leading-none">{service.bookedLast30Days}</p>
                       <p className="text-subtle mt-1 text-xs">{t("home_booked_30_days")}</p>
                     </div>
                     <div className="flex gap-1.5">
@@ -223,7 +228,7 @@ function WeeklyChart({ weeks }: { weeks: { weekStart: string; count: number }[] 
   const total = weeks.reduce((sum, w) => sum + w.count, 0);
   return (
     <div className="mt-4">
-      <p className="text-emphasis text-3xl leading-none">{total}</p>
+      <p className="text-emphasis text-2xl font-semibold leading-none">{total}</p>
       <div className="mt-5 flex h-36 items-end gap-2" role="img" aria-label={`${total} bookings in 8 weeks`}>
         {weeks.map((week, i) => {
           const isCurrent = i === weeks.length - 1;
@@ -277,12 +282,12 @@ function Stat(props: {
   testId: string;
 }) {
   const body = (
-    <div className="bg-default border-subtle h-full rounded-2xl border p-5" data-testid={props.testId}>
+    <div className="bg-default border-subtle h-full rounded-lg border p-5" data-testid={props.testId}>
       <div className="flex items-center justify-between">
         <p className="text-subtle text-sm">{props.label}</p>
         <Icon name={props.icon} className="text-subtle h-4 w-4" />
       </div>
-      <p className="text-emphasis mt-3 truncate text-3xl font-normal leading-none">{props.value}</p>
+      <p className="text-emphasis mt-2 truncate text-2xl font-semibold leading-none">{props.value}</p>
       <p
         className={`mt-2 truncate text-xs ${props.tone === "up" ? "text-emerald-400" : props.tone === "down" ? "text-orange-300" : "text-subtle"}`}>
         {props.note}

@@ -59,7 +59,7 @@ export function FeedbackDialog() {
               aria-checked={kind === option}
               onClick={() => setKind(option)}
               className={classNames(
-                "rounded-full border px-3 py-1.5 text-sm transition",
+                "rounded-md border px-3 py-1.5 text-sm transition",
                 kind === option
                   ? "border-emphasis bg-inverted text-inverted"
                   : "border-default text-default hover:border-emphasis"

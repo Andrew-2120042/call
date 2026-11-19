@@ -14,7 +14,7 @@ export function Bone({ className, style }: { className?: string; style?: CSSProp
 
 function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={classNames("bg-default border-subtle rounded-2xl border p-5", className)}>{children}</div>
+    <div className={classNames("bg-default border-subtle rounded-lg border p-5", className)}>{children}</div>
   );
 }
 
@@ -22,7 +22,7 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
 export function ListSkeleton({ rows = 5, avatar = true }: { rows?: number; avatar?: boolean }) {
   return (
     <div
-      className="bg-default border-subtle overflow-hidden rounded-2xl border"
+      className="bg-default border-subtle overflow-hidden rounded-lg border"
       aria-busy
       data-testid="list-skeleton">
       {Array.from({ length: rows }, (_, index) => (
@@ -152,13 +152,13 @@ export function PageListSkeleton({ rows = 6 }: { rows?: number }) {
 export function AssistantSkeleton() {
   return (
     <div className="mx-auto flex max-w-[680px] flex-col items-center py-24" aria-busy>
-      <Bone className="h-12 w-12 rounded-2xl" />
+      <Bone className="h-12 w-12 rounded-lg" />
       <Bone className="mt-5 h-8 w-72" />
       <Bone className="mt-3 h-4 w-96 max-w-full" />
-      <Bone className="mt-8 h-24 w-full rounded-3xl" />
+      <Bone className="mt-8 h-24 w-full rounded-lg" />
       <div className="mt-6 grid w-full gap-2.5 sm:grid-cols-2">
         {[0, 1, 2, 3].map((index) => (
-          <Bone key={index} className="h-16 rounded-2xl" />
+          <Bone key={index} className="h-16 rounded-lg" />
         ))}
       </div>
     </div>

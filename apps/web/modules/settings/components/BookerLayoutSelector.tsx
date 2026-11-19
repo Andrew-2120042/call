@@ -65,7 +65,7 @@ export const BookerLayoutSelector = ({
     <div
       className={classNames(
         "border-subtle bg-default overflow-hidden border",
-        isOuterBorder ? "rounded-lg p-6" : "rounded-[22px]"
+        isOuterBorder ? "rounded-lg p-6" : "rounded-lg"
       )}>
       <div className={classNames(isOuterBorder ? "pb-5" : "px-6 pt-6")}>
         <Label className={classNames("mb-1 font-semibold", isOuterBorder ? "text-sm" : "text-base")}>

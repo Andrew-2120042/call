@@ -65,7 +65,7 @@ export default function AssistantView() {
 
   const composer = (
     <form
-      className="border-default focus-within:border-emphasis bg-default rounded-[26px] border p-2 shadow-[0_1px_2px_rgba(0,0,0,.04),0_8px_24px_-16px_rgba(0,0,0,.18)] transition-colors"
+      className="border-default focus-within:border-emphasis bg-default rounded-lg border p-2 shadow-[0_1px_2px_rgba(0,0,0,.04),0_8px_24px_-16px_rgba(0,0,0,.18)] transition-colors"
       onSubmit={(e) => {
         e.preventDefault();
         send(draft);
@@ -105,7 +105,7 @@ export default function AssistantView() {
       <div
         className="mx-auto flex min-h-[calc(100dvh-120px)] max-w-[680px] flex-col justify-center py-10"
         data-testid="assistant-page">
-        <div className="bg-default border-subtle mx-auto grid h-12 w-12 place-items-center rounded-2xl border">
+        <div className="bg-default border-subtle mx-auto grid h-12 w-12 place-items-center rounded-lg border">
           <Icon name="message-circle" className="text-emphasis h-5 w-5" />
         </div>
         <h1 className="text-emphasis mt-5 text-center text-[28px] font-semibold leading-tight tracking-[-0.025em]">
@@ -117,7 +117,7 @@ export default function AssistantView() {
 
         {!configured && (
           <div
-            className="border-subtle bg-default mt-8 flex items-start gap-3 rounded-2xl border p-4"
+            className="border-subtle bg-default mt-8 flex items-start gap-3 rounded-lg border p-4"
             role="status">
             <Icon name="info" className="text-subtle mt-0.5 h-4 w-4 flex-none" />
             <div>
@@ -136,7 +136,7 @@ export default function AssistantView() {
               type="button"
               disabled={!configured}
               onClick={() => send(t(example.promptKey))}
-              className="border-subtle bg-default hover:border-emphasis group flex items-start gap-3 rounded-2xl border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60">
+              className="border-subtle bg-default hover:border-emphasis group flex items-start gap-3 rounded-lg border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60">
               <span className="bg-subtle grid h-8 w-8 flex-none place-items-center rounded-xl">
                 <Icon name={example.icon} className="text-emphasis h-4 w-4" />
               </span>
@@ -166,7 +166,7 @@ export default function AssistantView() {
             setTurns([]);
             setDraft("");
           }}
-          className="border-default text-emphasis hover:bg-subtle rounded-full border px-3 py-1.5 text-xs font-medium transition-colors">
+          className="border-default text-emphasis hover:bg-subtle rounded-md border px-3 py-1.5 text-xs font-medium transition-colors">
           {t("assistant_new_chat")}
         </button>
       </div>
@@ -185,14 +185,14 @@ export default function AssistantView() {
               className={classNames(
                 "max-w-[80%] text-[14px] leading-relaxed",
                 turn.role === "user"
-                  ? "bg-inverted text-inverted rounded-[20px] rounded-br-md px-4 py-2.5"
+                  ? "bg-inverted text-inverted rounded-lg rounded-br-md px-4 py-2.5"
                   : "text-emphasis pt-0.5"
               )}>
               <p className="whitespace-pre-line">
                 {turn.content.replace(/\*\*(.+?)\*\*/g, "$1").replace(/^\s*[-*]\s+/gm, "• ")}
               </p>
               {!!turn.actions?.length && (
-                <ul className="border-subtle bg-default mt-3 space-y-1.5 rounded-2xl border p-3 text-sm">
+                <ul className="border-subtle bg-default mt-3 space-y-1.5 rounded-lg border p-3 text-sm">
                   {turn.actions.map((action, i) => (
                     <li key={i} className="flex items-center gap-2">
                       <span className="grid h-4 w-4 flex-none place-items-center rounded-full bg-emerald-500 text-white">

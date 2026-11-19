@@ -40,7 +40,7 @@ export type ButtonProps = ButtonBaseProps &
   );
 
 export const buttonClasses = cva(
-  "group whitespace-nowrap inline-flex items-center text-sm font-medium relative rounded-full transition cursor-pointer disabled:cursor-not-allowed gap-1",
+  "group whitespace-nowrap inline-flex items-center text-[13px] font-medium relative rounded-md transition cursor-pointer disabled:cursor-not-allowed gap-1",
   {
     variants: {
       variant: {
@@ -150,8 +150,8 @@ export const buttonClasses = cva(
       },
       size: {
         xs: "h-6 p-2 leading-none text-xs rounded-md",
-        sm: "h-7 px-2 py-1.5 leading-none text-sm" /** For backwards compatibility */,
-        base: "px-2.5 py-2 text-sm leading-none",
+        sm: "h-7 px-2.5 py-1.5 leading-none text-[13px]" /** For backwards compatibility */,
+        base: "h-8 px-3 py-2 text-[13px] leading-none",
         lg: "px-3 py-2.5 ",
       },
       loading: {

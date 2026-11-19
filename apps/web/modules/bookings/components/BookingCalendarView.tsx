@@ -75,7 +75,7 @@ export function BookingCalendarView({
   return (
     <>
       <div
-        className="border-subtle flex flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-2xl border"
+        className="border-subtle flex flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-lg border"
         style={{ height: `calc(100vh - 6rem - ${bannersHeight}px)` }}>
         <Calendar
           timezone={timezone}

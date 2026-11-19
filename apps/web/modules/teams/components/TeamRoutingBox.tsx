@@ -53,7 +53,7 @@ export function TeamRoutingBox({ teamSlug }: { teamSlug: string }) {
   };
 
   return (
-    <section className="border-subtle bg-default mt-6 rounded-2xl border p-5" data-testid="team-routing">
+    <section className="border-subtle bg-default mt-6 rounded-lg border p-5" data-testid="team-routing">
       <p className="text-emphasis flex items-center gap-2 text-sm font-semibold">
         <Icon name="message-circle" className="h-4 w-4" />
         {t("team_routing_title")}
@@ -72,7 +72,7 @@ export function TeamRoutingBox({ teamSlug }: { teamSlug: string }) {
           <button
             type="submit"
             disabled={loading || message.trim().length < 3}
-            className="bg-inverted text-inverted mt-2 inline-flex h-9 items-center gap-2 rounded-full px-4 text-sm font-medium transition hover:opacity-90 disabled:opacity-50"
+            className="bg-inverted text-inverted mt-2 inline-flex h-9 items-center gap-2 rounded-md px-4 text-sm font-medium transition hover:opacity-90 disabled:opacity-50"
             data-testid="team-routing-submit">
             {loading && <Icon name="loader" className="h-4 w-4 animate-spin" />}
             {t("team_routing_button")}
@@ -112,7 +112,7 @@ export function TeamRoutingBox({ teamSlug }: { teamSlug: string }) {
                 // A full page load so the booking page opens on this exact slot.
                 <a
                   href={result.availability.bookUrl}
-                  className="bg-inverted text-inverted mt-3 inline-block rounded-full px-4 py-1.5 text-sm font-medium"
+                  className="bg-inverted text-inverted mt-3 inline-block rounded-md px-4 py-1.5 text-sm font-medium"
                   data-testid="team-routing-book-time">
                   {t("team_routing_book_time", {
                     time: dayjs(result.availability.start).tz(timeZone).format("ddd h:mma"),
@@ -125,14 +125,14 @@ export function TeamRoutingBox({ teamSlug }: { teamSlug: string }) {
             {result.service && (
               <Link
                 href={result.service.url}
-                className="bg-inverted text-inverted rounded-full px-4 py-1.5 text-sm font-medium">
+                className="bg-inverted text-inverted rounded-md px-4 py-1.5 text-sm font-medium">
                 {t("team_routing_book", { service: result.service.title })}
               </Link>
             )}
             {result.member && (
               <Link
                 href={result.member.url}
-                className="border-default text-emphasis rounded-full border px-4 py-1.5 text-sm">
+                className="border-default text-emphasis rounded-md border px-4 py-1.5 text-sm">
                 {t("team_routing_book_with", { name: result.member.name })}
               </Link>
             )}

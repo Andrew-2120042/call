@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-/** Pill tab bar for the service editor. Active state follows ?tabName= (updated in-browser on click). */
+/** Underlined tab bar for the service editor. Active state follows ?tabName= (updated in-browser on click). */
 export function ServiceTabs({ tabs }: { tabs: VerticalTabItemProps[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -14,7 +14,7 @@ export function ServiceTabs({ tabs }: { tabs: VerticalTabItemProps[] }) {
   return (
     <nav
       // Fits its tabs instead of stretching across the column.
-      className="no-scrollbar bg-subtle -mx-1 inline-flex max-w-full gap-1 overflow-x-auto rounded-full p-1"
+      className="no-scrollbar border-subtle flex max-w-full gap-5 overflow-x-auto border-b"
       aria-label="Service settings"
       data-testid="service-tabs">
       {tabs
@@ -30,10 +30,10 @@ export function ServiceTabs({ tabs }: { tabs: VerticalTabItemProps[] }) {
               data-testid={`vertical-tab-${tab["data-testid"]}`}
               onClick={() => (tab.onClick ? tab.onClick(tab.name) : router.push(tab.href))}
               className={classNames(
-                "flex-none whitespace-nowrap rounded-full px-4 py-2 text-sm transition-colors",
+                "-mb-px flex-none whitespace-nowrap border-b-2 pb-2 pt-1 text-[13px] transition-colors",
                 active
-                  ? "bg-default text-emphasis font-semibold shadow-[0_1px_2px_rgba(0,0,0,.08)]"
-                  : "text-subtle hover:text-emphasis font-medium"
+                  ? "border-emphasis text-emphasis font-medium"
+                  : "text-subtle hover:text-emphasis border-transparent"
               )}>
               {tab.name}
             </button>

@@ -121,7 +121,7 @@ export default function FormCard({
   customActions?: React.ReactNode;
 } & JSX.IntrinsicElements["div"]) {
   className = classNames(
-    "flex items-center group relative w-full rounded-2xl p-1 border border-subtle bg-cal-muted mb-2",
+    "flex items-center group relative w-full rounded-lg p-1 border border-subtle bg-cal-muted mb-2",
     className
   );
 
@@ -214,7 +214,7 @@ export function FormCardBody({
   className?: string;
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={`bg-default border-default w-full gap-3 rounded-2xl border p-3 ${className}`} {...props}>
+    <div className={`bg-default border-default w-full gap-3 rounded-md border p-3 ${className}`} {...props}>
       {children}
     </div>
   );

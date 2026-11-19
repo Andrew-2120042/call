@@ -74,8 +74,8 @@ function ThemeTiles(props: {
             onClick={() => props.onPick(id)}
             className={
               active
-                ? "border-emphasis rounded-2xl border-2 p-2 text-left"
-                : "border-subtle hover:border-emphasis rounded-2xl border-2 p-2 text-left transition"
+                ? "border-emphasis rounded-lg border-2 p-2 text-left"
+                : "border-subtle hover:border-emphasis rounded-lg border-2 p-2 text-left transition"
             }>
             <span
               className="border-subtle block h-20 rounded-xl border"
@@ -212,7 +212,7 @@ const AppearanceView = ({
 
   return (
     <SettingsHeader title={t("appearance")} description={t("appearance_description")}>
-      <section className="bg-default border-subtle rounded-[22px] border p-6" data-testid="app-theme-picker">
+      <section className="bg-default border-subtle rounded-lg border p-6" data-testid="app-theme-picker">
         <p className="text-emphasis font-semibold">{t("app_theme")}</p>
         <p className="text-subtle mt-1 text-sm">{t("sw_app_theme_hint")}</p>
         <ThemeTiles
@@ -228,7 +228,7 @@ const AppearanceView = ({
       {isApartOfOrganization ? null : (
         <>
           <section
-            className="bg-default border-subtle mt-4 rounded-[22px] border p-6"
+            className="bg-default border-subtle mt-4 rounded-lg border p-6"
             data-testid="booking-theme-picker">
             <p className="text-emphasis font-semibold">{t("theme")}</p>
             <p className="text-subtle mt-1 text-sm">{t("theme_applies_note")}</p>

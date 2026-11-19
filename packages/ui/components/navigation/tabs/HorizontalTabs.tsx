@@ -46,7 +46,7 @@ const HorizontalTabs = ({
   return (
     <div className="mb-4 max-w-full lg:mb-5">
       <nav
-        className="no-scrollbar flex space-x-0.5 overflow-x-scroll rounded-md"
+        className="no-scrollbar border-subtle flex gap-5 overflow-x-scroll border-b"
         aria-label="Tabs"
         ref={navRef}
         {...props}

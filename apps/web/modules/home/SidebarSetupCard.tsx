@@ -12,30 +12,18 @@ export function SidebarSetupCard() {
   const done = data.setup.filter((step) => step.done).length;
   const total = data.setup.length;
   if (done === total) return null;
-  const next = data.setup.find((step) => !step.done);
   const percent = Math.round((done / total) * 100);
 
   return (
-    <div className="bg-default mx-0 mb-3 hidden rounded-2xl p-4 lg:block" data-testid="sidebar-setup">
-      <div
-        className="grid h-12 w-12 place-items-center rounded-full"
-        style={{
-          background: `conic-gradient(var(--cal-text-emphasis) ${percent * 3.6}deg, var(--cal-bg-emphasis) 0)`,
-        }}
-        aria-hidden>
-        <div className="bg-default text-emphasis grid h-[40px] w-[40px] place-items-center rounded-full text-xs font-semibold">
-          {percent}%
-        </div>
-      </div>
-      <p className="text-emphasis mt-3 text-sm font-semibold">{t("setup_sidebar_title")}</p>
-      <p className="text-subtle text-xs">{t("setup_progress", { done, total })}</p>
-      {next && (
-        <Link
-          href={next.href}
-          className="bg-inverted text-inverted mt-3 block rounded-full px-4 py-2 text-center text-sm font-medium">
-          {t(`setup_step_${next.id}`)}
-        </Link>
-      )}
-    </div>
+    <Link
+      href="/home"
+      className="border-subtle hover:bg-subtle mb-3 hidden rounded-md border px-2.5 py-2 transition lg:block"
+      data-testid="sidebar-setup">
+      <span className="text-emphasis block text-[13px] font-medium">{t("setup_sidebar_title")}</span>
+      <span className="bg-emphasis mt-2 block h-1 overflow-hidden rounded-full" aria-hidden>
+        <span className="bg-inverted block h-full rounded-full" style={{ width: `${percent}%` }} />
+      </span>
+      <span className="text-subtle mt-1.5 block text-[11px]">{t("setup_percent_done", { percent })}</span>
+    </Link>
   );
 }

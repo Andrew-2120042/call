@@ -51,7 +51,7 @@ const L = require("./lib.cjs"); const { APP, RUN, db, check, section, findMail, 
     const times = await again.locator('[data-testid="time"]').evaluateAll((els) => els.map((e) => e.getAttribute("data-time")));
     check("That time is no longer offered to others", !times.includes(start), `${times.length} times left`);
     await again.context().close();
-    check("Free plan shows the Slotwise badge on the booking page", /Slotwise/i.test(await b1.page.locator("body").innerText()));
+    check("Free plan shows the Nodslot badge on the booking page", /Nodslot/i.test(await b1.page.locator("body").innerText()));
   });
   await section("4. Client reschedules, then cancels", async () => {
     const p = b1.page; let since = Date.now();

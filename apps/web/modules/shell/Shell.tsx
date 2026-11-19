@@ -1,5 +1,6 @@
 "use client";
 
+import { AppTopBar } from "./AppTopBar";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import classNames from "@calcom/ui/classNames";
 import { Button } from "@calcom/ui/components/button";
@@ -131,9 +132,9 @@ export function ShellMain(props: LayoutProps) {
       {(props.heading || !!props.backPath) && (
         <div
           className={classNames(
-            "mb-0 flex items-center bg-[var(--sw-panel)] md:mb-6 md:mt-0",
-            props.smallHeading ? "lg:mb-7" : "lg:mb-8",
-            !props.disableSticky && "sticky top-0 z-10"
+            "mb-0 flex items-center bg-[var(--sw-panel)] md:mb-5 md:mt-0",
+            props.smallHeading ? "lg:mb-5" : "lg:mb-6",
+            !props.disableSticky && "sticky top-0 z-10 md:top-11"
           )}>
           {props.beforeBackButton}
           {!!props.backPath && (
@@ -159,14 +160,14 @@ export function ShellMain(props: LayoutProps) {
                 {props.heading && (
                   <h3
                     className={classNames(
-                      "font-cal text-emphasis max-w-28 sm:max-w-72 md:max-w-80 hidden truncate text-2xl font-medium md:block xl:max-w-full",
-                      props.smallHeading ? "text-base" : "text-xl"
+                      "text-emphasis max-w-28 sm:max-w-72 md:max-w-80 hidden truncate font-semibold tracking-[-0.01em] md:block xl:max-w-full",
+                      props.smallHeading ? "text-[15px]" : "text-lg"
                     )}>
                     {!isLocaleReady ? <SkeletonText invisible /> : props.heading}
                   </h3>
                 )}
                 {props.subtitle && (
-                  <p className="text-default hidden text-sm md:block" data-testid="subtitle">
+                  <p className="text-subtle mt-0.5 hidden text-[13px] md:block" data-testid="subtitle">
                     {!isLocaleReady ? <SkeletonText invisible /> : props.subtitle}
                   </p>
                 )}
@@ -205,7 +206,8 @@ function MainContainer({
     <main data-sw-main className="bg-default relative z-0 flex-1 focus:outline-none">
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
-      <div className="max-w-full p-2 sm:p-4 lg:p-6">
+      <AppTopBar />
+      <div className="max-w-full p-2 sm:p-4 lg:px-6 lg:py-5">
         <ErrorBoundary>
           {!props.withoutMain ? <ShellMain {...props}>{props.children}</ShellMain> : props.children}
         </ErrorBoundary>

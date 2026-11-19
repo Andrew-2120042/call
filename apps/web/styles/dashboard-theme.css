@@ -1,6 +1,6 @@
-/* Owner dashboard shell: a quiet rail on the canvas and a rounded work panel beside it. Applied through
-   data-sw-* attributes on the shell so the engine's components stay untouched. Colours come from
-   brand-tokens.css. */
+/* Owner dashboard shell: a flat work-tool layout. A bordered rail on the left with grouped sections,
+   a thin top bar, and dense 13px content on the same dark canvas. Applied through data-sw-* attributes
+   on the shell so the engine's components stay untouched. Colours come from brand-tokens.css. */
 
 body:has([data-sw-main]),
 body:has([data-sw-settings-nav]) {
@@ -8,17 +8,17 @@ body:has([data-sw-settings-nav]) {
 }
 
 [data-sw-sidebar] {
-  background: transparent !important;
-  border-color: transparent !important;
+  background: var(--sw-canvas) !important;
+  border-right: 1px solid var(--cal-border-subtle) !important;
 }
 
 [data-sw-sidebar] nav a,
 [data-sw-sidebar] nav button,
 [data-sw-sidebar] > div:last-child a,
 [data-sw-sidebar] > div:last-child button {
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   color: var(--sw-nav-text);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 @media (min-width: 1024px) {
@@ -27,12 +27,24 @@ body:has([data-sw-settings-nav]) {
   [data-sw-sidebar] > div:last-child a,
   [data-sw-sidebar] > div:last-child button {
     font-size: 13px;
-    padding: 7px 12px !important;
+    padding: 5px 8px !important;
+    margin-top: 1px !important;
   }
 
   [data-sw-sidebar] nav svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Inside a section the rows are indented text, like a work tool's tree. */
+  [data-sw-sidebar] [data-sw-nav-children] a > svg,
+  [data-sw-sidebar] [data-sw-nav-children] a > span > svg:first-child {
+    display: none !important;
+  }
+
+  [data-sw-sidebar] [data-sw-nav-group-label] {
+    padding: 5px 8px !important;
+    color: var(--cal-text-subtle) !important;
   }
 }
 
@@ -50,26 +62,12 @@ body:has([data-sw-settings-nav]) {
 }
 
 [data-sw-main] {
-  background: var(--cal-bg-muted) !important;
+  background: var(--sw-canvas) !important;
+  font-size: 13px;
 }
 
-/* The work area is a rounded panel sitting beside the rail. */
-@media (min-width: 768px) {
-  [data-sw-main] {
-    margin: 8px 8px 8px 0;
-    border: 1px solid var(--cal-border-subtle);
-    border-radius: 16px;
-    min-height: calc(100dvh - 16px);
-    overflow: clip;
-  }
-}
-
-/* Full-width pages that hide the sidebar (the service editor) get an even margin all round. */
-@media (min-width: 768px) {
-  body:has([data-sw-no-sidebar]) [data-sw-main] {
-    margin: 12px;
-    min-height: calc(100dvh - 24px);
-  }
+[data-sw-topbar] {
+  background: var(--sw-canvas);
 }
 
 [data-sw-main] h1,
@@ -108,7 +106,7 @@ body:has([data-sw-settings-nav]) {
 
 /* Page headers sit on the same colour as the work area (no band behind titles). */
 :root {
-  --sw-panel: var(--cal-bg-muted);
+  --sw-panel: var(--sw-canvas);
 }
 
 /* Tab content entering: quick and subtle, never blocking clicks. */
@@ -137,7 +135,7 @@ body:has([data-sw-settings-nav]) {
 [data-sw-main] div.grid[data-testid$="-bookings"] {
   background: var(--cal-bg) !important;
   border: 1px solid var(--cal-border-subtle);
-  border-radius: 22px !important;
+  border-radius: 8px !important;
   padding: 0 !important;
   overflow: hidden;
 }
@@ -158,15 +156,16 @@ body:has([data-sw-settings-nav]) {
 
 /* Settings menu: same look as the main rail. */
 [data-sw-settings-nav] {
-  background: transparent !important;
+  background: var(--sw-canvas) !important;
+  border-right: 1px solid var(--cal-border-subtle);
   padding-left: 12px !important;
   padding-right: 12px !important;
 }
 
 [data-sw-settings-nav] a {
   width: 100% !important;
-  border-radius: 10px !important;
-  padding: 7px 12px !important;
+  border-radius: 6px !important;
+  padding: 5px 8px !important;
   font-size: 13px !important;
   color: var(--sw-nav-text);
 }
@@ -200,7 +199,7 @@ body:has([data-sw-settings-nav]) {
   background: var(--cal-bg);
   border: 1px solid var(--cal-border-subtle) !important;
   border-bottom-width: 0 !important;
-  border-radius: 22px 22px 0 0;
+  border-radius: 8px 8px 0 0;
 }
 
 /* The action strip under a section ("Update", "Delete account") */
@@ -209,13 +208,13 @@ body:has([data-sw-settings-nav]) {
   background: var(--cal-bg) !important;
   border: 1px solid var(--cal-border-subtle) !important;
   border-top-color: var(--cal-border-muted) !important;
-  border-radius: 0 0 22px 22px !important;
+  border-radius: 0 0 8px 8px !important;
   margin-top: 0 !important;
 }
 
 .sw-settings-card .rounded-t-lg {
   background: var(--cal-bg);
-  border-radius: 22px 22px 0 0 !important;
+  border-radius: 8px 8px 0 0 !important;
   border-bottom-width: 0 !important;
 }
 
@@ -223,7 +222,7 @@ body:has([data-sw-settings-nav]) {
 .sw-settings-card .rounded-lg.border,
 .sw-settings-card .rounded-md.border {
   background: var(--cal-bg);
-  border-radius: 22px !important;
+  border-radius: 8px !important;
 }
 
 /* Cal spaces these with margins; the flex gap handles spacing now. */
@@ -240,7 +239,7 @@ body:has([data-sw-settings-nav]) {
 
 /* Header boxes Cal draws as rounded-lg with a flat bottom */
 .sw-settings-card .rounded-lg.border.rounded-b-none {
-  border-radius: 22px 22px 0 0 !important;
+  border-radius: 8px 8px 0 0 !important;
 }
 .sw-settings-card .rounded-b-none + [class*="rounded-b-"],
 .sw-settings-card .rounded-b-none + form > [class*="rounded-b-"]:first-child {
@@ -248,15 +247,9 @@ body:has([data-sw-settings-nav]) {
 }
 
 /* The setup card's action is a real button, not a rail link. */
-[data-sw-sidebar] [data-testid="sidebar-setup"] {
-  border: 1px solid var(--cal-border-subtle);
-}
-
 [data-sw-sidebar] [data-testid="sidebar-setup"] a {
-  background: var(--cal-bg-inverted) !important;
-  color: var(--cal-text-inverted) !important;
-  border-radius: 999px !important;
-  padding: 8px 16px !important;
+  color: var(--cal-text-emphasis) !important;
+  padding: 0 !important;
 }
 
 /* Teams: a member who just joined slides in and glows briefly, like a player entering a lobby. */
@@ -272,3 +265,10 @@ body:has([data-sw-settings-nav]) {
   .sw-member-joined { animation: none; background-color: rgb(16 185 129 / 0.12); }
 }
 
+
+/* The rail's one call to action keeps its inverted colours. */
+[data-sw-sidebar] a[data-testid="sidebar-upgrade"] {
+  color: var(--cal-text-inverted) !important;
+  background: var(--cal-bg-inverted) !important;
+  font-weight: 600;
+}

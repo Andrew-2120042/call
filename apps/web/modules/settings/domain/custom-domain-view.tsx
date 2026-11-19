@@ -41,7 +41,7 @@ export default function CustomDomainView() {
 
   if (!entitled && !domain) {
     return (
-      <div className="bg-default border-subtle rounded-[22px] border p-6" data-testid="custom-domain-upgrade">
+      <div className="bg-default border-subtle rounded-lg border p-6" data-testid="custom-domain-upgrade">
         <p className="text-default text-sm">{t("custom_domain_pro_only")}</p>
         <Link href="/settings/billing" className="mt-4 inline-block">
           <Button type="button">{t("custom_domain_upgrade")}</Button>
@@ -53,7 +53,7 @@ export default function CustomDomainView() {
   if (!domain) {
     return (
       <form
-        className="bg-default border-subtle rounded-[22px] border p-6"
+        className="bg-default border-subtle rounded-lg border p-6"
         data-testid="custom-domain-add"
         onSubmit={(e) => {
           e.preventDefault();
@@ -90,7 +90,7 @@ export default function CustomDomainView() {
 
   return (
     <div className="space-y-4" data-testid="custom-domain-status">
-      <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
+      <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-lg border p-6">
         <div className="min-w-0">
           <div className="flex items-center gap-2.5">
             <p className="text-emphasis truncate text-lg font-semibold">{domain.domain}</p>
@@ -129,7 +129,7 @@ export default function CustomDomainView() {
       </div>
 
       {!domain.verified && (
-        <div className="bg-default border-subtle rounded-[22px] border p-6">
+        <div className="bg-default border-subtle rounded-lg border p-6">
           <p className="text-emphasis font-semibold">
             <span className="text-subtle mr-2">1</span>
             {t("custom_domain_step_records")}
@@ -137,7 +137,7 @@ export default function CustomDomainView() {
           <p className="text-subtle mt-1 text-sm">{t("custom_domain_dns_intro")}</p>
           <div className="mt-4 space-y-3">
             {domain.records.map((record) => (
-              <div key={record.type} className="border-subtle rounded-2xl border p-4">
+              <div key={record.type} className="border-subtle rounded-lg border p-4">
                 <span className="bg-subtle text-emphasis rounded-md px-2 py-0.5 text-xs font-semibold">
                   {record.type}
                 </span>
@@ -167,7 +167,7 @@ export default function CustomDomainView() {
       )}
 
       {!domain.verified && (
-        <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-[22px] border p-6">
+        <div className="bg-default border-subtle flex flex-wrap items-center justify-between gap-4 rounded-lg border p-6">
           <div>
             <p className="text-emphasis font-semibold">
               <span className="text-subtle mr-2">2</span>

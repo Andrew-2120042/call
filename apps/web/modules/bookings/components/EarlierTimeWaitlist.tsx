@@ -47,7 +47,7 @@ export function EarlierTimeWaitlist({ bookingUid }: { bookingUid: string }) {
             type="button"
             onClick={join}
             disabled={state === "saving"}
-            className="border-default text-emphasis hover:border-emphasis mt-3 inline-flex h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium transition disabled:opacity-50"
+            className="border-default text-emphasis hover:border-emphasis mt-3 inline-flex h-9 items-center gap-2 rounded-md border px-4 text-sm font-medium transition disabled:opacity-50"
             data-testid="earlier-waitlist-join">
             {state === "saving" && <Icon name="loader" className="h-4 w-4 animate-spin" />}
             {t("waitlist_earlier_button")}
