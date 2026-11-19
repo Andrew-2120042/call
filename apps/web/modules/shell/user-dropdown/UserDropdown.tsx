@@ -115,17 +115,17 @@ export function UserDropdown({ small }: UserDropdownProps) {
             data-testid="user-dropdown-trigger-button"
             className={classNames(
               "hover:bg-emphasis todesktop:!bg-transparent group mx-0 flex w-full cursor-pointer appearance-none items-center rounded-full text-left outline-none transition focus:outline-none focus:ring-0 md:rounded-none lg:rounded",
-              small ? "p-2" : "px-2 py-1.5"
+              small ? "p-1" : "px-2 py-1.5"
             )}
           />
         }>
         <span
           className={classNames(
-            small ? "h-4 w-4" : "h-5 w-5 ltr:mr-2 rtl:ml-2",
+            small ? "h-6 w-6" : "h-5 w-5 ltr:mr-2 rtl:ml-2",
             "relative shrink-0 rounded-full"
           )}>
           <Avatar
-            size={small ? "xs" : "xsm"}
+            size={small ? "sm" : "xsm"}
             imageSrc={user?.avatarUrl ?? user?.avatar}
             alt={user?.username ? `${user.username} Avatar` : "Nameless User Avatar"}
             className="overflow-hidden"
@@ -133,7 +133,7 @@ export function UserDropdown({ small }: UserDropdownProps) {
           <span
             className={classNames(
               "border-muted absolute -bottom-1 -right-1 rounded-full border bg-green-500",
-              small ? "-bottom-0.5 -right-0.5 h-2.5 w-2.5" : "-bottom-0.5 right-0 h-2 w-2"
+              small ? "-bottom-0.5 -right-0.5 h-3 w-3" : "-bottom-0.5 right-0 h-2 w-2"
             )}
           />
         </span>

@@ -81,7 +81,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
         data-sw-sidebar
         style={sidebarStylingAttributes}
         className={classNames(
-          "fixed left-0 hidden h-full w-14 flex-col overflow-y-auto overflow-x-hidden border-subtle border-r md:sticky md:flex lg:w-[224px] lg:px-2.5",
+          "fixed left-0 hidden h-full w-14 flex-col overflow-y-auto overflow-x-hidden border-subtle border-r md:sticky md:flex lg:w-[248px] lg:px-3",
           "max-h-screen"
         )}>
         <div className="flex h-full flex-col py-2.5">
