@@ -21,7 +21,7 @@ export function ButtonLink({
       ? "bg-fg text-bg hover:bg-white"
       : "border border-line-strong text-fg hover:bg-raised";
   const external = href.startsWith("http");
-  const cls = `inline-flex h-10 items-center justify-center rounded-full px-5 text-sm font-medium transition ${styles} ${className}`;
+  const cls = `inline-flex h-10 items-center justify-center rounded-md px-5 text-sm font-medium transition ${styles} ${className}`;
   return external ? (
     <a href={href} className={cls}>
       {children}

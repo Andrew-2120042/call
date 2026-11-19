@@ -72,11 +72,14 @@ export function Header() {
             </nav>
           </div>
           <div className="flex items-center gap-2">
-            <a href={loginUrl} className="text-muted hover:text-fg hidden rounded-full border border-line-strong px-3.5 py-1.5 text-[13px] transition sm:inline">
-              Sign in
+            <a href={loginUrl} className="text-muted hover:text-fg hidden px-2 py-1.5 text-[13px] transition sm:inline">
+              Log in
             </a>
-            <a href={signupUrl} className="bg-fg text-bg rounded-full px-3.5 py-1.5 text-[13px] font-medium transition hover:bg-white">
-              Start for free
+            <a href={signupUrl} className="hidden rounded-md border border-line-strong px-3 py-1.5 text-[13px] transition hover:bg-raised sm:inline">
+              Sign up for free
+            </a>
+            <a href={signupUrl} className="bg-fg text-bg rounded-md px-3 py-1.5 text-[13px] font-medium transition hover:bg-white">
+              Get started
             </a>
             <details className="group relative md:hidden">
               <summary className="text-muted hover:text-fg grid h-8 w-8 cursor-pointer list-none place-items-center rounded-full border border-line" aria-label="Menu">
@@ -123,10 +126,19 @@ export function Footer() {
   ];
   return (
     <footer className="border-t border-line">
-      <Container className="grid gap-10 py-16 sm:grid-cols-3 lg:grid-cols-6">
-        <div className="sm:col-span-3 lg:col-span-1">
-          <Logo />
+      <Container className="grid gap-12 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)]">
+        <div className="flex flex-col justify-between gap-10">
+          <svg viewBox="0 0 24 24" className="h-36 w-36 sm:h-48 sm:w-48" fill="none" aria-hidden>
+            <rect x="2" y="2" width="20" height="20" rx="6" fill="currentColor" />
+            <path d="M7.5 12.5l3 3 6-6.5" stroke="var(--color-bg)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <div className="text-faint space-y-1.5 text-xs">
+            <p className="text-muted">{site.name} © {new Date().getFullYear()}</p>
+            <Link href="/privacy" className="hover:text-fg block transition">Privacy</Link>
+            <Link href="/terms" className="hover:text-fg block transition">Terms</Link>
+          </div>
         </div>
+        <div className="grid gap-10 sm:grid-cols-3 lg:grid-cols-5">
         {columns.map((col) => (
           <div key={col.title}>
             <p className="text-faint text-xs">{col.title}</p>
@@ -139,10 +151,7 @@ export function Footer() {
             </ul>
           </div>
         ))}
-      </Container>
-      <Container className="text-faint flex flex-wrap justify-between gap-3 border-t border-line py-6 text-xs">
-        <span>© {new Date().getFullYear()} {site.name}</span>
-        <span>{site.tagline}</span>
+        </div>
       </Container>
     </footer>
   );

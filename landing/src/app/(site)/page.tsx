@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Accordion } from "@/components/accordion";
+import { AudienceCarousel } from "@/components/audience-carousel";
+import { HoodPanel } from "@/components/graphics";
+import { BookedChip, ClockChip, FaceStack, FeatureRow, JobIllustration } from "@/components/home-parts";
 import { PricingCards } from "@/components/pricing-cards";
-import { ApprovalMock, BookingMock, HeroWindows, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
+import { ApprovalMock, HeroWindows, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
 import { Faq } from "@/components/sections";
-import { type Story, StoryScroller } from "@/components/story-scroller";
 import { Container, JsonLd } from "@/components/ui";
-import { ConstellationGraphic, GrowthCurve, HoodPanel } from "@/components/graphics";
-import { Window } from "@/components/window";
-import { homeFaq } from "@/content/site-content";
+import { audiences, homeFaq } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
 const integrations = [
@@ -22,220 +22,216 @@ const integrations = [
   { name: "Webhooks", logo: "/logos/webhooks.svg" },
 ];
 
-const stories: Story[] = [
-  {
-    id: "get-booked",
-    nav: "Get booked",
-    lead: "One link, every service.",
-    rest: "Clients pick a time that suits them in their own time zone. Your calendars stay in sync, so you're never double booked.",
-    visual: <BookingMock />,
-    points: [
-      { title: "Unlimited services, free.", body: "Each service gets its own link, length, questions and location.", demo: ["Intro call · 15 min", "Consultation · 60 min", "Follow-up · 30 min"] },
-      { title: "Your calendars, in sync.", body: "Google, Outlook, Apple and CalDAV are checked for conflicts and updated with every booking.", demo: ["Google Calendar · busy 2–3pm", "New booking added to Outlook"] },
-    ],
-  },
-  {
-    id: "fill-cancellations",
-    nav: "Fill cancellations",
-    lead: "Cancellations refill themselves.",
-    rest: "People join a waitlist for times that are taken. The moment one frees up, the first in line gets it.",
-    visual: <WaitlistMock />,
-    points: [
-      { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books the slot.", demo: ["Priya N. · offered Sat 10:00am", "Claim link sent · 2 hours to accept"] },
-      { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person automatically.", demo: ["Offer expired · Priya N.", "Offered to Tom R. instead"] },
-    ],
-  },
-  {
-    id: "win-back",
-    nav: "Win them back",
-    lead: "Your personal retention agent.",
-    rest: "When a client cancels, AI offers them new times on the spot, then follows up by email with an opening they can take in one click.",
-    visual: <RebookMock />,
-    points: [
-      { title: "New times, right away.", body: "The cancel page suggests three open times, picked around when they like to meet.", demo: ["Cancelled · Tue 3:00pm", "3 new times suggested"] },
-      { title: "A follow-up that books.", body: "Ten minutes later they get one open time by email. One click and they're booked again.", demo: ["Want to rebook with Maya?", "Book Thu 11:00am · See other times"] },
-    ],
-  },
-  {
-    id: "stop-no-shows",
-    nav: "Stop no-shows",
-    lead: "Know who's actually coming.",
-    rest: "Clients confirm in one click before your deadline. If they don't, you're told and the time can go to someone else.",
-    visual: <NoShowMock />,
-    points: [
-      { title: "Confirm or release.", body: "Pick the deadline. Unconfirmed bookings can free themselves up.", demo: ["Please confirm by Thu 4pm", "Confirmed in one click"] },
-      { title: "Reminders that land.", body: "Send them a day before, an hour before, or both.", demo: ["Reminder · 1 day before", "Reminder · 1 hour before"] },
-    ],
-  },
-  {
-    id: "approve-requests",
-    nav: "Approve requests",
-    lead: "Read every request first.",
-    rest: "Approvals are free. On Pro, each request comes with a short summary of who is asking and why.",
-    visual: <ApprovalMock />,
-    points: [
-      { title: "Ask what you need.", body: "Unlimited booking questions on every plan.", demo: ["What do you need help with?", "How did you hear about us?"] },
-      { title: "Decide in seconds.", body: "AI summaries turn long answers into a few clear lines.", demo: ["Summary · 6-person studio, budget agreed", "Accept · Decline"] },
-    ],
-  },
-  {
-    id: "run-a-team",
-    nav: "Run a team",
-    lead: "Share the load across the team.",
-    rest: "Round robin, collective or one service copied to everyone, with a weekly view of who's free.",
-    visual: <TeamMock />,
-    points: [
-      { title: "See the gaps early.", body: "A weekly heatmap shows where nobody is free during working hours.", demo: ["Nobody free · Tue 1pm–3pm", "Spotted before anyone tries to book"] },
-      { title: "One simple price.", body: "Team is $69 a month for up to 10 people, then $10 per extra person.", demo: ["Team · $69 a month", "Up to 10 people · $10 per extra"] },
-    ],
-  },
-];
-
-const facts = [
-  { value: "$0", label: "to start, with unlimited services" },
-  { value: "4", label: "calendar providers kept in sync" },
-  { value: "2 hrs", label: "default window to claim a freed slot" },
-  { value: "10", label: "people on one flat Team plan" },
-];
+/** Email box that carries the address into sign-up, like Apollo's hero and closing banner. */
+function EmailSignup({ light = false }: { light?: boolean }) {
+  return (
+    <form action={signupUrl} method="get" className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="Enter your work email"
+        aria-label="Email"
+        className={`h-11 w-full rounded-md border px-3.5 sm:flex-1 text-sm outline-none transition ${
+          light
+            ? "border-black/15 bg-white text-black placeholder:text-black/40 focus:border-black/40"
+            : "border-line-strong bg-surface text-fg placeholder:text-faint focus:border-fg/40"
+        }`}
+      />
+      <button
+        type="submit"
+        className={`h-11 rounded-md px-5 text-sm font-medium transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-fg text-bg hover:bg-white"}`}>
+        Sign up for free
+      </button>
+    </form>
+  );
+}
 
 export default function Home() {
   return (
     <div className="relative">
-      {/* Thin rails framing the content column all the way down the page. */}
-      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-1/2 z-0 hidden w-full max-w-6xl -translate-x-1/2 border-x border-line/70 lg:block" />
-      {/* Hero */}
+      {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-[340px] mx-auto h-[520px] max-w-5xl rounded-full bg-accent/25 blur-[140px]" />
-        <Container className="relative pt-20 pb-14 text-center sm:pt-28">
-          <Link href="/blog/fill-last-minute-cancellations" className="text-faint hover:text-muted text-xs transition">
-            How to fill last-minute cancellations <span aria-hidden>›</span>
+        <Container className="relative pt-16 pb-12 text-center sm:pt-24">
+          <Link
+            href="/blog/fill-last-minute-cancellations"
+            className="text-muted hover:text-fg inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition">
+            <span className="rounded-full bg-raised px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">New</span>
+            Waitlists that refill cancelled times
           </Link>
-          <h1 className="mx-auto mt-5 max-w-[16ch] text-[44px] font-medium leading-[1.02] tracking-[-0.035em] sm:text-7xl">
-            The booking link that fills itself.
+          <h1 className="mx-auto mt-7 max-w-[17ch] text-[40px] font-semibold leading-[1.08] tracking-[-0.04em] sm:text-[76px] sm:leading-[1.02]">
+            Where clients <FaceStack /> find
+            <br className="hidden sm:block" /> <ClockChip /> the time to meet <BookedChip />
           </h1>
-          <p className="text-muted mx-auto mt-6 max-w-[48ch] text-base leading-relaxed sm:text-lg">
-            {site.name} gets you booked, refills cancelled slots from a waitlist and stops no-shows before they happen.
+          <p className="text-muted mx-auto mt-6 max-w-[50ch] text-base leading-relaxed sm:text-lg">
+            One booking link that gets you booked, refills cancelled slots from a waitlist, and stops no-shows before they
+            happen.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-            <Link href="/#product" className="rounded-full border border-line-strong px-4 py-2 text-[13px] transition hover:bg-raised">
-              See how it works
-            </Link>
-            <a href={signupUrl} className="bg-fg text-bg rounded-full px-4 py-2 text-[13px] font-medium transition hover:bg-white">
-              Start for free
-            </a>
+          <div className="mt-8 flex justify-center">
+            <EmailSignup />
           </div>
+          <p className="text-faint mt-3 text-xs">Free forever plan. No credit card required.</p>
         </Container>
-        <div className="relative pb-10">
-          {/* The coloured stage the product sits on, like a lit backdrop rising behind the window. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 top-1/3 bg-[linear-gradient(180deg,transparent,rgba(67,56,202,0.22)_45%,rgba(37,99,235,0.28))]"
-          />
-          <Container className="relative max-w-7xl!">
-            <HeroWindows />
+        <div className="relative pb-6">
+          <Container className="max-w-7xl!">
+            <div className="relative overflow-hidden rounded-2xl border border-line bg-[radial-gradient(ellipse_at_50%_0%,#1d1d1d,#0b0b0b_70%)] px-3 pt-10 sm:px-20 sm:pt-16">
+              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(transparent_95%,rgba(255,255,255,0.04)_95%),linear-gradient(90deg,transparent_95%,rgba(255,255,255,0.04)_95%)] bg-[size:48px_48px]" />
+              <div className="relative">
+                <HeroWindows />
+              </div>
+            </div>
           </Container>
         </div>
       </section>
 
-      {/* Works with */}
-      <section className="border-y border-line">
-        <Container className="grid grid-cols-2 gap-px bg-line px-0! sm:grid-cols-4">
-          {integrations.map((item) => (
-            <div key={item.name} className="bg-bg text-fg/85 flex h-28 items-center justify-center gap-3 whitespace-nowrap text-base font-medium tracking-tight transition hover:text-fg">
-              <Image src={item.logo} alt="" width={28} height={28} className="h-7 w-7 object-contain" />
-              {item.name}
-            </div>
-          ))}
-        </Container>
-      </section>
-
-      {/* Product story */}
-      <section id="product" className="scroll-mt-20 py-28">
+      {/* Works with: Apollo's logo strip, as the tools people already use. */}
+      <section className="py-14">
         <Container>
-          <p className="text-accent text-xs font-medium">Product</p>
-          <h2 data-reveal className="mt-3 max-w-[22ch] text-3xl font-medium leading-tight tracking-tight sm:text-5xl">
-            The calendar that works after you&apos;re booked. <span className="text-faint">Fills gaps, catches no-shows, shares the load.</span>
-          </h2>
-          <div className="mt-20">
-            <StoryScroller stories={stories} />
-          </div>
-        </Container>
-      </section>
-
-      {/* Live from day one */}
-      <section className="py-24">
-        <Container className="text-center">
-          <p className="text-accent text-xs font-medium">Set up in minutes</p>
-          <h2 data-reveal className="mx-auto mt-3 max-w-[30ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
-            Live from day one. <span className="text-faint">Connect your calendar, import from Calendly, and share your link before lunch.</span>
-          </h2>
-          <a href={signupUrl} className="mt-7 inline-block rounded-full border border-line-strong px-4 py-2 text-[13px] transition hover:bg-raised">
-            Start for free
-          </a>
-          <div data-reveal className="mx-auto mt-14 max-w-4xl">
-            <Window title="Bookings">
-              <Image src="/shots/bookings.png" alt={`The ${site.name} bookings list`} width={2560} height={1600} className="h-auto w-full" />
-            </Window>
-          </div>
-        </Container>
-      </section>
-
-      {/* Dark centrepiece */}
-      <section className="relative overflow-hidden border-t border-line pt-36 pb-32">
-        {/* One soft glow under the horizon that fades out down the whole section, so nothing has a hard edge. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_42%_at_50%_44%,rgba(79,70,229,0.15),rgba(37,99,235,0.05)_50%,transparent_80%)]"
-        />
-        {/* A wide horizon: a thin multi-colour ring masked from a gradient, with a soft glow under it. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-[300px] h-[1100px] w-[1900px] -translate-x-1/2 [mask-image:linear-gradient(180deg,#000_22%,transparent_42%)]">
-          <div className="absolute inset-0 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(37,99,235,0.18),transparent_45%)]" />
-          <div
-            className="absolute inset-0 bg-[linear-gradient(90deg,#f97316,#ec4899_30%,#8b5cf6_55%,#2563eb_80%,#22d3ee)] blur-[1px]"
-            style={{ mask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99.4%, #000 99.6%, #000 99.9%, transparent 100%)", WebkitMask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99.4%, #000 99.6%, #000 99.9%, transparent 100%)" }}
-          />
-          <div
-            className="absolute inset-0 bg-[linear-gradient(90deg,#f97316,#ec4899_30%,#8b5cf6_55%,#2563eb_80%,#22d3ee)] opacity-60 blur-2xl"
-            style={{ mask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 97%, #000 99.5%, transparent 100%)", WebkitMask: "radial-gradient(ellipse 50% 50% at 50% 50%, transparent 97%, #000 99.5%, transparent 100%)" }}
-          />
-        </div>
-        <Container className="relative text-center">
-          <p className="text-faint text-xs">The only booking link with</p>
-          <h2 className="mt-4 text-5xl font-medium tracking-[-0.035em] sm:text-7xl">
-            Self-filling calendars<sup className="text-faint align-super text-base">™</sup>
-          </h2>
-        </Container>
-        <Container className="relative mt-56 grid border-t border-line sm:grid-cols-2 lg:grid-cols-5">
-          {[
-            { t: "It waits for you.", b: "Waitlists queue up for every taken time.", icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" },
-            { t: "It asks for you.", b: "Clients confirm, or the time is released.", icon: "m8 12.5 2.5 2.5L16 9.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" },
-            { t: "It reads for you.", b: "Requests arrive with a short summary.", icon: "M5 5h14v14H5zM8.5 9.5h7M8.5 12h7M8.5 14.5h4" },
-            { t: "It reminds for you.", b: "Reminders before every booking.", icon: "M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16ZM10 20.5h4" },
-            { t: "It shares the load.", b: "Round robin across your team.", icon: "M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6.5 0a2.5 2.5 0 1 0 0-5M3.5 19a5.5 5.5 0 0 1 11 0M16 13.5a4.5 4.5 0 0 1 4.5 5" },
-          ].map((c) => (
-            <div
-              key={c.t}
-              className="relative flex h-56 flex-col justify-between border-line p-6 lg:[&:not(:last-child)]:border-r lg:[&:not(:last-child)]:after:absolute lg:[&:not(:last-child)]:after:top-full lg:[&:not(:last-child)]:after:-right-px lg:[&:not(:last-child)]:after:h-40 lg:[&:not(:last-child)]:after:w-px lg:[&:not(:last-child)]:after:bg-[linear-gradient(180deg,var(--color-line),transparent)] lg:[&:not(:last-child)]:after:content-['']">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-faint" aria-hidden>
-                <path d={c.icon} />
-              </svg>
-              <div>
-                <p className="text-sm font-medium">{c.t}</p>
-                <p className="text-faint mt-1.5 text-xs leading-relaxed">{c.b}</p>
+          <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">
+            Works with the calendars and video apps you already use
+          </p>
+          <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4 lg:grid-cols-8">
+            {integrations.map((item) => (
+              <div key={item.name} className="text-muted flex items-center justify-center gap-2 whitespace-nowrap text-sm">
+                <Image src={item.logo} alt="" width={22} height={22} className="h-[22px] w-[22px] object-contain opacity-90" />
+                {item.name}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </Container>
+      </section>
 
-        <Container className="relative mt-16 lg:mt-24">
+      {/* Feature rows: product on a grey stage, words and points beside it, alternating sides. */}
+      <section id="product" className="scroll-mt-20 border-t border-line py-28">
+        <Container className="space-y-32">
+          <FeatureRow
+            eyebrow="Fill cancellations"
+            title="Cancelled times refill themselves"
+            body="People join a waitlist for times that are taken. The moment one frees up, the first in line is offered it by email."
+            points={[
+              { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books." },
+              { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person on its own." },
+              { title: "Any time that day, or earlier.", body: "Clients can wait for a whole day, or for anything sooner." },
+            ]}
+            href="/features/waitlist-scheduling"
+            cta="See how the waitlist works"
+            visual={<WaitlistMock />}
+          />
+          <FeatureRow
+            flip
+            eyebrow="Approve requests"
+            title="Read every request before you say yes"
+            body="Approvals are free. On Pro, each request arrives with a short summary of who is asking and whether they're a fit."
+            points={[
+              { title: "Ask what you need.", body: "Unlimited booking questions on every plan." },
+              { title: "Decide in seconds.", body: "Long answers become a few clear lines, with spam flagged." },
+              { title: "Accept from anywhere.", body: "The calendar, the email, or just ask the Assistant." },
+            ]}
+            href="/features/booking-approval"
+            cta="See approvals"
+            visual={<ApprovalMock />}
+          />
+          <FeatureRow
+            eyebrow="Stop no-shows"
+            title="Know who's actually coming"
+            body="Clients confirm in one click before your deadline. If they don't, the time can go to someone on the waitlist."
+            points={[
+              { title: "Confirm or release.", body: "Pick the deadline; unconfirmed bookings free themselves up." },
+              { title: "Reminders that land.", body: "A day before, an hour before, or both." },
+              { title: "Series stay on track.", body: "Weekly sessions booked in one go, confirmed one at a time." },
+            ]}
+            href="/features/no-show-protection"
+            cta="See no-show protection"
+            visual={<NoShowMock />}
+          />
+          <FeatureRow
+            flip
+            eyebrow="Win them back"
+            title="A retention agent on every cancellation"
+            body="When a client cancels, they're offered new times on the spot, then a follow-up email with one opening they can take in a click."
+            points={[
+              { title: "New times, right away.", body: "Picked around when they like to meet." },
+              { title: "A follow-up that books.", body: "Ten minutes later, one open time by email." },
+              { title: "Nothing to set up.", body: "It's on for every one-to-one service." },
+            ]}
+            href="/features/ai-booking-summaries"
+            cta="See what the AI does"
+            visual={<RebookMock />}
+          />
+        </Container>
+      </section>
+
+      {/* One link, three jobs: Apollo's framed three-column section. */}
+      <section className="py-24">
+        <Container>
+          <div className="rounded-2xl border border-line bg-surface px-5 py-14 sm:px-10">
+            <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">How it works</p>
+            <h2 className="mt-3 text-center text-3xl font-medium tracking-[-0.025em] sm:text-5xl">One link. Three jobs.</h2>
+            <p className="text-muted mx-auto mt-4 max-w-[52ch] text-center text-[15px]">
+              Getting booked is the start. {site.name} keeps the calendar full after that, without you chasing anyone.
+            </p>
+            <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
+              {[
+                { kind: "book" as const, title: "Get booked", body: "Clients pick a time in their own time zone. Your calendars stay in sync, so you're never double booked.", tags: ["Booking page", "Calendar sync", "Meet & Zoom"] },
+                { kind: "keep" as const, title: "Stay booked", body: "Reminders, one-click confirmations and approvals keep the right people in the right slots.", tags: ["Reminders", "Confirm-or-release", "Approvals"] },
+                { kind: "fill" as const, title: "Fill the gaps", body: "Waitlists and rebooking offers turn every cancellation into another booking.", tags: ["Waitlist", "Rebook offers", "AI summaries"] },
+              ].map((job) => (
+                <div key={job.title} className="flex flex-col bg-bg p-7 text-center">
+                  <p className="text-2xl font-medium tracking-tight">{job.title}</p>
+                  <p className="text-muted mx-auto mt-2 max-w-[30ch] text-[13px] leading-relaxed">{job.body}</p>
+                  <div className="my-8">
+                    <JobIllustration kind={job.kind} />
+                  </div>
+                  <div className="mt-auto flex flex-wrap justify-center gap-1.5">
+                    {job.tags.map((tag) => (
+                      <span key={tag} className="text-muted rounded-md border border-line px-2 py-1 text-[11px]">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Four reasons, on a grey band (Apollo's "AI that actually executes"). */}
+      <section className="bg-surface border-y border-line py-24">
+        <Container>
+          <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">Why {site.name}</p>
+          <h2 className="mt-3 text-center text-3xl font-medium tracking-[-0.025em] sm:text-5xl">Scheduling that keeps you booked</h2>
+          <p className="text-muted mx-auto mt-4 max-w-[54ch] text-center text-[15px]">
+            Most booking tools stop at the booking. Ours keeps working on your calendar after it.
+          </p>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z", title: "Free where it counts", body: "Unlimited services, bookings, approvals and questions on the free plan." },
+              { icon: "M5 5h14v14H5zM8.5 9.5h7M8.5 12h7M8.5 14.5h4", title: "AI that reads for you", body: "Every request summarised, spam flagged, and an Assistant that sets up and answers for you." },
+              { icon: "M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4", title: "Built to refill", body: "Waitlists, confirm-or-release and rebooking offers turn gaps back into hours." },
+              { icon: "M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z", title: "Your data stays yours", body: "Calendar access is only used to find free times and add bookings. Leave any time." },
+            ].map((card) => (
+              <div key={card.title} className="rounded-xl border border-line bg-bg p-6">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-fg/80" aria-hidden>
+                  <path d={card.icon} />
+                </svg>
+                <p className="mt-8 text-[15px] font-medium">{card.title}</p>
+                <p className="text-muted mt-2 text-[13px] leading-relaxed">{card.body}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Don't change how you work (Apollo's enterprise accordion). */}
+      <section className="py-28">
+        <Container>
           <Accordion
             header={
               <>
-                <p className="text-accent text-xs font-medium">Under the hood</p>
-                <h2 data-reveal className="mt-3 max-w-[18ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
-                  All the scheduling, none of the busywork. <span className="text-faint">Ready on day one.</span>
+                <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Under the hood</p>
+                <h2 data-reveal className="mt-3 max-w-[16ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+                  Don&apos;t change how you work. Just add {site.name}.
                 </h2>
               </>
             }
@@ -247,7 +243,7 @@ export default function Home() {
               },
               {
                 title: "Video and locations",
-                body: "Google Meet, Zoom or Microsoft Teams links are added to every booking, or meet in person.",
+                body: "Google Meet or Zoom links are added to every booking, or meet in person or by phone.",
                 visual: <HoodPanel title="Where you meet" rows={[["/logos/google-meet.webp", "Google Meet", "Link added to every booking"], ["/logos/zoom.svg", "Zoom", "A new meeting each time"], [null, "In person", "12 High Street, studio 2"]]} />,
               },
               {
@@ -265,75 +261,54 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Connected */}
+      {/* Teams: one more feature row. */}
+      <section className="border-t border-line py-28">
+        <Container>
+          <FeatureRow
+            eyebrow="Run a team"
+            title="Share the load across the team"
+            body="Round robin, everyone at once, or one service copied to each person, with a weekly view of who's free."
+            points={[
+              { title: "See the gaps early.", body: "A weekly view shows where nobody is free." },
+              { title: "Fair by default.", body: "Bookings spread evenly across the team." },
+              { title: "One simple price.", body: "$69 a month for up to 10 people, then $10 per extra person." },
+            ]}
+            href="/features/team-scheduling"
+            cta="See team scheduling"
+            visual={<TeamMock />}
+          />
+        </Container>
+      </section>
+
+      {/* Big number (Apollo's "600K+"), kept to something true. */}
       <section className="border-t border-line py-24">
-        <Container className="text-center">
-          <p className="text-accent text-xs font-medium">Connectivity</p>
-          <h2 data-reveal className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">Your tools, connected.</h2>
-          <p className="text-muted mx-auto mt-3 max-w-[46ch] text-sm">Calendars, video and automation you already use. Bring your services and hours over from Calendly in a minute.</p>
-          <Link href="/docs/integrations" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
-            See every integration <span aria-hidden>→</span>
-          </Link>
-        </Container>
-        <div className="mt-14 overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_15%,#000_85%,transparent)]">
-          <div className="marquee flex w-max gap-4">
-            {[...integrations, ...integrations, ...integrations, ...integrations].map((item, i) => (
-              <span
-                key={`${item.name}-${i}`}
-                aria-hidden={i >= integrations.length}
-                className="flex h-[72px] items-center gap-3 rounded-2xl border border-line-strong bg-surface px-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                <Image src={item.logo} alt="" width={30} height={30} className="h-[30px] w-[30px] object-contain" />
-                <span className="text-muted whitespace-nowrap text-sm">{item.name}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Developers */}
-      <section className="border-t border-line py-32">
-        <Container className="grid items-center gap-12 lg:grid-cols-2">
+        <Container className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
           <div>
-            <h2 data-reveal className="text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
-              Webhooks. API keys. Embeds.
-              <br />
-              <span className="text-faint">Build anything on {site.name}.</span>
+            <h2 className="max-w-[16ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+              Everything you need to get booked costs
             </h2>
-            <Link href="/docs/developers" className="text-muted hover:text-fg mt-5 inline-block text-[13px] transition">
-              Read the docs <span aria-hidden>→</span>
-            </Link>
+            <p className="text-muted mt-4 max-w-[44ch] text-[15px]">
+              Unlimited services, bookings, approvals, questions and calendar sync. Pro adds the parts that refill your
+              calendar, for $12 a month.
+            </p>
           </div>
-          <ConstellationGraphic />
+          <p className="text-[120px] font-semibold leading-[0.85] tracking-[-0.06em] sm:text-[220px]">$0</p>
         </Container>
       </section>
 
-      {/* Statement */}
-      <section className="border-t border-line py-32">
-        <Container className="text-center">
-          <p className="font-serif mx-auto max-w-[24ch] text-3xl leading-snug sm:text-5xl">
-            “Every booking tool gets you booked. <span className="text-faint">Ours keeps you booked.</span>”
-          </p>
-          <p className="text-faint mt-6 text-xs">Why we built {site.name}</p>
-        </Container>
-      </section>
-
-      {/* Facts */}
+      {/* Who it's for (where Apollo shows customer stories). */}
       <section className="border-t border-line py-24">
         <Container>
-          <p className="text-accent text-xs font-medium">Built to be simple</p>
-          <h2 data-reveal className="mt-3 max-w-[14ch] text-3xl font-medium leading-tight tracking-tight sm:text-4xl">
-            Free to start. <span className="text-faint">Fair when you grow.</span>
-          </h2>
-          <div className="mt-12 grid items-end gap-12 lg:grid-cols-[1fr_1.3fr]">
-            <div data-reveal className="grid grid-cols-2 gap-x-8 gap-y-10">
-              {facts.map((f) => (
-                <div key={f.label} className="border-s border-line-strong ps-4">
-                  <p className="text-3xl font-medium tabular-nums">{f.value}</p>
-                  <p className="text-faint mt-1 text-xs">{f.label}</p>
-                </div>
-              ))}
-            </div>
-            <GrowthCurve />
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <h2 className="max-w-[18ch] text-3xl font-medium leading-tight tracking-[-0.025em] sm:text-5xl">
+              Made for people whose calendar is their income
+            </h2>
+            <Link href="/pricing" className="text-muted hover:text-fg text-[13px] transition">
+              Compare plans <span aria-hidden>→</span>
+            </Link>
+          </div>
+          <div className="mt-12">
+            <AudienceCarousel audiences={audiences} />
           </div>
         </Container>
       </section>
@@ -341,7 +316,7 @@ export default function Home() {
       {/* Pricing */}
       <section className="border-t border-line py-24" id="pricing">
         <Container>
-          <h2 data-reveal className="text-3xl font-medium tracking-tight sm:text-4xl">
+          <h2 data-reveal className="text-3xl font-medium tracking-[-0.025em] sm:text-5xl">
             Simple pricing. <span className="text-faint">Start free, upgrade when it pays for itself.</span>
           </h2>
           <PricingCards />
@@ -350,17 +325,26 @@ export default function Home() {
 
       <Faq items={homeFaq} />
 
-      {/* Final CTA */}
-      <section className="border-t border-line py-32">
-        <Container className="text-center">
-          <h2 data-reveal className="mx-auto max-w-[14ch] text-4xl font-medium leading-tight tracking-[-0.03em] sm:text-6xl">Full calendars run on {site.name}.</h2>
-          <div className="mt-8 flex justify-center gap-2.5">
-            <Link href="/pricing" className="rounded-full border border-line-strong px-4 py-2 text-[13px] transition hover:bg-raised">
-              See pricing
-            </Link>
-            <a href={signupUrl} className="bg-fg text-bg rounded-full px-4 py-2 text-[13px] font-medium transition hover:bg-white">
-              Start for free
-            </a>
+      {/* Closing banner: the one white block on the page, like Apollo's bright one. */}
+      <section className="pb-24 pt-8">
+        <Container>
+          <div className="relative overflow-hidden rounded-2xl bg-[#f4f4f2] px-6 py-16 text-black sm:px-14 sm:py-20">
+            <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(0,0,0,0.07),transparent_65%)]" />
+            <div aria-hidden className="pointer-events-none absolute bottom-0 right-0 hidden grid-cols-7 gap-1.5 p-10 opacity-60 lg:grid">
+              {Array.from({ length: 35 }, (_, i) => (
+                <span key={i} className={`h-8 w-8 rounded-md ${[9, 10, 16, 18, 23, 24, 25, 31].includes(i) ? "bg-black/80" : "bg-black/[0.06]"}`} />
+              ))}
+            </div>
+            <h2 className="relative max-w-[14ch] text-4xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-6xl">
+              Stop losing hours to empty slots.
+            </h2>
+            <p className="relative mt-5 max-w-[42ch] text-[15px] text-black/60">
+              Set up your page in a few minutes, share one link, and let {site.name} keep your week full.
+            </p>
+            <div className="relative mt-8">
+              <EmailSignup light />
+            </div>
+            <p className="relative mt-3 text-xs text-black/45">Free forever plan. No credit card required.</p>
           </div>
         </Container>
       </section>

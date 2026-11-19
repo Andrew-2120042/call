@@ -68,7 +68,49 @@ body {
   }
 }
 
+/* The hero clock ticks round slowly, and the booking chip flips from a time to "Booked". */
+.clock-minute {
+  transform-origin: 20px 20px;
+  animation: clock-spin 6s linear infinite;
+}
+.clock-hour {
+  transform-origin: 20px 20px;
+  animation: clock-spin 72s linear infinite;
+}
+@keyframes clock-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.booked-a,
+.booked-b {
+  animation: booked-swap 4s ease-in-out infinite;
+}
+.booked-b {
+  animation-delay: -2s;
+}
+@keyframes booked-swap {
+  0%,
+  40% {
+    transform: none;
+    opacity: 1;
+  }
+  50%,
+  90% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .clock-minute,
+  .clock-hour,
+  .booked-a,
+  .booked-b,
   .accordion-progress,
   .accordion-visual,
   .marquee {

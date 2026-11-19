@@ -24,7 +24,8 @@ export const viewport: Viewport = { themeColor: "#090909", colorScheme: "dark" }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${serif.variable}`}>
+    // The reveal script tags <html> before React loads, so its class list is expected to differ.
+    <html lang="en" className={`${inter.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
         {/* Marks the page before first paint so revealed sections don't flash in and out. */}
         <script
