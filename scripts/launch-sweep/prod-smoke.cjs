@@ -56,7 +56,7 @@ const hostEmail = `delivered+host${RUN}@resend.dev`, user = `qa${RUN}`, pw = cry
     const uid = new URL(c.url()).pathname.split("/").pop();
     check("Client can book on the live site", db(`select status from "Booking" where uid='${uid}'`) === "accepted");
     const ref = db(`select r.type||'|'||coalesce(r."meetingUrl",'') from "BookingReference" r join "Booking" bk on bk.id=r."bookingId" where bk.uid='${uid}'`);
-    check("Booking gets a Daily video room", /daily_video\|https:\/\//.test(ref), ref.split("|")[0]);
+    check("No built-in video room is made (host's own Meet/Zoom/Teams only)", !/daily_video/.test(ref), ref || "no video reference");
     console.log("--- Cancel and AI rebook ---");
     await c.getByTestId("cancel").click(); await c.getByTestId("cancel_reason").fill("Something came up"); await c.getByTestId("confirm_cancel").click();
     await c.waitForSelector('[data-testid="rebook-accept"]', { timeout: 90000 }).catch(() => {});
@@ -76,6 +76,6 @@ const hostEmail = `delivered+host${RUN}@resend.dev`, user = `qa${RUN}`, pw = cry
     check("Signed-out API calls are refused", me.status() === 401, me.status());
   } catch (e) { check("prod smoke ran to the end", false, e.message.split("\n")[0]); }
   console.log(`\n${results.filter(Boolean).length} of ${results.length} checks passed`);
-  fs.writeFileSync(__dirname + "/prod-run.json", JSON.stringify({ RUN, hostEmail, user }));
+  fs.writeFileSync(require("os").tmpdir() + "/nodslot-prod-run.json", JSON.stringify({ RUN, hostEmail, user }));
   await b.close(); process.exit(0);
 })();
