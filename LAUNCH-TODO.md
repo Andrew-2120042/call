@@ -2,19 +2,24 @@
 
 Everything still needed before Nodslot goes live. Tick items off as they're done. How to set each one up is in `DEPLOY.md`.
 
+## Live status (2026-11-19)
+Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.site (Vercel Hobby, team `andrew-0da0`, projects `nodslot` and `nodslot-landing`). Database: Neon (`nodslot-db`, iad1, Free) via the Vercel Marketplace. Live smoke test: `node scripts/launch-sweep/prod-smoke.cjs` (11 checks). How deploys work is in the memory note "deploy-process" and `DEPLOY.md`.
+
 ## Accounts and keys (the owner signs up; Claude wires them in)
-- [ ] **Domain**: buy it, then replace the `nodslot.site` placeholders (landing `src/site.config.ts` env vars, app URLs).
-- [ ] **Hosted database**: Supabase or Neon Postgres. Turn on backups (Supabase Free has none, Pro $25/mo has daily backups). Run `db-deploy`.
-- [~] **Email provider (Resend)**: account and a sending-only API key are done (2026-11-16, in `.env.launch-keys`, verified against Resend's API). Still needed: verify the sending domain (SPF, DKIM, DMARC) once the domain is bought. Until then Resend can only send to the account owner. The Resend team is named "wordofwealth21"; rename it or make a Nodslot team if you want them separate.
-- [x] **Video key (Daily.co)**: done 2026-11-16. Subdomain `nodslot.daily.co`, key in `.env` and `.env.launch-keys`, app switched on. Tested: a booking gets a Daily room, the link is in the client's email, no more "[Action Required]" host emails.
-- [~] **Google**: done for local use 2026-11-16. Project `nodslot-514917`, Calendar API on, consent screen "Nodslot" (External, testing mode, owner's Gmail is the only test user), web client with localhost redirect URIs, keys in both files, Google sign-in turned on. Tested up to Google's consent screen. Still needed after the domain: add the production URLs as redirect URIs, add the domain plus privacy and terms links to the consent screen, and submit for verification (takes weeks; until then only up to 100 listed test users can connect).
-- [ ] **Microsoft (Outlook, Teams video)**: blocked. A personal Microsoft account can't register apps without a directory. The owner needs to sign up for a free Azure account (asks for a card to verify identity), then Claude registers the app with redirect `/api/integrations/office365calendar/callback` and `/api/integrations/office365video/callback`.
-- [ ] **Billing: launch on Polar** (owner's decision 2026-11-17; Dodo comes later, under the "usuals" business at first). Needed: `POLAR_ACCESS_TOKEN` (empty today, so billing is off and everyone is on Free), Pro ($12) and Team ($69) products, the webhook. **Checkout has never been tested end to end**: do a sandbox purchase before launch.
-- [x] **Rate limiting (Unkey)**: done 2026-11-16. Workspace `nodslot`, a root key limited to rate limiting, and all 8 namespaces the app uses (core, common, api, ai, forcedSlowMode, instantMeeting, sms, smsMonth) created. Key in both files, tested. Free tier: 150k checks/month.
-- [ ] **Hosting (Vercel)**: two projects, app (`apps/web`) and landing (`landing`).
-- [ ] **Scheduler for background jobs**: the cron endpoints in `DEPLOY.md` §4 (reminders, waitlist offers, confirmations, AI summaries, task runner).
+- [x] **Domain** `nodslot.site` (GoDaddy, bought 2026-11-17). DNS: website, `app.` subdomain, Resend DKIM and SPF.
+- [x] **Hosted database**: Neon via Vercel. All migrations applied, apps seeded. Neon Free has limited backups; upgrade before real customer data matters.
+- [x] **Email (Resend)**: `nodslot.site` verified; mail goes out from `notifications@nodslot.site`. Still to do: `support@nodslot.site` has no inbox (set up Resend receiving or forwarding, or change the support address).
+- [x] **Built-in video removed** (2026-11-19, owner: "no one asked for this"). Daily app disabled in the database, `DAILY_API_KEY` removed from Vercel. Hosts use Google Meet, Zoom or Teams; with none, bookings simply have no link.
+- [~] **Google**: production redirect URIs and consent screen name done. Still in testing mode: submit for verification before more than 100 people connect.
+- [~] **Microsoft**: app registered, `MS_GRAPH_*` keys set in production. Not yet tested live (Outlook connect, Teams links).
+- [ ] **Zoom**: needs the owner to sign in at marketplace.zoom.us (an Ego tab "Zoom app for Nodslot" was opened), then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds the keys.
+- [ ] **Billing (Polar)**: `POLAR_ACCESS_TOKEN` still empty, so billing is off and everyone is Free. Pro $12, Team $69 for 10 people then $10 per extra person. Checkout never tested end to end.
+- [x] **Rate limiting (Unkey)** set in production.
+- [x] **Hosting (Vercel)**: both projects live, prebuilt deploys from this machine.
+- [x] **Background jobs**: 9 jobs on cron-job.org (task runner and AI summaries every 2 min; waitlist, confirmations, reminders, webhooks every 10 min; calendar health 30 min; host request reminders hourly; task cleanup daily). Hobby only allows daily Vercel crons, so `apps/web/vercel.json` is empty.
+- [x] **Anthropic key** set in production. Set a spend limit in the Anthropic console.
 - [ ] **Legal review** of the privacy and terms pages.
-- [ ] **Anthropic key** for production (`ANTHROPIC_API_KEY`), with a spend limit.
+- [ ] **Vercel Hobby is non-commercial.** Move to Pro (or Railway/Render) once there is a paying user.
 
 ## Product work Claude can do when asked
 - [ ] Weekly view on the booking page opens at the start of working hours, not the current time.
