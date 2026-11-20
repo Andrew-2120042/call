@@ -107,7 +107,6 @@ export const PersonalCalendarView = ({ userEmail }: PersonalCalendarViewProps) =
         title={t("connect_your_calendar")}
         subtitle={t("connect_calendar_to_prevent_conflicts")}
         isLoading={queryIntegrations.isPending}
-        floatingFooter={true}
         footer={
           <div className="flex w-full items-center justify-between gap-4">
             <Button color="minimal" className="rounded-[10px]" onClick={handleBack} disabled={isSubmitting}>

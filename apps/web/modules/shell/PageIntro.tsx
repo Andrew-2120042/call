@@ -212,7 +212,7 @@ export function PageIntro() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="page-intro-title"
-        className="bg-default border-subtle relative w-full max-w-[520px] overflow-hidden rounded-2xl border shadow-2xl">
+        className="bg-default border-subtle relative w-full max-w-[440px] overflow-hidden rounded-2xl border shadow-2xl">
         <button
           type="button"
           onClick={dismiss}
@@ -221,8 +221,8 @@ export function PageIntro() {
           <Icon name="x" className="h-4 w-4" />
         </button>
         {/* A small picture of the page itself, the way the website shows the product, instead of an icon. */}
-        <div className="relative flex h-56 items-end justify-center overflow-hidden bg-[#dfe8f7] px-10 pt-8">
-          <div className="w-full max-w-[380px] translate-y-3 rounded-t-xl border border-black/10 bg-white text-left text-[12px] text-[#1f1f1f] shadow-xl">
+        <div className="relative flex h-44 items-end justify-center overflow-hidden bg-[#dfe8f7] px-8 pt-6">
+          <div className="w-full max-w-[330px] translate-y-3 rounded-t-xl border border-black/10 bg-white text-left text-[12px] text-[#1f1f1f] shadow-xl">
             <div className="flex items-center gap-1.5 border-b border-black/10 px-3.5 py-2.5">
               <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
               <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
@@ -245,17 +245,17 @@ export function PageIntro() {
             </ul>
           </div>
         </div>
-        <div className="px-7 pb-6 pt-6">
+        <div className="px-6 pb-5 pt-5">
           <span className="inline-block rounded-md bg-[#2f5bff]/15 px-2 py-0.5 text-[12px] font-medium text-[#7aa2ff]">
             {t(`intro_${intro.id}_tag`)}
           </span>
           <h2
             id="page-intro-title"
-            className={`${headingFont.className} text-emphasis mt-3 text-[30px] font-normal leading-tight tracking-[-0.01em]`}>
+            className={`${headingFont.className} text-emphasis mt-2.5 text-[24px] font-normal leading-tight tracking-[-0.01em]`}>
             {t(key("title"))}
           </h2>
-          <p className="text-subtle mt-2 text-[14px] leading-relaxed">{t(key("body"))}</p>
-          <ul className="mt-4 space-y-2">
+          <p className="text-subtle mt-1.5 text-[13px] leading-relaxed">{t(key("body"))}</p>
+          <ul className="mt-3 space-y-1.5">
             {intro.points.map((point) => (
               <li key={point.key} className="text-default flex items-start gap-2.5 text-[13px] leading-snug">
                 <Icon name="check" className="text-subtle mt-0.5 h-3.5 w-3.5 shrink-0" />
@@ -263,7 +263,7 @@ export function PageIntro() {
               </li>
             ))}
           </ul>
-          <div className="mt-7 flex items-center justify-between gap-2">
+          <div className="mt-5 flex items-center justify-between gap-2">
             <a
               href={`${DOCS_URL}${DOCS_PAGE[intro.id] ?? ""}`}
               target="_blank"

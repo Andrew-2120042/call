@@ -139,6 +139,11 @@ export function HomeCalendar() {
               const inMonth = day.startsWith(month);
               const items = byDay.get(day) ?? [];
               const waitingHere = waitlistByDay.get(day) ?? [];
+              // Pop-ups from days near the right or bottom edge open the other way, so they stay on screen.
+              const edge = {
+                alignRight: index % 7 >= 5,
+                up: index >= days.length - 14,
+              };
               return (
                 <div
                   key={day}
@@ -166,7 +171,7 @@ export function HomeCalendar() {
                     {items.slice(0, SHOWN_PER_DAY).map((item) => (
                       <li key={item.uid} className="group/chip relative">
                         <Chip item={item} onOpen={() => openPeek({ kind: item.type, uid: item.uid })} />
-                        <HoverCard item={item} day={day} />
+                        <HoverCard item={item} day={day} edge={edge} />
                       </li>
                     ))}
                     {items.length > SHOWN_PER_DAY && (
@@ -174,6 +179,7 @@ export function HomeCalendar() {
                         <MoreItems
                           items={items.slice(SHOWN_PER_DAY)}
                           label={t("home_calendar_more", { count: items.length - SHOWN_PER_DAY })}
+                          edge={edge}
                           onOpen={(item) => openPeek({ kind: item.type, uid: item.uid })}
                         />
                       </li>
@@ -184,6 +190,7 @@ export function HomeCalendar() {
                           items={waitingHere}
                           waitlist
                           label={t("home_calendar_waiting_count", { count: waitingHere.length })}
+                          edge={edge}
                           onOpen={(item) => openPeek({ kind: item.type, uid: item.uid })}
                         />
                       </li>
@@ -198,6 +205,11 @@ export function HomeCalendar() {
     </section>
   );
 }
+
+type Edge = { alignRight: boolean; up: boolean };
+
+const edgeClasses = (edge: Edge) =>
+  classNames(edge.alignRight ? "right-0" : "left-0", edge.up ? "bottom-full mb-1" : "top-full mt-1");
 
 type DayItem =
   | ({ type: "booking" } & CalendarData["bookings"][number])
@@ -229,7 +241,7 @@ function Chip({ item, onOpen }: { item: DayItem; onOpen: () => void }) {
   );
 }
 
-function HoverCard({ item, day }: { item: DayItem; day: string }) {
+function HoverCard({ item, day, edge }: { item: DayItem; day: string; edge: Edge }) {
   const { t } = useLocale();
   const status =
     item.type === "waitlist"
@@ -243,7 +255,10 @@ function HoverCard({ item, day }: { item: DayItem; day: string }) {
   return (
     <div
       role="tooltip"
-      className="bg-default border-subtle pointer-events-none absolute left-0 top-full z-20 mt-1 hidden w-56 rounded-md border p-2.5 shadow-xl group-hover/chip:block">
+      className={classNames(
+        "bg-default border-subtle pointer-events-none absolute z-20 hidden w-56 rounded-md border p-2.5 shadow-xl group-hover/chip:block",
+        edgeClasses(edge)
+      )}>
       <p className="text-emphasis text-[12px] font-medium">
         {item.type === "waitlist" ? item.name : item.attendeeName}
       </p>
@@ -262,11 +277,13 @@ function MoreItems({
   label,
   waitlist,
   onOpen,
+  edge,
 }: {
   items: DayItem[];
   label: string;
   waitlist?: boolean;
   onOpen: (item: DayItem) => void;
+  edge: Edge;
 }) {
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
@@ -293,7 +310,11 @@ function MoreItems({
         {label}
       </button>
       {open && (
-        <div className="bg-default border-subtle absolute left-0 top-full z-30 mt-1 w-56 space-y-1 rounded-md border p-1.5 shadow-xl">
+        <div
+          className={classNames(
+            "bg-default border-subtle absolute z-30 max-h-72 w-56 space-y-1 overflow-y-auto rounded-md border p-1.5 shadow-xl",
+            edgeClasses(edge)
+          )}>
           {waitlist && (
             <p className="text-subtle px-1 pb-0.5 text-[11px]">{t("home_calendar_waitlist_popover")}</p>
           )}

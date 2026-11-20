@@ -68,11 +68,12 @@ body:has([data-sw-settings-nav]) {
   font-size: 13px;
 }
 
-/* The owner asked for page content a touch larger than the rail. Components size themselves in rem and px,
-   so zoom on the content column is the one switch that scales them all; the rail and top bar stay as they are. */
+/* The owner asked for page content a touch larger than the rail. Done by raising the root size on dashboard
+   pages (most sizes are rem), not with CSS zoom: zoom put dropdowns and popovers in the wrong place. The rail sets
+   its own px sizes, so it stays as it is. */
 @media (min-width: 1024px) {
-  [data-sw-content] {
-    zoom: 1.12;
+  html:has([data-sw-main]) {
+    font-size: 17.5px;
   }
 }
 
