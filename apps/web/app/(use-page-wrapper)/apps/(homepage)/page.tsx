@@ -55,6 +55,16 @@ const ServerPage = async () => {
         }
         const meta = getAppFromSlug(curated.slug);
         const db = dbApps.find((app) => app.slug === curated.slug);
+        if (!meta && curated.comingSoon) {
+          return {
+            slug: curated.slug,
+            name: curated.name ?? curated.slug,
+            logo: curated.logo ?? null,
+            descriptionKey: curated.descriptionKey,
+            status: "unavailable",
+            href: "/apps",
+          };
+        }
         if (!meta) return null;
         const category = db?.categories[0] ?? meta.categories?.[0] ?? "other";
         const isConnected = connected.has(curated.slug);

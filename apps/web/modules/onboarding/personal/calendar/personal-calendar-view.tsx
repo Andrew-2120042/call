@@ -1,5 +1,6 @@
 "use client";
 
+import { CURATED_APP_GROUPS } from "@calcom/features/apps-curation/curatedApps";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { trpc } from "@calcom/trpc/react";
 import { Button } from "@calcom/ui/components/button";
@@ -11,6 +12,10 @@ import { OnboardingCalendarBrowserView } from "../../components/onboarding-calen
 import { useSubmitPersonalOnboarding } from "../../hooks/useSubmitPersonalOnboarding";
 import { InstallableAppCard } from "../_components/InstallableAppCard";
 import { useAppInstallation } from "../_components/useAppInstallation";
+
+const CALENDAR_APP_SLUGS = new Set(
+  CURATED_APP_GROUPS.find((group) => group.id === "calendars")?.apps.map((app) => app.slug) ?? []
+);
 
 type PersonalCalendarViewProps = {
   userEmail: string;
@@ -30,6 +35,8 @@ export const PersonalCalendarView = ({ userEmail }: PersonalCalendarViewProps) =
     sortByMostPopular: true,
     sortByInstalledFirst: true,
   });
+  // Only the calendars Nodslot supports (the Apps page list), not every calendar app in the store.
+  const calendarApps = (queryIntegrations.data?.items ?? []).filter((app) => CALENDAR_APP_SLUGS.has(app.slug));
 
   const checkOverflow = () => {
     const element = scrollContainerRef.current;
@@ -131,7 +138,7 @@ export const PersonalCalendarView = ({ userEmail }: PersonalCalendarViewProps) =
             ref={scrollContainerRef}
             onScroll={handleScroll}
             className="scroll-bar grid max-h-[95cqh] grid-cols-1 gap-3 overflow-y-scroll sm:grid-cols-2">
-            {queryIntegrations.data?.items?.map((app) => (
+            {calendarApps.map((app) => (
               <InstallableAppCard
                 key={app.slug}
                 app={app}

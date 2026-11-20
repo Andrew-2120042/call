@@ -1,7 +1,7 @@
 // The short list of integrations Nodslot offers. The underlying app store has 100+ apps; most are
 // noise for solo creators and coaches, so the Apps page only shows these, in this order.
 
-export type CuratedGroupId = "calendars" | "video" | "crm" | "automations" | "tracking" | "payments";
+export type CuratedGroupId = "calendars" | "video" | "crm" | "work" | "automations" | "tracking" | "payments";
 
 export type CuratedApp = {
   slug: string;
@@ -28,8 +28,6 @@ export const CURATED_APP_GROUPS: {
     apps: [
       { slug: "google-calendar", descriptionKey: "apps_desc_google_calendar" },
       { slug: "office365-calendar", descriptionKey: "apps_desc_outlook_calendar" },
-      { slug: "apple-calendar", descriptionKey: "apps_desc_apple_calendar" },
-      { slug: "caldav-calendar", descriptionKey: "apps_desc_caldav", name: "CalDAV" },
     ],
   },
   {
@@ -50,6 +48,28 @@ export const CURATED_APP_GROUPS: {
       { slug: "hubspot", descriptionKey: "apps_desc_hubspot" },
       { slug: "salesforce", descriptionKey: "apps_desc_salesforce" },
       { slug: "pipedrive-crm", descriptionKey: "apps_desc_pipedrive", name: "Pipedrive" },
+    ],
+  },
+  {
+    id: "work",
+    titleKey: "apps_group_work",
+    subtitleKey: "apps_group_work_sub",
+    apps: [
+      // Not in the app store yet: each needs our own Slack / ClickUp app registered first (see LAUNCH-TODO.md).
+      {
+        slug: "slack",
+        descriptionKey: "apps_desc_slack",
+        name: "Slack",
+        logo: "/integrations/slack.svg",
+        comingSoon: true,
+      },
+      {
+        slug: "clickup",
+        descriptionKey: "apps_desc_clickup",
+        name: "ClickUp",
+        logo: "/integrations/clickup.svg",
+        comingSoon: true,
+      },
     ],
   },
   {
