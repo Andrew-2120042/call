@@ -193,7 +193,7 @@ export const useEmbedTypes = () => {
           viewBox="0 0 308 265"
           fill="none"
           xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_457_1339)">
+          <g clipPath="url(#clip0_457_1339)">
             <rect width="308" height="265" rx="8" fill="white" />
             <rect width="308" height="18" rx="4" fill="#F3F4F6" />
             <rect y="19" width="308" height="18" rx="4" fill="#F3F4F6" />
@@ -209,15 +209,15 @@ export const useEmbedTypes = () => {
             <rect y="209" width="308" height="18" rx="4" fill="#F3F4F6" />
             <rect y="228" width="308" height="18" rx="4" fill="#F3F4F6" />
             <rect y="247" width="308" height="18" rx="4" fill="#F3F4F6" />
-            <g clip-path="url(#clip1_457_1339)">
+            <g clipPath="url(#clip1_457_1339)">
               <rect x="107" y="64" width="189" height="189" rx="6" fill="white" />
-              <g clip-path="url(#clip2_457_1339)">
+              <g clipPath="url(#clip2_457_1339)">
                 <path
                   d="M124.671 75.5243C124.671 75.1018 124.325 74.756 123.902 74.756H117.756C117.334 74.756 116.988 75.1018 116.988 75.5243M124.671 75.5243V80.1341C124.671 80.5567 124.325 80.9024 123.902 80.9024H117.756C117.334 80.9024 116.988 80.5567 116.988 80.1341V75.5243M124.671 75.5243L120.829 78.2134L116.988 75.5243"
                   stroke="#9CA3AF"
-                  stroke-width="1.15244"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1.15244"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </g>
               <rect x="130.049" y="75.5244" width="92.1951" height="4.60976" rx="2.30488" fill="#D1D5DB" />
@@ -297,7 +297,7 @@ export const useEmbedTypes = () => {
               height="190.152"
               rx="6.57622"
               stroke="#101010"
-              stroke-width="1.15244"
+              strokeWidth="1.15244"
             />
           </g>
           <rect x="0.5" y="0.5" width="307" height="264" rx="7.5" stroke="#E5E7EB" />

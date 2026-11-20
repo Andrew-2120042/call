@@ -224,12 +224,14 @@ const ChooseEmbedTypesDialogContent = ({
   const { t } = useLocale();
   const { gotoState } = useEmbedGoto(noQueryParamMode);
   return (
-    <DialogContent className="relative rounded-lg p-10" type="creation" size="lg">
+    <DialogContent className="rounded-lg p-10" type="creation" size="lg">
       <EmbedCloseButton />
       <div className="mb-2">
-        <h3 className="font-cal text-emphasis mb-2 text-2xl font-semibold leading-none" id="modal-title">
-          {t("how_you_want_add_cal_site", { appName: APP_NAME })}
-        </h3>
+        <DialogPrimitive.Title asChild>
+          <h3 className="font-cal text-emphasis mb-2 text-2xl font-semibold leading-none">
+            {t("how_you_want_add_cal_site", { appName: APP_NAME })}
+          </h3>
+        </DialogPrimitive.Title>
         <div>
           <p className="text-subtle text-sm">{t("choose_ways_put_cal_site", { appName: APP_NAME })}</p>
         </div>
@@ -965,19 +967,20 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
     <DialogContent
       enableOverflow
       ref={dialogContentRef}
-      className="relative rounded-lg p-0.5 sm:max-w-7xl!"
+      className="rounded-lg p-0.5 sm:max-w-7xl!"
       type="creation">
       <EmbedCloseButton />
       <div className="flex">
         <div className="bg-cal-muted flex h-[95vh] w-1/3 flex-col overflow-y-auto p-8">
-          <h3
-            className="text-emphasis mb-2.5 flex items-center text-xl font-semibold leading-5"
-            id="modal-title">
-            <button className="h-6 w-6" onClick={gotoEmbedTypeSelectionState}>
-              <ArrowLeftIcon className="mr-4 w-4" />
-            </button>
-            {embed.title}
-          </h3>
+          <DialogPrimitive.Title asChild>
+            <h3
+              className="text-emphasis mb-2.5 flex items-center text-xl font-semibold leading-5">
+              <button className="h-6 w-6" onClick={gotoEmbedTypeSelectionState}>
+                <ArrowLeftIcon className="mr-4 w-4" />
+              </button>
+              {embed.title}
+            </h3>
+          </DialogPrimitive.Title>
           <h4 className="text-subtle mb-6 text-sm font-normal">{embed.subtitle}</h4>
           {eventTypeData?.eventType && embedType === "email" ? (
             <EmailEmbed
