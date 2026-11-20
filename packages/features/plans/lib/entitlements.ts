@@ -10,7 +10,8 @@ export type PlanFeature =
   | "removeBranding"
   | "customDomain"
   | "teamScheduling"
-  | "rebookFollowUp";
+  | "rebookFollowUp"
+  | "assistant";
 
 export type PlanLimits = {
   /** Custom (non-system) booking questions allowed per service. */
@@ -32,6 +33,7 @@ const PRO_FEATURES: PlanFeature[] = [
   "removeBranding",
   "customDomain",
   "rebookFollowUp",
+  "assistant",
 ];
 
 const PLAN_FEATURES: Record<NodslotPlan, ReadonlySet<PlanFeature>> = {
@@ -45,6 +47,10 @@ const PLAN_LIMITS: Record<NodslotPlan, PlanLimits> = {
   [NodslotPlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
   [NodslotPlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
 };
+
+/** Status of the in-app 14-day Pro trial (no card). Distinct from a provider's "trialing" subscription. */
+export const TRIAL_STATUS = "trial";
+export const TRIAL_DAYS = 14;
 
 export const planHasFeature = (plan: NodslotPlan, feature: PlanFeature) => PLAN_FEATURES[plan].has(feature);
 
@@ -62,6 +68,10 @@ export type SubscriptionSnapshot = {
  */
 export const getEffectivePlan = (subscription: SubscriptionSnapshot, now: Date): NodslotPlan => {
   if (!subscription) return NodslotPlan.FREE;
+  // Our own no-card trial: paid features until the trial period ends, then Free.
+  if (subscription.status === TRIAL_STATUS) {
+    return (subscription.currentPeriodEnd?.getTime() ?? 0) > now.getTime() ? subscription.plan : NodslotPlan.FREE;
+  }
   if (subscription.status === "active" || subscription.status === "trialing") return subscription.plan;
   const paidThrough = subscription.currentPeriodEnd?.getTime() ?? 0;
   const inPaidPeriod = paidThrough > now.getTime();

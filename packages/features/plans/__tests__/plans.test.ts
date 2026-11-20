@@ -126,6 +126,7 @@ describe("PlanService", () => {
         stored = subscription;
       },
       userExists: async (userId) => userId === 4,
+      deleteForUser: async () => undefined,
       clearBrandingRemoval: vi.fn().mockResolvedValue(undefined),
     };
     const polar = opts.polar

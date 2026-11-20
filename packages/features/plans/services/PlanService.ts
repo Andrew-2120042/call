@@ -2,6 +2,8 @@ import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
 import { NodslotPlan } from "@calcom/prisma/enums";
 import {
+  TRIAL_DAYS,
+  TRIAL_STATUS,
   getEffectivePlan,
   type PlanFeature,
   planHasFeature,
@@ -23,6 +25,7 @@ export type StoredSubscription = {
 export interface IPlanSubscriptionRepository {
   findByUserId(userId: number): Promise<StoredSubscription | null>;
   upsertForUser(subscription: StoredSubscription): Promise<void>;
+  deleteForUser(userId: number): Promise<void>;
   clearBrandingRemoval(userId: number): Promise<void>;
   userExists(userId: number): Promise<boolean>;
 }
@@ -103,6 +106,9 @@ export class PlanService {
       currentPeriodEnd: subscription?.currentPeriodEnd ?? null,
       cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd ?? false,
       billingConfigured: this.deps.gateway !== null,
+      // One trial per account: anyone who has had any subscription record (trial or paid) can't start another.
+      trialAvailable: !subscription,
+      onTrial: subscription?.status === TRIAL_STATUS,
     };
   }
 
@@ -139,13 +145,40 @@ export class PlanService {
     });
   }
 
+  /** Starts the one-time 14-day Pro trial. No card; when it ends the account is simply back on Free. */
+  async startTrial(userId: number) {
+    const existing = await this.deps.repository.findByUserId(userId);
+    if (existing) {
+      throw new ErrorWithCode(ErrorCode.BadRequest, "The free trial can only be used once per account.");
+    }
+    const now = this.now();
+    const endsAt = new Date(now.getTime() + TRIAL_DAYS * 24 * 60 * 60 * 1000);
+    await this.deps.repository.upsertForUser({
+      userId,
+      plan: NodslotPlan.PRO,
+      status: TRIAL_STATUS,
+      polarSubscriptionId: `trial_${userId}`,
+      polarCustomerId: `trial_${userId}`,
+      polarProductId: "trial",
+      currentPeriodEnd: endsAt,
+      cancelAtPeriodEnd: true,
+      polarModifiedAt: now,
+    });
+    return { plan: NodslotPlan.PRO, endsAt };
+  }
+
   /**
    * Local testing only (the API route refuses outside development): puts the user on a plan without paying.
-   * Free is stored as an expired subscription so the normal entitlement rules apply.
+   * Free removes the record entirely, so the account looks brand new (and can try the trial again).
    */
   async setPlanForTesting(userId: number, plan: NodslotPlan) {
     const now = this.now();
     const paid = plan !== NodslotPlan.FREE;
+    if (!paid) {
+      await this.deps.repository.deleteForUser(userId);
+      await this.deps.repository.clearBrandingRemoval(userId);
+      return;
+    }
     await this.deps.repository.upsertForUser({
       userId,
       plan: paid ? plan : NodslotPlan.PRO,

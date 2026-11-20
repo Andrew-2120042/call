@@ -104,6 +104,7 @@ describe("Dodo webhooks", () => {
         stored = subscription;
       },
       userExists: async (userId) => userId === 4,
+      deleteForUser: async () => undefined,
       clearBrandingRemoval: vi.fn().mockResolvedValue(undefined),
     };
     const service = new PlanService({
@@ -136,7 +137,8 @@ describe("checkout allow-list (test mode on the live site)", () => {
         findByUserId: async () => null,
         upsertForUser: async () => undefined,
         userExists: async () => true,
-        clearBrandingRemoval: async () => undefined,
+        deleteForUser: async () => undefined,
+      clearBrandingRemoval: async () => undefined,
       },
       gateway,
       productIds: { pro: "pdt_pro" },
@@ -147,5 +149,62 @@ describe("checkout allow-list (test mode on the live site)", () => {
       /being tested/
     );
     expect(await service.startCheckout({ userId: 2, email: "owner@example.com", plan: "pro" })).toBe("https://pay/x");
+  });
+});
+
+describe("14-day trial", () => {
+  const build = (now: Date) => {
+    let stored: StoredSubscription | null = null;
+    const service = new PlanService({
+      repository: {
+        findByUserId: async (userId) => (stored?.userId === userId ? stored : null),
+        upsertForUser: async (subscription) => {
+          stored = subscription;
+        },
+        userExists: async () => true,
+        deleteForUser: async () => undefined,
+      clearBrandingRemoval: async () => undefined,
+      },
+      gateway: null,
+      productIds: {},
+      webappUrl: "https://app",
+      now: () => now,
+    });
+    return service;
+  };
+
+  it("gives Pro for 14 days, once, then Free", async () => {
+    const start = new Date("2026-11-20T00:00:00Z");
+    const service = build(start);
+    expect((await service.getPlanSummary(4)).trialAvailable).toBe(true);
+    await service.startTrial(4);
+    expect(await service.getEffectivePlan(4)).toBe(NodslotPlan.PRO);
+    expect(await service.hasFeature(4, "waitlist")).toBe(true);
+    expect((await service.getPlanSummary(4)).trialAvailable).toBe(false);
+    await expect(service.startTrial(4)).rejects.toThrow(/only be used once/);
+  });
+
+  it("ends after 14 days", async () => {
+    const start = new Date("2026-11-20T00:00:00Z");
+    let now = start;
+    let stored: StoredSubscription | null = null;
+    const service = new PlanService({
+      repository: {
+        findByUserId: async () => stored,
+        upsertForUser: async (subscription) => {
+          stored = subscription;
+        },
+        userExists: async () => true,
+        deleteForUser: async () => undefined,
+      clearBrandingRemoval: async () => undefined,
+      },
+      gateway: null,
+      productIds: {},
+      webappUrl: "https://app",
+      now: () => now,
+    });
+    await service.startTrial(4);
+    now = new Date("2026-12-05T00:00:00Z");
+    expect(await service.getEffectivePlan(4)).toBe(NodslotPlan.FREE);
   });
 });

@@ -1,6 +1,7 @@
 import { getDefaultLocations } from "@calcom/app-store/_utils/getDefaultLocations";
 import { isAssistantConfigured, runAssistantTurn } from "@calcom/features/assistant/lib/getAssistant";
 import { AssistantActionsRepository } from "@calcom/features/assistant/repositories/AssistantActionsRepository";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { checkTrpcRateLimit } from "../../../lib/checkTrpcRateLimit";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import logger from "@calcom/lib/logger";
@@ -11,7 +12,11 @@ import { type AssistantCtx, createAssistantInbox } from "./assistantInbox";
 
 const log = logger.getSubLogger({ prefix: ["[assistant]"] });
 
-export const statusHandler = () => ({ configured: isAssistantConfigured() });
+export const statusHandler = async ({ ctx }: { ctx: AssistantCtx }) => ({
+  configured: isAssistantConfigured(),
+  // The assistant is a Pro feature (it runs on a paid AI model); Free accounts see the trial offer instead.
+  allowed: await getPlanService().hasFeature(ctx.user.id, "assistant"),
+});
 
 export const chatHandler = async ({
   ctx,
@@ -25,6 +30,9 @@ export const chatHandler = async ({
       code: "PRECONDITION_FAILED",
       message: "The assistant isn't set up on this server yet.",
     });
+  }
+  if (!(await getPlanService().hasFeature(ctx.user.id, "assistant"))) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "The assistant is part of Pro. Start a free trial to use it." });
   }
   await checkTrpcRateLimit(`assistant:${ctx.user.id}`);
   if (input.messages[input.messages.length - 1].role !== "user") {

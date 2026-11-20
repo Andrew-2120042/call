@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { type AssistantAction, describeAssistantAction } from "./describeAssistantAction";
+import { ProGate } from "~/plans/ProGate";
 
 type Turn = { role: "user" | "assistant"; content: string; actions?: AssistantAction[] };
 type Chat = { id: string; title: string; turns: Turn[]; updatedAt: number };
@@ -253,6 +254,7 @@ export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
   }, [draft]);
 
   const configured = status.data?.configured ?? true;
+  const allowed = status.data?.allowed ?? true;
   const send = (text: string) => {
     const content = text.trim();
     if (!content || chat.isPending || !configured) return;
@@ -327,6 +329,18 @@ export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
       ))}
     </ul>
   );
+
+  if (!allowed) {
+    return (
+      <div className={classNames("flex h-full flex-col overflow-y-auto", panel ? "px-4" : "")}>
+        <ProGate
+          titleKey="pro_gate_assistant_title"
+          bodyKey="pro_gate_assistant_body"
+          points={["pro_gate_assistant_p1", "pro_gate_assistant_p2", "pro_gate_assistant_p3"]}
+        />
+      </div>
+    );
+  }
 
   if (turns.length === 0 && panel) {
     return (

@@ -3,9 +3,9 @@ import { router } from "../../../trpc";
 import { ZAssistantChatInputSchema } from "./assistant.schema";
 
 export const assistantRouter = router({
-  status: authedProcedure.query(async () => {
+  status: authedProcedure.query(async ({ ctx }) => {
     const { statusHandler } = await import("./assistant.handler");
-    return statusHandler();
+    return statusHandler({ ctx });
   }),
   chat: authedProcedure.input(ZAssistantChatInputSchema).mutation(async ({ ctx, input }) => {
     const { chatHandler } = await import("./assistant.handler");

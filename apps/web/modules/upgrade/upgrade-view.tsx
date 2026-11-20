@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 
 type PlanId = "FREE" | "PRO" | "TEAM";
-type PlanSummary = { plan: PlanId; billingConfigured: boolean };
+type PlanSummary = { plan: PlanId; billingConfigured: boolean; trialAvailable?: boolean; onTrial?: boolean };
 
 // true = included, a string = included with that limit, false = not included.
 type Cell = boolean | string;
@@ -25,7 +25,7 @@ const COMPARISON: { groupKey: string; rows: { key: string; free: Cell; pro: Cell
       { key: "billing_f_questions", free: true, pro: true, team: true },
       { key: "billing_f_apps", free: true, pro: true, team: true },
       { key: "billing_f_import", free: true, pro: true, team: true },
-      { key: "billing_f_assistant", free: true, pro: true, team: true },
+      { key: "billing_f_assistant", free: false, pro: true, team: true },
     ],
   },
   {
@@ -97,7 +97,21 @@ export default function UpgradeView() {
   };
 
   const current = summary?.plan ?? null;
-  const canBuy = !!summary?.billingConfigured && current === "FREE";
+  const onTrial = !!summary?.onTrial;
+  // Someone on the free trial can still subscribe; their paid plan takes over from the trial.
+  const canBuy = !!summary?.billingConfigured && (current === "FREE" || onTrial);
+  const startTrial = async () => {
+    setBusy(true);
+    const res = await fetch("/api/billing/trial", { method: "POST" });
+    if (res.ok) {
+      showToast(t("trial_started"), "success");
+      window.location.href = "/home";
+      return;
+    }
+    const json = await res.json().catch(() => ({}));
+    showToast(json.message ?? t("something_went_wrong"), "error");
+    setBusy(false);
+  };
 
   const plans: { id: PlanId; price: string; per: string; blurbKey: string; points: string[] }[] = [
     {
@@ -105,7 +119,7 @@ export default function UpgradeView() {
       price: "$0",
       per: t("billing_forever"),
       blurbKey: "upgrade_blurb_free",
-      points: ["billing_f_page", "billing_f_unlimited", "billing_f_approvals", "billing_f_assistant"],
+      points: ["billing_f_page", "billing_f_unlimited", "billing_f_approvals", "billing_f_questions"],
     },
     {
       id: "PRO",
@@ -116,6 +130,7 @@ export default function UpgradeView() {
         "billing_f_waitlist",
         "billing_f_confirm",
         "billing_f_ai_summaries",
+        "billing_f_assistant",
         "billing_f_reminders",
         "billing_f_domain",
       ],
@@ -216,11 +231,22 @@ export default function UpgradeView() {
                       className="h-10 w-full rounded-md bg-[#ebf23a] text-[14px] font-medium text-black transition hover:brightness-95 disabled:opacity-50">
                       {busy
                         ? t("loading")
-                        : isCurrent || current === "TEAM"
+                        : (isCurrent && !onTrial) || current === "TEAM"
                           ? t("upgrade_youre_on_it")
                           : t("billing_upgrade_pro")}
                     </button>
-                  ) : (
+                  ) : null}
+                  {plan.id === "PRO" && summary?.trialAvailable && current === "FREE" ? (
+                    <button
+                      type="button"
+                      onClick={startTrial}
+                      disabled={busy}
+                      data-testid="upgrade-trial"
+                      className="border-subtle text-emphasis hover:bg-subtle mt-2 h-10 w-full rounded-md border text-[14px] transition disabled:opacity-50">
+                      {t("trial_start_cta")}
+                    </button>
+                  ) : null}
+                  {plan.id === "PRO" ? null : (
                     <button
                       type="button"
                       disabled
