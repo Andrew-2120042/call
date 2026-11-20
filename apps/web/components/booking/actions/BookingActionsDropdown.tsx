@@ -33,7 +33,6 @@ import type { BookingItemProps } from "../types";
 import { useBookingActionsStoreContext } from "./BookingActionsStoreProvider";
 import {
   type BookingActionContext,
-  getAfterEventActions,
   getCancelEventAction,
   getEditEventActions,
   getPendingActions,
@@ -284,35 +283,8 @@ export function BookingActionsDropdown({
                 : undefined,
   })) as ActionType[];
 
-  const baseAfterEventActions = getAfterEventActions(actionContext);
-  const afterEventActions: ActionType[] = baseAfterEventActions.map((action) => ({
-    ...action,
-    onClick:
-      action.id === "view_recordings"
-        ? () => setViewRecordingsDialogIsOpen(true)
-        : action.id === "meeting_session_details"
-          ? () => setMeetingSessionDetailsDialogIsOpen(true)
-          : action.id === "charge_card"
-            ? () => setChargeCardDialogIsOpen(true)
-            : action.id === "no_show"
-              ? () => {
-                  if (attendeeList.length === 1) {
-                    const attendee = attendeeList[0];
-                    noShowMutation.mutate({
-                      bookingUid: booking.uid,
-                      attendees: [{ email: attendee.email, noShow: !attendee.noShow }],
-                    });
-                    return;
-                  }
-                  setIsNoShowDialogOpen(true);
-                }
-              : undefined,
-    disabled:
-      action.disabled ||
-      (action.id === "no_show" && !(isBookingInPast || isOngoing)) ||
-      (action.id === "view_recordings" && !booking.isRecorded),
-  })) as ActionType[];
-
+  // No after-event actions: recordings, session details and no-show fees belong to built-in video and
+  // payments, which Nodslot doesn't offer.
   const reportAction = getReportAction(actionContext);
   const reportActionWithHandler = {
     ...reportAction,
@@ -498,9 +470,6 @@ export function BookingActionsDropdown({
     // Check if any edit action is available
     const hasAvailableEditAction = editEventActions.some((action) => !action.disabled);
 
-    // Check if any after event action is available
-    const hasAvailableAfterAction = afterEventActions.some((action) => !action.disabled);
-
     // Check report and cancel actions
     const isReportAvailable = !reportActionWithHandler.disabled;
     const isCancelAvailable = !cancelEventAction.disabled;
@@ -508,7 +477,6 @@ export function BookingActionsDropdown({
     return (
       hasAvailablePendingAction ||
       hasAvailableEditAction ||
-      hasAvailableAfterAction ||
       isReportAvailable ||
       isCancelAvailable
     );
@@ -592,27 +560,6 @@ export function BookingActionsDropdown({
                     e.stopPropagation();
                     action.onClick?.(e);
                   }}
-                  data-booking-uid={action.bookingUid}
-                  data-testid={action.id}
-                  className={action.disabled ? "text-muted" : undefined}>
-                  {action.label}
-                </DropdownItem>
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel className="px-2 pb-1 pt-1.5">{t("after_event")}</DropdownMenuLabel>
-            {afterEventActions.map((action) => (
-              <DropdownMenuItem className="rounded-lg" key={action.id} disabled={action.disabled}>
-                <DropdownItem
-                  type="button"
-                  color={action.color}
-                  StartIcon={action.icon}
-                  href={action.disabled ? undefined : action.href}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    action.onClick?.(e);
-                  }}
-                  disabled={action.disabled}
                   data-booking-uid={action.bookingUid}
                   data-testid={action.id}
                   className={action.disabled ? "text-muted" : undefined}>
