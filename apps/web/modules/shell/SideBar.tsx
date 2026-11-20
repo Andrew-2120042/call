@@ -20,14 +20,17 @@ import { useBottomNavItems } from "./useBottomNavItems";
 
 export type SideBarContainerProps = {
   bannersHeight: number;
+  /** Set by the slide-out drawer: show the sidebar even if it's collapsed, and let « close the drawer instead. */
+  onCollapse?: () => void;
 };
 
 export type SideBarProps = {
   bannersHeight: number;
   user?: UserAuth | null;
+  onCollapse?: () => void;
 };
 
-export function SideBarContainer({ bannersHeight }: SideBarContainerProps) {
+export function SideBarContainer({ bannersHeight, onCollapse }: SideBarContainerProps) {
   const { status, data } = useSession();
   const isStandalone = useIsStandalone();
 
@@ -36,7 +39,7 @@ export function SideBarContainer({ bannersHeight }: SideBarContainerProps) {
   // Though when logged out, app store pages would temporarily show SideBar until session status is confirmed.
   if (status !== "loading" && status !== "authenticated") return null;
   if (isStandalone) return null;
-  return <SideBar bannersHeight={bannersHeight} user={data?.user} />;
+  return <SideBar bannersHeight={bannersHeight} user={data?.user} onCollapse={onCollapse} />;
 }
 
 type PlanState = { plan: string; onTrial: boolean; trialEndsAt: string | null };
@@ -68,7 +71,7 @@ function useCurrentPlan() {
   return plan;
 }
 
-export function SideBar({ bannersHeight, user }: SideBarProps) {
+export function SideBar({ bannersHeight, user, onCollapse }: SideBarProps) {
   const { t, isLocaleReady } = useLocale();
   const plan = useCurrentPlan();
   const hidden = useSidebar((state) => state.hidden);
@@ -87,7 +90,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
     top: `${bannersHeight}px`,
   };
 
-  if (hidden) return null;
+  if (hidden && !onCollapse) return null;
 
   return (
     <div className="relative">
@@ -110,7 +113,7 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
             </Link>
             <button
               type="button"
-              onClick={toggleSidebar}
+              onClick={onCollapse ?? toggleSidebar}
               aria-label={t("hide_sidebar")}
               title={t("hide_sidebar")}
               data-testid="sidebar-hide"

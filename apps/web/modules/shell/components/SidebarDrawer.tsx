@@ -40,12 +40,12 @@ export function SidebarDrawer() {
       {open && (
         <div className="fixed inset-0 z-50 hidden md:flex" role="dialog" aria-modal="true">
           <div className="h-full bg-cal-muted shadow-2xl [&>div]:h-full">
-            <SideBarContainer bannersHeight={0} />
+            <SideBarContainer bannersHeight={0} onCollapse={() => setOpen(false)} />
           </div>
           <button
             type="button"
             aria-label={t("close")}
-            className="h-full flex-1 bg-black/40 backdrop-blur-[1px]"
+            className="h-full flex-1 bg-black/40"
             onClick={() => setOpen(false)}
           />
         </div>
