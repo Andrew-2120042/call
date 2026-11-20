@@ -3,6 +3,7 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { IconName } from "@calcom/ui/components/icon";
 import { Icon } from "@calcom/ui/components/icon";
+import { headingFont } from "@lib/headingFont";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -145,10 +146,10 @@ function markSeen(id: string) {
 }
 
 const TONES = {
-  amber: "border-amber-400/40 bg-amber-400/15 text-amber-100",
-  sky: "border-sky-400/40 bg-sky-400/15 text-sky-100",
-  emerald: "border-emerald-400/40 bg-emerald-400/15 text-emerald-100",
-  none: "border-white/25 bg-white/10 text-white",
+  amber: "bg-amber-400",
+  sky: "bg-sky-400",
+  emerald: "bg-emerald-400",
+  none: "bg-gray-400",
 };
 
 /** The first time someone opens a section, a short card says what it's for and what they can do there. */
@@ -193,71 +194,67 @@ export function PageIntro() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="page-intro-title"
-        className="bg-default border-subtle relative w-full max-w-[460px] overflow-hidden rounded-xl border shadow-2xl">
+        className="bg-default border-subtle relative w-full max-w-[480px] rounded-2xl border p-7 shadow-2xl">
         <button
           type="button"
           onClick={dismiss}
           aria-label={t("close")}
-          className="absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-md text-white/80 hover:bg-white/10 hover:text-white">
+          className="text-subtle hover:bg-subtle hover:text-emphasis absolute right-4 top-4 grid h-7 w-7 place-items-center rounded-md">
           <Icon name="x" className="h-4 w-4" />
         </button>
-        <div className="relative flex h-44 items-center justify-center bg-[linear-gradient(135deg,#2f3f72_0%,#56478a_50%,#24595e_100%)]">
-          <div className="flex flex-col items-center gap-2">
-            <span className="grid h-10 w-10 place-items-center rounded-lg border border-white/25 bg-white/10 text-white">
-              <Icon name={intro.icon} className="h-5 w-5" />
+        <span className="border-subtle bg-muted text-emphasis grid h-10 w-10 place-items-center rounded-xl border">
+          <Icon name={intro.icon} className="h-[18px] w-[18px]" />
+        </span>
+        <h2
+          id="page-intro-title"
+          className={`${headingFont.className} text-emphasis mt-5 text-[28px] font-normal leading-tight tracking-[-0.01em]`}>
+          {t(key("title"))}
+        </h2>
+        <p className="text-subtle mt-2 text-[14px] leading-relaxed">{t(key("body"))}</p>
+        {/* A glimpse of the states this page deals in, set as plain labels rather than a decorative banner. */}
+        <div className="mt-5 flex flex-wrap gap-1.5">
+          {intro.chips.map((chip) => (
+            <span
+              key={chip.textKey}
+              className="border-subtle bg-muted text-default inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px]">
+              <span className={`h-1.5 w-1.5 rounded-full ${TONES[chip.tone ?? "none"]}`} />
+              {t(chip.textKey)}
             </span>
-            <div className="flex flex-wrap justify-center gap-1.5 px-6">
-              {intro.chips.map((chip) => (
-                <span
-                  key={chip.textKey}
-                  className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] backdrop-blur ${TONES[chip.tone ?? "none"]}`}>
-                  <Icon name={chip.icon} className="h-3 w-3" />
-                  {t(chip.textKey)}
-                </span>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-        <div className="px-6 pb-5 pt-5">
-          <h2 id="page-intro-title" className="text-emphasis text-[17px] font-semibold tracking-[-0.01em]">
-            {t(key("title"))}
-          </h2>
-          <p className="text-subtle mt-1.5 text-[13px] leading-relaxed">{t(key("body"))}</p>
-          <p className="text-emphasis mt-4 text-[12px] font-medium">{t("intro_you_can")}</p>
-          <ul className="mt-2 space-y-2">
-            {intro.points.map((point) => (
-              <li key={point.key} className="text-default flex items-start gap-2.5 text-[13px]">
-                <Icon name={point.icon} className="text-subtle mt-0.5 h-4 w-4 shrink-0" />
-                {t(point.key)}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex justify-end gap-2">
-            {intro.cta ? (
-              <>
-                <button
-                  type="button"
-                  onClick={dismiss}
-                  className="border-subtle text-default hover:bg-subtle h-8 rounded-md border px-3 text-[13px]">
-                  {t("intro_maybe_later")}
-                </button>
-                <Link
-                  href={intro.cta.href}
-                  onClick={dismiss}
-                  className="bg-inverted text-inverted inline-flex h-8 items-center rounded-md px-3 text-[13px] font-medium">
-                  {t(intro.cta.key)}
-                </Link>
-              </>
-            ) : (
+        <ul className="border-subtle mt-6 space-y-3 border-t pt-5">
+          {intro.points.map((point) => (
+            <li key={point.key} className="text-default flex items-start gap-3 text-[14px] leading-snug">
+              <Icon name={point.icon} className="text-subtle mt-0.5 h-4 w-4 shrink-0" />
+              {t(point.key)}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-7 flex justify-end gap-2">
+          {intro.cta ? (
+            <>
               <button
                 type="button"
                 onClick={dismiss}
-                data-testid="page-intro-ok"
-                className="bg-inverted text-inverted h-8 rounded-md px-4 text-[13px] font-medium">
-                {t("intro_got_it")}
+                className="border-subtle text-default hover:bg-subtle h-9 rounded-md border px-3.5 text-[13px]">
+                {t("intro_maybe_later")}
               </button>
-            )}
-          </div>
+              <Link
+                href={intro.cta.href}
+                onClick={dismiss}
+                className="bg-inverted text-inverted inline-flex h-9 items-center rounded-md px-3.5 text-[13px] font-medium">
+                {t(intro.cta.key)}
+              </Link>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={dismiss}
+              data-testid="page-intro-ok"
+              className="bg-inverted text-inverted h-9 rounded-md px-4 text-[13px] font-medium">
+              {t("intro_got_it")}
+            </button>
+          )}
         </div>
       </div>
     </div>

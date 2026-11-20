@@ -3,8 +3,9 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Logo } from "@calcom/ui/components/logo";
 import { signOut } from "next-auth/react";
-import { Children, type ReactNode } from "react";
+import { Children, type ReactNode, Suspense } from "react";
 import { Toaster } from "sonner";
+import { OnboardingDebugNav } from "./OnboardingDebugNav";
 
 // Setup is four screens: how you'll use it, your details, a few questions, your calendar.
 export const ONBOARDING_STEPS = 4;
@@ -63,6 +64,11 @@ export const OnboardingLayout = ({ currentStep, totalSteps, progress, children }
         </div>
       </main>
       <Toaster position="bottom-right" />
+      {process.env.NODE_ENV === "development" && (
+        <Suspense fallback={null}>
+          <OnboardingDebugNav />
+        </Suspense>
+      )}
     </div>
   );
 };

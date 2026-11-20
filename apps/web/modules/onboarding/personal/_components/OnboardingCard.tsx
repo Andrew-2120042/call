@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { SkeletonText } from "@calcom/ui/components/skeleton";
+import { headingFont } from "@lib/headingFont";
 
 type OnboardingCardProps = {
   title: string;
@@ -17,7 +18,7 @@ export const OnboardingCard = ({ title, subtitle, children, footer, isLoading }:
         {/* Card Header */}
         <div className="flex w-full gap-1.5 px-5 py-4">
           <div className="flex w-full flex-col gap-1">
-            <h1 className="font-cal text-xl font-semibold leading-6">{title}</h1>
+            <h1 className={`${headingFont.className} text-[26px] font-normal leading-tight tracking-[-0.01em]`}>{title}</h1>
             <p className="text-subtle text-sm font-medium leading-tight">{subtitle}</p>
           </div>
         </div>

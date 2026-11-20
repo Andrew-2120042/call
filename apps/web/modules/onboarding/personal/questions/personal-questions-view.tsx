@@ -6,8 +6,9 @@ import classNames from "@calcom/ui/classNames";
 import type { IconName } from "@calcom/ui/components/icon";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { headingFont } from "@lib/headingFont";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ONBOARDING_STEPS, OnboardingLayout } from "../../components/OnboardingLayout";
 import type { PreviewService, PreviewTag } from "../../components/SetupPreviewCard";
 import { SetupPreviewCard } from "../../components/SetupPreviewCard";
@@ -113,6 +114,13 @@ export function PersonalQuestionsView() {
   const utils = trpc.useUtils();
   const { data: me } = trpc.viewer.me.get.useQuery();
   const [step, setStep] = useState(0);
+  // ?q=<n> opens a given question; the dev-only debug bar uses it to step through them.
+  const questionParam = useSearchParams()?.get("q");
+  useEffect(() => {
+    if (questionParam == null) return;
+    const index = Number(questionParam);
+    if (Number.isInteger(index)) setStep(Math.min(Math.max(index, 0), QUESTIONS.length - 1));
+  }, [questionParam]);
   const [answers, setAnswers] = useState<Answers>(DEFAULTS);
   const apply = trpc.viewer.home.applySetup.useMutation({
     onSuccess: async (result) => {
@@ -196,7 +204,7 @@ export function PersonalQuestionsView() {
         <p className="text-subtle text-[12px]">
           {t("setup_q_counter", { current: step + 1, total: QUESTIONS.length })}
         </p>
-        <h1 className="text-emphasis mt-2 text-[22px] font-semibold leading-tight tracking-[-0.015em]">
+        <h1 className={`${headingFont.className} text-emphasis mt-2 text-[28px] font-normal leading-tight tracking-[-0.01em]`}>
           {t(`setup_q_${question.id}_title`)}
         </h1>
         <p className="text-subtle mt-1.5 text-[13px] leading-relaxed">{t(`setup_q_${question.id}_hint`)}</p>

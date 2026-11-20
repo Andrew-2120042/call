@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { SkeletonText } from "@calcom/ui/components/skeleton";
+import { headingFont } from "@lib/headingFont";
 
 type OnboardingCardProps = {
   title: string;
@@ -58,7 +59,7 @@ export const OnboardingCard = ({
           {/* Card Header */}
           <div className="mb-2 flex w-full gap-1.5 py-2  md:mb-0 md:py-4">
             <div className="flex w-full flex-col gap-2">
-              <h1 className="font-cal text-xl font-semibold leading-6">{title}</h1>
+              <h1 className={`${headingFont.className} text-[26px] font-normal leading-tight tracking-[-0.01em]`}>{title}</h1>
               <p className="text-subtle text-sm leading-tight">{subtitle}</p>
             </div>
           </div>
