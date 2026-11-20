@@ -24,7 +24,7 @@ const dodoEvent = (overrides: Record<string, unknown> = {}, type = "subscription
     cancel_at_next_billing_date: false,
     created_at: "2026-11-20T09:59:00Z",
     customer: { customer_id: "cus_1", email: "a@example.com", name: "A" },
-    metadata: { nodslotUserId: "4" },
+    metadata: { nodslotUserId: "4", nodslotApp: "https://app" },
     ...overrides,
   },
 });
@@ -39,6 +39,7 @@ describe("createDodoGateway", () => {
       email: "a@example.com",
       successUrl: "https://app/ok",
       returnUrl: "https://app/back",
+      appUrl: "https://app",
     });
     expect(url).toBe("https://pay/x");
     const [calledUrl, init] = fetchImpl.mock.calls[0];
@@ -49,7 +50,7 @@ describe("createDodoGateway", () => {
       customer: { email: "a@example.com" },
       return_url: "https://app/ok",
       cancel_url: "https://app/back",
-      metadata: { nodslotUserId: "4" },
+      metadata: { nodslotUserId: "4", nodslotApp: "https://app" },
     });
   });
 
@@ -68,7 +69,7 @@ describe("createDodoGateway", () => {
     const fetchImpl = vi.fn().mockResolvedValue(new Response("bad product", { status: 422 }));
     const gateway = createDodoGateway({ apiKey: "k", environment: "test_mode", fetchImpl });
     await expect(
-      gateway.createCheckoutUrl({ productId: "x", userId: 4, email: "a@b.c", successUrl: "s", returnUrl: "r" })
+      gateway.createCheckoutUrl({ productId: "x", userId: 4, email: "a@b.c", successUrl: "s", returnUrl: "r", appUrl: "a" })
     ).rejects.toThrow(/422/);
   });
 });
@@ -92,7 +93,7 @@ describe("Dodo webhooks", () => {
       current_period_end: "2026-12-20T10:00:00Z",
       cancel_at_period_end: true,
       modified_at: "2026-11-20T10:00:00Z",
-      metadata: { nodslotUserId: "4" },
+      metadata: { nodslotUserId: "4", nodslotApp: "https://app" },
     });
   });
 
@@ -206,5 +207,43 @@ describe("14-day trial", () => {
     await service.startTrial(4);
     now = new Date("2026-12-05T00:00:00Z");
     expect(await service.getEffectivePlan(4)).toBe(NodslotPlan.FREE);
+  });
+});
+
+describe("confirming a checkout on return", () => {
+  const setup = (subscription: ReturnType<typeof dodoEvent> | null) => {
+    let stored: StoredSubscription | null = null;
+    const service = new PlanService({
+      repository: {
+        findByUserId: async (userId) => (stored?.userId === userId ? stored : null),
+        upsertForUser: async (s) => {
+          stored = s;
+        },
+        deleteForUser: async () => undefined,
+        userExists: async () => true,
+        clearBrandingRemoval: async () => undefined,
+      },
+      gateway: {
+        createCheckoutUrl: vi.fn(),
+        createPortalUrl: vi.fn(),
+        getSubscription: async () =>
+          subscription ? toSubscriptionEvent(dodoSubscriptionEventSchema.parse(subscription)) : null,
+      },
+      productIds: { pro: "pdt_pro" },
+      webappUrl: "https://app",
+      now: () => new Date("2026-11-21T00:00:00Z"),
+    });
+    return service;
+  };
+
+  it("switches the plan straight away for the paying user", async () => {
+    const service = setup(dodoEvent());
+    const result = await service.confirmCheckout(4, "sub_dodo_1");
+    expect(result.outcome).toBe("applied");
+    expect(result.summary.plan).toBe(NodslotPlan.PRO);
+  });
+
+  it("refuses to apply someone else's payment", async () => {
+    await expect(setup(dodoEvent()).confirmCheckout(5, "sub_dodo_1")).rejects.toThrow(/different account/);
   });
 });

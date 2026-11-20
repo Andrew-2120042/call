@@ -5,7 +5,6 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Button } from "@calcom/ui/components/button";
 import { Icon } from "@calcom/ui/components/icon";
 import { showToast } from "@calcom/ui/components/toast";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PlansSkeleton } from "~/shell/skeletons";
 
@@ -15,6 +14,7 @@ type PlanSummary = {
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
   billingConfigured: boolean;
+  onTrial?: boolean;
 };
 
 async function postForUrl(path: string, body?: unknown) {
@@ -30,7 +30,6 @@ async function postForUrl(path: string, body?: unknown) {
 
 export default function BillingView() {
   const { t } = useLocale();
-  const searchParams = useSearchParams();
   const [summary, setSummary] = useState<PlanSummary | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -40,11 +39,6 @@ export default function BillingView() {
       .then(setSummary)
       .catch(() => showToast(t("something_went_wrong"), "error"));
   }, [t]);
-
-  useEffect(() => {
-    // Polar redirects here after payment; the webhook may land a few seconds later.
-    if (searchParams?.get("checkout") === "success") showToast(t("billing_checkout_success"), "success");
-  }, [searchParams, t]);
 
   const go = async (action: string, path: string, body?: unknown) => {
     setBusy(action);
@@ -59,7 +53,9 @@ export default function BillingView() {
   if (!summary) return <PlansSkeleton />;
 
   const current = summary.plan;
-  const isPaid = current !== "FREE";
+  const onTrial = !!summary.onTrial;
+  // The free trial isn't a subscription: no provider billing page, and upgrading stays open.
+  const isPaid = current !== "FREE" && !onTrial;
   const plans: {
     id: "FREE" | "PRO" | "TEAM";
     price: string;
@@ -77,7 +73,6 @@ export default function BillingView() {
         t("billing_f_approvals"),
         t("billing_f_questions"),
         t("billing_f_one_reminder"),
-        t("billing_f_assistant"),
         t("billing_f_apps"),
         t("billing_f_import"),
       ],
@@ -91,6 +86,7 @@ export default function BillingView() {
         t("billing_f_waitlist"),
         t("billing_f_confirm"),
         t("billing_f_ai_summaries"),
+        t("billing_f_assistant"),
         t("billing_f_reminders"),
         t("billing_f_branding"),
         t("billing_f_domain"),
@@ -187,7 +183,7 @@ export default function BillingView() {
                   </li>
                 ))}
               </ul>
-              {isPro && !isCurrent && (
+              {isPro && (!isCurrent || onTrial) && current !== "TEAM" && (
                 <button
                   type="button"
                   disabled={!summary.billingConfigured || busy === "pro"}

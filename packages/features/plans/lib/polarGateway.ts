@@ -31,14 +31,14 @@ export function createPolarGateway(options: {
   };
 
   return {
-    async createCheckoutUrl({ productId, userId, email, successUrl, returnUrl }) {
+    async createCheckoutUrl({ productId, userId, email, successUrl, returnUrl, appUrl }) {
       const checkout = await post<{ url: string }>("/checkouts/", {
         products: [productId],
         external_customer_id: String(userId),
         customer_email: email,
         success_url: successUrl,
         return_url: returnUrl,
-        metadata: { nodslotUserId: String(userId) },
+        metadata: { nodslotUserId: String(userId), nodslotApp: appUrl },
       });
       return checkout.url;
     },

@@ -1,4 +1,5 @@
 import type { IBillingGateway } from "../services/PlanService";
+import { dodoSubscriptionEventSchema, toSubscriptionEvent } from "./dodoWebhook";
 
 const BASE_URLS = {
   live_mode: "https://live.dodopayments.com",
@@ -31,17 +32,31 @@ export function createDodoGateway(options: {
   };
 
   return {
-    async createCheckoutUrl({ productId, userId, email, successUrl, returnUrl }) {
+    async createCheckoutUrl({ productId, userId, email, successUrl, returnUrl, appUrl }) {
       const session = await post<{ checkout_url: string | null }>("/checkouts", {
         product_cart: [{ product_id: productId, quantity: 1 }],
         customer: { email },
         return_url: successUrl,
         cancel_url: returnUrl,
         // Read back from subscription webhooks to know whose plan to change.
-        metadata: { nodslotUserId: String(userId) },
+        metadata: { nodslotUserId: String(userId), nodslotApp: appUrl },
       });
       if (!session.checkout_url) throw new Error("Dodo did not return a checkout URL");
       return session.checkout_url;
+    },
+    async getSubscription(subscriptionId) {
+      const response = await doFetch(
+        `${BASE_URLS[options.environment]}/subscriptions/${encodeURIComponent(subscriptionId)}`,
+        { headers: { authorization: `Bearer ${options.apiKey}` }, signal: AbortSignal.timeout(15_000) }
+      );
+      if (response.status === 404) return null;
+      if (!response.ok) throw new Error(`Dodo /subscriptions failed with ${response.status}`);
+      const parsed = dodoSubscriptionEventSchema.safeParse({
+        type: "subscription.updated",
+        timestamp: new Date().toISOString(),
+        data: await response.json(),
+      });
+      return parsed.success ? toSubscriptionEvent(parsed.data) : null;
     },
     async createPortalUrl({ customerId, returnUrl }) {
       const query = new URLSearchParams({ return_url: returnUrl });

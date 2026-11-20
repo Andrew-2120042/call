@@ -39,13 +39,27 @@ export function SideBarContainer({ bannersHeight }: SideBarContainerProps) {
   return <SideBar bannersHeight={bannersHeight} user={data?.user} />;
 }
 
+type PlanState = { plan: string; onTrial: boolean; trialEndsAt: string | null };
+
 function useCurrentPlan() {
-  const [plan, setPlan] = useState<string | null>(null);
+  const [plan, setPlan] = useState<PlanState | null>(null);
   useEffect(() => {
     let cancelled = false;
     fetch("/api/billing/plan")
       .then((res) => (res.ok ? res.json() : null))
-      .then((summary) => !cancelled && setPlan(summary?.plan ?? null))
+      .then(
+        (summary) =>
+          !cancelled &&
+          setPlan(
+            summary?.plan
+              ? {
+                  plan: summary.plan,
+                  onTrial: !!summary.onTrial,
+                  trialEndsAt: summary.onTrial ? summary.currentPeriodEnd : null,
+                }
+              : null
+          )
+      )
       .catch(() => {});
     return () => {
       cancelled = true;
@@ -108,13 +122,23 @@ export function SideBar({ bannersHeight, user }: SideBarProps) {
         </div>
 
         <div className="md:px-2 md:pb-3 lg:px-0 lg:pb-3">
-          {plan && plan !== "TEAM" && (
-            <Link
-              href="/upgrade"
-              data-testid="sidebar-upgrade"
-              className="bg-inverted text-inverted mb-3 hidden h-8 items-center justify-center rounded-md text-[13px] font-semibold lg:flex">
-              {t("upgrade")}
-            </Link>
+          {/* Only people who haven't paid see Upgrade; a trial also shows how long it has left. */}
+          {plan && (plan.plan === "FREE" || plan.onTrial) && (
+            <div className="mb-3 hidden lg:block">
+              {plan.onTrial && plan.trialEndsAt && (
+                <p className="text-subtle mb-1.5 px-1 text-[12px]" data-testid="sidebar-trial-left">
+                  {t("trial_days_left", {
+                    count: Math.max(1, Math.ceil((new Date(plan.trialEndsAt).getTime() - Date.now()) / 86_400_000)),
+                  })}
+                </p>
+              )}
+              <Link
+                href="/upgrade"
+                data-testid="sidebar-upgrade"
+                className="bg-inverted text-inverted flex h-8 items-center justify-center rounded-md text-[13px] font-semibold">
+                {t("upgrade")}
+              </Link>
+            </div>
           )}
           <SidebarSetupCard />
           <FeedbackDialog />

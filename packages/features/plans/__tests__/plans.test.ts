@@ -167,8 +167,18 @@ describe("PlanService", () => {
       modified_at: "2026-11-13T10:00:00.000Z",
       created_at: "2026-11-13T09:00:00.000Z",
       customer: { external_id: "4" },
+      metadata: { nodslotApp: "https://app.test" },
       ...overrides,
     },
+  });
+
+  it("ignores a subscription started from another copy of the app", async () => {
+    const ctx = setup();
+    expect(
+      await ctx.service.applySubscriptionEvent(event({ metadata: { nodslotApp: "http://localhost:3000" } }))
+    ).toBe("ignored_other_app");
+    expect(await ctx.service.applySubscriptionEvent(event({ metadata: null }))).toBe("ignored_other_app");
+    expect(await ctx.service.getEffectivePlan(4)).toBe(NodslotPlan.FREE);
   });
 
   it("upgrades a user to Pro on an active subscription", async () => {

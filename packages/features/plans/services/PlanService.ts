@@ -38,7 +38,11 @@ export interface IBillingGateway {
     email: string;
     successUrl: string;
     returnUrl: string;
+    /** Which app started the checkout, echoed back in webhooks so another environment's payments are ignored. */
+    appUrl: string;
   }): Promise<string>;
+  /** Reads a subscription straight from the provider (used on return from checkout). Null if unsupported. */
+  getSubscription?(subscriptionId: string): Promise<SubscriptionEvent | null>;
   createPortalUrl(params: { userId: number; customerId: string; returnUrl: string }): Promise<string>;
 }
 
@@ -80,7 +84,8 @@ export type WebhookOutcome =
   | "ignored_event"
   | "ignored_unknown_product"
   | "ignored_unknown_user"
-  | "ignored_stale";
+  | "ignored_stale"
+  | "ignored_other_app";
 
 export class PlanService {
   private readonly now: () => Date;
@@ -120,6 +125,10 @@ export class PlanService {
 
   async startCheckout(params: { userId: number; email: string; plan: "pro" | "team" }) {
     if (!this.deps.gateway) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
+    const summary = await this.getPlanSummary(params.userId);
+    if (summary.plan !== NodslotPlan.FREE && !summary.onTrial) {
+      throw new ErrorWithCode(ErrorCode.BadRequest, "You're already on a paid plan. Manage it from Billing.");
+    }
     if (this.deps.canCheckout && !this.deps.canCheckout(params.email)) {
       throw new ErrorWithCode(ErrorCode.BadRequest, "Payments are being tested. Upgrading opens soon.");
     }
@@ -129,9 +138,24 @@ export class PlanService {
       productId,
       userId: params.userId,
       email: params.email,
-      successUrl: `${this.deps.webappUrl}/settings/billing?checkout=success`,
-      returnUrl: `${this.deps.webappUrl}/settings/billing`,
+      successUrl: `${this.deps.webappUrl}/upgrade/success`,
+      returnUrl: `${this.deps.webappUrl}/upgrade`,
+      appUrl: this.deps.webappUrl,
     });
+  }
+
+  /**
+   * Called when the customer lands back from checkout: asks the provider directly, so the plan switches at once
+   * (and works where webhooks can't reach, like a developer's machine). Only for the signed-in user's own payment.
+   */
+  async confirmCheckout(userId: number, subscriptionId: string) {
+    const event = await this.deps.gateway?.getSubscription?.(subscriptionId);
+    if (!event) return { outcome: "pending" as const, summary: await this.getPlanSummary(userId) };
+    if (String(event.data.metadata?.nodslotUserId ?? "") !== String(userId)) {
+      throw new ErrorWithCode(ErrorCode.Forbidden, "That payment belongs to a different account.");
+    }
+    const outcome = await this.applySubscriptionEvent(event);
+    return { outcome, summary: await this.getPlanSummary(userId) };
   }
 
   async openPortal(userId: number) {
@@ -202,6 +226,13 @@ export class PlanService {
     if (!plan) {
       this.deps.logger?.warn("[plans] subscription for an unknown product", { productId: data.product_id });
       return "ignored_unknown_product";
+    }
+
+    // Test and live share one provider account: a payment started from another copy of the app (a developer's
+    // machine, a preview) carries that app's address and must never change an account here.
+    if (data.metadata?.nodslotApp !== this.deps.webappUrl) {
+      this.deps.logger?.warn("[plans] subscription from another app ignored", { subscriptionId: data.id });
+      return "ignored_other_app";
     }
 
     const externalId = data.customer?.external_id ?? data.metadata?.nodslotUserId;
