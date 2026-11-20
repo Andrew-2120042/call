@@ -1,4 +1,4 @@
-import type { IPolarGateway } from "../services/PlanService";
+import type { IBillingGateway } from "../services/PlanService";
 
 const BASE_URLS = {
   production: "https://api.polar.sh/v1",
@@ -14,7 +14,7 @@ export function createPolarGateway(options: {
   accessToken: string;
   environment: PolarEnvironment;
   fetchImpl?: FetchLike;
-}): IPolarGateway {
+}): IBillingGateway {
   const doFetch = options.fetchImpl ?? fetch;
   const post = async <T>(path: string, body: Record<string, unknown>): Promise<T> => {
     const response = await doFetch(`${BASE_URLS[options.environment]}${path}`, {

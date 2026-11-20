@@ -5,7 +5,7 @@ import { getEventTypePlanViolations } from "../lib/eventTypePlanGuard";
 import {
   type IPlanSubscriptionRepository,
   PlanService,
-  type PolarSubscriptionEvent,
+  type SubscriptionEvent,
   type StoredSubscription,
 } from "../services/PlanService";
 
@@ -136,7 +136,7 @@ describe("PlanService", () => {
       : null;
     const service = new PlanService({
       repository,
-      polar,
+      gateway: polar,
       productIds: { pro: "prod_pro", team: "prod_team" },
       webappUrl: "https://app.test",
       now: () => NOW,
@@ -152,9 +152,9 @@ describe("PlanService", () => {
   };
 
   const event = (
-    overrides: Partial<PolarSubscriptionEvent["data"]> = {},
+    overrides: Partial<SubscriptionEvent["data"]> = {},
     type = "subscription.active"
-  ): PolarSubscriptionEvent => ({
+  ): SubscriptionEvent => ({
     type,
     data: {
       id: "sub_1",

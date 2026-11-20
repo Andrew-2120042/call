@@ -27,7 +27,8 @@ export interface IPlanSubscriptionRepository {
   userExists(userId: number): Promise<boolean>;
 }
 
-export interface IPolarGateway {
+/** The payment provider (Polar or Dodo): hosted checkout and the customer's billing portal. */
+export interface IBillingGateway {
   createCheckoutUrl(params: {
     productId: string;
     userId: number;
@@ -35,11 +36,14 @@ export interface IPolarGateway {
     successUrl: string;
     returnUrl: string;
   }): Promise<string>;
-  createPortalUrl(params: { userId: number; returnUrl: string }): Promise<string>;
+  createPortalUrl(params: { userId: number; customerId: string; returnUrl: string }): Promise<string>;
 }
 
-/** The subset of a Polar subscription webhook payload this service relies on. */
-export type PolarSubscriptionEvent = {
+/**
+ * A subscription change in Polar's webhook shape. Dodo events are mapped into it (see dodoWebhook.ts), and the
+ * provider's ids are stored in the polar* columns whichever provider is active.
+ */
+export type SubscriptionEvent = {
   type: string;
   data: {
     id: string;
@@ -59,7 +63,7 @@ export type PlanProductIds = { pro?: string; team?: string };
 
 export interface IPlanServiceDeps {
   repository: IPlanSubscriptionRepository;
-  polar: IPolarGateway | null;
+  gateway: IBillingGateway | null;
   productIds: PlanProductIds;
   webappUrl: string;
   now?: () => Date;
@@ -96,7 +100,7 @@ export class PlanService {
       status: subscription?.status ?? null,
       currentPeriodEnd: subscription?.currentPeriodEnd ?? null,
       cancelAtPeriodEnd: subscription?.cancelAtPeriodEnd ?? false,
-      billingConfigured: this.deps.polar !== null,
+      billingConfigured: this.deps.gateway !== null,
     };
   }
 
@@ -107,10 +111,10 @@ export class PlanService {
   }
 
   async startCheckout(params: { userId: number; email: string; plan: "pro" | "team" }) {
-    if (!this.deps.polar) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
+    if (!this.deps.gateway) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
     const productId = this.deps.productIds[params.plan];
     if (!productId) throw new ErrorWithCode(ErrorCode.BadRequest, `The ${params.plan} plan isn't available`);
-    return this.deps.polar.createCheckoutUrl({
+    return this.deps.gateway.createCheckoutUrl({
       productId,
       userId: params.userId,
       email: params.email,
@@ -120,14 +124,18 @@ export class PlanService {
   }
 
   async openPortal(userId: number) {
-    if (!this.deps.polar) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
+    if (!this.deps.gateway) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
     const subscription = await this.deps.repository.findByUserId(userId);
     if (!subscription) throw new ErrorWithCode(ErrorCode.NotFound, "You don't have a subscription yet");
-    return this.deps.polar.createPortalUrl({ userId, returnUrl: `${this.deps.webappUrl}/settings/billing` });
+    return this.deps.gateway.createPortalUrl({
+      userId,
+      customerId: subscription.polarCustomerId,
+      returnUrl: `${this.deps.webappUrl}/settings/billing`,
+    });
   }
 
-  /** Applies a verified Polar subscription webhook. Idempotent and safe against out-of-order delivery. */
-  async applySubscriptionEvent(event: PolarSubscriptionEvent): Promise<WebhookOutcome> {
+  /** Applies a verified subscription webhook (Polar, or Dodo mapped to the same shape). Idempotent and safe against out-of-order delivery. */
+  async applySubscriptionEvent(event: SubscriptionEvent): Promise<WebhookOutcome> {
     if (!event.type.startsWith("subscription.")) return "ignored_event";
     const { data } = event;
 

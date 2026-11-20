@@ -85,3 +85,6 @@ export function signPolarWebhookForTest(params: {
   const signature = sign(key, id, timestamp, Buffer.from(params.body)).toString("base64");
   return { "webhook-id": id, "webhook-timestamp": timestamp, "webhook-signature": `v1,${signature}` };
 }
+
+/** Dodo Payments signs with the same Standard Webhooks scheme, so it shares this verifier. */
+export const verifyStandardWebhook = verifyPolarWebhook;
