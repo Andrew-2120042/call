@@ -54,6 +54,8 @@ import type { IBookingCancelService } from "./interfaces/IBookingCancelService";
 
 const log = logger.getSubLogger({ prefix: ["handleCancelBooking"] });
 const REBOOK_OFFER_DELAY_MS = 10 * 60 * 1000;
+// Pro: a second, softer nudge if they still haven't rebooked a few days later.
+const REBOOK_FOLLOW_UP_DELAY_MS = 3 * 24 * 60 * 60 * 1000;
 
 type PlatformParams = {
   platformClientId?: string;
@@ -533,6 +535,11 @@ async function handler(input: CancelBookingInput, dependencies?: Dependencies) {
         "sendRebookOfferEmail",
         { bookingUid: bookingToDelete.uid },
         { scheduledAt: new Date(Date.now() + REBOOK_OFFER_DELAY_MS) }
+      );
+      await tasker.create(
+        "sendRebookOfferEmail",
+        { bookingUid: bookingToDelete.uid, followUp: true },
+        { scheduledAt: new Date(Date.now() + REBOOK_FOLLOW_UP_DELAY_MS) }
       );
     } catch (error) {
       log.error("Could not schedule the rebook offer email", safeStringify({ error }));

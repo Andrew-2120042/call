@@ -6,6 +6,7 @@ import classNames from "@calcom/ui/classNames";
 import { Icon } from "@calcom/ui/components/icon";
 import { Logo } from "@calcom/ui/components/logo";
 import { showToast } from "@calcom/ui/components/toast";
+import { headingFont } from "@lib/headingFont";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 
@@ -31,6 +32,7 @@ const COMPARISON: { groupKey: string; rows: { key: string; free: Cell; pro: Cell
     groupKey: "upgrade_group_fill",
     rows: [
       { key: "upgrade_row_reminders", free: "1", pro: "5", team: "5" },
+      { key: "upgrade_row_rebook_emails", free: "1", pro: "2", team: "2" },
       { key: "billing_f_waitlist", free: false, pro: true, team: true },
       { key: "billing_f_confirm", free: false, pro: true, team: true },
       { key: "billing_f_ai_summaries", free: false, pro: true, team: true },
@@ -148,16 +150,16 @@ export default function UpgradeView() {
       </header>
 
       <main className="mx-auto max-w-[1080px] px-5 pb-24 pt-14 md:px-8">
-        <section className="text-center">
-          <h1 className="text-emphasis text-[32px] font-semibold leading-tight tracking-[-0.025em] md:text-[40px]">
+        {/* Same layout as the pricing page on the website: headline left, the short pitch right. */}
+        <section className="grid items-end gap-6 md:grid-cols-[1.4fr_1fr]">
+          <h1
+            className={`${headingFont.className} text-emphasis max-w-[18ch] text-[36px] font-normal leading-[1.05] tracking-[-0.02em] md:text-[48px]`}>
             {t("upgrade_page_title")}
           </h1>
-          <p className="text-subtle mx-auto mt-3 max-w-[560px] text-[15px] leading-relaxed">
-            {t("upgrade_page_subtitle")}
-          </p>
+          <p className="text-subtle text-[15px] leading-relaxed md:pb-2">{t("upgrade_page_subtitle")}</p>
         </section>
 
-        <section className="mt-12 grid gap-4 md:grid-cols-3">
+        <section className="mt-12 grid gap-4 md:grid-cols-3 md:gap-0">
           {plans.map((plan) => {
             const isPro = plan.id === "PRO";
             const isCurrent = plan.id === current;
@@ -165,16 +167,21 @@ export default function UpgradeView() {
               <div
                 key={plan.id}
                 className={classNames(
-                  "relative flex flex-col rounded-xl border p-6",
-                  isPro ? "border-emphasis bg-subtle" : "border-subtle"
+                  "flex flex-col rounded-xl border p-6 md:rounded-none",
+                  isPro
+                    ? "border-[#ebf23a]/50 bg-[#ebf23a]/[0.04] md:rounded-xl"
+                    : "border-subtle md:border-0"
                 )}>
-                {isPro && (
-                  <span className="bg-inverted text-inverted absolute -top-2.5 left-6 rounded px-2 py-0.5 text-[11px] font-medium">
-                    {t("upgrade_most_popular")}
-                  </span>
-                )}
-                <div className="flex items-center justify-between">
-                  <p className="text-emphasis text-[15px] font-semibold">
+                {/* Every column keeps the badge row so names and prices line up across plans. */}
+                <div className="h-5">
+                  {isPro && (
+                    <span className="inline-block rounded bg-[#ebf23a] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-black">
+                      {t("upgrade_most_popular")}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <p className={`${headingFont.className} text-emphasis text-[24px] leading-none`}>
                     {t(`billing_plan_${plan.id.toLowerCase()}`)}
                   </p>
                   {isCurrent && (
@@ -190,7 +197,7 @@ export default function UpgradeView() {
                 </div>
                 <p className="text-subtle mt-1 min-h-[40px] text-[13px] leading-snug">{t(plan.blurbKey)}</p>
                 <p className="mt-5 flex items-baseline gap-1.5">
-                  <span className="text-emphasis text-[36px] font-semibold leading-none tracking-tight">
+                  <span className={`${headingFont.className} text-emphasis text-[36px] leading-none tracking-[-0.02em]`}>
                     {plan.price}
                   </span>
                   <span className="text-subtle text-[13px]">{plan.per}</span>
@@ -206,7 +213,7 @@ export default function UpgradeView() {
                       onClick={upgrade}
                       disabled={!canBuy || busy}
                       data-testid="upgrade-pro"
-                      className="bg-inverted text-inverted h-10 w-full rounded-md text-[14px] font-semibold transition disabled:opacity-50">
+                      className="h-10 w-full rounded-md bg-[#ebf23a] text-[14px] font-medium text-black transition hover:brightness-95 disabled:opacity-50">
                       {busy
                         ? t("loading")
                         : isCurrent || current === "TEAM"
@@ -227,7 +234,7 @@ export default function UpgradeView() {
                   )}
                 </div>
 
-                <ul className="mt-6 space-y-2.5 text-[13px]">
+                <ul className="border-subtle mt-6 space-y-2.5 border-t pt-5 text-[13px]">
                   {plan.points.map((key) => (
                     <li key={key} className="flex items-start gap-2">
                       <Icon name="check" className="text-emphasis mt-0.5 h-4 w-4 flex-none" />
@@ -244,7 +251,8 @@ export default function UpgradeView() {
         )}
 
         <section className="mt-20">
-          <h2 className="text-emphasis text-[22px] font-semibold tracking-[-0.015em]">
+          <h2
+            className={`${headingFont.className} text-emphasis text-center text-[32px] font-normal tracking-[-0.02em]`}>
             {t("upgrade_compare_title")}
           </h2>
           <div className="border-subtle mt-6 overflow-x-auto rounded-xl border">
@@ -289,7 +297,7 @@ export default function UpgradeView() {
         </section>
 
         <section className="mt-20 grid gap-10 md:grid-cols-[280px_1fr]">
-          <h2 className="text-emphasis text-[22px] font-semibold tracking-[-0.015em]">
+          <h2 className={`${headingFont.className} text-emphasis text-[28px] font-normal tracking-[-0.02em]`}>
             {t("upgrade_faq_title")}
           </h2>
           <dl className="border-subtle divide-subtle divide-y border-y">

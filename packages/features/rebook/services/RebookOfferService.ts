@@ -12,6 +12,7 @@ export type RebookOfferEmail = {
   startTime: Date;
   bookUrl: string;
   moreTimesUrl: string;
+  followUp?: boolean;
 };
 
 export type RebookOfferResult = { sent: true; start: string } | { sent: false; reason: string };
@@ -35,17 +36,27 @@ export class RebookOfferService {
         to: Date;
       }) => Promise<string[]>;
       send: (email: RebookOfferEmail) => Promise<void>;
+      /** Whether the host's plan includes the later follow-up email. */
+      isFollowUpEntitled: (userId: number) => Promise<boolean>;
       appUrl: string;
     }
   ) {}
 
-  async offer(bookingUid: string, now = new Date()): Promise<RebookOfferResult> {
+  async offer(
+    bookingUid: string,
+    now = new Date(),
+    options: { followUp?: boolean } = {}
+  ): Promise<RebookOfferResult> {
     const booking = await this.deps.repository.findByUidIncludeEventTypeAndAttendee(bookingUid);
     const attendee = booking?.attendees[0];
     if (!booking || !attendee || !booking.eventType || !booking.userId)
       return { sent: false, reason: "not found" };
     if (booking.status !== BookingStatus.CANCELLED || booking.rescheduled)
       return { sent: false, reason: "not cancelled" };
+
+    if (options.followUp && !(await this.deps.isFollowUpEntitled(booking.userId))) {
+      return { sent: false, reason: "follow-up needs Pro" };
+    }
 
     // They may have rebooked on their own from the cancel page in the meantime.
     const alreadyRebooked = await this.deps.repository.hasUpcomingByAttendeeEmailAndUserId({
@@ -76,6 +87,7 @@ export class RebookOfferService {
       startTime: new Date(best.start),
       bookUrl: `${this.deps.appUrl}${result.bookingPath}?${params.toString()}`,
       moreTimesUrl: `${this.deps.appUrl}/booking/${booking.uid}`,
+      followUp: options.followUp,
     });
     return { sent: true, start: best.start };
   }

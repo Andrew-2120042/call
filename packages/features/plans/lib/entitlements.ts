@@ -9,7 +9,8 @@ export type PlanFeature =
   | "unlimitedScreeningQuestions"
   | "removeBranding"
   | "customDomain"
-  | "teamScheduling";
+  | "teamScheduling"
+  | "rebookFollowUp";
 
 export type PlanLimits = {
   /** Custom (non-system) booking questions allowed per service. */
@@ -30,6 +31,7 @@ const PRO_FEATURES: PlanFeature[] = [
   "multipleReminders",
   "removeBranding",
   "customDomain",
+  "rebookFollowUp",
 ];
 
 const PLAN_FEATURES: Record<NodslotPlan, ReadonlySet<PlanFeature>> = {

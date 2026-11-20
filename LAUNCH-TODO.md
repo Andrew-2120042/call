@@ -8,12 +8,20 @@ Everything still needed before Nodslot goes live. Tick items off as they're done
 3. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
 
 ## Come back to (owner asked to be reminded, 2026-11-19)
-- [ ] **Redesign the landing page.** It reads like a tech tool; it should feel like a calendar and show the product. Layout like Apollo's site (recording `~/Desktop/Screen Recording 2026-11-19 at 8.58.54 PM.mov`, frames in `docs/design-refs/landing-layout-apollo.jpg`): big product-demo blocks, a UI mock beside each feature's text, a row of 4 feature cards, customer stories, a huge closing banner, a big footer. Colours like Cal.com's (recording `... 8.57.34 PM.mov`, `docs/design-refs/landing-colours-calcom.jpg`): black or near-black, not Apollo's bright colours, with calendar pieces inside the headline (a photo, a clock, an "Intro call · 30m · Booked" chip) and a real app screenshot under it.
-- [ ] **Slack**: post new bookings, requests and cancellations to a channel, with Accept/Decline buttons. Needs the owner to create a Slack app at api.slack.com/apps (Claude gives the exact settings).
-- [ ] **ClickUp**: a task for each booking. Needs a ClickUp OAuth app from the owner.
+- [x] **Redesign the landing page** (done 2026-11-19/20: Apollo-style layout, dark, serif headings, own pricing page). It reads like a tech tool; it should feel like a calendar and show the product. Layout like Apollo's site (recording `~/Desktop/Screen Recording 2026-11-19 at 8.58.54 PM.mov`, frames in `docs/design-refs/landing-layout-apollo.jpg`): big product-demo blocks, a UI mock beside each feature's text, a row of 4 feature cards, customer stories, a huge closing banner, a big footer. Colours like Cal.com's (recording `... 8.57.34 PM.mov`, `docs/design-refs/landing-colours-calcom.jpg`): black or near-black, not Apollo's bright colours, with calendar pieces inside the headline (a photo, a clock, an "Intro call · 30m · Booked" chip) and a real app screenshot under it.
+- [ ] **Slack** (listed on the Apps page as "Not available yet" since 2026-11-20): post new bookings, requests and cancellations to a channel, with Accept/Decline buttons. Needs the owner to create a Slack app at api.slack.com/apps (Claude gives the exact settings).
+- [ ] **ClickUp** (listed on the Apps page as "Not available yet" since 2026-11-20): a task for each booking. Needs a ClickUp OAuth app from the owner.
 - [ ] **Microsoft Teams links**: the Teams app (`msteams`) is built but switched off; needs the Microsoft app tested live with the online-meetings permission.
 - [ ] **Clients leave a waitlist themselves** (a "leave" link in their email). The only gap found in the waitlist.
 - [ ] **Future, not now: an MCP server for AI agents** (like Cal.com's `mcp.cal.com`): voice and chat agents connect, check real availability and book on the owner's page, signing in with OAuth and using their own AI tokens.
+
+## Done 2026-11-20 (local, not deployed yet)
+- Apple Calendar and CalDAV removed from the Apps page, onboarding and the website. Calendars are Google and Outlook only.
+- Assistant can read every booking, count them, read availability, and move or cancel upcoming bookings. Guardrails: it must propose the exact changes first; the server only allows changes from the plan the owner was shown (hidden marker in the reply); 10 changes per turn; own upcoming bookings only; one-off bookings only (series are moved in the app).
+- "Add booking" on the Home calendar opens an in-app form (service, free time, client, required questions) and books straight onto the calendar.
+- Pro: a second rebooking email 3 days after a client cancels, if they haven't rebooked.
+- Client-facing pages use a softer dark palette; dashboard content slightly larger; calendar side panel no longer scrolls the page behind it.
+- Code is on GitHub: https://github.com/Andrew-2120042/call (public).
 
 ## Live status (2026-11-19)
 Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.site (Vercel Hobby, team `andrew-0da0`, projects `nodslot` and `nodslot-landing`). Database: Neon (`nodslot-db`, iad1, Free) via the Vercel Marketplace. Live smoke test: `node scripts/launch-sweep/prod-smoke.cjs` (11 checks). How deploys work is in the memory note "deploy-process" and `DEPLOY.md`.

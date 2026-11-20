@@ -267,6 +267,7 @@ export const pricing = [
       "Confirm-or-release for no-shows",
       "AI summaries of booking requests",
       "Several reminder emails per booking",
+      "A second rebooking email if a client cancels and doesn't come back",
       "Your own domain, like book.yourname.com",
       `No ${site.name} badge`,
     ],
@@ -316,6 +317,7 @@ export const pricingCompare: { group: string; rows: { label: string; values: [st
     rows: [
       { label: "Waitlist for taken times", values: [false, true, true] },
       { label: "Confirm-or-release for no-shows", values: [false, true, true] },
+      { label: "Rebooking emails after a client cancels", values: ["One", "Two", "Two"] },
       { label: "Team waitlist across every host", values: [false, false, true] },
     ],
   },

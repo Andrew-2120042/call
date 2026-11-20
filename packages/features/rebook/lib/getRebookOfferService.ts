@@ -1,6 +1,7 @@
 import { RebookOfferEmail } from "@calcom/emails/templates/rebook-offer-email";
 import { getAvailableSlotsService } from "@calcom/features/di/containers/AvailableSlots";
 import { getTranslation } from "@calcom/i18n/server";
+import { getPlanService } from "@calcom/features/plans/lib/getPlanService";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { prisma } from "@calcom/prisma";
 import { RebookRepository } from "../repositories/RebookRepository";
@@ -34,6 +35,7 @@ export function getRebookOfferService(): RebookOfferService {
       const t = await getTranslation(to.locale || "en", "common");
       await new RebookOfferEmail({ ...email, to, t }).sendEmail();
     },
+    isFollowUpEntitled: (userId) => getPlanService().hasFeature(userId, "rebookFollowUp"),
     appUrl: WEBAPP_URL,
   });
   return service;

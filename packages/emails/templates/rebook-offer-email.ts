@@ -11,6 +11,8 @@ export type RebookOfferEmailData = {
   startTime: Date;
   bookUrl: string;
   moreTimesUrl: string;
+  /** The second, later nudge (Pro): softer wording, sent days after the cancellation. */
+  followUp?: boolean;
   t: TFunction;
 };
 
@@ -29,9 +31,10 @@ export class RebookOfferEmail extends BaseEmail {
     const shortTime = local.format("ddd h:mma");
     const when = `${local.format("dddd, MMMM D, YYYY h:mma")} (${to.timeZone})`;
     const firstName = to.name.split(" ")[0] || to.name;
-    const subject = t("rebook_offer_subject", { hostName, ...RAW });
-    const title = t("rebook_offer_title", { hostName, ...RAW });
-    const body = t("rebook_offer_body", { name: firstName, hostName, ...RAW });
+    const prefix = this.data.followUp ? "rebook_followup" : "rebook_offer";
+    const subject = t(`${prefix}_subject`, { hostName, ...RAW });
+    const title = t(`${prefix}_title`, { hostName, ...RAW });
+    const body = t(`${prefix}_body`, { name: firstName, hostName, ...RAW });
     const cta = { label: t("rebook_offer_cta", { time: shortTime, ...RAW }), href: this.data.bookUrl };
     const secondaryCta = { label: t("rebook_offer_more_times"), href: this.data.moreTimesUrl };
     return {
