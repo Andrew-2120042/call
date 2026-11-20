@@ -7,6 +7,18 @@ Everything still needed before Nodslot goes live. Tick items off as they're done
 2. [~] **Billing**: going with Dodo (owner, 2026-11-20); Polar code stays as a fallback. Until live keys are set in production, everyone is on Free.
 3. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
 
+## Advertised but not working (sweep 2026-11-20) — fix or take off the site before launch
+- [ ] **Your own domain (Pro):** built (Settings → Plan & billing → Custom domain, TXT check, routing) but production has no `CUSTOM_DOMAIN_CNAME_TARGET` / `VERCEL_DOMAINS_*`, so a verified domain doesn't serve the page. Needs a Vercel token scoped to the team (owner creates it at vercel.com/account/settings/tokens).
+- [ ] **Zoom links:** app disabled, no keys. Owner signs in at marketplace.zoom.us, then Claude registers the app.
+- [ ] **Zapier and Make:** disabled; the website "works with" strip and FAQ mention them.
+- [ ] **HubSpot, Salesforce, Pipedrive:** disabled (each needs its own developer app).
+- [ ] **Slack, ClickUp:** not built; shown as "Not available yet" on the Apps page.
+- [ ] **Outlook calendar and Microsoft Teams links:** switched on with keys, never tested live.
+- [ ] **Paying for Pro:** Dodo is in test mode and limited to the owner's two emails; nobody else can buy yet. Team checkout doesn't exist ("Coming soon"), but the website's Team card says "Start a team".
+- [ ] **Support inbox:** `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` is empty, so support@nodslot.site is used and it has no inbox.
+- [ ] **Google:** published to production 2026-11-20 but unverified (warning screen, 100-user cap). Needs nodslot.site verified in Search Console (DNS TXT at GoDaddy), the calendar scopes declared, and a demo video.
+- [ ] Live account 4 (`qaprobe128`, a test account) got Pro from a local test payment on 2026-11-20 (the bug is fixed); its PlanSubscription row should be deleted (owner to confirm).
+
 ## Come back to (owner asked to be reminded, 2026-11-19)
 - [x] **Redesign the landing page** (done 2026-11-19/20: Apollo-style layout, dark, serif headings, own pricing page). It reads like a tech tool; it should feel like a calendar and show the product. Layout like Apollo's site (recording `~/Desktop/Screen Recording 2026-11-19 at 8.58.54 PM.mov`, frames in `docs/design-refs/landing-layout-apollo.jpg`): big product-demo blocks, a UI mock beside each feature's text, a row of 4 feature cards, customer stories, a huge closing banner, a big footer. Colours like Cal.com's (recording `... 8.57.34 PM.mov`, `docs/design-refs/landing-colours-calcom.jpg`): black or near-black, not Apollo's bright colours, with calendar pieces inside the headline (a photo, a clock, an "Intro call · 30m · Booked" chip) and a real app screenshot under it.
 - [ ] **Slack** (listed on the Apps page as "Not available yet" since 2026-11-20): post new bookings, requests and cancellations to a channel, with Accept/Decline buttons. Needs the owner to create a Slack app at api.slack.com/apps (Claude gives the exact settings).
