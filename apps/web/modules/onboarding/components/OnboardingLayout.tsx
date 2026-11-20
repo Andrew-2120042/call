@@ -20,7 +20,7 @@ type OnboardingLayoutProps = {
 };
 
 /**
- * One card over a quiet landscape: the step on the left, a live preview of what it builds on the right,
+ * One card on a plain background: the step on the left, a live preview of what it builds on the right,
  * and a thin progress line across the top of the card.
  */
 export const OnboardingLayout = ({ currentStep, totalSteps, progress, children }: OnboardingLayoutProps) => {
@@ -34,7 +34,6 @@ export const OnboardingLayout = ({ currentStep, totalSteps, progress, children }
     <div
       className="bg-default relative flex min-h-screen w-full flex-col overflow-hidden"
       data-testid="onboarding-frame">
-      <Landscape />
       <header className="relative z-10 flex h-14 items-center justify-between px-5 md:px-8">
         <Logo small />
         <button
@@ -72,32 +71,3 @@ export const OnboardingLayout = ({ currentStep, totalSteps, progress, children }
     </div>
   );
 };
-
-/** Layered hills under a soft glow, drawn in the text colour at low strength so it suits light and dark. */
-function Landscape() {
-  return (
-    <div className="pointer-events-none absolute inset-0" aria-hidden>
-      <div className="absolute inset-x-0 top-0 h-[70%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(125,160,255,0.12),transparent_65%)]" />
-      <svg
-        className="text-emphasis absolute inset-x-0 bottom-0 h-[55%] w-full"
-        viewBox="0 0 1440 500"
-        preserveAspectRatio="none">
-        <path
-          d="M0 260 C 180 170 320 210 480 190 C 660 168 760 90 960 120 C 1140 148 1260 210 1440 170 L1440 500 L0 500 Z"
-          fill="currentColor"
-          opacity="0.035"
-        />
-        <path
-          d="M0 330 C 220 260 380 300 560 280 C 760 258 880 200 1080 230 C 1240 254 1340 300 1440 280 L1440 500 L0 500 Z"
-          fill="currentColor"
-          opacity="0.05"
-        />
-        <path
-          d="M0 410 C 240 360 420 390 640 372 C 860 354 1020 330 1200 352 C 1320 366 1390 380 1440 376 L1440 500 L0 500 Z"
-          fill="currentColor"
-          opacity="0.07"
-        />
-      </svg>
-    </div>
-  );
-}

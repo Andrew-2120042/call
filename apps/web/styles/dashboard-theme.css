@@ -72,7 +72,7 @@ body:has([data-sw-settings-nav]) {
    so zoom on the content column is the one switch that scales them all; the rail and top bar stay as they are. */
 @media (min-width: 1024px) {
   [data-sw-content] {
-    zoom: 1.06;
+    zoom: 1.12;
   }
 }
 

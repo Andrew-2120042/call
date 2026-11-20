@@ -163,10 +163,11 @@ export function PageIntro() {
   useEffect(() => {
     const match = INTROS.find((item) => item.match(pathname));
     if (!match) return setIntro(null);
+    // ?intro=1 shows it again on purpose (to preview it), even if it was already seen.
+    const forced = window.location.search.includes("intro=1");
     // Automated browsers (our own test runs) would get stuck behind it, unless they ask for it.
-    const automated =
-      typeof navigator !== "undefined" && navigator.webdriver && !window.location.search.includes("intro=1");
-    if (automated || readSeen().includes(match.id)) return setIntro(null);
+    const automated = typeof navigator !== "undefined" && navigator.webdriver && !forced;
+    if (automated || (!forced && readSeen().includes(match.id))) return setIntro(null);
     setIntro(match);
   }, [pathname]);
 
