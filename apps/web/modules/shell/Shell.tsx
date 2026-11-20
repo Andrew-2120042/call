@@ -213,7 +213,7 @@ function MainContainer({
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
       <AppTopBar />
-      <div className="max-w-full p-2 sm:p-4 lg:px-6 lg:py-5">
+      <div data-sw-content className="max-w-full p-2 sm:p-4 lg:px-6 lg:py-5">
         <ErrorBoundary>
           {!props.withoutMain ? <ShellMain {...props}>{props.children}</ShellMain> : props.children}
         </ErrorBoundary>

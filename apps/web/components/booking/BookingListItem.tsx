@@ -351,7 +351,7 @@ function BookingListItem(booking: BookingItemProps) {
         </div>
         <div
           data-testid="title-and-attendees"
-          className={classNames("flex-1 px-4", isRejected && "line-through")}>
+          className={classNames("min-w-0 flex-1 px-4", isRejected && "line-through")}>
           <ConditionalLink onClick={onClick} bookingLink={bookingLink} bookingUid={booking.uid} className="flex h-full flex-col">
             {/* Time and Badges for mobile */}
             <div className="w-full pb-2 pt-4 sm:hidden">

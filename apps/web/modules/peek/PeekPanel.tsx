@@ -10,12 +10,14 @@ import { SkeletonText } from "@calcom/ui/components/skeleton";
 import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { useLockBodyScroll } from "@lib/hooks/useLockBodyScroll";
 import { useEffect, useState } from "react";
 import { usePeek } from "./peekStore";
 
 export function PeekPanel() {
   const target = usePeek((state) => state.target);
   const close = usePeek((state) => state.close);
+  useLockBodyScroll(!!target);
 
   useEffect(() => {
     if (!target) return;
@@ -117,7 +119,7 @@ function PeekContent({
         </button>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-5 py-5">
+      <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5">
         {error && <p className="text-error text-[13px]">{error.message}</p>}
         {isPending && <SkeletonText className="h-24 w-full" />}
         {data && (

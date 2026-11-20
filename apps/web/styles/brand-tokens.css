@@ -55,6 +55,21 @@
   --sw-accent: #2563eb;
 }
 
+/* Client-facing pages (booking, profile, confirmation, cancel) in dark mode: a softer charcoal than the dashboard,
+   with brighter secondary text, so clients can read them easily on a phone. Set on body so pop-ups inherit it. */
+.dark body:has([data-booking-page]) {
+  --cal-bg: hsl(0, 0%, 14%);
+  --cal-bg-muted: hsl(0, 0%, 11%);
+  --cal-bg-subtle: hsl(0, 0%, 19%);
+  --cal-bg-emphasis: hsl(0, 0%, 24%);
+  --cal-border: hsl(0, 0%, 26%);
+  --cal-border-subtle: hsl(0, 0%, 21%);
+  --cal-border-muted: hsl(0, 0%, 16%);
+  --cal-text: hsl(0, 0%, 90%);
+  --cal-text-subtle: hsl(0, 0%, 66%);
+  --cal-text-muted: hsl(0, 0%, 58%);
+}
+
 /* Type: the standard size scale, set a touch heavier and more open than default. */
 body {
   font-weight: 450;

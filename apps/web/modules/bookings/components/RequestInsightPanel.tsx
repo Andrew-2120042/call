@@ -216,7 +216,7 @@ export function RequestInsightLine({ bookingUid }: { bookingUid: string }) {
   if (!insight) return <div className="mb-2.5 mt-2 h-5" aria-hidden />;
   return (
     <div
-      className="mb-2.5 mt-2 flex h-5 min-w-0 max-w-[18rem] items-center gap-2 sm:max-w-64 md:max-w-96 xl:max-w-xl"
+      className="mb-2.5 mt-2 flex h-5 min-w-0 max-w-full items-center gap-2"
       data-testid="request-insight-line">
       <RequestFitBadges fit={insight.fit as Fit} spamLikely={insight.spamLikely} />
       <span className="text-subtle min-w-0 truncate text-xs" title={insight.summary}>

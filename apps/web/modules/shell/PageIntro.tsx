@@ -4,6 +4,7 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import type { IconName } from "@calcom/ui/components/icon";
 import { Icon } from "@calcom/ui/components/icon";
 import { headingFont } from "@lib/headingFont";
+import { useLockBodyScroll } from "@lib/hooks/useLockBodyScroll";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -157,6 +158,7 @@ export function PageIntro() {
   const { t } = useLocale();
   const pathname = usePathname() ?? "";
   const [intro, setIntro] = useState<Intro | null>(null);
+  useLockBodyScroll(!!intro);
 
   useEffect(() => {
     const match = INTROS.find((item) => item.match(pathname));

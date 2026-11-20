@@ -68,6 +68,14 @@ body:has([data-sw-settings-nav]) {
   font-size: 13px;
 }
 
+/* The owner asked for page content a touch larger than the rail. Components size themselves in rem and px,
+   so zoom on the content column is the one switch that scales them all; the rail and top bar stay as they are. */
+@media (min-width: 1024px) {
+  [data-sw-content] {
+    zoom: 1.06;
+  }
+}
+
 [data-sw-topbar] {
   background: var(--sw-canvas);
 }
