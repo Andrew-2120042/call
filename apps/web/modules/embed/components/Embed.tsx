@@ -49,6 +49,8 @@ import { EmbedTheme } from "@calcom/features/embed/lib/constants";
 import { getDimension } from "@calcom/features/embed/lib/getDimension";
 import { useEmbedDialogCtx } from "@calcom/features/embed/lib/hooks/useEmbedDialogCtx";
 import { useEmbedParams } from "@calcom/features/embed/lib/hooks/useEmbedParams";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Icon } from "@calcom/ui/components/icon";
 import type {
   EmbedTabs,
   EmbedType,
@@ -196,6 +198,22 @@ const ThemeSelectControl = ({
   );
 };
 
+/** The ✕ in the corner of both embed screens; closing works like Escape or clicking outside. */
+function EmbedCloseButton() {
+  const { t } = useLocale();
+  return (
+    <DialogPrimitive.Close asChild>
+      <button
+        type="button"
+        aria-label={t("close")}
+        data-testid="embed-close"
+        className="text-subtle hover:text-emphasis hover:bg-subtle absolute right-4 top-4 z-10 grid h-8 w-8 place-items-center rounded-md">
+        <Icon name="x" className="h-4 w-4" />
+      </button>
+    </DialogPrimitive.Close>
+  );
+}
+
 const ChooseEmbedTypesDialogContent = ({
   types,
   noQueryParamMode,
@@ -206,7 +224,8 @@ const ChooseEmbedTypesDialogContent = ({
   const { t } = useLocale();
   const { gotoState } = useEmbedGoto(noQueryParamMode);
   return (
-    <DialogContent className="rounded-lg p-10" type="creation" size="lg">
+    <DialogContent className="relative rounded-lg p-10" type="creation" size="lg">
+      <EmbedCloseButton />
       <div className="mb-2">
         <h3 className="font-cal text-emphasis mb-2 text-2xl font-semibold leading-none" id="modal-title">
           {t("how_you_want_add_cal_site", { appName: APP_NAME })}
@@ -946,8 +965,9 @@ const EmbedTypeCodeAndPreviewDialogContent = ({
     <DialogContent
       enableOverflow
       ref={dialogContentRef}
-      className="rounded-lg p-0.5 sm:max-w-7xl!"
+      className="relative rounded-lg p-0.5 sm:max-w-7xl!"
       type="creation">
+      <EmbedCloseButton />
       <div className="flex">
         <div className="bg-cal-muted flex h-[95vh] w-1/3 flex-col overflow-y-auto p-8">
           <h3

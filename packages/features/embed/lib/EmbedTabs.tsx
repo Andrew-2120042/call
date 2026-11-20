@@ -1,11 +1,13 @@
 import type { MutableRefObject } from "react";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 
 import type { BookerLayout } from "@calcom/features/bookings/Booker/types";
 import { useEmbedBookerUrl } from "@calcom/features/bookings/hooks/useBookerUrl";
 import { APP_NAME } from "@calcom/lib/constants";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { TextArea } from "@calcom/ui/components/form";
+import { Icon } from "@calcom/ui/components/icon";
+import { showToast } from "@calcom/ui/components/toast";
 
 import type { EmbedFramework, EmbedType, PreviewState } from "../types";
 import { Codes } from "./EmbedCodes";
@@ -19,6 +21,31 @@ export const enum EmbedTabName {
   HTML = "embed-code",
   IFRAME_REACT = "embed-react",
   ATOM_REACT = "embed-atom-react",
+}
+
+/** A copy button pinned to the top-right corner of the code box. */
+function CodeCopyButton({ targetRef }: { targetRef: MutableRefObject<HTMLTextAreaElement | HTMLIFrameElement | null> }) {
+  const { t } = useLocale();
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="relative h-0">
+      <button
+        type="button"
+        data-testid="embed-copy-icon"
+        onClick={async () => {
+          const box = targetRef.current;
+          if (!(box instanceof HTMLTextAreaElement)) return;
+          await navigator.clipboard.writeText(box.value);
+          setCopied(true);
+          showToast(t("code_copied"), "success");
+          setTimeout(() => setCopied(false), 1500);
+        }}
+        className="border-subtle bg-default text-default hover:text-emphasis absolute right-2 top-2 z-10 inline-flex h-7 items-center gap-1.5 rounded-md border px-2 text-[12px]">
+        <Icon name={copied ? "check" : "copy"} className="h-3.5 w-3.5" />
+        {copied ? t("copied") : t("copy")}
+      </button>
+    </div>
+  );
 }
 
 export const tabs = [
@@ -48,6 +75,7 @@ export const tabs = [
               {t("place_where_cal_widget_appear", { appName: APP_NAME })}
             </small>
           </div>
+          <CodeCopyButton targetRef={ref} />
           <TextArea
             data-testid="embed-code"
             ref={ref as typeof ref & MutableRefObject<HTMLTextAreaElement>}
@@ -55,7 +83,7 @@ export const tabs = [
             className="text-default bg-default h-[calc(100%-50px)] font-mono"
             style={{ resize: "none", overflow: "auto" }}
             readOnly
-            value={`<!-- Cal ${embedType} embed code begins -->\n${
+            value={`<!-- ${APP_NAME} ${embedType} embed code begins -->\n${
               embedType === "inline"
                 ? `<div style="width:${getDimension(previewState.inline.width)};height:${getDimension(
                     previewState.inline.height
@@ -72,7 +100,7 @@ export const tabs = [
     namespace,
   })}
   </script>
-  <!-- Cal ${embedType} embed code ends -->`}
+  <!-- ${APP_NAME} ${embedType} embed code ends -->`}
           />
           <p className="text-subtle hidden text-sm">{t("need_help_embedding")}</p>
         </>
@@ -101,6 +129,7 @@ export const tabs = [
       return (
         <>
           <small className="text-subtle flex py-2">{t("create_update_react_component")}</small>
+          <CodeCopyButton targetRef={ref} />
           <TextArea
             data-testid="embed-react"
             ref={ref as typeof ref & MutableRefObject<HTMLTextAreaElement>}
@@ -124,55 +153,6 @@ export const tabs = [
     namespace,
   })}
   `}
-          />
-        </>
-      );
-    }),
-  },
-  {
-    name: "React (Atom)",
-    href: `embedTabName=${EmbedTabName.ATOM_REACT}`,
-    "data-testid": "react-atom",
-    icon: "code" as const,
-    type: "code",
-    Component: forwardRef<
-      HTMLTextAreaElement | HTMLIFrameElement | null,
-      { embedType: EmbedType; calLink: string; previewState: PreviewState; namespace: string }
-    >(function EmbedReactAtom({ embedType, calLink, previewState, namespace }, ref) {
-      const { t } = useLocale();
-      const embedCalOrigin = useEmbedCalOrigin();
-
-      if (ref instanceof Function || !ref) {
-        return null;
-      }
-      if (ref.current && !(ref.current instanceof HTMLTextAreaElement)) {
-        return null;
-      }
-      return (
-        <>
-          <small className="text-subtle flex py-2">{t("create_update_react_component")}</small>
-          <TextArea
-            data-testid={`${EmbedTabName.ATOM_REACT}`}
-            ref={ref as typeof ref & MutableRefObject<HTMLTextAreaElement>}
-            name={`${EmbedTabName.ATOM_REACT}`}
-            className="text-default bg-default h-[calc(100%-50px)] font-mono"
-            readOnly
-            style={{ resize: "none", overflow: "auto" }}
-            value={`/* First make sure that you have installed the package */
-
-/* If you are using yarn */
-// yarn add @calcom/atoms
-
-/* If you are using npm */
-// npm install @calcom/atoms
-${getEmbedTypeSpecificString({
-  embedFramework: "react-atom" as EmbedFramework,
-  embedType,
-  calLink,
-  previewState,
-  embedCalOrigin,
-  namespace,
-})}`}
           />
         </>
       );
