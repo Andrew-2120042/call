@@ -5,7 +5,9 @@ export type AssistantAction =
   | { type: "request_accepted"; name: string }
   | { type: "request_declined"; name: string }
   | { type: "request_reported"; name: string }
-  | { type: "waitlist_removed"; name: string };
+  | { type: "waitlist_removed"; name: string }
+  | { type: "booking_rescheduled"; name: string; when: string }
+  | { type: "booking_cancelled"; name: string };
 
 export function describeAssistantAction(
   action: AssistantAction,
@@ -30,5 +32,9 @@ export function describeAssistantAction(
       return t("assistant_did_report", { name: action.name });
     case "waitlist_removed":
       return t("assistant_did_waitlist_remove", { name: action.name });
+    case "booking_rescheduled":
+      return t("assistant_did_reschedule", { name: action.name, when: action.when });
+    case "booking_cancelled":
+      return t("assistant_did_cancel", { name: action.name });
   }
 }

@@ -50,8 +50,54 @@ export type AssistantWaitlistEntry = {
   placeInLine: number;
 };
 
-/** Requests and waitlist, scoped to one owner. Booker text inside these is data, never instructions. */
+export type AssistantBookingStatus = "upcoming" | "past" | "unconfirmed" | "cancelled" | "all";
+
+export type AssistantBooking = {
+  bookingUid: string;
+  title: string;
+  service: string;
+  client: string;
+  clientEmail: string;
+  start: string;
+  startIso: string;
+  minutes: number;
+  status: string;
+};
+
+export type AssistantBookingCounts = {
+  total: number;
+  upcoming: number;
+  past: number;
+  unconfirmed: number;
+  cancelled: number;
+  from: string | null;
+  to: string | null;
+};
+
+export type AssistantAvailability = {
+  timeZone: string;
+  schedules: { name: string; isDefault: boolean; weekly: string[]; dateOverrides: string[] }[];
+};
+
+/** Requests, bookings and the waitlist, scoped to one owner. Booker text inside these is data, never instructions. */
 export interface IAssistantInbox {
+  listBookings(filter: {
+    status: AssistantBookingStatus;
+    from?: string;
+    to?: string;
+    limit: number;
+  }): Promise<AssistantBooking[]>;
+  countBookings(range: { from?: string; to?: string }): Promise<AssistantBookingCounts>;
+  getAvailability(): Promise<AssistantAvailability>;
+  /** Moves one upcoming booking through the normal reschedule flow (calendar events and emails update). */
+  rescheduleBooking(
+    bookingUid: string,
+    newStartLocal: string
+  ): Promise<{ ok: true; name: string; when: string } | { ok: false; error: string }>;
+  cancelBooking(
+    bookingUid: string,
+    reason: string
+  ): Promise<{ ok: true; name: string } | { ok: false; error: string }>;
   listRequests(): Promise<AssistantRequest[]>;
   decideRequest(bookingUid: string, accept: boolean, reason?: string): Promise<{ name: string } | null>;
   reportSpam(bookingUid: string): Promise<{ name: string } | null>;
@@ -67,6 +113,8 @@ export type AssistantAction =
   | { type: "request_accepted"; name: string }
   | { type: "request_declined"; name: string }
   | { type: "request_reported"; name: string }
-  | { type: "waitlist_removed"; name: string };
+  | { type: "waitlist_removed"; name: string }
+  | { type: "booking_rescheduled"; name: string; when: string }
+  | { type: "booking_cancelled"; name: string };
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };

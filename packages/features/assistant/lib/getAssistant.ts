@@ -10,6 +10,7 @@ export async function runAssistantTurn(params: {
   actions: IAssistantActions;
   inbox?: IAssistantInbox;
   userId: number;
+  timeZone?: string;
   messages: ChatMessage[];
 }) {
   const apiKey = process.env.ANTHROPIC_API_KEY;

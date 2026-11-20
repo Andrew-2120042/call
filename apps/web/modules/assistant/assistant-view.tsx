@@ -409,14 +409,17 @@ export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
           <div
             key={index}
             className={classNames("flex gap-3", turn.role === "user" ? "justify-end" : "justify-start")}>
-            {turn.role === "assistant" && <Mark small />}
             <div
               className={classNames(
                 "max-w-[85%] text-[13px] leading-relaxed",
-                turn.role === "user" ? "bg-subtle text-emphasis rounded-lg px-3 py-2" : "text-emphasis pt-0.5"
+                turn.role === "user" ? "bg-subtle text-emphasis rounded-lg px-3 py-2" : "text-emphasis max-w-full pt-0.5"
               )}>
               <p className="whitespace-pre-line">
-                {turn.content.replace(/\*\*(.+?)\*\*/g, "$1").replace(/^\s*[-*]\s+/gm, "• ")}
+                {turn.content
+                  .replace(/<!--plan:[^>]*-->/g, "")
+                  .trim()
+                  .replace(/\*\*(.+?)\*\*/g, "$1")
+                  .replace(/^\s*[-*]\s+/gm, "• ")}
               </p>
               {!!turn.actions?.length && (
                 <ul className="border-subtle bg-default mt-3 space-y-1.5 rounded-lg border p-3 text-[13px]">
@@ -435,7 +438,6 @@ export function AssistantChat({ variant }: { variant: "page" | "panel" }) {
         ))}
         {chat.isPending && (
           <div className="flex gap-3">
-            <Mark small />
             <span className="text-subtle flex items-center gap-2 pt-1 text-[13px]">
               <Icon name="loader" className="h-4 w-4 animate-spin" />
               {t("assistant_working")}

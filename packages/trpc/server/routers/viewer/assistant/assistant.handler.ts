@@ -42,6 +42,7 @@ export const chatHandler = async ({
       actions,
       inbox: createAssistantInbox(ctx),
       userId: ctx.user.id,
+      timeZone: ctx.user.timeZone,
       messages: input.messages,
     });
     if (!result) throw new Error("assistant not configured");
