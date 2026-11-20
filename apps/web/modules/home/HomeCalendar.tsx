@@ -10,6 +10,7 @@ import Link from "next/link";
 import type { ReactNode, RefObject } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePeek } from "~/peek/peekStore";
+import { AddBookingDialog } from "./AddBookingDialog";
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const SHOWN_PER_DAY = 3;
@@ -407,7 +408,7 @@ function DatePicker({
   );
 }
 
-/** Adding a booking means booking your own page on the client's behalf, opened on the chosen day. */
+/** "Add booking" opens a form that puts a booking straight onto the host's calendar (no trip to the public page). */
 function AddBookingMenu({
   data,
   day,
@@ -420,9 +421,9 @@ function AddBookingMenu({
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, open, () => setOpen(false));
   const services = data?.services ?? [];
-  const link = (slug: string) => `${data?.bookingPageUrl}/${slug}?month=${day.slice(0, 7)}&date=${day}`;
+  // Only the "add your first service" menu needs closing on an outside click; the form has its own backdrop.
+  useClickOutside(ref, open && services.length === 0, () => setOpen(false));
 
   return (
     <div ref={ref} className="relative" onClick={(event) => event.stopPropagation()}>
@@ -430,7 +431,7 @@ function AddBookingMenu({
         <button
           type="button"
           aria-label={t("home_calendar_add_on_day", { day: dayjs(day).format("D MMM") })}
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen(true)}
           className={classNames(
             "text-subtle hover:text-emphasis hover:bg-emphasis grid h-5 w-5 place-items-center rounded transition",
             open ? "opacity-100" : "opacity-0 group-hover/day:opacity-100 focus:opacity-100"
@@ -440,36 +441,28 @@ function AddBookingMenu({
       ) : (
         <button
           type="button"
-          onClick={() => setOpen((value) => !value)}
+          onClick={() => setOpen(true)}
           data-testid="home-calendar-add"
           className="bg-inverted text-inverted inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-[12px] font-medium">
           <Icon name="plus" className="h-3.5 w-3.5" />
           {t("home_calendar_add")}
         </button>
       )}
-      {open && (
-        <div
-          className={classNames(
-            "bg-default border-subtle absolute top-full z-30 mt-1 w-64 rounded-lg border p-1.5 shadow-2xl",
-            compact ? "left-0" : "right-0"
-          )}>
-          <p className="text-subtle px-2 pb-1.5 pt-1 text-[11px]">
-            {t("home_calendar_add_hint", { day: dayjs(day).format("ddd D MMM") })}
-          </p>
-          {services.length === 0 ? (
+      {open &&
+        (services.length === 0 ? (
+          <div className="bg-default border-subtle absolute right-0 top-full z-30 mt-1 w-64 rounded-lg border p-1.5 shadow-2xl">
             <MenuLink href={`/event-types?dialog=new&eventPage=${data?.username ?? ""}`}>
               {t("home_calendar_add_first_service")}
             </MenuLink>
-          ) : (
-            services.map((service) => (
-              <MenuLink key={service.id} href={link(service.slug)} external>
-                <span className="min-w-0 flex-1 truncate">{service.title}</span>
-                <span className="text-subtle shrink-0 text-[11px]">{service.length} min</span>
-              </MenuLink>
-            ))
-          )}
-        </div>
-      )}
+          </div>
+        ) : (
+          <AddBookingDialog
+            services={services}
+            username={data?.username ?? ""}
+            day={day}
+            onClose={() => setOpen(false)}
+          />
+        ))}
     </div>
   );
 }
