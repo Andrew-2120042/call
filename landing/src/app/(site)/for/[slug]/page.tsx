@@ -27,23 +27,23 @@ export default async function AudiencePage({ params }: Params) {
     <>
       <Container className="max-w-3xl pt-20">
         <Eyebrow>For {a.plural}</Eyebrow>
-        <h1 className="mt-4 text-4xl font-medium tracking-tight sm:text-5xl">{a.title}</h1>
+        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{a.title}</h1>
         <p className="text-muted mt-5 text-lg leading-relaxed">{a.summary}</p>
         <div className="mt-8"><ButtonLink href={signupUrl}>Sign up free</ButtonLink></div>
       </Container>
       <Container className="max-w-3xl py-14">
-        <h2 className="text-2xl font-medium tracking-tight">Sound familiar?</h2>
+        <h2 className="text-2xl font-normal tracking-[-0.02em]">Sound familiar?</h2>
         <ul className="mt-5 space-y-2">
           {a.pains.map((p) => (
             <li key={p} className="text-muted flex gap-3"><span className="text-faint">—</span>{p}</li>
           ))}
         </ul>
-        <h2 className="mt-14 text-2xl font-medium tracking-tight">What helps most</h2>
+        <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">What helps most</h2>
         <div className="mt-6 grid gap-3">
           {picked.map((f) => (
             <Link key={f.slug} href={`/features/${f.slug}`} className="rounded-2xl border border-line bg-surface p-5 transition hover:border-line-strong">
               <div className="flex items-center justify-between gap-3">
-                <h3 className="font-medium">{f.name}</h3>
+                <h3 className="font-sans font-medium">{f.name}</h3>
                 <PlanBadge plan={f.plan} />
               </div>
               <p className="text-muted mt-2 text-sm leading-relaxed">{f.summary}</p>

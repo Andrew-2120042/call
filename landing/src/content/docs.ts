@@ -72,7 +72,7 @@ export const docs: DocPage[] = [
       ] },
       { type: "image", src: "/shots/booking.png", alt: `A ${site.name} booking page`, caption: "What your clients see when they open the link." },
       { type: "h2", text: "Connect your calendar" },
-      { type: "p", text: `Go to **Apps** and connect Google Calendar, Outlook, Apple Calendar or any CalDAV calendar. ${site.name} checks it for busy times so you're never double booked, and adds new bookings to the calendar you choose.` },
+      { type: "p", text: `Go to **Apps** and connect Google Calendar or Outlook. ${site.name} checks it for busy times so you're never double booked, and adds new bookings to the calendar you choose.` },
       { type: "h2", text: "Share your link" },
       { type: "p", text: "Your page lives at your username, and each service has its own link under it. Copy either from **Home** or the service's menu, or use **View public page** in the sidebar to see what clients see." },
       { type: "h2", text: "Move from Calendly" },
@@ -209,7 +209,7 @@ export const docs: DocPage[] = [
     blocks: [
       { type: "p", text: "Connect apps from **Apps** in the sidebar. Each one says what it does and how to connect it." },
       { type: "h2", text: "Calendars" },
-      { type: "list", items: ["Google Calendar", "Outlook and Microsoft 365", "Apple iCloud (with an app-specific password)", "Any CalDAV calendar, like Fastmail or Nextcloud"] },
+      { type: "list", items: ["Google Calendar", "Outlook and Microsoft 365"] },
       { type: "h2", text: "Video" },
       { type: "list", items: ["Google Meet", "Zoom", "Microsoft Teams"] },
       { type: "h2", text: "CRM" },

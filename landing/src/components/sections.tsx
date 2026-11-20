@@ -6,7 +6,7 @@ export function Faq({ items, title = "Questions & answers" }: { items: { q: stri
     <section className="border-t border-line py-24">
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.7fr]">
         <div>
-          <h2 className="text-3xl font-medium tracking-tight sm:text-4xl">{title}</h2>
+          <h2 className="text-3xl font-normal tracking-[-0.02em] sm:text-4xl">{title}</h2>
           <p className="text-muted mt-3 max-w-[30ch] text-sm leading-relaxed">
             Anything else? Email{" "}
             <a href={`mailto:${site.supportEmail}`} className="text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg">
@@ -45,7 +45,7 @@ export function FinalCta({ title = "Get your booking link in two minutes" }: { t
     <section className="py-16">
       <Container>
         <div data-reveal className="rounded-3xl border border-line bg-surface px-6 py-14 text-center">
-          <h2 className="text-2xl font-medium tracking-tight sm:text-3xl">{title}</h2>
+          <h2 className="text-2xl font-normal tracking-[-0.02em] sm:text-3xl">{title}</h2>
           <p className="text-muted mx-auto mt-3 max-w-[48ch] text-sm sm:text-base">
             Free forever for one person. Upgrade only when you want the waitlist, no-show protection or a team.
           </p>

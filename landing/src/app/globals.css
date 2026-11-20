@@ -15,10 +15,29 @@
   --color-accent-soft: rgb(37 99 235 / 0.1);
   --color-brand: #ebf23a;
   --color-ink: #2b2540;
+  --color-card: #ffffff;
+  --color-chrome: #dcdcd6;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
-  --font-display: var(--font-display-face), var(--font-inter), ui-sans-serif, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, monospace;
+}
+
+/* Dark palette: the site ships dark (data-theme on <html>); the light tokens above remain for the dev switch. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0e0e0d;
+  --color-surface: #191917;
+  --color-raised: #232320;
+  --color-line: #262624;
+  --color-line-strong: #383733;
+  --color-fg: #f1f0ec;
+  --color-muted: #a9a6a0;
+  --color-faint: #76736e;
+  --color-accent: #6b9bff;
+  --color-accent-soft: rgb(107 155 255 / 0.14);
+  --color-ink: #e7e3ff;
+  --color-card: #151514;
+  --color-chrome: #121211;
 }
 
 html {
@@ -35,13 +54,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Headings in the display face, regular weight and tight, the way Apollo sets them. */
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.03em;
+/* Headings in the serif to match the hero; tiny labels opt back into sans with font-sans. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
 }
 
 ::selection {
@@ -183,4 +204,59 @@ h3 {
     opacity: 1;
     transform: none;
   }
+}
+
+
+/* Hero slot chip: "Cancelled" gives way to "Booked" on a loop, the waitlist in one glance. */
+@keyframes slot-out {
+  0%, 35% { opacity: 1; transform: translateY(0); }
+  45%, 90% { opacity: 0; transform: translateY(-40%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes slot-in {
+  0%, 35% { opacity: 0; transform: translateY(40%); }
+  45%, 90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(40%); }
+}
+.slot-flip-out { animation: slot-out 4.5s ease-in-out infinite; }
+.slot-flip-in { animation: slot-in 4.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .slot-flip-out { animation: none; opacity: 0; }
+  .slot-flip-in { animation: none; opacity: 1; }
+}
+
+/* Logo strip: two copies side by side, slid by one copy's width so the loop never jumps. */
+/* Edge fades are overlays, not mask-image: a mask is mis-sized under the page zoom and clipped the strip. */
+.marquee {
+  position: relative;
+}
+.marquee::before,
+.marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 6%;
+  pointer-events: none;
+}
+.marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg), transparent);
+}
+.marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg), transparent);
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
 }

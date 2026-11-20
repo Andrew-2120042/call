@@ -11,7 +11,7 @@ export function DocView({ page }: { page: DocPage }) {
   const href = (d: DocPage) => (d.slug === "introduction" ? "/docs" : `/docs/${d.slug}`);
   return (
     <article className="mx-auto max-w-[760px] px-5 pt-10 pb-16 sm:px-10 lg:pt-14">
-      <h1 className="text-lg font-medium tracking-tight">{page.title}</h1>
+      <h1 className="text-[34px] font-normal leading-tight tracking-[-0.02em]">{page.title}</h1>
       <p className="text-muted mt-1.5 text-[13px]">{page.description}</p>
       <p className="text-faint mt-8 text-[10px] font-medium uppercase tracking-[0.16em]">{page.eyebrow}</p>
       <DocBlocks blocks={page.blocks} />

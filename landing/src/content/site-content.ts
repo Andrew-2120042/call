@@ -241,22 +241,23 @@ export const pricing = [
   {
     name: "Free",
     price: "$0",
-    period: "forever",
+    period: "Forever, for one person",
     blurb: "Everything you need for a professional booking link.",
     cta: "Get started",
     items: [
       "Unlimited services and bookings",
-      "Google, Outlook and Apple calendar sync",
-      "Google Meet, Zoom and Microsoft Teams",
-      "Approvals and unlimited booking questions",
+      "Google Calendar and Outlook sync",
+      "Google Meet, Zoom and Microsoft Teams links",
+      "Approve bookings before they're confirmed",
+      "Unlimited booking questions",
       "One reminder email per booking",
-      "Embed on your website",
+      "Embed booking on your website",
     ],
   },
   {
     name: "Pro",
     price: "$12",
-    period: "per month",
+    period: "Per month, for one person",
     blurb: "Protect your calendar from gaps and no-shows.",
     cta: "Start with Pro",
     highlight: true,
@@ -265,22 +266,67 @@ export const pricing = [
       "Waitlist that refills cancelled slots",
       "Confirm-or-release for no-shows",
       "AI summaries of booking requests",
-      "Multiple reminder emails",
-      `Your own domain and no ${site.name} badge`,
+      "Several reminder emails per booking",
+      "Your own domain, like book.yourname.com",
+      `No ${site.name} badge`,
     ],
   },
   {
     name: "Team",
     price: "$69",
-    period: "per month",
-    blurb: "$69 for up to 10 people, then $10 per extra person.",
+    period: "Per month for up to 10 people, then $10 per extra person",
+    blurb: "One link for the whole team, without paying per seat.",
     cta: "Start a team",
     items: [
-      "Everything in Pro",
+      "Everything in Pro, for every member",
       "Round robin and collective services",
-      "Invite by email or link, with roles",
+      "Managed services, set up once for everyone",
+      "Team waitlist across every host",
+      "Weekly coverage view of who's free",
       "A shared team booking page",
-      "10 people included, then $10 each",
+      "Invite by email or link, with roles",
+    ],
+  },
+];
+
+/** Plan-by-plan detail for the pricing page table: true, false, or a short value. */
+export const pricingCompare: { group: string; rows: { label: string; values: [string | boolean, string | boolean, string | boolean] }[] }[] = [
+  {
+    group: "Booking",
+    rows: [
+      { label: "Services and bookings", values: ["Unlimited", "Unlimited", "Unlimited"] },
+      { label: "Booking questions", values: ["Unlimited", "Unlimited", "Unlimited"] },
+      { label: "Approve requests before booking", values: [true, true, true] },
+      { label: "AI summary of each request", values: [false, true, true] },
+      { label: "Embed on your website", values: [true, true, true] },
+      { label: "Your own domain", values: [false, true, true] },
+      { label: `Remove the ${site.name} badge`, values: [false, true, true] },
+    ],
+  },
+  {
+    group: "Calendars and video",
+    rows: [
+      { label: "Google Calendar and Outlook", values: [true, true, true] },
+      { label: "Google Meet, Zoom and Microsoft Teams", values: [true, true, true] },
+      { label: "Reminder emails per booking", values: ["One", "Several", "Several"] },
+    ],
+  },
+  {
+    group: "Keeping your calendar full",
+    rows: [
+      { label: "Waitlist for taken times", values: [false, true, true] },
+      { label: "Confirm-or-release for no-shows", values: [false, true, true] },
+      { label: "Team waitlist across every host", values: [false, false, true] },
+    ],
+  },
+  {
+    group: "Teams",
+    rows: [
+      { label: "People included", values: ["1", "1", "10, then $10 each"] },
+      { label: "Round robin and collective services", values: [false, false, true] },
+      { label: "Managed services", values: [false, false, true] },
+      { label: "Weekly coverage view", values: [false, false, true] },
+      { label: "Roles: owner, admin, member", values: [false, false, true] },
     ],
   },
 ];
@@ -312,7 +358,7 @@ export const homeFaq = [
   },
   {
     q: `Which calendars and video apps work with ${site.name}?`,
-    a: "Google Calendar, Outlook and Microsoft 365, Apple iCloud and any CalDAV calendar are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom or Microsoft Teams link. Zapier, Make and webhooks connect everything else.",
+    a: "Google Calendar and Outlook (Microsoft 365) are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom or Microsoft Teams link. Zapier, Make and webhooks connect everything else.",
   },
   {
     q: "Do my clients need an account?",

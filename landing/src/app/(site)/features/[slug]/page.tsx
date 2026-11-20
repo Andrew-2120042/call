@@ -35,7 +35,7 @@ export default async function FeaturePage({ params }: Params) {
           <Eyebrow>{feature.name}</Eyebrow>
           <PlanBadge plan={feature.plan} />
         </div>
-        <h1 className="mt-4 text-4xl font-medium tracking-tight sm:text-5xl">{feature.title}</h1>
+        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{feature.title}</h1>
         <p className="text-muted mt-5 text-lg leading-relaxed">{feature.summary}</p>
         <div className="mt-8 flex gap-3">
           <ButtonLink href={signupUrl}>Try it free</ButtonLink>
@@ -48,13 +48,13 @@ export default async function FeaturePage({ params }: Params) {
           <p className="text-faint text-xs font-medium uppercase tracking-[0.12em]">The problem</p>
           <p className="mt-3 leading-relaxed">{feature.problem}</p>
         </div>
-        <h2 className="mt-14 text-2xl font-medium tracking-tight">How it works</h2>
+        <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">How it works</h2>
         <ol className="mt-6 space-y-6">
           {feature.how.map((step, i) => (
             <li key={step.title} className="flex gap-4">
               <span className="grid h-7 w-7 flex-none place-items-center rounded-full border border-line-strong text-xs">{i + 1}</span>
               <div>
-                <h3 className="font-medium">{step.title}</h3>
+                <h3 className="font-sans font-medium">{step.title}</h3>
                 <p className="text-muted mt-1 text-sm leading-relaxed">{step.body}</p>
               </div>
             </li>
@@ -65,7 +65,7 @@ export default async function FeaturePage({ params }: Params) {
       <Faq items={feature.faq} />
 
       <Container className="py-8">
-        <h2 className="text-lg font-medium">More features</h2>
+        <h2 className="text-lg font-normal">More features</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {others.map((f) => (
             <Link key={f.slug} href={`/features/${f.slug}`} className="rounded-xl border border-line bg-surface p-4 text-sm transition hover:border-line-strong">

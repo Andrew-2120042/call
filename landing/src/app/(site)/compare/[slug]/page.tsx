@@ -29,7 +29,7 @@ export default async function ComparePage({ params }: Params) {
     <>
       <Container className="max-w-3xl pt-20">
         <Eyebrow>{site.name} vs {c.competitor}</Eyebrow>
-        <h1 className="mt-4 text-4xl font-medium tracking-tight sm:text-5xl">{c.title}</h1>
+        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{c.title}</h1>
         <p className="text-muted mt-5 text-lg leading-relaxed">{c.summary}</p>
       </Container>
       <Container className="max-w-3xl py-14">

@@ -48,7 +48,7 @@ export function FeatureRow({
           </ul>
           <Link
             href={href}
-            className="mt-6 inline-flex h-9 items-center rounded-md border border-fg bg-white px-4 text-[13px] transition hover:bg-surface">
+            className="mt-6 inline-flex h-9 items-center rounded-md border border-fg bg-card px-4 text-[13px] transition hover:bg-surface">
             {cta}
           </Link>
         </div>
@@ -58,40 +58,77 @@ export function FeatureRow({
 }
 
 /** Line drawings for the three-part section: one per job the link does. */
-export function JobIllustration({ kind }: { kind: "book" | "keep" | "fill" }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.3, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+/** A small slice of the real product for each job, so the section shows the work rather than describing it. */
+export function JobVisual({ kind }: { kind: "book" | "keep" | "fill" }) {
+  if (kind === "book") {
+    return (
+      <div className="rounded-xl border border-line-strong bg-card p-4 text-left text-[12px] shadow-xl shadow-black/20">
+        <div className="flex items-center justify-between">
+          <span className="font-medium">Intro call</span>
+          <span className="text-faint">30 min</span>
+        </div>
+        <p className="text-faint mt-0.5">Thursday 22</p>
+        <div className="mt-3 grid grid-cols-2 gap-1.5">
+          {["9:00am", "9:30am", "10:00am", "11:30am"].map((time) => (
+            <span
+              key={time}
+              className={`rounded-md border px-2 py-1.5 text-center ${time === "10:00am" ? "border-fg bg-fg text-bg" : "border-line text-muted"}`}>
+              {time}
+            </span>
+          ))}
+        </div>
+        <p className="mt-3 flex items-center gap-1.5 text-emerald-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          Booked, added to your calendar
+        </p>
+      </div>
+    );
+  }
+  if (kind === "keep") {
+    return (
+      <div className="rounded-xl border border-line-strong bg-card p-4 text-left text-[12px] shadow-xl shadow-black/20">
+        <p className="text-faint">Reminder · 24h before</p>
+        <p className="mt-1 font-medium">See you tomorrow at 10:00am?</p>
+        <div className="mt-3 flex gap-1.5">
+          <span className="rounded-md bg-fg px-2.5 py-1.5 text-bg">I&apos;ll be there</span>
+          <span className="text-muted rounded-md border border-line px-2.5 py-1.5">Release it</span>
+        </div>
+        <div className="mt-3 space-y-1.5 border-t border-line pt-3">
+          {[
+            ["Sam R.", "Confirmed"],
+            ["Jordan B.", "Waiting"],
+          ].map(([name, status]) => (
+            <p key={name} className="flex justify-between">
+              <span className="text-muted">{name}</span>
+              <span className={status === "Confirmed" ? "text-emerald-400" : "text-amber-400"}>{status}</span>
+            </p>
+          ))}
+        </div>
+      </div>
+    );
+  }
   return (
-    <svg viewBox="0 0 160 110" className="text-fg/70 mx-auto h-28 w-auto" aria-hidden>
-      {kind === "book" && (
-        <g {...common}>
-          <rect x="35" y="22" width="90" height="70" rx="8" />
-          <path d="M35 40h90M58 14v14M102 14v14" />
-          {[0, 1, 2, 3].map((col) =>
-            [0, 1, 2].map((row) => (
-              <rect key={`${col}-${row}`} x={46 + col * 19} y={48 + row * 13} width="12" height="8" rx="2" opacity={col === 2 && row === 1 ? 1 : 0.35} />
-            ))
-          )}
-          <path d="M84 61l3 3 6-6" strokeWidth="1.8" />
-        </g>
-      )}
-      {kind === "keep" && (
-        <g {...common}>
-          <path d="M80 16l36 13v24c0 22-15 36-36 43-21-7-36-21-36-43V29z" />
-          <path d="M65 55l10 10 20-21" strokeWidth="1.8" />
-          <path d="M30 96h100" opacity="0.35" />
-        </g>
-      )}
-      {kind === "fill" && (
-        <g {...common}>
-          <rect x="30" y="30" width="44" height="22" rx="5" />
-          <rect x="86" y="30" width="44" height="22" rx="5" strokeDasharray="4 4" />
-          <rect x="30" y="62" width="44" height="22" rx="5" />
-          <rect x="86" y="62" width="44" height="22" rx="5" />
-          <path d="M108 20c14 0 22 6 22 14" opacity="0.5" />
-          <path d="M126 30l4 4 4-4" opacity="0.5" />
-          <circle cx="108" cy="41" r="3" fill="currentColor" />
-        </g>
-      )}
-    </svg>
+    <div className="rounded-xl border border-line-strong bg-card p-4 text-left text-[12px] shadow-xl shadow-black/20">
+      <p className="flex justify-between">
+        <span className="font-medium">Thu 10:00am</span>
+        <span className="text-amber-400 line-through decoration-amber-400/60">Cancelled</span>
+      </p>
+      <div className="mt-3 space-y-2">
+        {[
+          ["1", "Priya N.", "Offered"],
+          ["2", "Tom R.", "Next"],
+        ].map(([n, name, status]) => (
+          <p key={name} className="flex items-center gap-2">
+            <span className="text-faint grid h-4 w-4 place-items-center rounded-full border border-line text-[10px]">{n}</span>
+            <span className="flex-1">{name}</span>
+            <span className={status === "Offered" ? "text-accent" : "text-faint"}>{status}</span>
+          </p>
+        ))}
+      </div>
+      <p className="mt-3 flex items-center gap-1.5 border-t border-line pt-3 text-emerald-400">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        Priya claimed it, slot filled
+      </p>
+    </div>
   );
 }

@@ -37,7 +37,7 @@ export default async function ArticlePage({ params }: Params) {
   return (
     <>
       <article className="mx-auto max-w-[760px] px-5 pt-10 pb-16 sm:px-10 lg:pt-14">
-        <h1 className="text-lg font-medium leading-snug tracking-tight">{a.title}</h1>
+        <h1 className="text-[34px] font-normal leading-tight tracking-[-0.02em] sm:text-[42px]">{a.title}</h1>
         <p className="text-faint mt-1.5 text-[11px]">
           Updated <time dateTime={a.updated}>{formatDate(a.updated)}</time>
         </p>
@@ -49,7 +49,7 @@ export default async function ArticlePage({ params }: Params) {
         <div className="text-muted text-[13px] leading-[1.7]">
           {a.sections.map((s) => (
             <section key={s.heading}>
-              <h2 id={docSlug(s.heading)} className="text-fg mt-9 scroll-mt-6 text-sm font-semibold">
+              <h2 id={docSlug(s.heading)} className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">
                 {s.heading}
               </h2>
               {s.paragraphs?.map((p) => <p key={p} className="mt-3">{p}</p>)}
@@ -84,10 +84,10 @@ export default async function ArticlePage({ params }: Params) {
           ))}
           {a.faq.length > 0 && (
             <section>
-              <h2 id="questions" className="text-fg mt-9 scroll-mt-6 text-sm font-semibold">Questions</h2>
+              <h2 id="questions" className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">Questions</h2>
               {a.faq.map((f) => (
                 <div key={f.q}>
-                  <h3 className="text-fg mt-5 text-[13px] font-medium">{f.q}</h3>
+                  <h3 className="font-sans text-fg mt-5 text-[13px] font-medium">{f.q}</h3>
                   <p className="mt-1">{f.a}</p>
                 </div>
               ))}
@@ -95,7 +95,7 @@ export default async function ArticlePage({ params }: Params) {
           )}
           {a.sources.length > 0 && (
             <section className="mt-10 border-t border-line pt-5">
-              <h2 className="text-faint text-[10px] font-medium uppercase tracking-[0.14em]">Sources</h2>
+              <h2 className="font-sans text-faint text-[10px] font-medium uppercase tracking-[0.14em]">Sources</h2>
               <ul className="mt-2 space-y-1 text-xs">
                 {a.sources.map((s) => (
                   <li key={s.url}>

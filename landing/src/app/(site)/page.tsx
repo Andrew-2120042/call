@@ -3,8 +3,7 @@ import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { AudienceCarousel } from "@/components/audience-carousel";
 import { HoodPanel } from "@/components/graphics";
-import { FeatureRow, JobIllustration } from "@/components/home-parts";
-import { PricingCards } from "@/components/pricing-cards";
+import { FeatureRow, JobVisual } from "@/components/home-parts";
 import { ApprovalMock, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
 import { Faq } from "@/components/sections";
 import { Container, JsonLd } from "@/components/ui";
@@ -14,13 +13,25 @@ import { signupUrl, site } from "@/site.config";
 const integrations = [
   { name: "Google Calendar", logo: "/logos/google-calendar.svg" },
   { name: "Outlook", logo: "/logos/outlook.svg" },
-  { name: "Apple Calendar", logo: "/logos/apple-calendar.svg" },
-  { name: "CalDAV", logo: "/logos/caldav.svg" },
   { name: "Google Meet", logo: "/logos/google-meet.webp" },
   { name: "Zoom", logo: "/logos/zoom.svg" },
+  { name: "Microsoft Teams", logo: "/logos/microsoft-teams.svg" },
   { name: "Zapier", logo: "/logos/zapier.svg" },
   { name: "Webhooks", logo: "/logos/webhooks.svg" },
 ];
+
+/** The product in one gesture, set inside the headline: a cancelled time turning back into a booking. */
+function SlotFlip() {
+  return (
+    <span className="relative mx-1 inline-flex translate-y-[-0.12em] items-center gap-2 rounded-full border border-line-strong bg-card py-1.5 pr-3 pl-3.5 align-middle font-sans text-[15px] leading-none tracking-normal shadow-sm sm:gap-2.5 sm:py-2 sm:text-[20px]">
+      <span className="text-fg">10:00</span>
+      <span className="relative inline-grid">
+        <span className="slot-flip-out col-start-1 row-start-1 rounded-full bg-amber-100 px-2 py-1 text-[12px] text-amber-700 sm:text-[14px]">Cancelled</span>
+        <span className="slot-flip-in col-start-1 row-start-1 rounded-full bg-emerald-100 px-2 py-1 text-center text-[12px] text-emerald-700 sm:text-[14px]">Booked</span>
+      </span>
+    </span>
+  );
+}
 
 /** Email box that carries the address into sign-up, like Apollo's hero and closing banner. */
 function EmailSignup({ light = false }: { light?: boolean }) {
@@ -35,12 +46,12 @@ function EmailSignup({ light = false }: { light?: boolean }) {
         className={`h-11 w-full rounded-md border px-3.5 sm:flex-1 text-sm outline-none transition ${
           light
             ? "border-black/15 bg-white text-black placeholder:text-black/40 focus:border-black/40"
-            : "border-line-strong bg-white text-fg placeholder:text-faint focus:border-fg/40"
+            : "border-line-strong bg-card text-fg placeholder:text-faint focus:border-fg/40"
         }`}
       />
       <button
         type="submit"
-        className={`h-10 rounded-md px-5 text-[13px] transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-brand text-fg hover:brightness-95"}`}>
+        className={`h-10 rounded-md px-5 text-[13px] transition ${light ? "bg-black text-white hover:bg-black/85" : "bg-brand text-black hover:brightness-95"}`}>
         Sign up for free
       </button>
     </form>
@@ -53,22 +64,15 @@ export default function Home() {
       {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
         <Container className="relative pt-16 pb-16 text-center sm:pt-24">
-          <h1 className="mx-auto max-w-[16ch] text-[44px] leading-[1.02] tracking-[-0.035em] sm:text-[72px]">
-            Fill your calendar with one booking link
+          <h1 className="mx-auto max-w-[18ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
+            Cancelled slots <SlotFlip /> fill themselves
           </h1>
-          <p className="text-fg/80 mx-auto mt-5 max-w-[46ch] text-[15px] leading-snug">
-            Spend your time with clients, not chasing them. {site.name} books you, refills cancelled slots from a waitlist and
-            stops no-shows, all from one link.
+          <p className="text-fg/80 mx-auto mt-6 max-w-[46ch] text-[15px] leading-snug">
+            One booking link that offers every cancelled time to your waitlist, checks in before no-shows, and keeps your
+            calendar full while you work.
           </p>
-          <div className="mt-7 flex justify-center">
-            <div className="inline-flex overflow-hidden rounded-md border border-fg">
-              <a href={signupUrl} className="bg-fg text-bg inline-flex h-10 items-center px-6 text-[14px] transition hover:bg-fg/85 sm:px-10">
-                Sign up for free
-              </a>
-              <Link href="/#product" className="inline-flex h-10 items-center bg-white px-6 text-[14px] transition hover:bg-surface sm:px-10">
-                See how it works
-              </Link>
-            </div>
+          <div className="mt-8 flex justify-center">
+            <EmailSignup />
           </div>
           <p className="text-faint mt-3 inline-flex items-center gap-1.5 text-[12px]">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
@@ -77,10 +81,7 @@ export default function Home() {
             </svg>
             No credit card required
           </p>
-          <div className="mt-6 flex justify-center">
-            <EmailSignup />
-          </div>
-          <p className="text-faint mt-4 text-[11px]">
+          <p className="text-faint mt-2 text-[11px]">
             By signing up, I agree to {site.name}&apos;s{" "}
             <Link href="/terms" className="underline">Terms of Service</Link> and{" "}
             <Link href="/privacy" className="underline">Privacy Policy</Link>.
@@ -88,21 +89,25 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Works with: Apollo's logo strip, as the tools people already use. */}
-      <section className="py-14">
-        <Container>
-          <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">
-            Works with the calendars and video apps you already use
-          </p>
-          <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4 lg:grid-cols-8">
-            {integrations.map((item) => (
-              <div key={item.name} className="text-muted flex items-center justify-center gap-2 whitespace-nowrap text-sm">
-                <Image src={item.logo} alt="" width={22} height={22} className="h-[22px] w-[22px] object-contain opacity-90" />
-                {item.name}
-              </div>
+      {/* Works with: a slow, endless logo strip. */}
+      <section className="border-t border-line py-12">
+        <p className="text-muted text-center text-[15px]">Works with the calendars and video apps you already use</p>
+        {/* Undo the page zoom here: browsers clip an animated strip inside a zoomed parent at the unzoomed width. */}
+        <div className="marquee mt-8 overflow-hidden [zoom:calc(1/var(--site-zoom,1))]">
+          <div className="marquee-track flex w-max">
+            {/* Four copies slid by half: each half is wider than any screen, so the strip never shows a gap. */}
+            {[0, 1, 2, 3].map((copy) => (
+              <ul key={copy} className="flex shrink-0 items-center gap-14 pr-14" aria-hidden={copy > 0}>
+                {integrations.map((item) => (
+                  <li key={item.name} className="text-muted flex items-center gap-2.5 whitespace-nowrap text-[16px]">
+                    <Image src={item.logo} alt="" width={26} height={26} className="h-[26px] w-[26px] object-contain" />
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* Feature rows: product on a grey stage, words and points beside it, alternating sides. */}
@@ -165,37 +170,38 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* One link, three jobs: Apollo's framed three-column section. */}
-      <section className="py-24">
+      {/* One link, three jobs: what happens before, around and after each booking. */}
+      <section className="border-t border-line py-28">
         <Container>
-          <div className="rounded-2xl border border-line bg-surface px-5 py-14 sm:px-10">
-            <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">How it works</p>
-            <h2 className="mt-3 text-center text-3xl font-normal tracking-[-0.025em] sm:text-5xl">One link. Three jobs.</h2>
-            <p className="text-muted mx-auto mt-4 max-w-[52ch] text-center text-[15px]">
-              Getting booked is the start. {site.name} keeps the calendar full after that, without you chasing anyone.
-            </p>
-            <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
-              {[
-                { kind: "book" as const, title: "Get booked", body: "Clients pick a time in their own time zone. Your calendars stay in sync, so you're never double booked.", tags: ["Booking page", "Calendar sync", "Meet & Zoom"] },
-                { kind: "keep" as const, title: "Stay booked", body: "Reminders, one-click confirmations and approvals keep the right people in the right slots.", tags: ["Reminders", "Confirm-or-release", "Approvals"] },
-                { kind: "fill" as const, title: "Fill the gaps", body: "Waitlists and rebooking offers turn every cancellation into another booking.", tags: ["Waitlist", "Rebook offers", "AI summaries"] },
-              ].map((job) => (
-                <div key={job.title} className="flex flex-col bg-bg p-7 text-center">
-                  <p className="text-2xl font-medium tracking-tight">{job.title}</p>
-                  <p className="text-muted mx-auto mt-2 max-w-[30ch] text-[13px] leading-relaxed">{job.body}</p>
-                  <div className="my-8">
-                    <JobIllustration kind={job.kind} />
-                  </div>
-                  <div className="mt-auto flex flex-wrap justify-center gap-1.5">
-                    {job.tags.map((tag) => (
-                      <span key={tag} className="text-muted rounded-md border border-line px-2 py-1 text-[11px]">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+          <p className="text-faint text-center font-mono text-[11px] uppercase tracking-[0.16em]">How it works</p>
+          <h2 className="mt-3 text-center text-4xl font-normal tracking-[-0.025em] sm:text-6xl">One link. Three jobs.</h2>
+          <p className="text-muted mx-auto mt-5 max-w-[50ch] text-center text-[15px]">
+            Getting booked is the start. {site.name} keeps the calendar full after that, without you chasing anyone.
+          </p>
+          <div className="mt-16 grid gap-4 md:grid-cols-3">
+            {[
+              { kind: "book" as const, step: "01", title: "Get booked", body: "Clients pick a time in their own time zone. Your calendars stay in sync, so you're never double booked.", tags: ["Booking page", "Calendar sync", "Meet & Zoom"] },
+              { kind: "keep" as const, step: "02", title: "Stay booked", body: "Reminders ask clients to confirm in one click. Anyone who doesn't, frees the time for someone who will.", tags: ["Reminders", "Confirm-or-release", "Approvals"] },
+              { kind: "fill" as const, step: "03", title: "Fill the gaps", body: "A cancelled time goes straight to the next person on the waitlist, until someone claims it.", tags: ["Waitlist", "Rebook offers", "AI summaries"] },
+            ].map((job) => (
+              <div key={job.title} data-reveal className="flex flex-col rounded-2xl border border-line bg-surface">
+                <div className="p-7 pb-0">
+                  <p className="text-faint font-mono text-[11px] tracking-[0.16em]">{job.step}</p>
+                  <h3 className="mt-3 text-[30px] leading-none">{job.title}</h3>
+                  <p className="text-muted mt-3 text-[14px] leading-relaxed">{job.body}</p>
                 </div>
-              ))}
-            </div>
+                <div className="mt-8 flex-1 px-7">
+                  <JobVisual kind={job.kind} />
+                </div>
+                <div className="mt-7 flex flex-wrap gap-1.5 border-t border-line px-7 py-5">
+                  {job.tags.map((tag) => (
+                    <span key={tag} className="text-muted rounded-md border border-line px-2 py-1 text-[11px]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
@@ -242,8 +248,8 @@ export default function Home() {
             items={[
               {
                 title: "Calendar sync",
-                body: "Busy times from Google, Outlook, Apple and CalDAV are respected, and new bookings land on the calendar you choose.",
-                visual: <HoodPanel title="Calendars" rows={[["/logos/google-calendar.svg", "Google Calendar", "Checking for conflicts"], ["/logos/outlook.svg", "Outlook", "New bookings go here"], ["/logos/apple-calendar.svg", "Apple Calendar", "Checking for conflicts"]]} />,
+                body: "Busy times from Google Calendar and Outlook are respected, and new bookings land on the calendar you choose.",
+                visual: <HoodPanel title="Calendars" rows={[["/logos/google-calendar.svg", "Google Calendar", "Checking for conflicts"], ["/logos/outlook.svg", "Outlook", "New bookings go here"]]} />,
               },
               {
                 title: "Video and locations",
@@ -296,7 +302,7 @@ export default function Home() {
               calendar, for $12 a month.
             </p>
           </div>
-          <p className="text-ink text-[120px] font-normal leading-[0.85] tracking-[-0.06em] sm:text-[240px]">$0</p>
+          <p className="text-ink font-serif text-[120px] font-normal leading-[0.85] tracking-[-0.04em] sm:text-[240px]">$0</p>
         </Container>
       </section>
 
@@ -314,16 +320,6 @@ export default function Home() {
           <div className="mt-12">
             <AudienceCarousel audiences={audiences} />
           </div>
-        </Container>
-      </section>
-
-      {/* Pricing */}
-      <section className="border-t border-line py-24" id="pricing">
-        <Container>
-          <h2 data-reveal className="text-3xl font-normal tracking-[-0.025em] sm:text-5xl">
-            Simple pricing. <span className="text-faint">Start free, upgrade when it pays for itself.</span>
-          </h2>
-          <PricingCards />
         </Container>
       </section>
 

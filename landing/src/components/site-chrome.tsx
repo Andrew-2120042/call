@@ -2,6 +2,7 @@ import Link from "next/link";
 import { articles } from "@/content/articles";
 import { audiences, comparisons, features } from "@/content/site-content";
 import { loginUrl, signupUrl, site } from "@/site.config";
+import { NavMenus } from "./nav-menus";
 import { Container } from "./ui";
 
 export function Logo({ className = "" }: { className?: string }) {
@@ -27,29 +28,6 @@ const resourcesMenu = [
   { href: "/blog/best-scheduling-software-2027", label: "Best scheduling software 2027", hint: "An honest shortlist" },
 ];
 
-function Menu({ label, items }: { label: string; items: { href: string; label: string; hint: string }[] }) {
-  return (
-    <div className="group relative">
-      <button type="button" className="text-muted group-hover:text-fg flex items-center gap-1 py-4 text-[13px] transition">
-        {label}
-        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden className="opacity-60">
-          <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-        </svg>
-      </button>
-      <div className="invisible absolute left-1/2 top-full z-50 w-80 -translate-x-1/2 pt-1 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-        <div className="rounded-2xl border border-line-strong bg-surface p-2 shadow-2xl shadow-black/10">
-          {items.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:bg-raised block rounded-xl px-3 py-2.5 transition">
-              <span className="block text-[13px] font-medium">{item.label}</span>
-              <span className="text-faint mt-0.5 block truncate text-xs">{item.hint}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function Header() {
   return (
     <>
@@ -60,13 +38,17 @@ export function Header() {
           </Link>
         </Container>
       </div>
-      <header className="sticky top-0 z-40 border-b border-line-strong/60 bg-[#dcdcd6]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-xl">
         <Container className="flex h-14 items-center justify-between gap-4">
           <div className="flex items-center gap-8">
             <Logo />
             <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
-              <Menu label="Product" items={productMenu} />
-              <Menu label="Resources" items={resourcesMenu} />
+              <NavMenus
+                menus={[
+                  { label: "Product", items: productMenu },
+                  { label: "Resources", items: resourcesMenu },
+                ]}
+              />
               <Link href="/features/team-scheduling" className="text-muted hover:text-fg text-[13px] transition">Teams</Link>
               <Link href="/pricing" className="text-muted hover:text-fg text-[13px] transition">Pricing</Link>
             </nav>
@@ -75,10 +57,10 @@ export function Header() {
             <a href={loginUrl} className="text-muted hover:text-fg hidden px-2 py-1.5 text-[13px] transition sm:inline">
               Log in
             </a>
-            <a href={signupUrl} className="hidden rounded-md border border-fg/40 px-3 py-1.5 text-[13px] transition hover:bg-white/60 sm:inline">
+            <a href={signupUrl} className="hidden rounded-md border border-fg/40 px-3 py-1.5 text-[13px] transition hover:bg-surface sm:inline">
               Sign up for free
             </a>
-            <a href={signupUrl} className="bg-brand text-fg rounded-md px-3 py-1.5 text-[13px] font-medium transition hover:brightness-95">
+            <a href={signupUrl} className="bg-brand text-black rounded-md px-3 py-1.5 text-[13px] font-medium transition hover:brightness-95">
               Get started
             </a>
             <details className="group relative md:hidden">
@@ -125,7 +107,7 @@ export function Footer() {
     },
   ];
   return (
-    <footer className="border-t border-line bg-[#dcdcd6]">
+    <footer className="border-t border-line bg-chrome">
       <Container className="grid gap-12 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)]">
         <div className="flex flex-col justify-between gap-10">
           <svg viewBox="0 0 24 24" className="h-36 w-36 sm:h-48 sm:w-48" fill="none" aria-hidden>

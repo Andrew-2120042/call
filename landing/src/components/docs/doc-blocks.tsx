@@ -48,12 +48,12 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
             return <p key={i} className="mt-3"><Inline text={block.text} /></p>;
           case "h2":
             return (
-              <h2 key={i} id={docSlug(block.text)} className="text-fg mt-9 scroll-mt-6 text-sm font-semibold">
+              <h2 key={i} id={docSlug(block.text)} className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">
                 {block.text}
               </h2>
             );
           case "h3":
-            return <h3 key={i} className="text-fg mt-6 text-[13px] font-medium">{block.text}</h3>;
+            return <h3 key={i} className="font-sans text-fg mt-6 text-[13px] font-medium">{block.text}</h3>;
           case "steps":
             return (
               <ol key={i} className="mt-3 list-decimal space-y-1.5 ps-5 marker:text-faint">

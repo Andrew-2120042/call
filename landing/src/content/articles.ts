@@ -130,7 +130,7 @@ export const articles: Article[] = [
           "Count your services. If you need more than one on a free plan, rule out tools that cap event types.",
           "Count your hosts. Multiply the per-seat price by your team size, including next year's hires.",
           "Look at last month's calendar. If you lost more than a couple of hours to cancellations or no-shows, a waitlist and attendance confirmation will pay for themselves.",
-          "Check your calendar provider works (Google, Outlook, Apple, CalDAV) before you migrate.",
+          "Check your calendar provider works (Google or Outlook) before you migrate.",
         ],
       },
       {
