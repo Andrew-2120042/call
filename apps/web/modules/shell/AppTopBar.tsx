@@ -6,18 +6,19 @@ import { useKBar } from "kbar";
 import { useSession } from "next-auth/react";
 import { useAssistantPanel } from "~/assistant/assistant-view";
 import { OPEN_FEEDBACK_EVENT } from "~/feedback/FeedbackDialog";
+import { SidebarDrawer } from "./components/SidebarDrawer";
 import { NotificationsBell } from "./NotificationsBell";
 import { useSidebar } from "./sidebarStore";
 import { UserDropdown } from "./user-dropdown/UserDropdown";
 
 /** Desktop top bar: search (⌘K), the Assistant, help and the account menu, above every page. */
-export function AppTopBar() {
+export function AppTopBar({ sidebarDrawer }: { sidebarDrawer?: boolean }) {
   const { status } = useSession();
   if (status !== "authenticated") return null;
-  return <AppTopBarContent />;
+  return <AppTopBarContent sidebarDrawer={sidebarDrawer} />;
 }
 
-function AppTopBarContent() {
+function AppTopBarContent({ sidebarDrawer }: { sidebarDrawer?: boolean }) {
   const { t } = useLocale();
   const { query } = useKBar();
   const sidebarHidden = useSidebar((state) => state.hidden);
@@ -29,7 +30,8 @@ function AppTopBarContent() {
       data-sw-topbar
       className="border-subtle sticky top-0 z-30 hidden h-11 items-center gap-2 border-b px-4 md:flex lg:px-6">
       <div className="flex flex-1 items-center">
-        {sidebarHidden && (
+        {sidebarDrawer && <SidebarDrawer />}
+        {!sidebarDrawer && sidebarHidden && (
           <button
             type="button"
             onClick={toggleSidebar}

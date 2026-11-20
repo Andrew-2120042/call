@@ -24,7 +24,6 @@ import {
   EventTypeEmbedDialog,
 } from "@calcom/web/modules/embed/components/EventTypeEmbed";
 import WebShell from "@calcom/web/modules/shell/Shell";
-import { SidebarDrawer } from "@calcom/web/modules/shell/components/SidebarDrawer";
 import { LoaderIcon } from "@coss/ui/icons";
 import { Suspense, useMemo, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -102,7 +101,7 @@ function EventTypeSingleLayout({
     <Shell
       // The editor needs the width; the back arrow returns to Services, so the main sidebar steps aside here.
       SidebarContainer={isPlatform ? undefined : <NoSidebar />}
-      beforeBackButton={isPlatform ? undefined : <SidebarDrawer />}
+      sidebarDrawer={!isPlatform}
       backPath={teamId ? `/event-types?teamId=${teamId}` : "/event-types"}
       title={`${eventType.title} | ${t("event_type")}`}
       heading={

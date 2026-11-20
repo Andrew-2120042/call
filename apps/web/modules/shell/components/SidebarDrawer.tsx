@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "@calcom/lib/hooks/useLocale";
-import { Button } from "@calcom/ui/components/button";
+import { Icon } from "@calcom/ui/components/icon";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -26,17 +26,17 @@ export function SidebarDrawer() {
 
   return (
     <>
-      <Button
-        variant="icon"
-        size="sm"
-        color="minimal"
-        StartIcon="menu"
+      {/* Same spot and look as the top bar's "show sidebar" button on other pages. */}
+      <button
+        type="button"
         aria-label={t("open_menu")}
+        title={t("show_sidebar")}
         aria-expanded={open}
         onClick={() => setOpen(true)}
-        className="hidden rounded-md md:inline-flex ltr:mr-1 rtl:ml-1"
-        data-testid="sidebar-drawer-toggle"
-      />
+        className="text-subtle hover:text-emphasis hover:bg-subtle grid h-7 w-7 place-items-center rounded-md"
+        data-testid="sidebar-drawer-toggle">
+        <Icon name="chevrons-right" className="h-4 w-4" />
+      </button>
       {open && (
         <div className="fixed inset-0 z-50 hidden md:flex" role="dialog" aria-modal="true">
           <div className="h-full bg-cal-muted shadow-2xl [&>div]:h-full">

@@ -9,8 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import { AssistantChat, useAssistantChat, useAssistantPanel } from "./assistant-view";
 
 /**
- * The Assistant on the right of any page. On wide screens it sits beside the page; on narrower ones it floats
- * over it, because squeezing the page to make room broke its layout.
+ * The Assistant on the right of any page. It always sits beside the page (never over it), so whatever page is
+ * open stays fully visible and usable while chatting; the page column narrows to make room.
  */
 export function AssistantPanel() {
   const { t } = useLocale();
@@ -27,7 +27,7 @@ export function AssistantPanel() {
   if (!open) return null;
   return (
     <aside
-      className="border-subtle bg-default fixed inset-y-0 right-0 z-40 hidden w-[400px] shrink-0 flex-col border-l shadow-2xl md:flex min-[1440px]:sticky min-[1440px]:top-0 min-[1440px]:h-screen min-[1440px]:shadow-none"
+      className="border-subtle bg-default sticky top-0 z-40 hidden h-screen w-[360px] shrink-0 flex-col border-l md:flex min-[1440px]:w-[400px]"
       data-testid="assistant-panel"
       aria-label={t("assistant_page_title")}>
       <header className="flex h-11 shrink-0 items-center gap-1 px-3">

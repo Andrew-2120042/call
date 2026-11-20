@@ -83,6 +83,8 @@ export type LayoutProps = {
   HeadingLeftIcon?: ReactNode;
   /** Rendered before the back button, e.g. a toggle that brings back a hidden sidebar. */
   beforeBackButton?: ReactNode;
+  /** Pages without the sidebar (the service editor) get a button at the left of the top bar to open it. */
+  sidebarDrawer?: boolean;
   backPath?: string | boolean; // renders back button to specified path
   // use when content needs to expand with flex
   flexChildrenContainer?: boolean;
@@ -213,7 +215,7 @@ function MainContainer({
     <main data-sw-main className="bg-default relative z-0 flex-1 focus:outline-none">
       {/* show top navigation for md and smaller (tablet and phones) */}
       {TopNavContainerProp}
-      <AppTopBar />
+      <AppTopBar sidebarDrawer={props.sidebarDrawer} />
       <div data-sw-content className="max-w-full p-2 sm:p-4 lg:px-6 lg:py-5">
         <ErrorBoundary>
           {!props.withoutMain ? <ShellMain {...props}>{props.children}</ShellMain> : props.children}
