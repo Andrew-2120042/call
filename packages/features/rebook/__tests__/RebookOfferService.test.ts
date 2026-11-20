@@ -85,10 +85,8 @@ describe("RebookOfferService", () => {
     });
     expect(email.hostName).toBe("Pro Host");
     const bookUrl = new URL(email.bookUrl);
-    expect(bookUrl.origin + bookUrl.pathname).toBe("https://app.example.com/pro/discovery-call");
-    expect(bookUrl.searchParams.get("slot")).toBe("2026-11-20T04:00:00Z");
-    expect(bookUrl.searchParams.get("date")).toBe("2026-11-20");
-    expect(bookUrl.searchParams.get("email")).toBe("maya@example.com");
+    expect(bookUrl.origin + bookUrl.pathname).toBe("https://app.example.com/booking/b1");
+    expect(bookUrl.searchParams.get("rebook")).toBe("2026-11-20T04:00:00Z");
     expect(email.moreTimesUrl).toBe("https://app.example.com/booking/b1");
   });
 

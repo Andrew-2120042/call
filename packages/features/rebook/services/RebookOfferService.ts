@@ -77,15 +77,13 @@ export class RebookOfferService {
     const best = result.suggestions[0];
     if (!best) return { sent: false, reason: "no open times" };
 
-    const params = new URLSearchParams(result.prefill);
-    params.set("date", dayjs(best.start).tz(timeZone).format("YYYY-MM-DD"));
-    params.set("slot", best.start);
     await this.deps.send({
       to: { name: attendee.name, email: attendee.email, timeZone, locale: attendee.locale },
       hostName: booking.user?.name || booking.user?.username || "",
       serviceTitle: booking.eventType.title,
       startTime: new Date(best.start),
-      bookUrl: `${this.deps.appUrl}${result.bookingPath}?${params.toString()}`,
+      // The cancel page with this time already picked: the client only has to press Confirm.
+      bookUrl: `${this.deps.appUrl}/booking/${booking.uid}?rebook=${encodeURIComponent(best.start)}`,
       moreTimesUrl: `${this.deps.appUrl}/booking/${booking.uid}`,
       followUp: options.followUp,
     });
