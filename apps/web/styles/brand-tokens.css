@@ -21,6 +21,7 @@
   --cal-brand-text: #ffffff;
 
   --sw-canvas: #ececef;
+  --sw-sidebar: #ececef;
   --sw-nav-hover: rgba(11, 11, 12, 0.05);
   --sw-nav-active: #ffffff;
   --sw-nav-text: #5f5f6a;
@@ -28,36 +29,50 @@
 }
 
 .dark {
-  /* Neutral greys matched to the reference dashboard: canvas 3.5%, panel 6.5%, cards 9.5%, lines 13%. */
-  --cal-bg: hsl(0, 0%, 9.5%);
-  --cal-bg-muted: hsl(0, 0%, 6.5%);
-  --cal-bg-subtle: hsl(0, 0%, 13%);
-  --cal-bg-emphasis: hsl(0, 0%, 16%);
+  /* Notion's dark greys (the owner's reference): page #191919, sidebar and cards #202020, lines #2f2f2f. */
+  --cal-bg: #202020;
+  --cal-bg-muted: #191919;
+  --cal-bg-subtle: #2a2a2a;
+  --cal-bg-emphasis: #303030;
   --cal-bg-inverted: #ffffff;
-  --cal-border: hsl(0, 0%, 16%);
-  --cal-border-subtle: hsl(0, 0%, 13%);
-  --cal-border-muted: hsl(0, 0%, 9.5%);
-  --cal-border-emphasis: hsl(0, 0%, 30%);
-  --cal-text-emphasis: #ffffff;
-  --cal-text: hsl(0, 0%, 85%);
-  --cal-text-subtle: hsl(0, 0%, 52%);
-  --cal-text-muted: hsl(0, 0%, 46%);
+  --cal-border: #2f2f2f;
+  --cal-border-subtle: #2a2a2a;
+  --cal-border-muted: #232323;
+  --cal-border-emphasis: #4a4a4a;
+  --cal-text-emphasis: #f2f2f2;
+  --cal-text: #d4d4d4;
+  --cal-text-subtle: #9b9b9b;
+  --cal-text-muted: #7f7f7f;
   --cal-text-inverted: #000000;
 
   --cal-brand: #ffffff;
   --cal-brand-emphasis: hsl(0, 0%, 90%);
   --cal-brand-text: #000000;
 
-  --sw-canvas: hsl(0, 0%, 3.5%);
-  --sw-nav-hover: hsl(0, 0%, 9.5%);
-  --sw-nav-active: hsl(0, 0%, 11%);
-  --sw-nav-text: hsl(0, 0%, 52%);
+  --sw-canvas: #191919;
+  --sw-sidebar: #202020;
+  --sw-nav-hover: #2a2a2a;
+  --sw-nav-active: #2f2f2f;
+  --sw-nav-text: #9b9b9b;
   --sw-accent: #2563eb;
 }
 
-/* Client-facing pages (booking, profile, confirmation, cancel) in dark mode: a softer charcoal than the dashboard,
-   with brighter secondary text, so clients can read them easily on a phone. Set on body so pop-ups inherit it. */
+/* Client-facing pages (booking, profile, confirmation, cancel). The owner picks Black (default), Grey or White
+   in Appearance; White is plain light mode. Set on body so pop-ups inherit it. */
 .dark body:has([data-booking-page]) {
+  --cal-bg: hsl(0, 0%, 8%);
+  --cal-bg-muted: hsl(0, 0%, 4.5%);
+  --cal-bg-subtle: hsl(0, 0%, 12%);
+  --cal-bg-emphasis: hsl(0, 0%, 17%);
+  --cal-border: hsl(0, 0%, 19%);
+  --cal-border-subtle: hsl(0, 0%, 14%);
+  --cal-border-muted: hsl(0, 0%, 10%);
+  --cal-text: hsl(0, 0%, 92%);
+  --cal-text-subtle: hsl(0, 0%, 64%);
+  --cal-text-muted: hsl(0, 0%, 56%);
+}
+
+html[data-page-palette="grey"].dark body:has([data-booking-page]) {
   --cal-bg: hsl(0, 0%, 14%);
   --cal-bg-muted: hsl(0, 0%, 11%);
   --cal-bg-subtle: hsl(0, 0%, 19%);

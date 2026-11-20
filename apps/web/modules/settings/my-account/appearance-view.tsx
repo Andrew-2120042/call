@@ -43,12 +43,14 @@ const useBrandColors = (
   });
 };
 
-type ThemeChoice = "system" | "light" | "dark";
+// "grey" is a booking-page-only choice: dark mode with a softer charcoal palette (see brand-tokens.css).
+type ThemeChoice = "system" | "light" | "dark" | "grey";
 
 const THEME_SWATCH: Record<ThemeChoice, string> = {
   system: "linear-gradient(90deg,#f4f4f5 50%,#0b0b0c 50%)",
   light: "#f4f4f5",
   dark: "#0b0b0c",
+  grey: "#2a2a2a",
 };
 
 function ThemeTiles(props: {
@@ -221,7 +223,7 @@ const AppearanceView = ({
           testIdPrefix="app-theme"
           options={["dark", "light"]}
           onPick={pickAppTheme}
-          labels={{ system: t("theme_system"), light: t("light"), dark: t("dark") }}
+          labels={{ system: t("theme_system"), light: t("light"), dark: t("dark"), grey: t("booking_theme_grey") }}
         />
       </section>
 
@@ -236,9 +238,14 @@ const AppearanceView = ({
               value={currentBookingTheme}
               label={t("theme")}
               testIdPrefix="booking-theme"
-              options={["dark", "light", "system"]}
+              options={["dark", "grey", "light"]}
               onPick={pickBookingTheme}
-              labels={{ system: t("theme_system"), light: t("light"), dark: t("dark") }}
+              labels={{
+                system: t("theme_system"),
+                light: t("booking_theme_white"),
+                dark: t("booking_theme_black"),
+                grey: t("booking_theme_grey"),
+              }}
             />
           </section>
 

@@ -8,7 +8,7 @@ body:has([data-sw-settings-nav]) {
 }
 
 [data-sw-sidebar] {
-  background: var(--sw-canvas) !important;
+  background: var(--sw-sidebar, var(--sw-canvas)) !important;
   border-right: 1px solid var(--cal-border-subtle) !important;
 }
 

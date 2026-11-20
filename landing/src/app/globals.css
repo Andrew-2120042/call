@@ -25,19 +25,19 @@
 /* Dark palette: the site ships dark (data-theme on <html>); the light tokens above remain for the dev switch. */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-bg: #0e0e0d;
-  --color-surface: #191917;
-  --color-raised: #232320;
-  --color-line: #262624;
-  --color-line-strong: #383733;
-  --color-fg: #f1f0ec;
-  --color-muted: #a9a6a0;
-  --color-faint: #76736e;
+  --color-bg: #191919;
+  --color-surface: #202020;
+  --color-raised: #2a2a2a;
+  --color-line: #2f2f2f;
+  --color-line-strong: #3d3d3d;
+  --color-fg: #f0f0f0;
+  --color-muted: #a3a3a3;
+  --color-faint: #7f7f7f;
   --color-accent: #6b9bff;
   --color-accent-soft: rgb(107 155 255 / 0.14);
   --color-ink: #e7e3ff;
-  --color-card: #151514;
-  --color-chrome: #121211;
+  --color-card: #202020;
+  --color-chrome: #202020;
 }
 
 html {

@@ -28,7 +28,14 @@ export default function useTheme(themeToSet: "system" | (string & {}) | undefine
     // Embed theme takes precedence over theme configured in app.
     // If embedTheme isn't set i.e. it's not explicitly configured with a theme, then it would use the theme configured in appearance.
     // If embedTheme is set to "auto" then we consider it as null which then uses system theme.
-    const finalThemeToSet = embedTheme ? (embedTheme === "auto" ? "system" : embedTheme) : themeToSet;
+    const requested = embedTheme ? (embedTheme === "auto" ? "system" : embedTheme) : themeToSet;
+    // "grey" is dark mode with a softer palette: next-themes only knows light/dark, so it runs as dark and
+    // the palette is switched by an attribute that brand-tokens.css reads.
+    if (typeof document !== "undefined") {
+      if (requested === "grey") document.documentElement.dataset.pagePalette = "grey";
+      else delete document.documentElement.dataset.pagePalette;
+    }
+    const finalThemeToSet = requested === "grey" ? "dark" : requested;
 
     if (!finalThemeToSet || finalThemeToSet === activeTheme) return;
 
