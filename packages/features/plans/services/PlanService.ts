@@ -66,6 +66,8 @@ export interface IPlanServiceDeps {
   gateway: IBillingGateway | null;
   productIds: PlanProductIds;
   webappUrl: string;
+  /** Who may open a checkout. Used while the provider is in test mode on the live site, so only the owner can. */
+  canCheckout?: (email: string) => boolean;
   now?: () => Date;
   logger?: { info: (...args: unknown[]) => void; warn: (...args: unknown[]) => void };
 }
@@ -112,6 +114,9 @@ export class PlanService {
 
   async startCheckout(params: { userId: number; email: string; plan: "pro" | "team" }) {
     if (!this.deps.gateway) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
+    if (this.deps.canCheckout && !this.deps.canCheckout(params.email)) {
+      throw new ErrorWithCode(ErrorCode.BadRequest, "Payments are being tested. Upgrading opens soon.");
+    }
     const productId = this.deps.productIds[params.plan];
     if (!productId) throw new ErrorWithCode(ErrorCode.BadRequest, `The ${params.plan} plan isn't available`);
     return this.deps.gateway.createCheckoutUrl({
@@ -132,6 +137,27 @@ export class PlanService {
       customerId: subscription.polarCustomerId,
       returnUrl: `${this.deps.webappUrl}/settings/billing`,
     });
+  }
+
+  /**
+   * Local testing only (the API route refuses outside development): puts the user on a plan without paying.
+   * Free is stored as an expired subscription so the normal entitlement rules apply.
+   */
+  async setPlanForTesting(userId: number, plan: NodslotPlan) {
+    const now = this.now();
+    const paid = plan !== NodslotPlan.FREE;
+    await this.deps.repository.upsertForUser({
+      userId,
+      plan: paid ? plan : NodslotPlan.PRO,
+      status: paid ? "active" : "expired",
+      polarSubscriptionId: `debug_${userId}`,
+      polarCustomerId: `debug_${userId}`,
+      polarProductId: "debug",
+      currentPeriodEnd: paid ? new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) : new Date(now.getTime() - 1000),
+      cancelAtPeriodEnd: false,
+      polarModifiedAt: now,
+    });
+    if (!paid) await this.deps.repository.clearBrandingRemoval(userId);
   }
 
   /** Applies a verified subscription webhook (Polar, or Dodo mapped to the same shape). Idempotent and safe against out-of-order delivery. */

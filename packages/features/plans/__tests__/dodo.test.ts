@@ -127,3 +127,25 @@ describe("Dodo webhooks", () => {
     expect(await service.getEffectivePlan(4)).toBe(NodslotPlan.FREE);
   });
 });
+
+describe("checkout allow-list (test mode on the live site)", () => {
+  it("lets only allowed emails open a checkout", async () => {
+    const gateway = { createCheckoutUrl: vi.fn().mockResolvedValue("https://pay/x"), createPortalUrl: vi.fn() };
+    const service = new PlanService({
+      repository: {
+        findByUserId: async () => null,
+        upsertForUser: async () => undefined,
+        userExists: async () => true,
+        clearBrandingRemoval: async () => undefined,
+      },
+      gateway,
+      productIds: { pro: "pdt_pro" },
+      webappUrl: "https://app",
+      canCheckout: (email) => email === "owner@example.com",
+    });
+    await expect(service.startCheckout({ userId: 1, email: "someone@example.com", plan: "pro" })).rejects.toThrow(
+      /being tested/
+    );
+    expect(await service.startCheckout({ userId: 2, email: "owner@example.com", plan: "pro" })).toBe("https://pay/x");
+  });
+});

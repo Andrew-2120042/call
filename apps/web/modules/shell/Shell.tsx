@@ -27,6 +27,7 @@ import { PageIntro } from "./PageIntro";
 import { SideBarContainer } from "./SideBar";
 import { TopNavContainer } from "./TopNav";
 import { useAppTheme } from "./useAppTheme";
+import { DebugPlanSwitch } from "./DebugPlanSwitch";
 
 const Layout = (props: LayoutProps) => {
   const { banners, bannersHeight } = useBanners();
@@ -220,6 +221,7 @@ function MainContainer({
         {/* show bottom navigation for md and smaller (tablet and phones) on pages where back button doesn't exist */}
         {!props.backPath ? MobileNavigationContainerProp : null}
       </div>
+      {process.env.NODE_ENV === "development" && <DebugPlanSwitch />}
     </main>
   );
 }

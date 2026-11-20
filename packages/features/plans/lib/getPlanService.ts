@@ -40,11 +40,23 @@ function billingSetup(): { gateway: IBillingGateway | null; productIds: PlanProd
   return { gateway: null, productIds: {} };
 }
 
+/**
+ * DODO_TEST_ALLOWED_EMAILS (comma separated) limits checkout to those accounts. Used while Dodo runs in test
+ * mode on the live site: test cards would otherwise give anyone a paid plan for free.
+ */
+function checkoutAllowList(): ((email: string) => boolean) | undefined {
+  const raw = process.env.DODO_TEST_ALLOWED_EMAILS?.trim();
+  if (!raw) return undefined;
+  const allowed = new Set(raw.split(",").map((email) => email.trim().toLowerCase()).filter(Boolean));
+  return (email) => allowed.has(email.trim().toLowerCase());
+}
+
 export function getPlanService(): PlanService {
   if (service) return service;
   service = new PlanService({
     repository: new PlanSubscriptionRepository(prisma),
     ...billingSetup(),
+    canCheckout: checkoutAllowList(),
     webappUrl: WEBAPP_URL,
     logger: logger.getSubLogger({ prefix: ["[plans]"] }),
   });
