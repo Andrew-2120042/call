@@ -7,7 +7,7 @@ const page = findDoc("introduction")!;
 export const metadata: Metadata = {
   title: "Docs",
   description: page.description,
-  alternates: { canonical: "/docs" },
+  alternates: { canonical: "/docs", types: { "text/markdown": "/docs.md" } },
 };
 
 export default function DocsHome() {

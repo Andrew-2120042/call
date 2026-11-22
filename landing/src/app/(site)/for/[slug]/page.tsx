@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections";
-import { ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
+import { BreadcrumbLd, ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
 import { audiences, features } from "@/content/site-content";
-import { signupUrl } from "@/site.config";
+import { signupUrl, site } from "@/site.config";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const a = audiences.find((x) => x.slug === slug);
   if (!a) return {};
-  return { title: a.title, description: a.summary, alternates: { canonical: `/for/${a.slug}` } };
+  return { title: a.title, description: a.summary, alternates: { canonical: `/for/${a.slug}`, types: { "text/markdown": `/for/${a.slug}.md` } } };
 }
 
 export default async function AudiencePage({ params }: Params) {
@@ -25,6 +25,7 @@ export default async function AudiencePage({ params }: Params) {
   const picked = a.highlights.map((slug) => features.find((f) => f.slug === slug)).filter((f) => f !== undefined);
   return (
     <>
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: `For ${a.plural}`, path: `/for/${a.slug}` }]} />
       <Container className="max-w-3xl pt-20">
         <Eyebrow>For {a.plural}</Eyebrow>
         <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{a.title}</h1>

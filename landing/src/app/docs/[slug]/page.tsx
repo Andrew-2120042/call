@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const page = findDoc((await params).slug);
   if (!page) return {};
-  return { title: `${page.title} · Docs`, description: page.description, alternates: { canonical: `/docs/${page.slug}` } };
+  return { title: `${page.title} · Docs`, description: page.description, alternates: { canonical: `/docs/${page.slug}`, types: { "text/markdown": `/docs/${page.slug}.md` } } };
 }
 
 export default async function DocPageRoute({ params }: { params: Promise<{ slug: string }> }) {

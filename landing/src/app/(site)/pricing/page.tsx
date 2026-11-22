@@ -1,19 +1,38 @@
 import type { Metadata } from "next";
 import { PricingCards, PricingCompare } from "@/components/pricing-cards";
 import { Faq, FinalCta } from "@/components/sections";
-import { Container } from "@/components/ui";
-import { homeFaq } from "@/content/site-content";
+import { BreadcrumbLd, Container, JsonLd } from "@/components/ui";
+import { homeFaq, pricing } from "@/content/site-content";
 import { site } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "Pricing: free booking link, Pro $12, Team $69 for 10 people",
   description: `${site.name} is free for unlimited services and bookings. Pro adds a waitlist, no-show protection and AI request summaries for $12 a month. Teams of up to 10 pay $69 a month in total, then $10 per extra person.`,
-  alternates: { canonical: "/pricing" },
+  alternates: { canonical: "/pricing", types: { "text/markdown": "/pricing.md" } },
 };
 
 export default function PricingPage() {
   return (
     <>
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Pricing", path: "/pricing" }]} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: site.name,
+          url: `${site.url}/pricing`,
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          offers: pricing.map((plan) => ({
+            "@type": "Offer",
+            name: plan.name,
+            price: plan.price.replace("$", ""),
+            priceCurrency: "USD",
+            description: `${plan.period}. ${plan.items.join("; ")}.`,
+            url: `${site.url}/pricing`,
+          })),
+        }}
+      />
       <Container className="grid items-end gap-6 pt-14 pb-10 lg:grid-cols-[1.4fr_1fr] lg:pt-16">
         <h1 className="max-w-[18ch] text-[38px] leading-[1.04] tracking-[-0.025em] sm:text-[52px]">
           Free to start. Paid when it pays for itself.

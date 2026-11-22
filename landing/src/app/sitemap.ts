@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("", 1),
     page("/pricing", 0.9),
+    page("/ai", 0.6),
     ...features.map((f) => page(`/features/${f.slug}`, 0.8)),
     ...comparisons.map((c) => page(`/compare/${c.slug}`, 0.8)),
     ...audiences.map((a) => page(`/for/${a.slug}`, 0.7)),

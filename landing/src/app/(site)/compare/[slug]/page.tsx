@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections";
-import { ButtonLink, Container, Eyebrow } from "@/components/ui";
+import { BreadcrumbLd, ButtonLink, Container, Eyebrow } from "@/components/ui";
 import { comparisons } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${c.competitor} alternative: ${site.name} vs ${c.competitor}`,
     description: c.summary,
-    alternates: { canonical: `/compare/${c.slug}` },
+    alternates: { canonical: `/compare/${c.slug}`, types: { "text/markdown": `/compare/${c.slug}.md` } },
   };
 }
 
@@ -27,6 +27,7 @@ export default async function ComparePage({ params }: Params) {
   if (!c) notFound();
   return (
     <>
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: `${c.competitor} alternative`, path: `/compare/${c.slug}` }]} />
       <Container className="max-w-3xl pt-20">
         <Eyebrow>{site.name} vs {c.competitor}</Eyebrow>
         <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{c.title}</h1>

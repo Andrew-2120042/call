@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: { default: `${site.name}: ${site.tagline}`, template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: { "text/markdown": "/index.md" } },
   openGraph: { type: "website", siteName: site.name, url: site.url, title: site.name, description: site.description },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
   robots: { index: true, follow: true },

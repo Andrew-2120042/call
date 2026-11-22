@@ -102,6 +102,7 @@ export function Footer() {
         { href: `mailto:${site.supportEmail}`, label: "Contact" },
         { href: "/privacy", label: "Privacy" },
         { href: "/terms", label: "Terms" },
+        { href: "/ai", label: "For AI assistants" },
         { href: "/llms.txt", label: "llms.txt" },
       ],
     },

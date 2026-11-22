@@ -46,3 +46,21 @@ export function PlanBadge({ plan }: { plan: string }) {
 export function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
+
+/** Breadcrumb trail for search results, from the home page down to this page. */
+export function BreadcrumbLd({ trail, siteUrl }: { trail: { name: string; path: string }[]; siteUrl: string }) {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [{ name: "Home", path: "" }, ...trail].map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: item.name,
+          item: `${siteUrl}${item.path}`,
+        })),
+      }}
+    />
+  );
+}

@@ -5,7 +5,9 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 ## Main (do these first)
 1. [ ] **Zoom**: the owner signs in at marketplace.zoom.us (Ego tab "Zoom app for Calbee"); then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds its keys to production.
 2. [~] **Billing**: going with Dodo (owner, 2026-11-20); Polar code stays as a fallback. Until live keys are set in production, everyone is on Free.
-3. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
+4. [ ] **Calbee name on the live server**: in Vercel → nodslot project → Settings → Environment Variables (Production), set `EMAIL_FROM_NAME`, `NEXT_PUBLIC_APP_NAME` and `NEXT_PUBLIC_COMPANY_NAME` to `Calbee`, then redeploy. Until then emails come from "Nodslot". (Owner, added 2026-11-23.)
+5. [ ] **Search and AI traffic** (built 2026-11-23): after the next website deploy, run `cd landing && npm run indexnow` (tells Bing, which feeds ChatGPT search and Copilot). Then the owner signs in to Google Search Console and Bing Webmaster Tools, adds the site, and submits `/sitemap.xml`. Repeat for the new domain once it's bought.
+6. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
 
 ## Advertised but not working (sweep 2026-11-20) — fix or take off the site before launch
 - [ ] **Your own domain (Pro):** built (Settings → Plan & billing → Custom domain, TXT check, routing) but production has no `CUSTOM_DOMAIN_CNAME_TARGET` / `VERCEL_DOMAINS_*`, so a verified domain doesn't serve the page. Needs a Vercel token scoped to the team (owner creates it at vercel.com/account/settings/tokens).

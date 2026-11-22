@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Faq, FinalCta } from "@/components/sections";
-import { ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
+import { BreadcrumbLd, ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
 import { features } from "@/content/site-content";
-import { signupUrl } from "@/site.config";
+import { signupUrl, site } from "@/site.config";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: feature.keyword,
     description: feature.summary,
-    alternates: { canonical: `/features/${feature.slug}` },
+    alternates: { canonical: `/features/${feature.slug}`, types: { "text/markdown": `/features/${feature.slug}.md` } },
     openGraph: { title: feature.title, description: feature.summary },
   };
 }
@@ -30,6 +30,7 @@ export default async function FeaturePage({ params }: Params) {
   const others = features.filter((f) => f.slug !== feature.slug).slice(0, 3);
   return (
     <>
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Features", path: "/#product" }, { name: feature.name, path: `/features/${feature.slug}` }]} />
       <Container className="max-w-3xl pt-20">
         <div className="flex items-center gap-3">
           <Eyebrow>{feature.name}</Eyebrow>
