@@ -101,7 +101,8 @@ export class CustomDomainService {
     const verificationToken = `nodslot-${randomBytes(16).toString("hex")}`;
     await this.deps.repository.upsertForUser({ userId, domain, verificationToken });
     if (previous && this.deps.host) await this.deps.host.removeDomain(previous.domain).catch(() => undefined);
-    if (this.deps.host) await this.deps.host.addDomain(domain);
+    // The domain is only connected to hosting once its owner proves control in verify(): otherwise anyone
+    // could claim domains that aren't theirs and use up the hosting plan's domain slots.
 
     const stored = await this.deps.repository.findByUserId(userId);
     if (!stored) throw new ErrorWithCode(ErrorCode.InternalServerError, "Couldn't save the domain");
@@ -122,6 +123,8 @@ export class CustomDomainService {
     const found = records.some((chunks) => chunks.join("").trim() === stored.verificationToken);
     const checkedAt = this.now();
     const verifiedAt = found ? (stored.verifiedAt ?? checkedAt) : null;
+    // Connect it to hosting on every successful check (idempotent), so a failed earlier attempt heals itself.
+    if (found && this.deps.host) await this.deps.host.addDomain(stored.domain);
     await this.deps.repository.markChecked(userId, verifiedAt, checkedAt);
     return this.toStatus({ ...stored, verifiedAt, lastCheckedAt: checkedAt });
   }

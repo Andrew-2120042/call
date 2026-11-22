@@ -111,6 +111,16 @@ describe("CustomDomainService", () => {
       },
       { type: "CNAME", name: "book.example.com", value: "cname.nodslot.test" },
     ]);
+  });
+
+  it("connects the domain to hosting only after the TXT record proves ownership", async () => {
+    const ctx = setup({ withHost: true });
+    const status = await ctx.service.add(4, "book.example.com");
+    expect(ctx.host?.addDomain).not.toHaveBeenCalled();
+    await ctx.service.verify(4);
+    expect(ctx.host?.addDomain).not.toHaveBeenCalled();
+    ctx.setTxt([[status.records[0].value]]);
+    await ctx.service.verify(4);
     expect(ctx.host?.addDomain).toHaveBeenCalledWith("book.example.com");
   });
 
