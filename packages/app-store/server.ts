@@ -86,7 +86,7 @@ export async function getLocationGroupedOptions(
   const integrations = await getEnabledAppsFromCredentials(credentials, { filterOnCredentials: true });
 
   integrations.forEach((app) => {
-    // Built-in video (Daily) was removed from Nodslot: hosts use their own Meet, Zoom or Teams, so it is never
+    // Built-in video (Daily) was removed from Calbee: hosts use their own Meet, Zoom or Teams, so it is never
     // offered as a location even where its global credential still exists.
     if (app.slug === "daily-video") return;
     // All apps that are labeled as a locationOption are video apps.

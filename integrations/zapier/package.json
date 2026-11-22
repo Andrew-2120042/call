@@ -1,7 +1,7 @@
 {
   "name": "nodslot-zapier",
   "version": "1.0.0",
-  "description": "Nodslot for Zapier: instant triggers for new, requested, rescheduled and cancelled bookings.",
+  "description": "Calbee for Zapier: instant triggers for new, requested, rescheduled and cancelled bookings.",
   "private": true,
   "main": "index.js",
   "scripts": {

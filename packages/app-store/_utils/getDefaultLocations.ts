@@ -14,7 +14,7 @@ type User = {
 
 export async function getDefaultLocations(user: User): Promise<EventTypeLocation[]> {
   const defaultConferencingData = userMetadataSchema.parse(user.metadata)?.defaultConferencingApp;
-  // Nodslot has no built-in video: without a chosen conferencing app, new services start with no location.
+  // Calbee has no built-in video: without a chosen conferencing app, new services start with no location.
   if (!defaultConferencingData || defaultConferencingData.appSlug === "daily-video") return [];
 
   // We are not returning the credential, so we are fine with the service account key

@@ -1,6 +1,6 @@
 const { endpoint } = require("../lib");
 
-/** One REST-hook trigger per booking event; Nodslot calls Zapier's URL the moment it happens. */
+/** One REST-hook trigger per booking event; Calbee calls Zapier's URL the moment it happens. */
 const makeTrigger = ({ key, event, noun, label, description }) => ({
   key,
   noun,

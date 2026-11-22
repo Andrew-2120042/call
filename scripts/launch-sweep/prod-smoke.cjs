@@ -12,7 +12,7 @@ const hostEmail = `delivered+host${RUN}@resend.dev`, user = `qa${RUN}`, pw = cry
   try {
     console.log("--- Landing and signup ---");
     const l = await person(); await l.goto("https://nodslot.site", { timeout: 60000 });
-    check("Website loads with the Nodslot name", /Nodslot/.test(await l.title() + await l.locator("body").innerText()));
+    check("Website loads with the Calbee name", /Calbee/.test(await l.title() + await l.locator("body").innerText()));
     const signupHref = await l.evaluate(() => [...document.querySelectorAll("a")].map((a) => a.href).find((h) => /app\.nodslot\.site\/signup/.test(h)));
     check("Website's sign-up button points at the live app", !!signupHref, signupHref);
     const s = await person(); await s.goto(APP + "/signup", { timeout: 60000 });

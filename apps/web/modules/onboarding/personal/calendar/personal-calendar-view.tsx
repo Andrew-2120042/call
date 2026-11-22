@@ -35,7 +35,7 @@ export const PersonalCalendarView = ({ userEmail }: PersonalCalendarViewProps) =
     sortByMostPopular: true,
     sortByInstalledFirst: true,
   });
-  // Only the calendars Nodslot supports (the Apps page list), not every calendar app in the store.
+  // Only the calendars Calbee supports (the Apps page list), not every calendar app in the store.
   const calendarApps = (queryIntegrations.data?.items ?? []).filter((app) => CALENDAR_APP_SLUGS.has(app.slug));
 
   const checkOverflow = () => {

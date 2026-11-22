@@ -1202,7 +1202,7 @@ async function handler(
 
       const mainHostCalendar = eventType.destinationCalendar || organizerUser.destinationCalendar;
 
-      // Nodslot has no built-in video, so a missing Meet connection or default app means no video link.
+      // Calbee has no built-in video, so a missing Meet connection or default app means no video link.
       if (locationBodyString === MeetLocationType && mainHostCalendar?.integration !== "google_calendar") {
         locationBodyString = "";
         organizerOrFirstDynamicGroupMemberDefaultLocationUrl = undefined;

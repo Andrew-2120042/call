@@ -1,4 +1,4 @@
-# Nodslot build plan: autonomous loop checklist
+# Calbee build plan: autonomous loop checklist
 
 Work through this list top to bottom. A feature is done only when it is built, covered by unit tests,
 type-checked, verified end to end on the running app (real HTTP / browser, emails checked in

@@ -6,7 +6,7 @@ vi.mock("@calcom/lib/constants", async () => {
   const actual = (await vi.importActual("@calcom/lib/constants")) as typeof import("@calcom/lib/constants");
   return {
     ...actual,
-    COMPANY_NAME: "Nodslot",
+    COMPANY_NAME: "Calbee",
     CALCOM_VERSION: "5.1.0",
   };
 });
@@ -16,7 +16,7 @@ describe("Credits", () => {
     render(<Credits />);
 
     const currentYear = new Date().getFullYear();
-    expect(screen.getByText(new RegExp(`© ${currentYear} Nodslot`))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`© ${currentYear} Calbee`))).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 

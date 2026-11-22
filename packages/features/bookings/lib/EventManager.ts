@@ -322,7 +322,7 @@ export default class EventManager {
       // Delegation Credential case won't normally have DestinationCalendar set and thus fallback of using Google Calendar credential would be used. Identify that case.
       // TODO: We could extend this logic to Regular Credentials also. Having a Google Calendar credential would cause fallback to use that credential to create calendar and thus we could have Google Meet link
       if (!isDelegationCredential({ credentialId: googleCalendarCredential?.id })) {
-        // Nodslot has no built-in video: without a Google calendar there's no Meet link to make, so leave it empty.
+        // Calbee has no built-in video: without a Google calendar there's no Meet link to make, so leave it empty.
         log.warn(
           "Google Meet selected but Google Calendar is not the destination calendar; no video link added"
         );

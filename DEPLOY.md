@@ -1,6 +1,6 @@
-# Deploying Nodslot to production
+# Deploying Calbee to production
 
-Nodslot is a Next.js monorepo (the Cal.diy engine plus Nodslot features) backed by Postgres.
+Calbee is a Next.js monorepo (the Cal.diy engine plus Calbee features) backed by Postgres.
 
 ## 0. Two sites, one repo
 - **Landing site** (`landing/`): the marketing site on the root domain. Separate Vercel project with Root Directory `landing`. See `landing/README.md`.
@@ -17,7 +17,7 @@ Nodslot is a Next.js monorepo (the Cal.diy engine plus Nodslot features) backed 
   - Pipedrive: client id and secret from developers.pipedrive.com, entered in Settings → Admin → Apps.
   - Then run `seed-app-store` again. Google Analytics, Tag Manager, Meta Pixel and Make need no keys.
 - Zapier and Make: the restored apps point people at Cal.com's Zapier/Make listings, which talk to Cal's
-  servers. Nodslot needs its own Zapier and Make apps (free on their developer platforms) before these work
+  servers. Calbee needs its own Zapier and Make apps (free on their developer platforms) before these work
   end to end. Webhooks work today.
 - Email sending domain (SPF, DKIM, DMARC) and `EMAIL_SERVER_*`.
 - Polar products and webhook (section 5), `DAILY_API_KEY` for built-in video, `ANTHROPIC_API_KEY` for AI summaries.
@@ -77,7 +77,7 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
 
 ## 5b. Custom domains (Pro)
 - Owners connect a domain in **Settings → Custom domain**. They add:
-  - a TXT record `_nodslot-verify.<domain>` with their token (proves ownership)
+  - a TXT record `_calbee-verify.<domain>` with their token (proves ownership)
   - a CNAME to `CUSTOM_DOMAIN_CNAME_TARGET` (on Vercel: `cname.vercel-dns.com`)
 - **On Vercel:** set `VERCEL_DOMAINS_API_TOKEN` and `VERCEL_DOMAINS_PROJECT_ID` (plus `VERCEL_DOMAINS_TEAM_ID` for a team). The domain is then added to the project automatically and Vercel issues its TLS certificate. Without them, add domains to the project by hand.
 - **Elsewhere:** put a reverse proxy in front that issues certificates on demand (for example Caddy with `on_demand_tls`) and forwards the `Host` header.
@@ -88,7 +88,7 @@ On Vercel, use Vercel Cron with a small proxy or an external scheduler (for exam
   - If the owner's plan lapses, visitors are redirected to the regular app URL.
 - If the app is served on other hostnames, list them in `APP_EXTRA_HOSTS`.
 
-## 6. Security notes for the Nodslot endpoints
+## 6. Security notes for the Calbee endpoints
 - **Public endpoints are rate-limited and validated with zod:**
   - `/api/waitlist/join`, `/api/waitlist/options`, `/api/waitlist/claim`, `/api/attendance/confirm`.
   - Claim and confirm links carry 256-bit random tokens. Only their sha256 hash is stored.

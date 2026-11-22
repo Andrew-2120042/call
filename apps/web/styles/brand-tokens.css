@@ -1,4 +1,4 @@
-/* Nodslot surface system. Dark-first: a near-black canvas, a slightly lifted work panel, soft dark cards
+/* Calbee surface system. Dark-first: a near-black canvas, a slightly lifted work panel, soft dark cards
    and white pill actions. Light keeps the same structure on neutral greys. Loaded after the engine's
    tokens so every component picks it up. */
 

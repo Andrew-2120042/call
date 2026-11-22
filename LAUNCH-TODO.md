@@ -1,9 +1,9 @@
 # Launch to-do
 
-Everything still needed before Nodslot goes live. Tick items off as they're done. How to set each one up is in `DEPLOY.md`.
+Everything still needed before Calbee goes live. Tick items off as they're done. How to set each one up is in `DEPLOY.md`.
 
 ## Main (do these first)
-1. [ ] **Zoom**: the owner signs in at marketplace.zoom.us (Ego tab "Zoom app for Nodslot"); then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds its keys to production.
+1. [ ] **Zoom**: the owner signs in at marketplace.zoom.us (Ego tab "Zoom app for Calbee"); then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds its keys to production.
 2. [~] **Billing**: going with Dodo (owner, 2026-11-20); Polar code stays as a fallback. Until live keys are set in production, everyone is on Free.
 3. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
 
@@ -36,7 +36,7 @@ Everything still needed before Nodslot goes live. Tick items off as they're done
 - Code is on GitHub: https://github.com/Andrew-2120042/call (public).
 
 ## Live status (2026-11-19)
-Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.site (Vercel Hobby, team `andrew-0da0`, projects `nodslot` and `nodslot-landing`). Database: Neon (`nodslot-db`, iad1, Free) via the Vercel Marketplace. Live smoke test: `node scripts/launch-sweep/prod-smoke.cjs` (11 checks). How deploys work is in the memory note "deploy-process" and `DEPLOY.md`.
+Calbee is live: landing at https://nodslot.site, app at https://app.nodslot.site (Vercel Hobby, team `andrew-0da0`, projects `nodslot` and `nodslot-landing`). Database: Neon (`nodslot-db`, iad1, Free) via the Vercel Marketplace. Live smoke test: `node scripts/launch-sweep/prod-smoke.cjs` (11 checks). How deploys work is in the memory note "deploy-process" and `DEPLOY.md`.
 
 ## Accounts and keys (the owner signs up; Claude wires them in)
 - [x] **Domain** `nodslot.site` (GoDaddy, bought 2026-11-17). DNS: website, `app.` subdomain, Resend DKIM and SPF.
@@ -45,7 +45,7 @@ Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.sit
 - [x] **Built-in video removed** (2026-11-19, owner: "no one asked for this"). Daily app disabled in the database, `DAILY_API_KEY` removed from Vercel. Hosts use Google Meet, Zoom or Teams; with none, bookings simply have no link.
 - [~] **Google**: published to production 2026-11-20 (branding links + nodslot.site authorized). Unverified: users see a warning and there's a 100-user cap until verification (needs declared scopes, Search Console domain check and a demo video).
 - [~] **Microsoft**: app registered, `MS_GRAPH_*` keys set in production. Not yet tested live (Outlook connect, Teams links).
-- [ ] **Zoom**: needs the owner to sign in at marketplace.zoom.us (an Ego tab "Zoom app for Nodslot" was opened), then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds the keys.
+- [ ] **Zoom**: needs the owner to sign in at marketplace.zoom.us (an Ego tab "Zoom app for Calbee" was opened), then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds the keys.
 - [ ] **Billing (Polar)**: `POLAR_ACCESS_TOKEN` still empty, so billing is off and everyone is Free. Pro $12, Team $69 for 10 people then $10 per extra person. Checkout never tested end to end.
 - [x] **Rate limiting (Unkey)** set in production.
 - [x] **Hosting (Vercel)**: both projects live, prebuilt deploys from this machine.
@@ -70,7 +70,7 @@ Nodslot is live: landing at https://nodslot.site, app at https://app.nodslot.sit
 - [ ] After each key is added, run the matching "Not tested" item in `LAUNCH-SWEEP.md` (real email, calendar sync, video, Dodo checkout, rate limits, custom domains).
 - [ ] **Where production keys live:** `.env.launch-keys` at the repo root (git-ignored). Copy its values into Vercel's environment variables at deploy time; never commit it.
 - [ ] `packages/prisma/.env` points at a different database than the root `.env`, so `seed-app-store` fails with P1003 unless run with `DATABASE_URL` set. Fix the file or always pass the URL.
-- [~] **Dodo (2026-11-20):** billing code supports Dodo (used when `DODO_API_KEY` is set). Test mode is set up under "usuals": products "Nodslot Pro" and "Nodslot Team", API key "nodslot (test)", values in `.env` and `.env.launch-keys` (DODO_TEST_*). Checkout tested locally. Still to do: a Dodo webhook endpoint (needs a public URL, so on deploy) and a full paid test; move to the new name's own Dodo business after the rename. Previously: the existing Dodo account is the business "usuals". Decide whether Nodslot sells under it or gets its own business (its own verification) before products are created.
+- [~] **Dodo (2026-11-20):** billing code supports Dodo (used when `DODO_API_KEY` is set). Test mode is set up under "usuals": products "Calbee Pro" and "Calbee Team", API key "nodslot (test)", values in `.env` and `.env.launch-keys` (DODO_TEST_*). Checkout tested locally. Still to do: a Dodo webhook endpoint (needs a public URL, so on deploy) and a full paid test; move to the new name's own Dodo business after the rename. Previously: the existing Dodo account is the business "usuals". Decide whether Calbee sells under it or gets its own business (its own verification) before products are created.
 - [ ] **Zapier and Make:** accounts are logged in, but the apps can only be connected and published once the app has a public URL (after the domain and hosting).
 - [x] **Help & feedback** in the sidebar (done 2026-11-17): saves to the `Feedback` table and emails `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` with reply-to the sender. **Set that address to a real inbox before launch** (it defaults to `support@nodslot.site`).
 - [x] **Real email delivery, first pass** (2026-11-17): 6 emails sent through Resend (API and SMTP) to the Resend account's own address, all "Delivered". **Still to do by a person:** open them in that inbox and check they didn't land in spam, and how they look in light and dark mode on phone and desktop. Repeat from the real domain once it's verified.

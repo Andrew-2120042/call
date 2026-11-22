@@ -252,10 +252,10 @@ export const docs: DocPage[] = [
   }
 }` },
       { type: "h3", text: "Verify the signature" },
-      { type: "p", text: "Add a secret to the webhook and every request carries `X-Nodslot-Signature-256`: an HMAC-SHA256 of the raw body, as hex. Compute the same with your secret and compare." },
+      { type: "p", text: "Add a secret to the webhook and every request carries `X-Calbee-Signature-256`: an HMAC-SHA256 of the raw body, as hex. Compute the same with your secret and compare." },
       { type: "code", text: `import { createHmac, timingSafeEqual } from "node:crypto";
 
-export function isFromNodslot(rawBody: string, header: string, secret: string) {
+export function isFromCalbee(rawBody: string, header: string, secret: string) {
   const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
   return header.length === expected.length && timingSafeEqual(Buffer.from(header), Buffer.from(expected));
 }` },

@@ -110,7 +110,7 @@ const handleDeleteCredential = async ({
       const locations = locationsSchema.parse(eventType.locations);
 
       const updatedLocations: TlocationsSchema = locations.reduce((acc: TlocationsSchema, location) => {
-        // Nodslot has no built-in video to swap in, so the removed app's location is simply dropped.
+        // Calbee has no built-in video to swap in, so the removed app's location is simply dropped.
         if (!location.type.includes(integrationQuery)) {
           acc.push(location);
         }

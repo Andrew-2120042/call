@@ -431,7 +431,7 @@ export const getLocationValueForDB = (
     }
   });
 
-  // Nodslot has no built-in video, so an empty location stays empty instead of becoming a video room.
+  // Calbee has no built-in video, so an empty location stays empty instead of becoming a video room.
   return { bookingLocation: bookingLocation.trim(), conferenceCredentialId };
 };
 

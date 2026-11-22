@@ -1,6 +1,6 @@
-# Nodslot: project notes (read first)
+# Calbee: project notes (read first)
 
-"Nodslot" is a **placeholder name**. Rename by changing `NEXT_PUBLIC_APP_NAME` in `.env` plus the brand assets.
+"Calbee" is a **placeholder name**. Rename by changing `NEXT_PUBLIC_APP_NAME` in `.env` plus the brand assets.
 
 ## The product
 **A booking tool where you decide who gets on your calendar.** It is built for solo service businesses: consultants, coaches, freelancers, creators, therapists, beauty and wellness pros.
@@ -73,7 +73,7 @@ The name is placeholder until the user picks the real one, which happens before 
 
 To rename:
 1. Set `NEXT_PUBLIC_APP_NAME` in `.env` (and in production env vars).
-2. Optionally set `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` and `EMAIL_FROM_NAME`. Their code defaults in `packages/lib/constants.ts` also say Nodslot.
+2. Optionally set `NEXT_PUBLIC_COMPANY_NAME`, `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` and `EMAIL_FROM_NAME`. Their code defaults in `packages/lib/constants.ts` also say Calbee.
 3. Replace `apps/web/public/brand/mark.svg` (logo mark, #292929 on transparent) and `brand/app-icon.svg` (512px app icon) if the mark changes.
 4. Run `node scripts/brand/generate-brand-assets.mjs`. It regenerates the wordmarks, every favicon/app icon/mstile, `favicon.ico`, `safari-pinned-tab.svg` and the `site.webmanifest` name.
 5. Restart the app.

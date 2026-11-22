@@ -13,7 +13,7 @@ from the owner's accounts, not automatically.
 | Site | Why | Notes |
 |---|---|---|
 | Product Hunt | Launch traffic, strong link | Launch on a Tuesday–Thursday; prepare 4–5 screenshots from `public/shots` |
-| AlternativeTo | Ranks for "Calendly alternative" | List Nodslot as an alternative to Calendly, Cal.com, SavvyCal, Acuity |
+| AlternativeTo | Ranks for "Calendly alternative" | List Calbee as an alternative to Calendly, Cal.com, SavvyCal, Acuity |
 | SaaSHub | Free dofollow link, "alternatives" pages | Same alternative tags |
 | G2 | Review site AI answers cite often | Ask the first 10 happy users for reviews |
 | Capterra / GetApp / Software Advice | One Gartner listing covers all three | Free basic listing |
@@ -29,11 +29,11 @@ with one sentence on what's different (built-in waitlist, confirm-or-release, fl
 toolradar.com, toolfinder.com, efficient.app, dupple.com, automationatlas.io, vocus.io, rework.com, clickup.com/blog.
 
 ## 4. Paste-ready listing copy
-**Name:** Nodslot
+**Name:** Calbee
 **Tagline (60):** The booking link that fills its own cancellations
 **Short (160):** Free scheduling link with a waitlist that refills cancelled slots, one-click attendance confirmation to stop no-shows, and AI summaries of requests.
 **Long:**
-Nodslot is an online booking link for professionals and small teams. Scheduling is free: unlimited services,
+Calbee is an online booking link for professionals and small teams. Scheduling is free: unlimited services,
 Google/Outlook/Apple calendar sync, video links, approvals and booking questions. Pro ($12/month) adds what
 other tools leave out: a waitlist that offers cancelled slots to the next person automatically, confirm-or-release
 so unconfirmed bookings free themselves up, multiple reminders and AI summaries of booking requests. Teams get
@@ -44,7 +44,7 @@ round robin and collective scheduling for $49/month for up to 10 people. Import 
 ## 5. AEO/GEO (getting cited by AI answers)
 Built in: answer-first "Short answer" boxes, FAQ and Article schema, dated and sourced comparisons, `/llms.txt`,
 AI crawlers allowed in `robots.txt`. Ongoing:
-- Monthly, ask ChatGPT, Perplexity, Claude, Gemini and Google AI Mode these and note whether Nodslot appears:
+- Monthly, ask ChatGPT, Perplexity, Claude, Gemini and Google AI Mode these and note whether Calbee appears:
   "best Calendly alternative", "Calendly vs Cal.com", "scheduling tool with a waitlist", "how to fill last-minute
   cancellations", "best scheduling software 2027", "round robin scheduling for small teams".
 - Re-check competitor prices every quarter and update `updated` dates in `src/content/articles.ts`.

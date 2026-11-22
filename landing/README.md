@@ -1,4 +1,4 @@
-# Nodslot landing site
+# Calbee landing site
 
 The marketing site (nodslot.site), kept separate from the app in `apps/web`:
 its own `package.json`, its own `node_modules`, its own deploy. Editing anything here never touches or rebuilds the app.

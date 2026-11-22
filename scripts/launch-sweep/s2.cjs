@@ -125,7 +125,7 @@ const inTwoDays = () => { const d = new Date(Date.now() + 2 * 86400000); return 
     const hit = got[0];
     check("Booking sends a webhook", !!hit && /BOOKING_CREATED/.test(hit.body));
     const sig = hit && L.crypto.createHmac("sha256", secret).update(hit.body).digest("hex");
-    check("It carries a valid Nodslot signature header", !!hit && hit.headers["x-nodslot-signature-256"] === sig, hit ? Object.keys(hit.headers).filter((k) => k.startsWith("x-")).join(",") : "");
+    check("It carries a valid Calbee signature header", !!hit && hit.headers["x-calbee-signature-256"] === sig, hit ? Object.keys(hit.headers).filter((k) => k.startsWith("x-")).join(",") : "");
     db(`delete from "Webhook" where id='${id}'`); db(`update "Booking" set status='cancelled' where uid='${w.uid}'`); server.close(); await w.page.context().close();
   });
 

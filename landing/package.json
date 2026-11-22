@@ -2,7 +2,7 @@
   "name": "nodslot-landing",
   "private": true,
   "version": "1.0.0",
-  "description": "Nodslot marketing site. Separate from the app: its own dependencies and its own deploy.",
+  "description": "Calbee marketing site. Separate from the app: its own dependencies and its own deploy.",
   "scripts": {
     "brand": "node -e \"require('fs').copyFileSync('../brand.json','src/brand.json')\"",
     "predev": "npm run brand",

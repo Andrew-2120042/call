@@ -2,8 +2,8 @@
   {
     "name": "apiKey",
     "type": "password",
-    "label": "Nodslot API key",
+    "label": "Calbee API key",
     "required": true,
-    "help": "In Nodslot, open Apps → Make and click Generate API key."
+    "help": "In Calbee, open Apps → Make and click Generate API key."
   }
 ]

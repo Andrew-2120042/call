@@ -1,6 +1,6 @@
 # Product Hunt launch kit
 
-Draft written 2026-11-20. Uses the current name "Nodslot"; swap in the new name after the rename.
+Draft written 2026-11-20. Uses the current name "Calbee"; swap in the new name after the rename.
 
 ## When
 
@@ -51,9 +51,9 @@ Plus a 30–60 second video: cancel a booking, watch the waitlist offer go out, 
 
 Hi Product Hunt 👋
 
-I built Nodslot because every booking tool I tried stops working the moment someone books. But the expensive part of running a calendar comes after that: the 10am that cancels the night before, the no-show, the request from someone you'd never work with.
+I built Calbee because every booking tool I tried stops working the moment someone books. But the expensive part of running a calendar comes after that: the 10am that cancels the night before, the no-show, the request from someone you'd never work with.
 
-So Nodslot keeps working after the booking:
+So Calbee keeps working after the booking:
 - **Cancelled slots refill themselves.** People join a waitlist for taken times; when one frees up, the first in line gets it by email.
 - **Fewer no-shows.** Clients confirm a day before, or the time goes back on offer.
 - **Read every request first.** Each one arrives with a short AI summary and a spam check.

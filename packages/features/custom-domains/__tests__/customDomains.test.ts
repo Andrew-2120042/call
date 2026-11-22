@@ -106,8 +106,8 @@ describe("CustomDomainService", () => {
     expect(status.records).toEqual([
       {
         type: "TXT",
-        name: "_nodslot-verify.book.example.com",
-        value: expect.stringMatching(/^nodslot-[a-f0-9]{32}$/),
+        name: "_calbee-verify.book.example.com",
+        value: expect.stringMatching(/^calbee-[a-f0-9]{32}$/),
       },
       { type: "CNAME", name: "book.example.com", value: "cname.nodslot.test" },
     ]);
@@ -152,7 +152,7 @@ describe("CustomDomainService", () => {
     ctx.setTxt([["something-else"]]);
     expect((await ctx.service.verify(4)).verified).toBe(false);
 
-    ctx.setTxt([["nodslot-", token.slice("nodslot-".length)]]); // long TXT values arrive in chunks
+    ctx.setTxt([["calbee-", token.slice("calbee-".length)]]); // long TXT values arrive in chunks
     const verified = await ctx.service.verify(4);
     expect(verified.verified).toBe(true);
     expect(verified.verifiedAt).toEqual(NOW);

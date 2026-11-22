@@ -1,15 +1,15 @@
 const { endpoint } = require("./lib");
 
-// Users create the key in Nodslot: Apps → Zapier → Generate API key.
+// Users create the key in Calbee: Apps → Zapier → Generate API key.
 module.exports = {
   type: "custom",
   fields: [
     {
       key: "apiKey",
-      label: "Nodslot API key",
+      label: "Calbee API key",
       required: true,
       type: "password",
-      helpText: "In Nodslot, open Apps → Zapier and click **Generate API key**.",
+      helpText: "In Calbee, open Apps → Zapier and click **Generate API key**.",
     },
   ],
   test: async (z, bundle) => {
@@ -17,5 +17,5 @@ module.exports = {
     response.throwForStatus();
     return response.data;
   },
-  connectionLabel: (z, bundle) => bundle.inputData.username || bundle.inputData.email || "Nodslot",
+  connectionLabel: (z, bundle) => bundle.inputData.username || bundle.inputData.email || "Calbee",
 };

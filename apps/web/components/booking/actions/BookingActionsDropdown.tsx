@@ -284,7 +284,7 @@ export function BookingActionsDropdown({
   })) as ActionType[];
 
   // No after-event actions: recordings, session details and no-show fees belong to built-in video and
-  // payments, which Nodslot doesn't offer.
+  // payments, which Calbee doesn't offer.
   const reportAction = getReportAction(actionContext);
   const reportActionWithHandler = {
     ...reportAction,

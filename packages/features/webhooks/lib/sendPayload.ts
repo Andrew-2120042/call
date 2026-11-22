@@ -313,8 +313,8 @@ const _sendPayload = async (
     method: "POST",
     headers: {
       "Content-Type": contentType,
-      "X-Nodslot-Signature-256": createWebhookSignature({ secret: secretKey, body }),
-      "X-Nodslot-Webhook-Version": version,
+      "X-Calbee-Signature-256": createWebhookSignature({ secret: secretKey, body }),
+      "X-Calbee-Webhook-Version": version,
       // Legacy names kept so receivers built against the upstream format keep working.
       "X-Cal-Signature-256": createWebhookSignature({ secret: secretKey, body }),
       "X-Cal-Webhook-Version": version,

@@ -33,7 +33,7 @@ const Page = async () => {
   if (!user) {
     redirect(redirectUrl);
   }
-  // Branding removal is a Nodslot Pro feature, so the plan decides, not Cal's team/premium flags.
+  // Branding removal is a Calbee Pro feature, so the plan decides, not Cal's team/premium flags.
   const hasPaidPlan = await getPlanService().hasFeature(user.id, "removeBranding");
 
   return <AppearancePage user={user} hasPaidPlan={hasPaidPlan} />;

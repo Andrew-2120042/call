@@ -39,7 +39,7 @@ Yes, but only if we say it the right way.
 
 ## Naming lesson
 
-Names starting with "Cal" or containing "slot/book + common suffix" are picked over. Checked and rejected: Slotwise (WordPress plugin, slotwise.pk, another Calendly alternative, GitHub apps), Calful (CalFull at calfull.com, same audience), Calsy (calsy.io and calsy.eu, both scheduling), Attic (all domains taken, unwinnable search term). Passed the `.com` and same-name checks: Nodslot, Nodmeet, Bookusher, Admitbook. Trademarks not checked.
+Names starting with "Cal" or containing "slot/book + common suffix" are picked over. Checked and rejected: Slotwise (WordPress plugin, slotwise.pk, another Calendly alternative, GitHub apps), Calful (CalFull at calfull.com, same audience), Calsy (calsy.io and calsy.eu, both scheduling), Attic (all domains taken, unwinnable search term). Passed the `.com` and same-name checks: Calbee, Nodmeet, Bookusher, Admitbook. Trademarks not checked.
 
 ## Sources
 
