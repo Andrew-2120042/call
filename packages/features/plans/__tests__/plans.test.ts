@@ -15,7 +15,8 @@ const EARLIER = new Date("2026-11-01T12:00:00.000Z");
 
 describe("entitlements", () => {
   it("gives Free approvals and questions, and keeps the income-protecting features for Pro", () => {
-    expect(planHasFeature(NodslotPlan.FREE, "approvalRequests")).toBe(true);
+    expect(planHasFeature(NodslotPlan.FREE, "approvalRequests")).toBe(false);
+    expect(planHasFeature(NodslotPlan.PRO, "approvalRequests")).toBe(true);
     expect(planHasFeature(NodslotPlan.FREE, "waitlist")).toBe(false);
     expect(planHasFeature(NodslotPlan.FREE, "confirmOrRelease")).toBe(false);
     expect(planHasFeature(NodslotPlan.FREE, "customDomain")).toBe(false);
@@ -58,8 +59,8 @@ describe("getEventTypePlanViolations", () => {
       },
       { attendeeReminderMinutes: [1440] }
     );
-    // Approval is free; the rest are Pro.
     expect(violations.map((v) => v.field)).toEqual([
+      "requiresConfirmation",
       "waitlistEnabled",
       "attendeeConfirmationHours",
       "attendeeReminderMinutes",

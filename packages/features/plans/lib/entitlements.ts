@@ -20,12 +20,13 @@ export type PlanLimits = {
   maxRemindersPerService: number;
 };
 
-// Free matches what individuals expect from any scheduling tool (approvals, unlimited questions).
-// Pro is what protects income: filling cancellations, stopping no-shows, AI triage, and your own brand.
-const FREE_FEATURES: PlanFeature[] = ["approvalRequests", "unlimitedScreeningQuestions"];
+// Free is a working booking link with unlimited questions. Pro is what protects income and the host's time:
+// approving requests first, filling cancellations, stopping no-shows, AI triage, and your own brand.
+const FREE_FEATURES: PlanFeature[] = ["unlimitedScreeningQuestions"];
 
 const PRO_FEATURES: PlanFeature[] = [
   ...FREE_FEATURES,
+  "approvalRequests",
   "waitlist",
   "confirmOrRelease",
   "aiRequestInsights",

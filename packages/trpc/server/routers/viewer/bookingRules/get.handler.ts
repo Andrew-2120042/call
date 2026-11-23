@@ -46,6 +46,7 @@ export const getHandler = async ({ ctx, input }: GetOptions) => {
     plan,
     limits: getPlanLimits(plan),
     features: {
+      approvals: planHasFeature(plan, "approvalRequests"),
       waitlist: planHasFeature(plan, "waitlist"),
       confirmOrRelease: planHasFeature(plan, "confirmOrRelease"),
       multipleReminders: planHasFeature(plan, "multipleReminders"),

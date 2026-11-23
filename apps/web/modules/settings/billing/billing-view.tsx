@@ -69,7 +69,6 @@ export default function BillingView() {
       features: [
         t("billing_f_page"),
         t("billing_f_unlimited"),
-        t("billing_f_approvals"),
         t("billing_f_questions"),
         t("billing_f_one_reminder"),
         t("billing_f_apps"),
@@ -82,6 +81,7 @@ export default function BillingView() {
       per: t("billing_per_month"),
       features: [
         t("billing_f_everything_free"),
+        t("billing_f_approvals"),
         t("billing_f_waitlist"),
         t("billing_f_confirm"),
         t("billing_f_ai_summaries"),

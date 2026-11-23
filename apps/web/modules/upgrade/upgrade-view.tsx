@@ -21,7 +21,7 @@ const COMPARISON: { groupKey: string; rows: { key: string; free: Cell; pro: Cell
     rows: [
       { key: "billing_f_page", free: true, pro: true, team: true },
       { key: "billing_f_unlimited", free: true, pro: true, team: true },
-      { key: "billing_f_approvals", free: true, pro: true, team: true },
+      { key: "billing_f_approvals", free: false, pro: true, team: true },
       { key: "billing_f_questions", free: true, pro: true, team: true },
       { key: "billing_f_apps", free: true, pro: true, team: true },
       { key: "billing_f_import", free: true, pro: true, team: true },
@@ -121,7 +121,7 @@ export default function UpgradeView() {
       price: "$0",
       per: t("billing_forever"),
       blurbKey: "upgrade_blurb_free",
-      points: ["billing_f_page", "billing_f_unlimited", "billing_f_approvals", "billing_f_questions"],
+      points: ["billing_f_page", "billing_f_unlimited", "billing_f_questions"],
     },
     {
       id: "PRO",
@@ -129,6 +129,7 @@ export default function UpgradeView() {
       per: t("upgrade_per_month_short"),
       blurbKey: "upgrade_blurb_pro",
       points: [
+        "billing_f_approvals",
         "billing_f_waitlist",
         "billing_f_confirm",
         "billing_f_ai_summaries",

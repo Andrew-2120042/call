@@ -9,8 +9,6 @@ export type RouteRequest = {
     length: number;
     description: string | null;
     schedulingType?: string | null;
-    /** Who hosts the service; null or missing means every member does. */
-    hostIds?: number[] | null;
   }[];
   members: { username: string; name: string }[];
   message: string;
@@ -36,6 +34,8 @@ type PublicTeamPage = {
     length: number;
     description: string | null;
     schedulingType?: string | null;
+    /** Who hosts the service; null or missing means every member does. */
+    hostIds?: number[] | null;
   }[];
   members: { id: number; username: string | null; name: string | null }[];
 };

@@ -7,6 +7,7 @@ import type {
 } from "@calcom/features/eventtypes/lib/types";
 import ServerTrans from "@calcom/lib/components/ServerTrans";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
+import { trpc } from "@calcom/trpc/react";
 import type { EventTypeMetaDataSchema } from "@calcom/prisma/zod-utils";
 import classNames from "@calcom/ui/classNames";
 import { CheckboxField, Input, Select, SettingsToggle } from "@calcom/ui/components/form";
@@ -65,6 +66,12 @@ export default function RequiresConfirmationController({
   const { shouldLockDisableProps } = useManagedFieldLock();
   const shouldLockIndicator = (_field: string) => false;
   const requiresConfirmationLockedProps = shouldLockDisableProps("requiresConfirmation");
+  // Approvals are a Pro feature. Someone who already has them on (from before a downgrade) can still turn them off.
+  const bookingRules = trpc.viewer.bookingRules.get.useQuery(
+    { eventTypeId: eventType.id },
+    { enabled: !!eventType.id, refetchOnWindowFocus: false }
+  );
+  const approvalsLocked = bookingRules.data?.features.approvals === false && !requiresConfirmation;
 
   const options = [
     { label: t("minute_timeUnit"), value: "minutes" },
@@ -99,8 +106,14 @@ export default function RequiresConfirmationController({
               title={t("requires_confirmation")}
             help={t("help_requires_confirmation")}
               data-testid="requires-confirmation"
-              disabled={seatsEnabled || requiresConfirmationLockedProps.disabled}
-              tooltip={seatsEnabled ? t("seat_options_doesnt_support_confirmation") : undefined}
+              disabled={seatsEnabled || requiresConfirmationLockedProps.disabled || approvalsLocked}
+              tooltip={
+                seatsEnabled
+                  ? t("seat_options_doesnt_support_confirmation")
+                  : approvalsLocked
+                    ? t("approvals_pro_tooltip")
+                    : undefined
+              }
               description={
                 <LearnMoreLink
                   t={t}

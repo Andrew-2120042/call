@@ -125,7 +125,7 @@ export function PersonalQuestionsView() {
   const apply = trpc.viewer.home.applySetup.useMutation({
     onSuccess: async (result) => {
       await utils.viewer.eventTypes.invalidate();
-      if (result.skipped.waitlist || result.skipped.confirm) showToast(t("setup_q_pro_later"), "success");
+      if (result.skipped.approval || result.skipped.waitlist || result.skipped.confirm) showToast(t("setup_q_pro_later"), "success");
       router.push("/onboarding/personal/calendar");
     },
     onError: (error) => showToast(error.message, "error"),

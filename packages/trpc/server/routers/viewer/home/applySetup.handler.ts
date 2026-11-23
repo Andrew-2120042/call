@@ -50,6 +50,7 @@ export const applySetupHandler = async ({ ctx, input }: Options) => {
   const plan = await getPlanService().getEffectivePlan(userId);
   const canWaitlist = planHasFeature(plan, "waitlist");
   const canConfirm = planHasFeature(plan, "confirmOrRelease");
+  const canApprove = planHasFeature(plan, "approvalRequests");
   const locations = locationsFor(input) as Prisma.InputJsonValue;
   const reminders = input.reminderHours ? [input.reminderHours * 60] : [];
 
@@ -69,8 +70,8 @@ export const applySetupHandler = async ({ ctx, input }: Options) => {
       position: services.length - index,
       attendeeReminderMinutes: reminders,
       // An intro call is a quick yes; only the main session follows the approval and series answers.
-      requiresConfirmation: service.main && input.approval,
-      requiresConfirmationWillBlockSlot: service.main && input.approval,
+      requiresConfirmation: service.main && input.approval && canApprove,
+      requiresConfirmationWillBlockSlot: service.main && input.approval && canApprove,
       recurringEvent:
         service.main && input.series
           ? ({ freq: WEEKLY, count: input.series, interval: 1 } as Prisma.InputJsonValue)
@@ -92,6 +93,7 @@ export const applySetupHandler = async ({ ctx, input }: Options) => {
   return {
     services: created,
     skipped: {
+      approval: input.approval && !canApprove,
       waitlist: input.waitlist && !canWaitlist,
       confirm: input.confirm && !canConfirm,
     },
