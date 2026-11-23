@@ -3,7 +3,10 @@
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Icon } from "@calcom/ui/components/icon";
 import classNames from "classnames";
+import { showToast } from "@calcom/ui/components/toast";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 import Shell from "~/shell/Shell";
 
 export type CuratedAppCard = {
@@ -19,6 +22,13 @@ type Group = { id: string; titleKey: string; subtitleKey: string; apps: CuratedA
 
 export default function CuratedAppsView({ groups }: { groups: Group[] }) {
   const { t } = useLocale();
+  const connectError = useSearchParams()?.get("connect_error");
+  const shownError = useRef<string | null>(null);
+  useEffect(() => {
+    if (!connectError || shownError.current === connectError) return;
+    shownError.current = connectError;
+    showToast(t(`connect_error_${connectError}`), "error");
+  }, [connectError, t]);
   return (
     <Shell heading={t("apps")} subtitle={t("apps_page_subtitle")}>
       <div className="mx-auto max-w-4xl space-y-10" data-testid="curated-apps">

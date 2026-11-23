@@ -38,7 +38,8 @@ describe("uploadAvatar", () => {
     const result = await uploadAvatar({ userId: 1, avatar: "image-data" });
 
     expect(mockUuidv4).toHaveBeenCalled();
-    expect(result).toBe("/api/avatar/generated-uuid-1234.png");
+    // A version suffix makes browsers and the CDN fetch a replaced avatar instead of the cached one.
+    expect(result).toMatch(/^\/api\/avatar\/generated-uuid-1234\.png\?v=[a-z0-9]+$/);
   });
 
   it("reuses existing objectKey and does NOT call uuidv4", async () => {
@@ -47,7 +48,8 @@ describe("uploadAvatar", () => {
     const result = await uploadAvatar({ userId: 1, avatar: "image-data" });
 
     expect(mockUuidv4).not.toHaveBeenCalled();
-    expect(result).toBe("/api/avatar/existing-key-5678.png");
+    // A version suffix makes browsers and the CDN fetch a replaced avatar instead of the cached one.
+    expect(result).toMatch(/^\/api\/avatar\/existing-key-5678\.png\?v=[a-z0-9]+$/);
   });
 
   it("includes objectKey in create clause but NOT in update clause", async () => {
@@ -68,7 +70,8 @@ describe("uploadAvatar", () => {
 
     const result = await uploadAvatar({ userId: 5, avatar: "data" });
 
-    expect(result).toBe("/api/avatar/my-key.png");
+    // A version suffix makes browsers and the CDN fetch a replaced avatar instead of the cached one.
+    expect(result).toMatch(/^\/api\/avatar\/my-key\.png\?v=[a-z0-9]+$/);
   });
 
   it("uses correct compound unique key for lookup and upsert", async () => {

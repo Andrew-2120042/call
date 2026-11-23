@@ -15,15 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const state = decodeOAuthState(req);
 
   if (typeof code !== "string") {
-    if (state?.onErrorReturnTo || state?.returnTo) {
-      res.redirect(
-        getSafeRedirectUrl(state.onErrorReturnTo) ??
-          getSafeRedirectUrl(state?.returnTo) ??
-          `${WEBAPP_URL}/apps/installed`
-      );
-      return;
-    }
-    res.status(400).json({ message: "No code returned" });
+    // Microsoft only lets work or school (Microsoft 365) accounts create Teams meetings through an app; a personal
+    // account comes back with invalid_scope. Say so on the Apps page instead of returning silently or as raw JSON.
+    const reason = req.query.error === "invalid_scope" ? "msteams_work_account" : "msteams";
+    const back =
+      getSafeRedirectUrl(state?.onErrorReturnTo) ?? getSafeRedirectUrl(state?.returnTo) ?? `${WEBAPP_URL}/apps`;
+    const url = new URL(back, WEBAPP_URL);
+    url.searchParams.set("connect_error", reason);
+    res.redirect(url.toString());
     return;
   }
 

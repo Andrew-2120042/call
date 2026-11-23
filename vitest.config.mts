@@ -48,6 +48,8 @@ function getTestExclude() {
   const baseExclude = [
     "**/node_modules/**",
     "**/dist/**",
+    // Built Next output can contain compiled copies of test files.
+    "**/.next/**",
     "apps/api/v2/**/*.spec.ts",
     "__checks__/**/*.spec.ts",
   ];

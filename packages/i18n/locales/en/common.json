@@ -5330,6 +5330,8 @@
   "billing_free_hint": "Upgrade any time. You keep everything you've set up.",
   "billing_upgrade_pro": "Upgrade to Pro",
   "billing_upgrade_team": "Start a team",
+  "connect_error_msteams_work_account": "Teams meeting links need a work or school Microsoft 365 account. Personal Microsoft accounts can't create Teams meetings for apps.",
+  "connect_error_msteams": "Microsoft Teams wasn't connected. Please try again.",
   "approvals_pro_tooltip": "Approving bookings first is a Pro feature. Upgrade to turn it on.",
   "billing_switch_team": "Switch to Team",
   "billing_f_page": "Your booking page and services",
