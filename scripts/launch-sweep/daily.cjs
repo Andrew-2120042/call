@@ -8,6 +8,6 @@ const L = require("./lib.cjs");
   L.check("Client's email has the meeting link", /slotwise\.daily\.co|\/video\//.test(m?.raw || ""));
   const err = await L.findMail("pro@example.com", since, /Action Required/, 4000);
   L.check("No '[Action Required]' error email to the host", !err);
-  L.db(`update "Booking" set status='cancelled' where uid='${b.uid}'`);
+  L.db(`update "Booking" set status='cancelled', "idempotencyKey"=null where uid='${b.uid}'`);
   L.summary(); await T.browser.close(); process.exit(0);
 })();

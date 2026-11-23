@@ -5,7 +5,7 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 ## Main (do these first)
 1. [ ] **Zoom**: the owner signs in at marketplace.zoom.us (Ego tab "Zoom app for Calbee"); then Claude registers the app (redirect `https://app.nodslot.site/api/integrations/zoomvideo/callback`) and adds its keys to production.
 2. [~] **Billing**: going with Dodo (owner, 2026-11-20); Polar code stays as a fallback. Until live keys are set in production, everyone is on Free.
-3. [ ] **Calbee name on the live server**: in Vercel → nodslot project → Settings → Environment Variables (Production), set `EMAIL_FROM_NAME`, `NEXT_PUBLIC_APP_NAME` and `NEXT_PUBLIC_COMPANY_NAME` to `Calbee`, then redeploy. Until then emails come from "Nodslot". (Owner, added 2026-11-23.)
+3. [x] **Calbee name on the live server** (done 2026-11-23 via the Vercel CLI): in Vercel → nodslot project → Settings → Environment Variables (Production), set `EMAIL_FROM_NAME`, `NEXT_PUBLIC_APP_NAME` and `NEXT_PUBLIC_COMPANY_NAME` to `Calbee`, then redeploy. Until then emails come from "Nodslot". (Owner, added 2026-11-23.)
 4. [ ] **Search and AI traffic** (built 2026-11-23): after the next website deploy, run `cd landing && npm run indexnow` (tells Bing, which feeds ChatGPT search and Copilot). Then the owner signs in to Google Search Console and Bing Webmaster Tools, adds the site, and submits `/sitemap.xml`. Repeat for the new domain once it's bought.
 5. [ ] **support@nodslot.site** has no inbox: the owner picks where those emails should go (Resend receiving, forwarding to Gmail, or a different address).
 
@@ -15,11 +15,16 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 - [ ] **Zapier and Make:** disabled; the website "works with" strip and FAQ mention them.
 - [ ] **HubSpot, Salesforce, Pipedrive:** disabled (each needs its own developer app).
 - [ ] **Slack, ClickUp:** not built; shown as "Not available yet" on the Apps page.
-- [ ] **Outlook calendar and Microsoft Teams links:** switched on with keys, never tested live.
+- [x] **Outlook calendar** tested 2026-11-23 with a real Outlook account: busy times hide slots, bookings appear in Outlook, cancelling removes them.
+- [ ] **Microsoft Teams links:** Microsoft only lets work or school (Microsoft 365) accounts create Teams meetings through an app; personal accounts are refused (users now see a plain explanation). Needs a test with a work/school account.
 - [ ] **Paying for Pro:** Dodo is in test mode and limited to the owner's two emails; nobody else can buy yet. Team checkout works in test mode (2026-11-23), including Pro → Team switching.
 - [ ] **Support inbox:** `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` is empty, so support@nodslot.site is used and it has no inbox.
 - [ ] **Google:** published to production 2026-11-20 but unverified (warning screen, 100-user cap). Needs nodslot.site verified in Search Console (DNS TXT at GoDaddy), the calendar scopes declared, and a demo video.
 - [ ] Live account 4 (`qaprobe128`, a test account) got Pro from a local test payment on 2026-11-20 (the bug is fixed); its PlanSubscription row should be deleted (owner to confirm).
+
+## Found by the full test run (2026-11-23)
+- [ ] **Repeating bookings:** if a later week of a weekly series is already taken, the whole series fails with "This slot is no longer available", but the first week is saved anyway. Comes from the underlying Cal booking engine. Fix: check every week before booking and say which week is taken.
+- [x] Fixed: login page imported a server-only module; Teams connect error showed raw JSON; waitlist claim said "no longer available" when it was only a short rate limit; assistant labels mentioned a server key name.
 
 ## Come back to (owner asked to be reminded, 2026-11-19)
 - [x] **Redesign the landing page** (done 2026-11-19/20: Apollo-style layout, dark, serif headings, own pricing page). It reads like a tech tool; it should feel like a calendar and show the product. Layout like Apollo's site (recording `~/Desktop/Screen Recording 2026-11-19 at 8.58.54 PM.mov`, frames in `docs/design-refs/landing-layout-apollo.jpg`): big product-demo blocks, a UI mock beside each feature's text, a row of 4 feature cards, customer stories, a huge closing banner, a big footer. Colours like Cal.com's (recording `... 8.57.34 PM.mov`, `docs/design-refs/landing-colours-calcom.jpg`): black or near-black, not Apollo's bright colours, with calendar pieces inside the headline (a photo, a clock, an "Intro call · 30m · Booked" chip) and a real app screenshot under it.

@@ -28,7 +28,10 @@ type Offer = {
   firstComeFirstServed: boolean;
 };
 
-type LoadState = { kind: "loading" } | { kind: "error"; message: string } | { kind: "ready"; offer: Offer };
+type LoadState =
+  | { kind: "loading" }
+  | { kind: "error"; message: string; busy?: boolean }
+  | { kind: "ready"; offer: Offer };
 
 export default function WaitlistClaimPage() {
   const { t } = useLocale();
@@ -45,7 +48,9 @@ export default function WaitlistClaimPage() {
       .then(async (res) => {
         const body = await res.json();
         if (cancelled) return;
-        if (!res.ok) setState({ kind: "error", message: body.message ?? t("waitlist_claim_invalid") });
+        // Too many tries in a short time isn't a lost offer: say so, so the person waits instead of giving up.
+        if (res.status === 429) setState({ kind: "error", message: t("waitlist_claim_busy_body"), busy: true });
+        else if (!res.ok) setState({ kind: "error", message: body.message ?? t("waitlist_claim_invalid") });
         else setState({ kind: "ready", offer: body });
       })
       .catch(() => !cancelled && setState({ kind: "error", message: t("waitlist_claim_invalid") }));
@@ -65,7 +70,7 @@ export default function WaitlistClaimPage() {
       });
       const body = await res.json();
       if (!res.ok) {
-        setClaimError(body.message ?? t("something_went_wrong"));
+        setClaimError(res.status === 429 ? t("waitlist_claim_busy_body") : (body.message ?? t("something_went_wrong")));
         setClaiming(false);
         return;
       }
@@ -90,7 +95,7 @@ export default function WaitlistClaimPage() {
         <ClientHeader
           icon="circle-alert"
           tone="warning"
-          title={t("waitlist_claim_unavailable_title")}
+          title={state.busy ? t("waitlist_claim_busy_title") : t("waitlist_claim_unavailable_title")}
           subtitle={state.message}
         />
       </ClientPageShell>

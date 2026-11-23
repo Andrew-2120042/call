@@ -84,10 +84,19 @@ const entryStatus = (email) => db(`select status from "WaitlistEntry" where emai
     const p = await person();
     await p.goto(link, { timeout: 300000 });
     await p.waitForSelector('[data-testid="waitlist-claim-page"]', { timeout: 120000 });
+    // The claim endpoint is rate limited per connection; this script claims many offers in a row, so wait it out.
+    for (let i = 0; i < 3 && (await p.getByText(/One moment, please|Rate limit/i).count()); i++) {
+      await p.waitForTimeout(35000); await p.reload(); await p.waitForSelector('[data-testid="waitlist-claim-page"]', { timeout: 120000 });
+    }
     const btn = p.getByTestId("waitlist-claim-button");
     let claimed = false;
     await Promise.race([btn.waitFor({ timeout: 60000 }), p.getByText(/no longer available/i).waitFor({ timeout: 60000 })]).catch(() => {});
-    if (await btn.count()) { await btn.click(); await p.waitForURL((u) => u.pathname.startsWith("/booking/"), { timeout: 60000 }).then(() => { claimed = true; }).catch(() => {}); }
+    for (let attempt = 0; attempt < 3 && !claimed && (await btn.count()); attempt++) {
+      await btn.click();
+      await p.waitForURL((u) => u.pathname.startsWith("/booking/"), { timeout: 60000 }).then(() => { claimed = true; }).catch(() => {});
+      if (!claimed && !(await p.getByText(/lot of tries/i).count())) break;
+      if (!claimed) await p.waitForTimeout(35000);
+    }
     await p.waitForTimeout(1200);
     const text = await p.locator("body").innerText();
     if (shot) await p.screenshot({ path: OUT + "/" + shot });
@@ -151,7 +160,7 @@ const entryStatus = (email) => db(`select status from "WaitlistEntry" where emai
   await cancel(noraC);
   const ginaOffer = await waitForOffer(em("gina.c@example.com"), since);
   check("Gina is offered the time that opened that day", !!ginaOffer);
-  const ginaClaim = await claim(ginaOffer.link);
+  const ginaClaim = await claim(ginaOffer.link, "C-gina.png");
   check("Gina claims it and is booked at that time", ginaClaim.claimed && !!db(`select 1 from "Booking" b join "Attendee" a on a."bookingId"=b.id where a.email='${em("gina.c@example.com")}' and b."startTime"='${noraC.start.replace("T", " ").replace("Z", "")}' and b.status in ('pending','accepted')`));
 
   // D. Earlier than my booking

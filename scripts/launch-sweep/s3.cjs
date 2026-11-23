@@ -2,14 +2,19 @@ const L = require("./lib.cjs"); const { APP, RUN, db, check, section, findMail, 
 (async () => {
   const T = await L.start();
   await section("13. Setup Assistant (AI) makes real changes", async () => {
-    const h = await T.login("free@example.com", "free"); await h.dismiss();
+    // The assistant is a Pro feature (since 2026-11-20): Free sees the upgrade prompt, Pro gets the assistant.
+    const f = await T.login("free@example.com", "free"); await f.dismiss();
+    await f.goto(APP + "/assistant", { timeout: 300000 }); await f.waitForTimeout(4000);
+    check("Free account sees the Pro prompt instead of the assistant", (await f.locator("textarea").count()) === 0, `${await f.locator("textarea").count()} text boxes`);
+    await f.context().close();
+    const h = await T.login("pro@example.com", "pro"); await h.dismiss();
     await h.goto(APP + "/assistant", { timeout: 300000 }); await h.getByTestId("assistant-page").waitFor({ timeout: 120000 }); await h.dismiss();
     const title = `Sweep Session ${RUN}`;
     await h.locator("textarea").first().fill(`Create a new 45 minute service called "${title}" with the description "Created by the launch sweep".`);
     await h.keyboard.press("Enter"); await h.locator('button[type="submit"]').first().click().catch(() => {});
     let row = ""; for (let i = 0; i < 40 && !row; i++) { row = db(`select length||'|'||id from "EventType" where title='${title}'`); if (!row) await h.waitForTimeout(2000); }
     check("Assistant creates the service it was asked for", row.startsWith("45|"), row);
-    check("…owned by the person who asked", !!row && db(`select u.email from "EventType" e join users u on u.id=e."userId" where e.id=${row.split("|")[1] || 0}`) === "free@example.com");
+    check("…owned by the person who asked", !!row && db(`select u.email from "EventType" e join users u on u.id=e."userId" where e.id=${row.split("|")[1] || 0}`) === "pro@example.com");
     if (row) db(`delete from "EventType" where id=${row.split("|")[1]}`);
     await h.context().close();
   });
@@ -62,7 +67,7 @@ const L = require("./lib.cjs"); const { APP, RUN, db, check, section, findMail, 
     check("Only one of them gets the booking", n === "1", `${n} active bookings`);
     const loser = (await a.getByTestId("success-page").count()) ? b : a;
     check("The other is told the time is taken", !(await loser.getByTestId("success-page").count()) && /no longer|already|not available|taken|unable|try another|booked/i.test(await loser.locator("body").innerText()));
-    db(`update "Booking" b set status='cancelled' from "Attendee" t where t."bookingId"=b.id and t.email like 'race_+${RUN}@example.com'`);
+    db(`update "Booking" b set status='cancelled', "idempotencyKey"=null from "Attendee" t where t."bookingId"=b.id and t.email like 'race_+${RUN}@example.com'`);
     await a.context().close(); await b.context().close();
   });
   L.summary(); await T.browser.close(); process.exit(0);

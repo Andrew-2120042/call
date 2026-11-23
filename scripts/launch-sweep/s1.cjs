@@ -56,11 +56,11 @@ const L = require("./lib.cjs"); const { APP, RUN, db, check, section, findMail, 
   await section("4. Client reschedules, then cancels", async () => {
     const p = b1.page; let since = Date.now();
     await p.goto(`${APP}/reschedule/${b1.uid}`, { timeout: 300000 });
-    await p.waitForSelector('[data-testid="day"]', { timeout: 120000 });
+    await p.waitForSelector('[data-testid="day"]', { timeout: 120000 }).catch(async (e) => { await p.screenshot({ path: __dirname + "/reschedule-fail-days.png", fullPage: true }); throw e; });
     await p.locator('[data-testid="day"]:not([data-disabled="true"])').nth(5).click();
     await p.waitForSelector('[data-testid="time"]'); await p.locator('[data-testid="time"]').nth(2).click();
     await p.getByTestId("confirm-reschedule-button").click();
-    await p.waitForSelector('[data-testid="success-page"]', { timeout: 120000 });
+    await p.waitForSelector('[data-testid="success-page"]', { timeout: 120000 }).catch(async (e) => { await p.screenshot({ path: __dirname + "/reschedule-fail-confirm.png", fullPage: true }); throw e; });
     const newUid = new URL(p.url()).pathname.split("/").pop();
     check("Reschedule creates the new booking", newUid !== b1.uid && T.status(newUid) === "accepted", T.status(newUid));
     check("Old booking is closed and marked rescheduled", db(`select status||'|'||coalesce(rescheduled::text,'') from "Booking" where uid='${b1.uid}'`) === "cancelled|true", db(`select status||'|'||coalesce(rescheduled::text,'') from "Booking" where uid='${b1.uid}'`));
@@ -73,7 +73,14 @@ const L = require("./lib.cjs"); const { APP, RUN, db, check, section, findMail, 
     await p.waitForSelector('[data-testid="rebook-accept"]', { timeout: 90000 }).catch(() => {});
     const n = await p.getByTestId("rebook-accept").count();
     check("Cancelled page offers 3 new times (AI rebook)", n === 3, `${n} suggestions`);
-    if (n) { await p.getByTestId("rebook-accept").first().click(); await p.waitForSelector('input[name="name"]', { timeout: 120000 }); check("'Book this time' opens the form pre-filled", (await p.locator('input[name="name"]').inputValue()) === "Cara Client" && /slot=/.test(p.url())); }
+    // One-click rebook (since 2026-11-20): pick a time, confirm, and the client is booked without a form.
+    if (n) {
+      await p.getByTestId("rebook-accept").first().click();
+      await p.getByTestId("rebook-confirm").click();
+      await p.waitForURL((u) => u.pathname.startsWith("/booking/") && !u.pathname.endsWith(newUid), { timeout: 120000 });
+      const rebookedUid = new URL(p.url()).pathname.split("/").pop();
+      check("'Book this time' then Confirm books the client in one click", T.status(rebookedUid) === "accepted", T.status(rebookedUid));
+    }
     await p.context().close();
   });
   let host2;

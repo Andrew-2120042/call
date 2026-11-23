@@ -41,7 +41,7 @@ const inTwoDays = () => { const d = new Date(Date.now() + 2 * 86400000); return 
     check("Reminder email is sent when due", !!m, m?.subject);
     await L.cron("/api/cron/attendee-reminders"); await L.cron("/api/cron/attendee-reminders"); await new Promise((x) => setTimeout(x, 2500));
     check("Running the job again doesn't send it twice", L.mails(since).filter((x) => x.to.includes(e) && /remind/i.test(x.subject)).length === 1);
-    db(`update "Booking" set status='cancelled' where uid='${r.uid}'`); await r.page.context().close();
+    db(`update "Booking" set status='cancelled', "idempotencyKey"=null where uid='${r.uid}'`); await r.page.context().close();
   });
 
   await section("8. Team bookings and the team page AI", async () => {
@@ -63,7 +63,7 @@ const inTwoDays = () => { const d = new Date(Date.now() + 2 * 86400000); return 
     const av = await p.getByTestId("team-routing-availability").innerText();
     check("'Who's free' answers with a time and people or 'nobody'", /Wednesday/.test(av) && /(Free then|Nobody)/.test(av), av.replace(/\n/g, " "));
     if (await p.getByTestId("team-routing-book-time").count()) { await p.getByTestId("team-routing-book-time").click(); await p.waitForSelector('input[name="name"]', { timeout: 120000 }).catch(() => {}); check("'Book that time' opens the form on that slot", /slot=/.test(p.url()) && await p.locator('input[name="name"]').isVisible()); }
-    db(`update "Booking" set status='cancelled' where uid in ('${rr.uid}','${co.uid}')`);
+    db(`update "Booking" set status='cancelled', "idempotencyKey"=null where uid in ('${rr.uid}','${co.uid}')`);
     for (const x of [rr.page, co.page, p]) await x.context().close();
   });
 
@@ -76,7 +76,7 @@ const inTwoDays = () => { const d = new Date(Date.now() + 2 * 86400000); return 
     check("They're told to upgrade", /upgrade|pro/i.test(await f.locator("body").innerText()));
     await f.goto(APP + "/settings/billing", { timeout: 300000 }); await f.waitForTimeout(3000);
     const t = await f.locator("body").innerText();
-    check("Billing page shows Free, Pro $12 and Team $49", /\$12/.test(t) && /\$49/.test(t) && /free/i.test(t));
+    check("Billing page shows Free, Pro $12 and Team $69", /\$12/.test(t) && /\$69/.test(t) && /free/i.test(t));
     await f.goto(APP + "/teams", { timeout: 300000 }); await f.waitForTimeout(2500);
     check("Free account is offered the Team plan instead of creating a team", (await f.getByTestId("teams-upgrade").count()) > 0 || /Team plan/i.test(await f.locator("body").innerText()));
     await f.context().close();
@@ -126,7 +126,7 @@ const inTwoDays = () => { const d = new Date(Date.now() + 2 * 86400000); return 
     check("Booking sends a webhook", !!hit && /BOOKING_CREATED/.test(hit.body));
     const sig = hit && L.crypto.createHmac("sha256", secret).update(hit.body).digest("hex");
     check("It carries a valid Calbee signature header", !!hit && hit.headers["x-calbee-signature-256"] === sig, hit ? Object.keys(hit.headers).filter((k) => k.startsWith("x-")).join(",") : "");
-    db(`delete from "Webhook" where id='${id}'`); db(`update "Booking" set status='cancelled' where uid='${w.uid}'`); server.close(); await w.page.context().close();
+    db(`delete from "Webhook" where id='${id}'`); db(`update "Booking" set status='cancelled', "idempotencyKey"=null where uid='${w.uid}'`); server.close(); await w.page.context().close();
   });
 
   L.summary(); await T.browser.close(); process.exit(0);

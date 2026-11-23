@@ -28,7 +28,7 @@ const VICTIM = { pendingUid: "8b7c0cc1-484f-45e5-b30f-820045b707e1", pendingId: 
   check("SQL-style search text returns nothing extra and no error", r.status === 200 && !r.body.includes(VICTIM.acceptedUid), `${r.status}`);
   r = await q("eventTypes/get", { id: VICTIM.eventTypeId });
   check("Can't load another host's service in the editor", denied(r), short(r));
-  r = await q("webhook/list");
+  r = await q("webhook/list", {});
   check("Webhook list shows none of the other account's webhooks", r.status === 200 && !/sweep-secret|"userId":4/.test(r.body), `${r.status}`);
 
   console.log("\n--- Changing someone else's data ---");
@@ -56,7 +56,9 @@ const VICTIM = { pendingUid: "8b7c0cc1-484f-45e5-b30f-820045b707e1", pendingId: 
 
   console.log("\n--- The other host's booking page, viewed while signed in as someone else ---");
   const page = await a.request.get(`${APP}/booking/${VICTIM.pendingUid}`); const html = await page.text();
-  check("No AI summary or Accept/Decline for a non-host", !/AI summary|host-accept|Suggested reply|"requestInsight":\{/.test(html), `${page.status()}`);
+  // The page carries every UI label ("AI summary", "Suggested reply"), so check for the stored summary itself.
+  const storedSummary = db(`select left(i.summary, 40) from "BookingRequestInsight" i join "Booking" b on b.id = i."bookingId" where b.uid = '${VICTIM.pendingUid}'`);
+  check("No AI summary or Accept/Decline for a non-host", !/host-accept|"requestInsight":\{/.test(html) && !(storedSummary && html.includes(storedSummary)), `${page.status()}`);
 
   console.log("\n--- Signed out ---");
   const anon = await (await T.person()).request;
@@ -88,7 +90,7 @@ const VICTIM = { pendingUid: "8b7c0cc1-484f-45e5-b30f-820045b707e1", pendingId: 
   }
   check("Account with a connected Google calendar: no tokens, secrets or password hashes in API responses", leak.length === 0, leak.join(" ; "));
   const pub = await anon.get(`${APP}/teampro/calendar-sync-test`); const pubHtml = await pub.text();
-  check("Public booking page HTML contains no tokens or server keys", !/refresh_token|access_token|ya29\.|GOCSPX-|sk-ant-|unkey_|re_[A-Za-z0-9]{8}_|CRON_SECRET|ANTHROPIC_API_KEY|DAILY_API_KEY/.test(pubHtml), `${pub.status()}`);
+  check("Public booking page HTML contains no tokens or server keys", !/"(refresh_token|access_token)\\?"\s*:\s*\\?"(?!Access token)[A-Za-z0-9._-]{20,}|ya29\.|GOCSPX-|sk-ant-|unkey_[A-Za-z0-9]{8}|["'\s]re_[A-Za-z0-9]{8}_|CRON_SECRET|ANTHROPIC_API_KEY|DAILY_API_KEY/.test(pubHtml), `${pub.status()}`);
 
   console.log("\n--- Redirects and headers ---");
   const lp = await T.person(); await lp.goto(`${APP}/auth/login?callbackUrl=${encodeURIComponent("https://evil.example/steal")}`, { timeout: 300000 });

@@ -8,7 +8,7 @@ const L = require("./lib.cjs"); const { APP, db, check } = L;
   const ref = db(`select r.type||'|'||(length(coalesce(r.uid,''))>5) from "BookingReference" r join "Booking" b on b.id=r."bookingId" where b.uid='${b.uid}' and r.type='google_calendar'`);
   check("Booking creates an event on the Google calendar", ref === "google_calendar|true", ref);
   // Hide the booking from Slotwise's own records: only Google now knows that time is busy.
-  db(`update "Booking" set status='cancelled' where uid='${b.uid}'`);
+  db(`update "Booking" set status='cancelled', "idempotencyKey"=null where uid='${b.uid}'`);
   check("Slot stays blocked because Google Calendar says busy", !(await slotsOn(date)).includes(start));
   db(`update "Booking" set status='accepted' where uid='${b.uid}'`);
   await b.page.goto(`${APP}/booking/${b.uid}`, { timeout: 300000 });
