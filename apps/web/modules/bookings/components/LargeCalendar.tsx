@@ -80,6 +80,7 @@ export const LargeCalendar = ({
         hoverEventDuration={eventDuration}
         hideHeader
         timezone={timezone}
+        scrollToCurrentTime={false}
       />
     </div>
   );

@@ -315,11 +315,25 @@ export class TeamManagementRepository {
   }
 
   async listPublicServices(teamId: number) {
-    return this.prismaClient.eventType.findMany({
+    const services = await this.prismaClient.eventType.findMany({
       where: { teamId, hidden: false },
       orderBy: [{ position: "desc" }, { id: "asc" }],
-      select: { id: true, title: true, slug: true, length: true, description: true, schedulingType: true },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        length: true,
+        description: true,
+        schedulingType: true,
+        assignAllTeamMembers: true,
+        hosts: { select: { userId: true } },
+      },
     });
+    return services.map(({ hosts, assignAllTeamMembers, ...service }) => ({
+      ...service,
+      /** Null means every team member hosts it. */
+      hostIds: assignAllTeamMembers ? null : hosts.map((host) => host.userId),
+    }));
   }
 
   async listPublicMembers(teamId: number) {

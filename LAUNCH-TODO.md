@@ -16,7 +16,7 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 - [ ] **HubSpot, Salesforce, Pipedrive:** disabled (each needs its own developer app).
 - [ ] **Slack, ClickUp:** not built; shown as "Not available yet" on the Apps page.
 - [ ] **Outlook calendar and Microsoft Teams links:** switched on with keys, never tested live.
-- [ ] **Paying for Pro:** Dodo is in test mode and limited to the owner's two emails; nobody else can buy yet. Team checkout doesn't exist ("Coming soon"), but the website's Team card says "Start a team".
+- [ ] **Paying for Pro:** Dodo is in test mode and limited to the owner's two emails; nobody else can buy yet. Team checkout works in test mode (2026-11-23), including Pro → Team switching.
 - [ ] **Support inbox:** `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` is empty, so support@nodslot.site is used and it has no inbox.
 - [ ] **Google:** published to production 2026-11-20 but unverified (warning screen, 100-user cap). Needs nodslot.site verified in Search Console (DNS TXT at GoDaddy), the calendar scopes declared, and a demo video.
 - [ ] Live account 4 (`qaprobe128`, a test account) got Pro from a local test payment on 2026-11-20 (the bug is fixed); its PlanSubscription row should be deleted (owner to confirm).
@@ -57,7 +57,7 @@ Calbee is live: landing at https://nodslot.site, app at https://app.nodslot.site
 - [ ] **Vercel Hobby is non-commercial.** Move to Pro (or Railway/Render) once there is a paying user.
 
 ## Product work Claude can do when asked
-- [ ] Weekly view on the booking page opens at the start of working hours, not the current time.
+- [x] Weekly view on the booking page opens at the start of working hours, not the current time (2026-11-23).
 - [ ] Optionally hide the "Experimental" Recurring tab and "Overlay my calendar" for a cleaner booking page.
 - [ ] Error monitoring (Sentry) so crashes after launch are visible.
 - [ ] Publish the Zapier and Make apps (built in `integrations/`, not listed yet). Webhooks already work.
@@ -66,12 +66,12 @@ Calbee is live: landing at https://nodslot.site, app at https://app.nodslot.site
 - [x] Waitlist improvements: first-come-first-served option, shorter windows for soon slots, "any time that day" and "earlier than my booking" (done 2026-11-16, tested end to end).
 - [ ] Remove the demo Team plan `demo-team-sub` on the `teampro` test account before production (it only exists in the local database).
 - [ ] Extra seats on the Team plan (price decided 2026-11-19): $69 covers 10 people; each person after that is $10/month per seat (needs a Dodo seat add-on and lifting the hard 10-seat stop in `TeamService`). Not started.
-- [ ] From the launch sweep (see `LAUNCH-SWEEP.md`): "Who's free" on the team page should only list hosts of the service it offers to book.
-- [ ] From the launch sweep: re-test a round-robin time that another visitor is holding (it showed as bookable, then failed).
+- [x] From the launch sweep: "Who's free" on the team page only lists hosts of the service it offers to book (2026-11-23).
+- [x] Re-tested 2026-11-23: a round-robin time held by visitor A is hidden from visitor B. The earlier failure came from stale holds left by killed test runs.
 - [ ] The task runner cron (`/api/tasks/cron`) must be scheduled as **GET**, not POST.
 - [ ] After each key is added, run the matching "Not tested" item in `LAUNCH-SWEEP.md` (real email, calendar sync, video, Dodo checkout, rate limits, custom domains).
 - [ ] **Where production keys live:** `.env.launch-keys` at the repo root (git-ignored). Copy its values into Vercel's environment variables at deploy time; never commit it.
-- [ ] `packages/prisma/.env` points at a different database than the root `.env`, so `seed-app-store` fails with P1003 unless run with `DATABASE_URL` set. Fix the file or always pass the URL.
+- [x] `packages/prisma/.env` is now a link to the root `.env` (one database).
 - [~] **Dodo (2026-11-20):** billing code supports Dodo (used when `DODO_API_KEY` is set). Test mode is set up under "usuals": products "Calbee Pro" and "Calbee Team", API key "nodslot (test)", values in `.env` and `.env.launch-keys` (DODO_TEST_*). Checkout tested locally. Still to do: a Dodo webhook endpoint (needs a public URL, so on deploy) and a full paid test; move to the new name's own Dodo business after the rename. Previously: the existing Dodo account is the business "usuals". Decide whether Calbee sells under it or gets its own business (its own verification) before products are created.
 - [ ] **Zapier and Make:** accounts are logged in, but the apps can only be connected and published once the app has a public URL (after the domain and hosting).
 - [x] **Help & feedback** in the sidebar (done 2026-11-17): saves to the `Feedback` table and emails `NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS` with reply-to the sender. **Set that address to a real inbox before launch** (it defaults to `support@nodslot.site`).

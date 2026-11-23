@@ -137,4 +137,25 @@ describe("TeamRoutingService", () => {
     });
     expect(past?.availability).toMatchObject({ isPast: true, bookUrl: null });
   });
+
+  it("only names people who host the suggested service as free", async () => {
+    const hostedPage = {
+      ...page,
+      services: [{ ...page.services[0], hostIds: [11] }, page.services[1]],
+    };
+    const findFreeMembers = vi.fn(async ({ memberIds }: { memberIds: number[] }) => memberIds);
+    const router: TeamRouter = async () => ({
+      serviceSlug: "intro",
+      memberUsername: null,
+      reason: "Intro first.",
+      requestedTime: "2026-11-17T15:00",
+    });
+    const result = await make(router, async () => hostedPage, findFreeMembers).route({
+      teamSlug: "studio",
+      message: "Who's free tomorrow at 3?",
+      now,
+    });
+    expect(findFreeMembers.mock.calls[0][0].memberIds).toEqual([11]);
+    expect(result?.availability?.free).toEqual([{ username: "omar", name: "Omar" }]);
+  });
 });

@@ -6,6 +6,7 @@ import {
 import classNames from "@calcom/ui/classNames";
 import type React from "react";
 import { useEffect, useMemo, useRef } from "react";
+import dayjs from "@calcom/dayjs";
 import "@calcom/features/calendars/weeklyview/styles/styles.css";
 import type { CalendarComponentProps } from "@calcom/features/calendars/weeklyview/types/state";
 import { getDaysBetweenDates, getHoursToDisplay } from "@calcom/features/calendars/weeklyview/utils";
@@ -53,6 +54,32 @@ function CalendarInner(props: CalendarComponentProps) {
   useEffect(() => {
     initialState(props);
   }, [props, initialState]);
+
+  // Without scroll-to-now (the booking page), open the week at the earliest bookable time, an hour above it,
+  // so visitors see the host's day instead of midnight or whatever time it happens to be.
+  const earliestOpenHour = useMemo(() => {
+    let earliest: number | null = null;
+    for (const ranges of Object.values(availableTimeslots ?? {})) {
+      for (const range of ranges) {
+        const start = timezone ? dayjs(range.start).tz(timezone) : dayjs(range.start);
+        const hour = start.hour() + start.minute() / 60;
+        if (earliest === null || hour < earliest) earliest = hour;
+      }
+    }
+    return earliest;
+  }, [availableTimeslots, timezone]);
+  const scrolledToHours = useRef(false);
+  useEffect(() => {
+    if (scrollToCurrentTime || earliestOpenHour === null || scrolledToHours.current || !container.current) return;
+    let scroller: HTMLElement | null = container.current;
+    while (scroller && scroller.scrollHeight <= scroller.clientHeight) scroller = scroller.parentElement;
+    if (!scroller) return;
+    const gridTop =
+      container.current.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    const hoursFromStart = Math.max(0, earliestOpenHour - (startHour || 0) - 1);
+    scroller.scrollTop = gridTop + hoursFromStart * hourSize;
+    scrolledToHours.current = true;
+  }, [scrollToCurrentTime, earliestOpenHour, startHour]);
 
   return (
     <MobileNotSupported>

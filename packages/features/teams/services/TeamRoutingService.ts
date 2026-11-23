@@ -9,6 +9,8 @@ export type RouteRequest = {
     length: number;
     description: string | null;
     schedulingType?: string | null;
+    /** Who hosts the service; null or missing means every member does. */
+    hostIds?: number[] | null;
   }[];
   members: { username: string; name: string }[];
   message: string;
@@ -94,7 +96,7 @@ export class TeamRoutingService {
 
     const decision = await this.deps.router({
       teamName: page.team.name,
-      services: page.services,
+      services: page.services.map(({ hostIds: _hostIds, ...service }) => service),
       members: members.map(({ username, name }) => ({ username, name })),
       message: text,
       now: dayjs(now).tz(zone).format("dddd D MMMM YYYY, HH:mm"),
@@ -132,7 +134,10 @@ export class TeamRoutingService {
     if (start.isBefore(now)) return { start: start.toISOString(), isPast: true, free: [], bookUrl: null };
 
     const end = start.add(service?.length ?? 30, "minute");
-    const candidates = member ? [member] : members;
+    // Only people who host the suggested service can take it, so don't offer anyone else as "free".
+    const hostIds = service?.hostIds?.length ? new Set(service.hostIds) : null;
+    const candidates = member ? [member] : hostIds ? members.filter((m) => hostIds.has(m.id)) : members;
+    if (!candidates.length) return { start: start.toISOString(), isPast: false, free: [], bookUrl: null };
     let freeIds: number[] = [];
     try {
       freeIds = await this.deps.findFreeMembers({
