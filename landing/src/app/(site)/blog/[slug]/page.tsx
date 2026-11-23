@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogArt } from "@/components/blog-art";
 import { CopyLinkButton } from "@/components/copy-link-button";
+import { OnThisPage } from "@/components/on-this-page";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
 import { type Article, articles, type ToolReview } from "@/content/articles";
 import { categoryOf, readingMinutes } from "@/lib/blog";
+import { BLOG_ART, DEFAULT_ART } from "@/content/blog-art";
 import { docSlug } from "@/content/docs";
 import { signupUrl, site } from "@/site.config";
 
@@ -138,7 +141,11 @@ export default async function ArticlePage({ params }: Params) {
           </div>
         </header>
 
-        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="mx-auto mt-12 max-w-[1000px]">
+          <BlogArt art={BLOG_ART[a.slug] ?? DEFAULT_ART} />
+        </div>
+
+        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
           <article className="mx-auto w-full min-w-0 max-w-[720px] lg:mx-0">
             {isReview(a) && (
               <p className="text-faint border-l-2 border-line pl-4 text-[13px] italic leading-relaxed">
@@ -148,10 +155,10 @@ export default async function ArticlePage({ params }: Params) {
             )}
             <div className="mt-6 rounded-xl border border-line bg-surface px-5 py-4">
               <p className="text-faint text-[11px] font-medium uppercase tracking-[0.14em]">The short answer</p>
-              <p className="mt-2 text-[16px] leading-relaxed">{a.answer}</p>
+              <p className="mt-2 text-[17px] leading-relaxed">{a.answer}</p>
             </div>
 
-            <div className="text-fg/85 text-[17px] leading-[1.75]">
+            <div className="text-fg/85 text-[18px] leading-[1.75]">
               {a.sections.map((s) => (
                 <section key={s.heading}>
                   <h2 id={docSlug(s.heading)} className="text-fg mt-14 scroll-mt-24 text-[30px] leading-tight tracking-[-0.02em]">
@@ -240,26 +247,20 @@ export default async function ArticlePage({ params }: Params) {
 
           <aside className="hidden lg:block">
             <div className="sticky top-24 space-y-5">
-              <nav aria-label="On this page" className="rounded-xl border border-line p-4">
-                <p className="text-faint text-[11px] font-medium uppercase tracking-[0.14em]">On this page</p>
-                <ol className="mt-3 space-y-1.5 text-[13px]">
-                  {toc.map((item, i) => (
-                    <li key={item.id} className="flex gap-2">
-                      <span className="text-faint w-5 flex-none tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                      <a href={`#${item.id}`} className="text-muted leading-snug hover:text-fg">{item.label}</a>
-                    </li>
-                  ))}
-                </ol>
-              </nav>
-              <div className="rounded-xl border border-line bg-surface p-5">
-                <p className="font-serif text-[22px] leading-tight">Still comparing scheduling tools?</p>
-                <p className="text-muted mt-2 text-[13px] leading-relaxed">
-                  {site.name} is a free booking link that refills cancelled times from a waitlist and asks clients to confirm.
+              <div className="rounded-xl border border-line bg-surface p-6">
+                <p className="font-serif text-[27px] leading-[1.15]">Still comparing scheduling tools?</p>
+                <p className="text-fg/75 mt-3 text-[15px] leading-relaxed">
+                  {site.name} is a free booking link that refills cancelled times from a waitlist and asks clients to
+                  confirm before the day.
                 </p>
-                <a href={signupUrl} className="bg-brand mt-4 inline-flex h-9 items-center rounded-md px-4 text-[13px] font-medium text-black transition hover:brightness-95">
+                <a
+                  href={signupUrl}
+                  className="bg-brand mt-5 inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-[14px] font-medium text-black transition hover:brightness-95">
                   Try {site.name} free
                 </a>
+                <p className="text-faint mt-2 text-center text-[12px]">No credit card needed</p>
               </div>
+              <OnThisPage items={toc} />
             </div>
           </aside>
         </div>
