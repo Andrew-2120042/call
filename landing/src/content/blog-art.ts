@@ -1,21 +1,21 @@
 import type { BlogArtSpec } from "@/components/blog-art";
 
-// Hero art for each post: three stickers that say what the post is about. Unlisted posts use the default.
+// Each post's hero art tells its own story in three stickers, read left to right. No two posts share a scene.
 export const BLOG_ART: Record<string, BlogArtSpec> = {
-  "best-scheduling-software-2027": { stickers: ["compare", "calendar", "confirm"], labels: ["9 tools tested", "Best picks", "Free plans"], palette: "riso" },
-  "free-meeting-scheduler": { stickers: ["free", "calendar", "envelope"], labels: ["$0 plans", "Unlimited links", "Reminders"], palette: "matcha" },
-  "calendly-alternatives": { stickers: ["compare", "waitlist", "team"], labels: ["8 alternatives", "Waitlists", "Team pricing"], palette: "candy" },
-  "cal-com-alternatives": { stickers: ["compare", "calendar", "team"], labels: ["6 alternatives", "Less setup", "Flat price"], palette: "aqua" },
-  "how-to-get-more-leads": { stickers: ["call", "growth", "calendar"], labels: ["Answer fast", "More leads", "Booked calls"], palette: "sunset" },
-  "how-to-get-clients-on-calls": { stickers: ["call", "confirm", "clock"], labels: ["Book in a minute", "Confirmed", "On time"], palette: "clay" },
-  "booking-app-with-waitlist": { stickers: ["waitlist", "envelope", "confirm"], labels: ["People waiting", "Offer sent", "Slot filled"], palette: "matcha" },
-  "team-scheduling-without-per-seat-pricing": { stickers: ["team", "free", "calendar"], labels: ["10 people", "One price", "Shared page"], palette: "candy" },
-  "booking-software-approve-requests": { stickers: ["envelope", "confirm", "call"], labels: ["Request in", "Approved", "Booked"], palette: "aqua" },
-  "calendly-vs-cal-com": { stickers: ["calendar", "compare", "calendar"], labels: ["Calendly", "Side by side", "Cal.com"], palette: "candy" },
-  "is-calendly-free": { stickers: ["free", "compare", "calendar"], labels: ["Free plan", "Limits", "Upgrades"], palette: "matcha" },
-  "round-robin-scheduling": { stickers: ["team", "clock", "calendar"], labels: ["Your team", "Whoever's free", "One link"], palette: "aqua" },
-  "fill-last-minute-cancellations": { stickers: ["waitlist", "envelope", "calendar"], labels: ["Waitlist", "Offer sent", "Slot filled"], palette: "riso" },
-  "reduce-appointment-no-shows": { stickers: ["clock", "confirm", "envelope"], labels: ["Reminder", "Confirmed", "Or released"], palette: "sunset" },
+  "best-scheduling-software-2027": { stickers: ["compare", "trophy", "calendar"], labels: ["9 tools tested", "Top picks", "Real bookings"], palette: "riso" },
+  "free-meeting-scheduler": { stickers: ["coins", "free", "calendar"], labels: ["No card", "$0 plans", "Unlimited links"], palette: "matcha" },
+  "calendly-alternatives": { stickers: ["calendar", "swap", "waitlist"], labels: ["Calendly", "Switch", "Fills cancellations"], palette: "candy" },
+  "cal-com-alternatives": { stickers: ["gear", "swap", "confirm"], labels: ["Lots of settings", "Switch", "Ready in minutes"], palette: "aqua" },
+  "how-to-get-more-leads": { stickers: ["magnet", "inbox", "growth"], labels: ["Attract", "Requests in", "More leads"], palette: "sunset" },
+  "how-to-get-clients-on-calls": { stickers: ["phone", "video", "confirm"], labels: ["Book a call", "On the call", "They showed up"], palette: "clay" },
+  "booking-app-with-waitlist": { stickers: ["cancelled", "waitlist", "envelope"], labels: ["Cancelled", "Next in line", "Offer sent"], palette: "matcha" },
+  "team-scheduling-without-per-seat-pricing": { stickers: ["team", "coins", "calendar"], labels: ["10 people", "$69 flat", "One team page"], palette: "candy" },
+  "booking-software-approve-requests": { stickers: ["inbox", "summary", "confirm"], labels: ["Request in", "AI summary", "Approved"], palette: "aqua" },
+  "calendly-vs-cal-com": { stickers: ["calendar", "versus", "gear"], labels: ["Calendly", "Head to head", "Cal.com"], palette: "sunset" },
+  "is-calendly-free": { stickers: ["question", "free", "coins"], labels: ["Is it free?", "Free plan", "Paid plans"], palette: "riso" },
+  "round-robin-scheduling": { stickers: ["team", "roundrobin", "calendar"], labels: ["Your team", "Takes turns", "Booked"], palette: "aqua" },
+  "fill-last-minute-cancellations": { stickers: ["cancelled", "envelope", "calendar"], labels: ["Cancelled", "Waitlist offer", "Filled again"], palette: "clay" },
+  "reduce-appointment-no-shows": { stickers: ["bell", "confirm", "clock"], labels: ["Reminder", "Confirmed", "On time"], palette: "sunset" },
 };
 
 export const DEFAULT_ART: BlogArtSpec = { stickers: ["calendar", "waitlist", "confirm"], palette: "riso" };
