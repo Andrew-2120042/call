@@ -79,13 +79,13 @@ export default function UpgradeView() {
 
   const leave = () => (window.history.length > 1 ? router.back() : router.push("/home"));
 
-  const upgrade = async () => {
+  const upgrade = async (target: "pro" | "team") => {
     setBusy(true);
     try {
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ plan: "pro" }),
+        body: JSON.stringify({ plan: target }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message ?? t("something_went_wrong"));
@@ -100,6 +100,8 @@ export default function UpgradeView() {
   const onTrial = !!summary?.onTrial;
   // Someone on the free trial can still subscribe; their paid plan takes over from the trial.
   const canBuy = !!summary?.billingConfigured && (current === "FREE" || onTrial);
+  // Paying Pro customers can move up to Team too; their subscription is switched rather than doubled.
+  const canBuyTeam = !!summary?.billingConfigured && current !== "TEAM";
   const startTrial = async () => {
     setBusy(true);
     const res = await fetch("/api/billing/trial", { method: "POST" });
@@ -204,11 +206,6 @@ export default function UpgradeView() {
                       {t("billing_current_badge")}
                     </span>
                   )}
-                  {plan.id === "TEAM" && !isCurrent && (
-                    <span className="border-subtle text-subtle rounded border px-1.5 py-0.5 text-[11px]">
-                      {t("billing_soon")}
-                    </span>
-                  )}
                 </div>
                 <p className="text-subtle mt-1 min-h-[40px] text-[13px] leading-snug">{t(plan.blurbKey)}</p>
                 <p className="mt-5 flex items-baseline gap-1.5">
@@ -225,7 +222,7 @@ export default function UpgradeView() {
                   {plan.id === "PRO" ? (
                     <button
                       type="button"
-                      onClick={upgrade}
+                      onClick={() => upgrade("pro")}
                       disabled={!canBuy || busy}
                       data-testid="upgrade-pro"
                       className="h-10 w-full rounded-md bg-[#ebf23a] text-[14px] font-medium text-black transition hover:brightness-95 disabled:opacity-50">
@@ -246,18 +243,30 @@ export default function UpgradeView() {
                       {t("trial_start_cta")}
                     </button>
                   ) : null}
-                  {plan.id === "PRO" ? null : (
+                  {plan.id === "TEAM" ? (
+                    <button
+                      type="button"
+                      onClick={() => upgrade("team")}
+                      disabled={!canBuyTeam || busy}
+                      data-testid="upgrade-team"
+                      className="border-emphasis text-emphasis hover:bg-subtle h-10 w-full rounded-md border text-[14px] font-medium transition disabled:opacity-50">
+                      {busy
+                        ? t("loading")
+                        : isCurrent
+                          ? t("upgrade_youre_on_it")
+                          : current === "PRO" && !onTrial
+                            ? t("billing_switch_team")
+                            : t("billing_upgrade_team")}
+                    </button>
+                  ) : null}
+                  {plan.id === "FREE" ? (
                     <button
                       type="button"
                       disabled
                       className="border-subtle text-subtle h-10 w-full rounded-md border text-[14px]">
-                      {isCurrent
-                        ? t("upgrade_youre_on_it")
-                        : plan.id === "TEAM"
-                          ? t("billing_soon")
-                          : t("upgrade_free_forever")}
+                      {isCurrent ? t("upgrade_youre_on_it") : t("upgrade_free_forever")}
                     </button>
-                  )}
+                  ) : null}
                 </div>
 
                 <ul className="border-subtle mt-6 space-y-2.5 border-t pt-5 text-[13px]">

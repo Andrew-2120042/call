@@ -61,7 +61,6 @@ export default function BillingView() {
     price: string;
     per: string;
     features: string[];
-    soon?: boolean;
   }[] = [
     {
       id: "FREE",
@@ -102,7 +101,6 @@ export default function BillingView() {
         t("billing_f_round_robin"),
         t("billing_f_team_page"),
       ],
-      soon: true,
     },
   ];
 
@@ -167,9 +165,6 @@ export default function BillingView() {
                     {t("billing_current_badge")}
                   </span>
                 )}
-                {plan.soon && !isCurrent && (
-                  <span className="bg-subtle rounded-md px-2.5 py-0.5 text-xs">{t("billing_soon")}</span>
-                )}
               </div>
               <p className="mt-3 flex items-baseline" style={{ columnGap: 6 }}>
                 <span className="text-[28px] font-semibold leading-none tracking-tight">{plan.price}</span>
@@ -190,6 +185,19 @@ export default function BillingView() {
                   onClick={() => go("pro", "/api/billing/checkout", { plan: "pro" })}
                   className="mt-6 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-[#121212] transition hover:opacity-90 disabled:opacity-50">
                   {busy === "pro" ? t("loading") : t("billing_upgrade_pro")}
+                </button>
+              )}
+              {plan.id === "TEAM" && !isCurrent && (
+                <button
+                  type="button"
+                  disabled={!summary.billingConfigured || busy === "team"}
+                  onClick={() => go("team", "/api/billing/checkout", { plan: "team" })}
+                  className="border-emphasis mt-6 rounded-md border px-4 py-2.5 text-sm font-semibold transition hover:opacity-90 disabled:opacity-50">
+                  {busy === "team"
+                    ? t("loading")
+                    : current === "PRO" && !onTrial
+                      ? t("billing_switch_team")
+                      : t("billing_upgrade_team")}
                 </button>
               )}
             </div>

@@ -43,6 +43,11 @@ export interface IBillingGateway {
   }): Promise<string>;
   /** Reads a subscription straight from the provider (used on return from checkout). Null if unsupported. */
   getSubscription?(subscriptionId: string): Promise<SubscriptionEvent | null>;
+  /**
+   * Moves an existing subscription to another product (Pro to Team), charging the prorated difference to the
+   * saved card. Returns a payment page only when the provider needs the customer to pay there.
+   */
+  changePlan?(params: { subscriptionId: string; productId: string }): Promise<{ paymentUrl: string | null }>;
   createPortalUrl(params: { userId: number; customerId: string; returnUrl: string }): Promise<string>;
 }
 
@@ -126,7 +131,10 @@ export class PlanService {
   async startCheckout(params: { userId: number; email: string; plan: "pro" | "team" }) {
     if (!this.deps.gateway) throw new ErrorWithCode(ErrorCode.BadRequest, "Billing isn't configured");
     const summary = await this.getPlanSummary(params.userId);
-    if (summary.plan !== NodslotPlan.FREE && !summary.onTrial) {
+    const isPaid = summary.plan !== NodslotPlan.FREE && !summary.onTrial;
+    // A paying Pro customer can move up to Team; any other paid-to-paid move goes through Billing.
+    const isProToTeam = isPaid && summary.plan === NodslotPlan.PRO && params.plan === "team";
+    if (isPaid && !isProToTeam) {
       throw new ErrorWithCode(ErrorCode.BadRequest, "You're already on a paid plan. Manage it from Billing.");
     }
     if (this.deps.canCheckout && !this.deps.canCheckout(params.email)) {
@@ -134,14 +142,29 @@ export class PlanService {
     }
     const productId = this.deps.productIds[params.plan];
     if (!productId) throw new ErrorWithCode(ErrorCode.BadRequest, `The ${params.plan} plan isn't available`);
+    // The success page waits for this plan, so a Pro customer moving to Team isn't greeted as "Pro" again.
+    const successUrl = `${this.deps.webappUrl}/upgrade/success?plan=${params.plan}`;
+    if (isProToTeam) return this.switchToTeam(params.userId, productId, successUrl);
     return this.deps.gateway.createCheckoutUrl({
       productId,
       userId: params.userId,
       email: params.email,
-      successUrl: `${this.deps.webappUrl}/upgrade/success`,
+      successUrl,
       returnUrl: `${this.deps.webappUrl}/upgrade`,
       appUrl: this.deps.webappUrl,
     });
+  }
+
+  private async switchToTeam(userId: number, productId: string, successUrl: string) {
+    const subscription = await this.deps.repository.findByUserId(userId);
+    if (!subscription || !this.deps.gateway?.changePlan) {
+      throw new ErrorWithCode(ErrorCode.BadRequest, "Switch to Team from Settings → Billing.");
+    }
+    const { paymentUrl } = await this.deps.gateway.changePlan({
+      subscriptionId: subscription.polarSubscriptionId,
+      productId,
+    });
+    return paymentUrl ?? `${successUrl}&subscription_id=${encodeURIComponent(subscription.polarSubscriptionId)}`;
   }
 
   /**

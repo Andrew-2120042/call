@@ -247,3 +247,81 @@ describe("confirming a checkout on return", () => {
     await expect(setup(dodoEvent()).confirmCheckout(5, "sub_dodo_1")).rejects.toThrow(/different account/);
   });
 });
+
+describe("Team checkout", () => {
+  const NOW = new Date("2026-11-23T10:00:00Z");
+  const paid = (plan: NodslotPlan): StoredSubscription => ({
+    userId: 4,
+    plan,
+    status: "active",
+    polarSubscriptionId: "sub_dodo_1",
+    polarCustomerId: "cus_1",
+    polarProductId: plan === NodslotPlan.TEAM ? "pdt_team" : "pdt_pro",
+    currentPeriodEnd: new Date("2026-12-23T10:00:00Z"),
+    cancelAtPeriodEnd: false,
+    polarModifiedAt: NOW,
+  });
+  const setup = (existing: StoredSubscription | null, paymentUrl: string | null = null) => {
+    const repository: IPlanSubscriptionRepository = {
+      findByUserId: async () => existing,
+      upsertForUser: async () => undefined,
+      userExists: async () => true,
+      deleteForUser: async () => undefined,
+      clearBrandingRemoval: async () => undefined,
+    };
+    const gateway = {
+      createCheckoutUrl: vi.fn().mockResolvedValue("https://pay/new"),
+      createPortalUrl: vi.fn(),
+      changePlan: vi.fn().mockResolvedValue({ paymentUrl }),
+    };
+    const service = new PlanService({
+      repository,
+      gateway,
+      productIds: { pro: "pdt_pro", team: "pdt_team" },
+      webappUrl: "https://app",
+      now: () => NOW,
+    });
+    return { service, gateway };
+  };
+
+  it("sends a Free user to a new Team checkout that returns to the Team success page", async () => {
+    const { service, gateway } = setup(null);
+    expect(await service.startCheckout({ userId: 4, email: "a@b.c", plan: "team" })).toBe("https://pay/new");
+    expect(gateway.createCheckoutUrl).toHaveBeenCalledWith(
+      expect.objectContaining({ productId: "pdt_team", successUrl: "https://app/upgrade/success?plan=team" })
+    );
+    expect(gateway.changePlan).not.toHaveBeenCalled();
+  });
+
+  it("moves a paying Pro customer's subscription to Team instead of starting a second one", async () => {
+    const { service, gateway } = setup(paid(NodslotPlan.PRO));
+    expect(await service.startCheckout({ userId: 4, email: "a@b.c", plan: "team" })).toBe(
+      "https://app/upgrade/success?plan=team&subscription_id=sub_dodo_1"
+    );
+    expect(gateway.changePlan).toHaveBeenCalledWith({ subscriptionId: "sub_dodo_1", productId: "pdt_team" });
+    expect(gateway.createCheckoutUrl).not.toHaveBeenCalled();
+  });
+
+  it("sends them to the provider's payment page when the switch needs one", async () => {
+    const { service } = setup(paid(NodslotPlan.PRO), "https://pay/difference");
+    expect(await service.startCheckout({ userId: 4, email: "a@b.c", plan: "team" })).toBe("https://pay/difference");
+  });
+
+  it("refuses to sell Team again, or Pro to someone already paying", async () => {
+    await expect(setup(paid(NodslotPlan.TEAM)).service.startCheckout({ userId: 4, email: "a@b.c", plan: "team" })).rejects.toThrow(
+      /already on a paid plan/
+    );
+    await expect(setup(paid(NodslotPlan.PRO)).service.startCheckout({ userId: 4, email: "a@b.c", plan: "pro" })).rejects.toThrow(
+      /already on a paid plan/
+    );
+  });
+
+  it("calls Dodo's change-plan with a prorated charge", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse({ payment_id: "pay_1", payment_link: null }));
+    const gateway = createDodoGateway({ apiKey: "k", environment: "test_mode", fetchImpl });
+    expect(await gateway.changePlan?.({ subscriptionId: "sub_dodo_1", productId: "pdt_team" })).toEqual({ paymentUrl: null });
+    const [calledUrl, init] = fetchImpl.mock.calls[0];
+    expect(calledUrl).toBe("https://test.dodopayments.com/subscriptions/sub_dodo_1/change-plan");
+    expect(JSON.parse(init.body)).toEqual({ product_id: "pdt_team", quantity: 1, proration_billing_mode: "prorated_immediately" });
+  });
+});

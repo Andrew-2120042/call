@@ -10,7 +10,7 @@ export type DodoEnvironment = keyof typeof BASE_URLS;
 
 type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
 
-/** Thin REST client for the two Dodo Payments calls billing needs (checkout session, customer portal session). */
+/** Thin REST client for the Dodo Payments calls billing needs: checkout, reading and changing a subscription, portal. */
 export function createDodoGateway(options: {
   apiKey: string;
   environment: DodoEnvironment;
@@ -57,6 +57,14 @@ export function createDodoGateway(options: {
         data: await response.json(),
       });
       return parsed.success ? toSubscriptionEvent(parsed.data) : null;
+    },
+    async changePlan({ subscriptionId, productId }) {
+      const result = await post<{ payment_link?: string | null }>(
+        `/subscriptions/${encodeURIComponent(subscriptionId)}/change-plan`,
+        // Charge only the difference for the rest of this month; the next renewal is at the Team price.
+        { product_id: productId, quantity: 1, proration_billing_mode: "prorated_immediately" }
+      );
+      return { paymentUrl: result.payment_link ?? null };
     },
     async createPortalUrl({ customerId, returnUrl }) {
       const query = new URLSearchParams({ return_url: returnUrl });

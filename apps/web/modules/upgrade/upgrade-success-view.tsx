@@ -6,7 +6,7 @@ import { Logo } from "@calcom/ui/components/logo";
 import { headingFont } from "@lib/headingFont";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type State = "checking" | "active" | "pending" | "failed";
 type Summary = { plan: "FREE" | "PRO" | "TEAM"; onTrial?: boolean };
@@ -16,6 +16,7 @@ const POLL_MS = 3000;
 const POLL_TRIES = 10;
 
 const UNLOCKED = ["upgrade_success_p1", "upgrade_success_p2", "upgrade_success_p3", "upgrade_success_p4"];
+const UNLOCKED_TEAM = ["upgrade_success_team_p1", "upgrade_success_team_p2", "upgrade_success_team_p3", "upgrade_success_team_p4"];
 
 /** Where checkout sends people back: confirms the payment and says plainly what they now have. */
 export default function UpgradeSuccessView() {
@@ -23,16 +24,18 @@ export default function UpgradeSuccessView() {
   const params = useSearchParams();
   const subscriptionId = params?.get("subscription_id") ?? null;
   const failedAtProvider = params?.get("status") === "failed";
+  // Set when Team was bought: a Pro customer switching is already "paid", so wait for Team itself.
+  const wantsTeam = params?.get("plan") === "team";
   const [state, setState] = useState<State>(failedAtProvider ? "failed" : "checking");
   const [plan, setPlan] = useState<Summary["plan"]>("PRO");
-  const started = useRef(false);
 
   useEffect(() => {
-    // Strict mode runs effects twice in development; one confirmation is enough.
-    if (failedAtProvider || started.current) return;
-    started.current = true;
+    // Confirming is idempotent, so a second run (React strict mode in development) is harmless; skipping it
+    // instead left the page stuck on "Confirming" because the first run had already been cancelled.
+    if (failedAtProvider) return;
     let cancelled = false;
-    const isPaid = (summary: Summary) => summary.plan !== "FREE" && !summary.onTrial;
+    const isPaid = (summary: Summary) =>
+      wantsTeam ? summary.plan === "TEAM" : summary.plan !== "FREE" && !summary.onTrial;
 
     const run = async () => {
       if (subscriptionId) {
@@ -65,7 +68,7 @@ export default function UpgradeSuccessView() {
     return () => {
       cancelled = true;
     };
-  }, [subscriptionId, failedAtProvider]);
+  }, [subscriptionId, failedAtProvider, wantsTeam]);
 
   const planName = t(`billing_plan_${plan.toLowerCase()}`);
 
@@ -93,7 +96,7 @@ export default function UpgradeSuccessView() {
               </h1>
               <p className="text-subtle mt-2 text-[14px] leading-relaxed">{t("upgrade_success_body")}</p>
               <ul className="border-subtle mx-auto mt-6 space-y-2.5 border-t pt-5 text-left text-[14px]">
-                {UNLOCKED.map((key) => (
+                {(plan === "TEAM" ? UNLOCKED_TEAM : UNLOCKED).map((key) => (
                   <li key={key} className="flex items-start gap-2.5">
                     <Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
                     {t(key)}
@@ -102,9 +105,9 @@ export default function UpgradeSuccessView() {
               </ul>
               <div className="mt-8 flex justify-center gap-2">
                 <Link
-                  href="/waitlist"
+                  href={plan === "TEAM" ? "/teams" : "/waitlist"}
                   className="border-subtle text-default hover:bg-subtle inline-flex h-10 items-center rounded-md border px-4 text-[14px]">
-                  {t("upgrade_success_waitlist")}
+                  {t(plan === "TEAM" ? "upgrade_success_create_team" : "upgrade_success_waitlist")}
                 </Link>
                 <Link
                   href="/home"
