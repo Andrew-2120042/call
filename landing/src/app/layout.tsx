@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import type { ReactNode } from "react";
 import { RevealObserver } from "@/components/reveal";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { ThemeSwitch, themePreviewScript } from "@/components/theme-switch";
 import { JsonLd } from "@/components/ui";
 
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         )}
       </head>
       <body className="min-h-screen">
+        <ScrollToTop />
         <RevealObserver />
         {children}
         {showThemeSwitch && <ThemeSwitch />}

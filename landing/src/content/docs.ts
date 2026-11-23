@@ -46,7 +46,7 @@ export const docs: DocPage[] = [
       ] },
       { type: "h2", text: "Plans" },
       { type: "table", head: ["Plan", "Price", "For"], rows: [
-        ["Free", "$0", "One person: unlimited services and bookings, calendar sync, video links, approvals"],
+        ["Free", "$0", "One person: unlimited services and bookings, calendar sync, video links"],
         ["Pro", "$12 a month", "Adds the waitlist, confirm-or-release, request summaries and your own domain"],
         ["Team", "$69 a month", "Up to 10 people, then $10 per extra person: round robin, collective and managed services, team waitlist"],
       ] },
@@ -103,7 +103,7 @@ export const docs: DocPage[] = [
       { type: "h2", text: "Booking questions" },
       { type: "p", text: "Ask anything you need before a booking: short answers, long answers, choices, phone numbers. Questions can be required or optional, and answers show on the booking." },
       { type: "h2", text: "Approvals" },
-      { type: "p", text: "Turn on **Requires confirmation** and each booking arrives as a request in **Bookings → Unconfirmed**. Accept or decline it; the client is told either way. On Pro, each request comes with a short summary of who is asking and why." },
+      { type: "p", text: "Turn on **Requires confirmation** and each booking arrives as a request in **Bookings → Unconfirmed**. Accept or decline it; the client is told either way. Approvals are a Pro feature, and each request comes with a short summary of who is asking and why." },
       { type: "h2", text: "Hiding a service" },
       { type: "p", text: "Switch a service off in the list to hide it from your page. Its link still works for people you send it to directly." },
     ],

@@ -17,7 +17,6 @@ const integrations = [
   { name: "Zoom", logo: "/logos/zoom.svg" },
   { name: "Microsoft Teams", logo: "/logos/microsoft-teams.svg" },
   { name: "Zapier", logo: "/logos/zapier.svg" },
-  { name: "Webhooks", logo: "/logos/webhooks.svg" },
 ];
 
 /** The product in one gesture, set inside the headline: a cancelled time turning back into a booking. */
@@ -68,8 +67,8 @@ export default function Home() {
             Cancelled slots <SlotFlip /> fill themselves
           </h1>
           <p className="text-fg/80 mx-auto mt-6 max-w-[46ch] text-[15px] leading-snug">
-            One booking link that offers every cancelled time to your waitlist, checks in before no-shows, and keeps your
-            calendar full while you work.
+            Your booking link with a waitlist built in. When a client cancels, the next person waiting gets that time
+            automatically, and clients confirm before the day so no-shows don&apos;t leave gaps.
           </p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />
@@ -130,7 +129,7 @@ export default function Home() {
             flip
             eyebrow="Approve requests"
             title="Read every request before you say yes"
-            body="Approvals are free. On Pro, each request arrives with a short summary of who is asking and whether they're a fit."
+            body="Read who is asking before a booking lands on your calendar. Each request arrives with a short summary of who they are and whether they're a fit."
             points={[
               { title: "Ask what you need.", body: "Unlimited booking questions on every plan." },
               { title: "Decide in seconds.", body: "Long answers become a few clear lines, with spam flagged." },
@@ -216,7 +215,7 @@ export default function Home() {
           </p>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z", title: "Free where it counts", body: "Unlimited services, bookings, approvals and questions on the free plan." },
+              { icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z", title: "Free where it counts", body: "Unlimited services, bookings and booking questions on the free plan." },
               { icon: "M5 5h14v14H5zM8.5 9.5h7M8.5 12h7M8.5 14.5h4", title: "AI that reads for you", body: "Every request summarised, spam flagged, and an Assistant that sets up and answers for you." },
               { icon: "M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4", title: "Built to refill", body: "Waitlists, confirm-or-release and rebooking offers turn gaps back into hours." },
               { icon: "M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z", title: "Your data stays yours", body: "Calendar access is only used to find free times and add bookings. Leave any time." },
@@ -298,8 +297,8 @@ export default function Home() {
               Everything you need to get booked costs
             </h2>
             <p className="text-muted mt-4 max-w-[44ch] text-[15px]">
-              Unlimited services, bookings, approvals, questions and calendar sync. Pro adds the parts that refill your
-              calendar, for $12 a month.
+              Unlimited services, bookings, questions and calendar sync. Pro adds approvals and the parts that refill
+              your calendar, for $12 a month.
             </p>
           </div>
           <p className="text-ink font-serif text-[120px] font-normal leading-[0.85] tracking-[-0.04em] sm:text-[240px]">$0</p>

@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections";
 import { BreadcrumbLd, ButtonLink, Container, Eyebrow } from "@/components/ui";
 import { comparisons } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
+
+// The long-form guide that compares every alternative, for readers who want more than this one-on-one.
+const GUIDES: Record<string, string> = {
+  "calendly-alternative": "/blog/calendly-alternatives",
+  "cal-com-alternative": "/blog/cal-com-alternatives",
+};
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -56,6 +63,13 @@ export default async function ComparePage({ params }: Params) {
         </div>
         <p className="text-faint mt-3 text-xs">Based on public information at the time of writing. Check each product for current details.</p>
         <p className="mt-10 leading-relaxed">{c.verdict}</p>
+        {GUIDES[c.slug] && (
+          <p className="mt-4">
+            <Link href={GUIDES[c.slug]} className="underline underline-offset-[3px]">
+              Read the full guide: every {c.competitor} alternative compared
+            </Link>
+          </p>
+        )}
         <div className="mt-8 flex gap-3">
           <ButtonLink href={signupUrl}>Switch for free</ButtonLink>
           <ButtonLink href="/pricing" variant="secondary">Pricing</ButtonLink>

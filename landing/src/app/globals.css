@@ -107,17 +107,6 @@ body {
 }
 
 /* The tools strip scrolls sideways forever; the list is rendered twice so the loop is seamless. */
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-.marquee:hover {
-  animation-play-state: paused;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 /* The hero stage's markers pulse outwards in turn. */
 .stage-pulse {
@@ -180,7 +169,7 @@ body {
   .booked-b,
   .accordion-progress,
   .accordion-visual,
-  .marquee {
+  .marquee-track {
     animation: none;
   }
   .accordion-progress {

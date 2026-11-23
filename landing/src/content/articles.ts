@@ -1,4 +1,5 @@
 import { site } from "@/site.config";
+import { guides2027 } from "./guides-2027";
 // Long-form articles written for specific searches. Competitor facts were checked against their official
 // pricing pages on the date in `checked`; re-check before editing numbers.
 
@@ -28,7 +29,7 @@ const CHECKED = "November 15, 2026";
 const calendlyPricing = { label: `Calendly pricing page (checked ${CHECKED})`, url: "https://calendly.com/pricing" };
 const calPricing = { label: `Cal.com pricing page (checked ${CHECKED})`, url: "https://cal.com/pricing" };
 
-export const articles: Article[] = [
+const earlierArticles: Article[] = [
   {
     slug: "calendly-vs-cal-com",
     title: "Calendly vs Cal.com (2027): pricing, free plans and which to pick",
@@ -46,7 +47,7 @@ export const articles: Article[] = [
           head: ["", "Calendly", "Cal.com", `${site.name}`],
           rows: [
             ["Free plan", "1 event type, 1 calendar, one-on-one only", "1 user, unlimited links and calendars", "1 user, unlimited services and calendars"],
-            ["Approve bookings first", "Not built in", "Yes (free)", "Yes (free)"],
+            ["Approve bookings first", "Not built in", "Yes (free)", "Yes (Pro, with an AI summary)"],
             ["Automated reminders", "Paid plans", "Free plan includes notifications", "1 free; more on Pro"],
             ["Round robin", "Teams, $16/seat/month", "Teams, $12/user/month", "Team, $69/month for up to 10"],
             ["Waitlist that refills cancellations", "No", "No", "Yes (Pro)"],
@@ -168,7 +169,7 @@ export const articles: Article[] = [
       {
         heading: "Free alternatives with more",
         paragraphs: [
-          `If one event type isn't enough, Cal.com and ${site.name} both offer unlimited booking links for one person on their free plans. ${site.name} also includes approvals and unlimited booking questions for free.`,
+          `If one event type isn't enough, Cal.com and ${site.name} both offer unlimited booking links for one person on their free plans. ${site.name} also includes unlimited booking questions for free.`,
         ],
       },
     ],
@@ -296,3 +297,7 @@ export const articles: Article[] = [
     sources: [],
   },
 ];
+
+// The 2027 guides come first; the long "best schedulers" guide replaces the earlier short version of that page.
+const replaced = new Set(guides2027.map((guide) => guide.slug));
+export const articles: Article[] = [...guides2027, ...earlierArticles.filter((article) => !replaced.has(article.slug))];

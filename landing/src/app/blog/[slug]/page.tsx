@@ -37,30 +37,52 @@ export default async function ArticlePage({ params }: Params) {
   return (
     <>
       <article className="mx-auto max-w-[760px] px-5 pt-10 pb-16 sm:px-10 lg:pt-14">
-        <h1 className="text-[34px] font-normal leading-tight tracking-[-0.02em] sm:text-[42px]">{a.title}</h1>
-        <p className="text-faint mt-1.5 text-[11px]">
-          Updated <time dateTime={a.updated}>{formatDate(a.updated)}</time>
+        <p className="text-faint text-[11px] font-medium uppercase tracking-[0.16em]">Guide</p>
+        <h1 className="mt-3 text-[36px] font-normal leading-[1.08] tracking-[-0.02em] sm:text-[48px]">{a.title}</h1>
+        <p className="text-faint mt-4 text-[13px]">
+          By the {site.name} team · Published <time dateTime={a.published}>{formatDate(a.published)}</time> · Updated{" "}
+          <time dateTime={a.updated}>{formatDate(a.updated)}</time>
         </p>
-        <p className="text-faint mt-8 text-[10px] font-medium uppercase tracking-[0.16em]">Guide</p>
-        <div className="mt-3 rounded-lg border border-line bg-surface px-4 py-3">
-          <p className="text-faint text-[10px] font-medium uppercase tracking-[0.14em]">Short answer</p>
-          <p className="mt-1.5 text-[13px] leading-relaxed">{a.answer}</p>
+        <div className="mt-8 rounded-lg border border-line bg-surface px-5 py-4">
+          <p className="text-faint text-[11px] font-medium uppercase tracking-[0.14em]">Short answer</p>
+          <p className="mt-2 text-[16px] leading-relaxed">{a.answer}</p>
         </div>
-        <div className="text-muted text-[13px] leading-[1.7]">
+        {a.sections.length > 3 && (
+          <nav className="mt-6 rounded-lg border border-line px-5 py-4" aria-label="Table of contents">
+            <p className="text-faint text-[11px] font-medium uppercase tracking-[0.14em]">In this guide</p>
+            <ol className="mt-2 list-decimal space-y-1 ps-5 text-[14px]">
+              {a.sections.map((s) => (
+                <li key={s.heading}>
+                  <a href={`#${docSlug(s.heading)}`} className="hover:text-fg text-muted underline-offset-[3px] hover:underline">
+                    {s.heading}
+                  </a>
+                </li>
+              ))}
+              {a.faq.length > 0 && (
+                <li>
+                  <a href="#questions" className="hover:text-fg text-muted underline-offset-[3px] hover:underline">
+                    Questions
+                  </a>
+                </li>
+              )}
+            </ol>
+          </nav>
+        )}
+        <div className="text-fg/85 text-[16px] leading-[1.75]">
           {a.sections.map((s) => (
             <section key={s.heading}>
-              <h2 id={docSlug(s.heading)} className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">
+              <h2 id={docSlug(s.heading)} className="text-fg mt-12 scroll-mt-24 text-[26px] font-normal leading-tight tracking-[-0.015em]">
                 {s.heading}
               </h2>
-              {s.paragraphs?.map((p) => <p key={p} className="mt-3">{p}</p>)}
+              {s.paragraphs?.map((p) => <p key={p} className="mt-4">{p}</p>)}
               {s.bullets && (
-                <ul className="mt-3 list-disc space-y-1.5 ps-5 marker:text-line-strong">
+                <ul className="mt-4 list-disc space-y-2 ps-5 marker:text-line-strong">
                   {s.bullets.map((b) => <li key={b} className="ps-1">{b}</li>)}
                 </ul>
               )}
               {s.table && (
-                <div className="mt-4 overflow-x-auto rounded-lg border border-line">
-                  <table className="w-full min-w-[520px] text-left text-xs">
+                <div className="mt-5 overflow-x-auto rounded-lg border border-line">
+                  <table className="w-full min-w-[560px] text-left text-[13px] leading-snug">
                     <thead className="text-faint bg-surface">
                       <tr>{s.table.head.map((h) => <th key={h} scope="col" className="px-3 py-2 font-medium">{h}</th>)}</tr>
                     </thead>
@@ -84,11 +106,11 @@ export default async function ArticlePage({ params }: Params) {
           ))}
           {a.faq.length > 0 && (
             <section>
-              <h2 id="questions" className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">Questions</h2>
+              <h2 id="questions" className="text-fg mt-12 scroll-mt-24 text-[26px] font-normal leading-tight tracking-[-0.015em]">Questions</h2>
               {a.faq.map((f) => (
                 <div key={f.q}>
-                  <h3 className="font-sans text-fg mt-5 text-[13px] font-medium">{f.q}</h3>
-                  <p className="mt-1">{f.a}</p>
+                  <h3 className="font-sans text-fg mt-6 text-[17px] font-medium">{f.q}</h3>
+                  <p className="mt-1.5">{f.a}</p>
                 </div>
               ))}
             </section>
@@ -96,7 +118,7 @@ export default async function ArticlePage({ params }: Params) {
           {a.sources.length > 0 && (
             <section className="mt-10 border-t border-line pt-5">
               <h2 className="font-sans text-faint text-[10px] font-medium uppercase tracking-[0.14em]">Sources</h2>
-              <ul className="mt-2 space-y-1 text-xs">
+              <ul className="mt-2 space-y-1 text-[13px]">
                 {a.sources.map((s) => (
                   <li key={s.url}>
                     <a href={s.url} rel="nofollow noopener" target="_blank" className="underline decoration-line-strong underline-offset-[3px] hover:text-fg">

@@ -35,6 +35,10 @@ export const features: Feature[] = [
       { q: "Do I have to approve waitlist bookings?", a: "No. A claimed slot becomes a normal booking. If the service needs approval, the claim goes through the same approval as any other request." },
       { q: "How long does someone have to claim an offer?", a: "Two hours by default, and never past the start of the slot. After that the offer moves to the next person." },
       { q: "Can I see who is waiting?", a: "Yes. The Waitlist page in your dashboard lists everyone waiting and who has an open offer." },
+      { q: "Can a client wait for any time that day?", a: "Yes. Clients can wait for one specific time, any time that day, or anything earlier than the booking they already have." },
+      { q: "Does the waitlist work for team services?", a: "Yes. On the Team plan, a freed time on any host can go to the next person waiting for that service." },
+      { q: "Which plan includes the waitlist?", a: "Pro ($12 a month) and Team. The 14-day Pro trial includes it, no card needed." },
+      { q: "Do clients need an account to join?", a: "No. They leave their name and email on your booking page and claim the time from the email." },
     ],
   },
   {
@@ -43,7 +47,7 @@ export const features: Feature[] = [
     keyword: "Approve bookings before they are confirmed",
     title: "Approve every booking before it's on your calendar",
     summary:
-      "Turn on approvals for any service. Requests land in your dashboard and you accept or decline each one. Free on every plan.",
+      "Turn on approvals for any service. Requests land in your dashboard with a short AI summary, and you accept or decline each one.",
     problem:
       "Some meetings shouldn't be booked instantly. You want to read who is asking and why before giving away your time.",
     how: [
@@ -51,10 +55,13 @@ export const features: Feature[] = [
       { title: "You review it in one place", body: "Requests sit in the Unconfirmed tab with everything the client told you." },
       { title: "Accept or decline", body: "Accepting confirms the booking and sends invites. Declining frees the time and lets the client know." },
     ],
-    plan: "Free",
+    plan: "Pro",
     faq: [
-      { q: "Is this really free?", a: "Yes. Approvals and unlimited booking questions are part of the free plan." },
-      { q: "Can I get help deciding?", a: "On Pro, every request gets a short AI summary of who is asking and what they want, so you can decide faster." },
+      { q: "Which plan includes approvals?", a: "Approvals are part of Pro ($12 a month) and Team. The 14-day Pro trial includes them, no card needed." },
+      { q: "What happens to the time while I decide?", a: "It's held for the client, so nobody else can book it while the request is waiting." },
+      { q: "Is the client told when I accept or decline?", a: "Yes. Accepting confirms the booking and sends the calendar invite; declining frees the time and lets the client know." },
+      { q: "Do I get help deciding?", a: "Every request gets a short AI summary of who is asking and what they want, whether they look like a fit, and whether it looks like spam." },
+      { q: "Can I approve only some services?", a: "Yes. Approvals are switched on per service, so an intro call can book instantly while a full session waits for you." },
     ],
   },
   {
@@ -75,6 +82,10 @@ export const features: Feature[] = [
     faq: [
       { q: "Does the client need an account?", a: "No. The link in the email is all they need." },
       { q: "Does this work with the waitlist?", a: "Yes. A released booking frees the slot, and the next person on the waitlist is offered it." },
+      { q: "When does the client get asked to confirm?", a: "You choose the deadline, for example 24 hours before the start. The confirm email goes out ahead of that deadline with a one-click button." },
+      { q: "Do I have to release unconfirmed bookings?", a: "No. Release is optional. Without it you're simply told who hasn't confirmed, and you decide what to do." },
+      { q: "Is this better than a reminder?", a: "A reminder tells a client the session is coming. A confirmation tells you whether they're actually coming, while there's still time to fill the slot." },
+      { q: "Which plan includes it?", a: "Pro ($12 a month) and Team." },
     ],
   },
   {
@@ -92,7 +103,13 @@ export const features: Feature[] = [
       { title: "You decide faster", body: "Accept or decline straight from the request." },
     ],
     plan: "Pro",
-    faq: [{ q: "Is the client told AI was used?", a: "The summary is only shown to you, inside your dashboard." }],
+    faq: [
+      { q: "What does the summary include?", a: "A sentence or two on who is asking and what they want, a fit rating (good, unclear or poor), a spam check, and a short reply you can send." },
+      { q: "Which bookings get a summary?", a: "Requests waiting for your approval, so you can decide faster. They appear next to the request in your dashboard." },
+      { q: "Can I reply to the client from there?", a: "Yes. Edit the suggested reply if you like and send it straight from the request." },
+      { q: "Is the client told AI was used?", a: "The summary is only shown to you, inside your dashboard." },
+      { q: "Which plan includes it?", a: "Pro ($12 a month) and Team, together with approvals." },
+    ],
   },
   {
     slug: "team-scheduling",
@@ -112,6 +129,9 @@ export const features: Feature[] = [
     faq: [
       { q: "Do invited members need to pay?", a: "No. The Team plan covers everyone in the team, up to 10 people." },
       { q: "Can a host always be included in round robin?", a: "Yes. Mark any host as 'always attends' and they join every booking while the others rotate." },
+      { q: "What's the difference between round robin and collective?", a: "Round robin books one host who is free, spreading bookings across the team. Collective only offers times when every host is free, for meetings everyone attends." },
+      { q: "Can clients book a specific person?", a: "Yes. The team page can list members so clients book them directly, or you can hide that and only show team services." },
+      { q: "Can I set a service up once for everyone?", a: "Yes. Managed services copy one setup to every member, and you choose which settings members can change." },
     ],
   },
 ];
@@ -136,7 +156,7 @@ export const comparisons: Comparison[] = [
     rows: [
       { label: "Free plan", us: "Unlimited services and calendars", them: "1 event type, 1 calendar, one-on-one only" },
       { label: "Waitlist that refills cancellations", us: "Built in (Pro)", them: "Not built in; needs webhooks or another tool" },
-      { label: "Approve bookings before confirming", us: "Free", them: "Not built in" },
+      { label: "Approve bookings before confirming", us: "Built in (Pro)", them: "Not built in" },
       { label: "Confirm-or-release for no-shows", us: "Built in (Pro)", them: "Reminders on paid plans" },
       { label: "Round robin for teams", us: "$69/month for up to 10 people", them: "Teams plan, $16 per seat/month" },
       { label: "Calendar sync, video links, reminders", us: "Yes", them: "Yes" },
@@ -151,7 +171,8 @@ export const comparisons: Comparison[] = [
     summary:
       `Cal.com is powerful and very configurable. ${site.name} keeps the scheduling core and drops the setup work, with a calm dashboard and features aimed at filling your calendar.`,
     rows: [
-      { label: "Approvals and unlimited questions", us: "Free", them: "Free" },
+      { label: "Unlimited booking questions", us: "Free", them: "Free" },
+      { label: "Approvals with an AI summary of each request", us: "Built in (Pro)", them: "Approvals only" },
       { label: "Waitlist for taken times", us: "Built in (Pro)", them: "Not built in" },
       { label: "Confirm-or-release", us: "Built in (Pro)", them: "Not built in" },
       { label: "AI summaries of booking requests", us: "Built in (Pro)", them: "Not built in" },
@@ -248,7 +269,6 @@ export const pricing = [
       "Unlimited services and bookings",
       "Google Calendar and Outlook sync",
       "Google Meet, Zoom and Microsoft Teams links",
-      "Approve bookings before they're confirmed",
       "Unlimited booking questions",
       "One reminder email per booking",
       "Embed booking on your website",
@@ -263,6 +283,7 @@ export const pricing = [
     highlight: true,
     items: [
       "Everything in Free",
+      "Approve bookings before they're confirmed",
       "Waitlist that refills cancelled slots",
       "Confirm-or-release for no-shows",
       "AI summaries of booking requests",
@@ -297,7 +318,7 @@ export const pricingCompare: { group: string; rows: { label: string; values: [st
     rows: [
       { label: "Services and bookings", values: ["Unlimited", "Unlimited", "Unlimited"] },
       { label: "Booking questions", values: ["Unlimited", "Unlimited", "Unlimited"] },
-      { label: "Approve requests before booking", values: [true, true, true] },
+      { label: "Approve requests before booking", values: [false, true, true] },
       { label: "AI summary of each request", values: [false, true, true] },
       { label: "Embed on your website", values: [true, true, true] },
       { label: "Your own domain", values: [false, true, true] },
@@ -344,7 +365,7 @@ export const homeFaq = [
   },
   {
     q: "Is the free plan really free?",
-    a: "Yes. No trial and no card. One person gets unlimited services and bookings, calendar sync, video links, approvals and booking questions, for as long as you like.",
+    a: "Yes. No trial and no card. One person gets unlimited services and bookings, calendar sync, video links and unlimited booking questions, for as long as you like.",
   },
   {
     q: "How does the waitlist fill a cancelled slot?",
