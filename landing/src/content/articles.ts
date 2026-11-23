@@ -3,16 +3,33 @@ import { guides2027 } from "./guides-2027";
 // Long-form articles written for specific searches. Competitor facts were checked against their official
 // pricing pages on the date in `checked`; re-check before editing numbers.
 
+/** One product reviewed inside a "best of" or "alternatives" article. */
+export type ToolReview = {
+  name: string;
+  platforms: string;
+  bestFor: string;
+  pros: string[];
+  cons: string[];
+  pricing: string;
+  url: string;
+};
+
+export type BlogCategory = "Best apps" | "Alternatives" | "Comparisons" | "Grow your practice" | "How-to";
+
 export type Section = {
   heading: string;
   paragraphs?: string[];
   bullets?: string[];
   table?: { head: string[]; rows: string[][] };
+  /** A tool review: rendered as a card with best-for, pros, cons and pricing before the paragraphs. */
+  tool?: ToolReview;
 };
 
 export type Article = {
   slug: string;
   title: string;
+  /** Blog section the article is listed under; defaults to How-to. */
+  category?: BlogCategory;
   description: string;
   /** The search this page answers. */
   keyword: string;
@@ -32,6 +49,7 @@ const calPricing = { label: `Cal.com pricing page (checked ${CHECKED})`, url: "h
 const earlierArticles: Article[] = [
   {
     slug: "calendly-vs-cal-com",
+    category: "Comparisons",
     title: "Calendly vs Cal.com (2027): pricing, free plans and which to pick",
     description:
       "Calendly vs Cal.com compared on free plans, team pricing, round robin and reminders, with a third option if cancellations and no-shows are your real problem.",
@@ -94,6 +112,7 @@ const earlierArticles: Article[] = [
   },
   {
     slug: "best-scheduling-software-2027",
+    category: "Best apps",
     title: "The best scheduling software for 2027, and who each one is for",
     description:
       `An honest guide to the best online scheduling tools for 2027: Calendly, Cal.com, SavvyCal, Acuity, Zoho Bookings and ${site.name}, with the job each one does best.`,
@@ -149,6 +168,7 @@ const earlierArticles: Article[] = [
   },
   {
     slug: "is-calendly-free",
+    category: "Comparisons",
     title: "Is Calendly free? What the free plan includes in 2027",
     description:
       "Calendly's free plan explained: one event type, one calendar, one-on-one meetings only. What's missing, what it costs to upgrade, and free alternatives.",
@@ -181,6 +201,7 @@ const earlierArticles: Article[] = [
   },
   {
     slug: "round-robin-scheduling",
+    category: "How-to",
     title: "Round robin scheduling: what it is and how to set it up",
     description:
       "Round robin scheduling explained: how bookings rotate across a team, when to use it instead of collective scheduling, and how to set it up with one booking link.",
@@ -225,6 +246,7 @@ const earlierArticles: Article[] = [
   },
   {
     slug: "fill-last-minute-cancellations",
+    category: "Grow your practice",
     title: "How to fill last-minute cancellations with an appointment waitlist",
     description:
       "A practical way to refill cancelled appointments automatically: let clients join a waitlist for taken times and offer freed slots to the first in line.",
@@ -267,6 +289,7 @@ const earlierArticles: Article[] = [
   },
   {
     slug: "reduce-appointment-no-shows",
+    category: "Grow your practice",
     title: "How to reduce appointment no-shows (without chasing clients)",
     description:
       "Practical ways to reduce no-shows: reminders at the right times, one-click attendance confirmation, and releasing unconfirmed slots to a waitlist.",

@@ -105,6 +105,13 @@ export function articleMd(a: Article) {
   const sections = a.sections.map((s) =>
     [
       `## ${s.heading}`,
+      s.tool &&
+        [
+          `**${s.tool.name}** (${s.tool.platforms}). Best for: ${s.tool.bestFor}.`,
+          `Pros: ${s.tool.pros.join("; ")}.`,
+          `Cons: ${s.tool.cons.join("; ")}.`,
+          `Pricing: ${s.tool.pricing}`,
+        ].join("\n\n"),
       ...(s.paragraphs ?? []),
       s.bullets?.map((b) => `- ${b}`).join("\n"),
       s.table && table(s.table.head, s.table.rows),
