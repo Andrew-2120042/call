@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogArt } from "@/components/blog-art";
 import { CopyLinkButton } from "@/components/copy-link-button";
-import { OnThisPage } from "@/components/on-this-page";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
 import { type Article, articles, type ToolReview } from "@/content/articles";
@@ -100,12 +99,11 @@ export default async function ArticlePage({ params }: Params) {
     ...articles.filter((x) => x.slug !== a.slug && categoryOf(x) === category),
     ...articles.filter((x) => x.slug !== a.slug && categoryOf(x) !== category),
   ].slice(0, 3);
-  const toc = [...a.sections.map((s) => ({ id: docSlug(s.heading), label: s.heading })), ...(a.faq.length ? [{ id: "questions", label: "Questions" }] : [])];
 
   return (
     <>
-      <div className="mx-auto max-w-[1160px] px-5 pt-8 sm:px-8">
-        <nav aria-label="Breadcrumb" className="text-faint flex flex-wrap items-center gap-1.5 text-[12px]">
+      <div className="mx-auto max-w-[1480px] px-5 pt-8 sm:px-8">
+        <nav aria-label="Breadcrumb" className="text-faint mx-auto flex max-w-[720px] flex-wrap items-center gap-1.5 text-[12px]">
           <Link href="/" className="hover:text-fg">Home</Link>
           <span aria-hidden>›</span>
           <Link href="/blog" className="hover:text-fg">Blog</Link>
@@ -145,8 +143,9 @@ export default async function ArticlePage({ params }: Params) {
           <BlogArt art={BLOG_ART[a.slug] ?? DEFAULT_ART} />
         </div>
 
-        <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <article className="mx-auto w-full min-w-0 max-w-[720px] lg:mx-0">
+        {/* The article sits in the middle of the page; the call to action rides in the right-hand gutter. */}
+        <div className="mt-14 grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,720px)_minmax(0,1fr)]">
+          <article className="mx-auto w-full min-w-0 max-w-[720px] xl:col-start-2">
             {isReview(a) && (
               <p className="text-faint border-l-2 border-line pl-4 text-[13px] italic leading-relaxed">
                 We test every tool we write about by setting it up and booking with it. {site.name} is our own product, so
@@ -245,10 +244,10 @@ export default async function ArticlePage({ params }: Params) {
             )}
           </article>
 
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 space-y-5">
-              <div className="rounded-xl border border-line bg-surface p-6">
-                <p className="font-serif text-[27px] leading-[1.15]">Still comparing scheduling tools?</p>
+          <aside className="hidden xl:col-start-3 min-[1360px]:block">
+            <div className="sticky top-24 max-w-[264px]">
+              <div className="rounded-xl border border-line bg-surface p-5 2xl:p-6">
+                <p className="font-serif text-[24px] leading-[1.15] 2xl:text-[27px]">Still comparing scheduling tools?</p>
                 <p className="text-fg/75 mt-3 text-[15px] leading-relaxed">
                   {site.name} is a free booking link that refills cancelled times from a waitlist and asks clients to
                   confirm before the day.
@@ -260,13 +259,12 @@ export default async function ArticlePage({ params }: Params) {
                 </a>
                 <p className="text-faint mt-2 text-center text-[12px]">No credit card needed</p>
               </div>
-              <OnThisPage items={toc} />
             </div>
           </aside>
         </div>
 
         {related.length > 0 && (
-          <section className="mt-20 border-t border-line pt-12">
+          <section className="mx-auto mt-20 max-w-[1160px] border-t border-line pt-12">
             <h2 className="text-[28px] tracking-[-0.02em]">Related articles</h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
               {related.map((r) => (
