@@ -17,8 +17,17 @@ export function Logo({ className = "" }: { className?: string }) {
   );
 }
 
-const productMenu = [
-  ...features.map((f) => ({ href: `/features/${f.slug}`, label: f.name, hint: f.title })),
+// Every feature, in the order a host meets them: fill the calendar, protect it, then grow a team.
+const featuresMenu = [
+  { href: "/features/waitlist-scheduling", label: "Waitlist", hint: "When someone cancels, the next person waiting is offered the time" },
+  { href: "/features/no-show-protection", label: "Confirm-or-release", hint: "Clients confirm before the day, or the time frees up for someone else" },
+  { href: "/features/booking-approval", label: "Approvals", hint: "Read every request before it lands on your calendar" },
+  { href: "/features/ai-booking-summaries", label: "AI request summaries", hint: "Who's asking, what they want, and whether they're a fit" },
+  { href: "/blog/fill-last-minute-cancellations", label: "Rebooking emails", hint: "A one-click new time for every client who cancels" },
+  { href: "/features/team-scheduling", label: "Team scheduling", hint: "Round robin and one team page, $69 a month for up to 10 people" },
+  { href: "/docs/integrations#calendars", label: "Calendar sync", hint: "Google Calendar and Outlook, so you're never double booked" },
+  { href: "/docs/developers#embed-on-your-site", label: "Embed on your website", hint: "Put your booking page on any site with one snippet" },
+  { href: "/docs/get-started#move-from-calendly", label: "Import from Calendly", hint: "Bring your services and hours across in a minute" },
 ];
 const resourcesMenu = [
   { href: "/docs", label: "Docs", hint: `How every part of ${site.name} works` },
@@ -45,12 +54,12 @@ export function Header() {
             <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
               <NavMenus
                 menus={[
-                  { label: "Product", items: productMenu },
+                  { label: "Features", items: featuresMenu },
                   { label: "Resources", items: resourcesMenu },
                 ]}
               />
-              <Link href="/features/team-scheduling" className="text-muted hover:text-fg text-[13px] transition">Teams</Link>
-              <Link href="/pricing" className="text-muted hover:text-fg text-[13px] transition">Pricing</Link>
+              <Link href="/features/team-scheduling" className="text-muted hover:text-fg text-[14px] transition">Teams</Link>
+              <Link href="/pricing" className="text-muted hover:text-fg text-[14px] transition">Pricing</Link>
             </nav>
           </div>
           <div className="flex items-center gap-2">
@@ -69,7 +78,7 @@ export function Header() {
               </summary>
               <nav className="absolute right-0 mt-2 w-56 rounded-2xl border border-line bg-surface p-2 shadow-xl" aria-label="Mobile">
                 {[
-                  { href: "/#product", label: "Product" },
+                  { href: "/#product", label: "Features" },
                   { href: "/features/team-scheduling", label: "Teams" },
                   { href: "/pricing", label: "Pricing" },
                   { href: "/docs", label: "Docs" },
@@ -90,7 +99,7 @@ export function Header() {
 
 export function Footer() {
   const columns = [
-    { title: "Product", links: [...features.map((f) => ({ href: `/features/${f.slug}`, label: f.name })), { href: "/pricing", label: "Pricing" }] },
+    { title: "Features", links: [...features.map((f) => ({ href: `/features/${f.slug}`, label: f.name })), { href: "/pricing", label: "Pricing" }] },
     { title: "Built for", links: audiences.map((a) => ({ href: `/for/${a.slug}`, label: a.plural[0].toUpperCase() + a.plural.slice(1) })) },
     { title: "Compare", links: comparisons.map((c) => ({ href: `/compare/${c.slug}`, label: `${c.competitor} alternative` })) },
     { title: "Guides", links: articles.slice(0, 6).map((a) => ({ href: `/blog/${a.slug}`, label: a.keyword[0].toUpperCase() + a.keyword.slice(1) })) },

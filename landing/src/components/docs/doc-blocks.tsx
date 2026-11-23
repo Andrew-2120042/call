@@ -41,19 +41,19 @@ export function Inline({ text }: { text: string }) {
 
 export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
   return (
-    <div className="text-muted text-[13px] leading-[1.7]">
+    <div className="text-fg/80 text-[17px] leading-[1.75]">
       {blocks.map((block, i) => {
         switch (block.type) {
           case "p":
             return <p key={i} className="mt-3"><Inline text={block.text} /></p>;
           case "h2":
             return (
-              <h2 key={i} id={docSlug(block.text)} className="font-sans text-fg mt-9 scroll-mt-6 text-sm font-semibold">
+              <h2 key={i} id={docSlug(block.text)} className="font-sans text-fg mt-9 scroll-mt-6 text-[24px] font-semibold">
                 {block.text}
               </h2>
             );
           case "h3":
-            return <h3 key={i} className="font-sans text-fg mt-6 text-[13px] font-medium">{block.text}</h3>;
+            return <h3 key={i} className="font-sans text-fg mt-7 text-[19px] font-semibold">{block.text}</h3>;
           case "steps":
             return (
               <ol key={i} className="mt-3 list-decimal space-y-1.5 ps-5 marker:text-faint">
@@ -69,7 +69,7 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
           case "table":
             return (
               <div key={i} className="mt-4 overflow-x-auto rounded-lg border border-line">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left text-[15px]">
                   <thead className="text-faint bg-surface">
                     <tr>{block.head.map((h) => <th key={h} className="px-3 py-2 font-medium">{h}</th>)}</tr>
                   </thead>
@@ -95,7 +95,7 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
             );
           case "note":
             return (
-              <p key={i} className="mt-4 rounded-lg border border-line bg-surface px-4 py-3 text-xs">
+              <p key={i} className="mt-4 rounded-lg border border-line bg-surface px-4 py-3 text-[15px]">
                 <Inline text={block.text} />
               </p>
             );
@@ -105,7 +105,7 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
                 <div className="overflow-hidden rounded-lg border border-line bg-surface">
                   <Image src={block.src} alt={block.alt} width={2560} height={1600} sizes="(min-width: 1024px) 680px, 100vw" quality={85} className="h-auto w-full" />
                 </div>
-                {block.caption && <figcaption className="text-faint mt-2 text-center text-[11px]">{block.caption}</figcaption>}
+                {block.caption && <figcaption className="text-faint mt-2 text-center text-[13px]">{block.caption}</figcaption>}
               </figure>
             );
           case "changes":
@@ -114,8 +114,8 @@ export function DocBlocks({ blocks }: { blocks: DocBlock[] }) {
                 {block.items.map((c) => (
                   <li key={c.title} className="relative ps-5 pb-6">
                     <span className="bg-line-strong absolute -start-[3.5px] top-1.5 h-1.5 w-1.5 rounded-full" />
-                    <p className="text-faint text-[11px]">{c.date}</p>
-                    <p className="text-fg mt-0.5 text-[13px] font-medium">{c.title}</p>
+                    <p className="text-faint text-[13px]">{c.date}</p>
+                    <p className="text-fg mt-0.5 text-[16px] font-medium">{c.title}</p>
                     <p className="mt-0.5">{c.body}</p>
                   </li>
                 ))}

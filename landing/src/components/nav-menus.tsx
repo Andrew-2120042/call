@@ -35,21 +35,21 @@ export function NavMenus({ menus }: { menus: MenuGroup[] }) {
               type="button"
               aria-expanded={isOpen}
               onClick={() => setOpen(isOpen ? null : menu.label)}
-              className={`flex items-center gap-1 py-4 text-[13px] transition ${isOpen ? "text-fg" : "text-muted hover:text-fg"}`}>
+              className={`flex items-center gap-1 py-4 text-[14px] transition ${isOpen ? "text-fg" : "text-muted hover:text-fg"}`}>
               {menu.label}
               <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden className={`opacity-60 transition ${isOpen ? "rotate-180" : ""}`}>
                 <path d="M2 3.5l3 3 3-3" stroke="currentColor" strokeWidth="1.3" fill="none" strokeLinecap="round" />
               </svg>
             </button>
             <div
-              className={`absolute left-1/2 top-full z-50 w-80 -translate-x-1/2 pt-1 transition ${
+              className={`absolute left-1/2 top-full z-50 w-[380px] -translate-x-1/2 pt-1 transition ${
                 isOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
               }`}>
               <div className="rounded-2xl border border-line bg-card p-2 shadow-2xl shadow-black/10">
                 {menu.items.map((item) => (
                   <Link key={item.href} href={item.href} onClick={() => setOpen(null)} className="hover:bg-surface block rounded-xl px-3 py-2.5 transition">
-                    <span className="block text-[13px] font-medium">{item.label}</span>
-                    <span className="text-faint mt-0.5 block truncate text-xs">{item.hint}</span>
+                    <span className="block text-[15px] font-medium">{item.label}</span>
+                    <span className="text-muted mt-0.5 block text-[13px] leading-snug">{item.hint}</span>
                   </Link>
                 ))}
               </div>

@@ -61,22 +61,22 @@ export function SideNav({
   return (
     <>
       <div className="flex items-center justify-between border-b border-line px-4 py-3 lg:hidden">
-        <Link href={homeHref} className="flex items-center gap-2 text-[13px] font-semibold">
+        <Link href={homeHref} className="flex items-center gap-2 text-[16px] font-semibold">
           <Mark /> {siteName} {label}
         </Link>
-        <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="text-muted rounded-md border border-line px-2.5 py-1 text-xs">
+        <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="text-muted rounded-md border border-line px-2.5 py-1 text-[15px]">
           {open ? "Close" : "Menu"}
         </button>
       </div>
       <aside
-        className={`${open ? "block" : "hidden"} border-b border-line lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-60 lg:flex-none lg:flex-col lg:border-b-0 lg:border-r`}>
+        className={`${open ? "block" : "hidden"} border-b border-line lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-72 lg:flex-none lg:flex-col lg:border-b-0 lg:border-r`}>
         <div className="hidden px-4 pt-5 lg:block">
-          <Link href={homeHref} className="flex items-center gap-2 text-[13px] font-semibold">
+          <Link href={homeHref} className="flex items-center gap-2 text-[16px] font-semibold">
             <Mark /> {siteName} {label}
           </Link>
         </div>
         <div className="px-3 pt-4">
-          <Link href="/" className="text-faint hover:text-muted flex items-center gap-1.5 px-1 text-xs transition">
+          <Link href="/" className="text-faint hover:text-muted flex items-center gap-1.5 px-1 text-[15px] transition">
             <span aria-hidden>←</span> Back to site
           </Link>
           <input
@@ -85,7 +85,7 @@ export function SideNav({
             onChange={(e) => setQuery(e.target.value)}
             placeholder={`Search ${label}`}
             aria-label={`Search ${label}`}
-            className="placeholder:text-faint mt-3 w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-xs outline-none focus:border-line-strong"
+            className="placeholder:text-faint mt-3 w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-[15px] outline-none focus:border-line-strong"
           />
         </div>
         <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label={label}>
@@ -96,7 +96,7 @@ export function SideNav({
                 <li key={p.href}>
                   <Link
                     href={p.href}
-                    className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition ${active ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"}`}>
+                    className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-[15px] transition ${active ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"}`}>
                     <Icon name={p.icon} />
                     {p.title}
                   </Link>
@@ -104,7 +104,7 @@ export function SideNav({
                     <ul className="mb-2 mt-1 space-y-0.5 border-s border-line ms-[15px] ps-3">
                       {p.headings.map((h) => (
                         <li key={h}>
-                          <a href={`#${docSlug(h)}`} className="text-faint hover:text-muted block py-0.5 text-[11px] transition">
+                          <a href={`#${docSlug(h)}`} className="text-faint hover:text-muted block py-0.5 text-[13px] transition">
                             {h}
                           </a>
                         </li>
@@ -114,10 +114,10 @@ export function SideNav({
                 </li>
               );
             })}
-            {shown.length === 0 && <li className="text-faint px-2 py-1.5 text-xs">Nothing matches “{query}”.</li>}
+            {shown.length === 0 && <li className="text-faint px-2 py-1.5 text-[15px]">Nothing matches “{query}”.</li>}
           </ul>
         </nav>
-        <div className="border-t border-line px-4 py-3 text-[11px]">
+        <div className="border-t border-line px-4 py-3 text-[13px]">
           <p className="text-muted">Need help?</p>
           <a href={`mailto:${supportEmail}`} className="text-faint hover:text-muted transition">
             {supportEmail}
