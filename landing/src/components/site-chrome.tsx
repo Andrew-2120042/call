@@ -17,18 +17,6 @@ export function Logo({ className = "" }: { className?: string }) {
   );
 }
 
-// Every feature, in the order a host meets them: fill the calendar, protect it, then grow a team.
-const featuresMenu = [
-  { href: "/features/waitlist-scheduling", label: "Waitlist", hint: "When someone cancels, the next person waiting is offered the time" },
-  { href: "/features/no-show-protection", label: "Confirm-or-release", hint: "Clients confirm before the day, or the time frees up for someone else" },
-  { href: "/features/booking-approval", label: "Approvals", hint: "Read every request before it lands on your calendar" },
-  { href: "/features/ai-booking-summaries", label: "AI request summaries", hint: "Who's asking, what they want, and whether they're a fit" },
-  { href: "/blog/fill-last-minute-cancellations", label: "Rebooking emails", hint: "A one-click new time for every client who cancels" },
-  { href: "/features/team-scheduling", label: "Team scheduling", hint: "Round robin and one team page, $69 a month for up to 10 people" },
-  { href: "/docs/integrations#calendars", label: "Calendar sync", hint: "Google Calendar and Outlook, so you're never double booked" },
-  { href: "/docs/developers#embed-on-your-site", label: "Embed on your website", hint: "Put your booking page on any site with one snippet" },
-  { href: "/docs/get-started#move-from-calendly", label: "Import from Calendly", hint: "Bring your services and hours across in a minute" },
-];
 const resourcesMenu = [
   { href: "/docs", label: "Docs", hint: `How every part of ${site.name} works` },
   { href: "/docs/changelog", label: "Changelog", hint: "What's new, every week" },
@@ -47,14 +35,15 @@ export function Header() {
           </Link>
         </Container>
       </div>
-      <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-xl">
+      {/* Solid, not a backdrop blur: Safari repaints a blurred sticky header on every scroll frame, which made pages lag. */}
+      <header className="sticky top-0 z-40 border-b border-line bg-bg">
         <Container className="flex h-14 items-center justify-between gap-4">
           <div className="flex items-center gap-8">
             <Logo />
             <nav className="hidden items-center gap-6 md:flex" aria-label="Main">
+              <Link href="/features" className="text-muted hover:text-fg text-[14px] transition">Features</Link>
               <NavMenus
                 menus={[
-                  { label: "Features", items: featuresMenu },
                   { label: "Resources", items: resourcesMenu },
                 ]}
               />
@@ -78,7 +67,7 @@ export function Header() {
               </summary>
               <nav className="absolute right-0 mt-2 w-56 rounded-2xl border border-line bg-surface p-2 shadow-xl" aria-label="Mobile">
                 {[
-                  { href: "/#product", label: "Features" },
+                  { href: "/features", label: "Features" },
                   { href: "/features/team-scheduling", label: "Teams" },
                   { href: "/pricing", label: "Pricing" },
                   { href: "/docs", label: "Docs" },

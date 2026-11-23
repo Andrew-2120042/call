@@ -239,6 +239,7 @@ body {
 }
 .marquee-track {
   animation: marquee 40s linear infinite;
+  will-change: transform;
 }
 .marquee:hover .marquee-track {
   animation-play-state: paused;

@@ -18,7 +18,7 @@ export function Window({ title, children, className = "" }: { title?: string; ch
 /** Small floating card used to annotate a product shot (an email, a notification, a status). */
 export function FloatCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-xl border border-line-strong bg-card/95 p-3.5 text-xs shadow-xl shadow-black/10 backdrop-blur ${className}`}>
+    <div className={`rounded-xl border border-line-strong bg-card p-3.5 text-xs shadow-xl shadow-black/10 ${className}`}>
       {children}
     </div>
   );
