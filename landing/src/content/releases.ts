@@ -20,18 +20,28 @@ export type Release = {
 
 export const releases: Release[] = [
   {
-    slug: "v2-3",
-    version: "v2.3",
+    slug: "v3-0",
+    version: "v3.0",
     date: "2026-11-24",
-    title: "Calbee v2.3: Team checkout, lunch breaks, free tools & more",
-    intro: "A new name, a way to buy Team, and a lot of small things that make your week easier to set up.",
+    title: "Calbee v3.0: The launch. Everything you need for meetings, now free",
+    intro: "Our biggest release yet. Everything you need to book meetings is now free, for everyone, forever. The advanced extras live on Pro, so you only pay if you want them.",
     highlights: [
+      { sticker: "free", label: "Free for everyone" },
       { sticker: "team", label: "Team checkout" },
       { sticker: "clock", label: "Lunch breaks" },
       { sticker: "calendar", label: "Outlook sync" },
-      { sticker: "free", label: "Free tools" },
     ],
     sections: [
+      {
+        heading: "Everything you need, free",
+        body: "No trial clock, no booking limits. The free plan covers what most people need to run their calendar.",
+        bullets: ["Unlimited services and bookings", "Google Calendar and Outlook sync", "A reminder on every booking", "A one-click rebook email when someone cancels", "Unlimited booking questions, embed on your site, import from Calendly"],
+      },
+      {
+        heading: "Advanced extras on Pro",
+        body: "$12 a month, with a 14-day trial and no card.",
+        bullets: ["A waitlist that refills cancelled times", "Confirm-or-release for no-shows", "Approvals with an AI summary of every request", "The assistant that reschedules when you say yes"],
+      },
       { heading: "Meet Calbee", body: "Our new name. Same product, same booking links, nothing to change on your side." },
       {
         heading: "Team checkout",
