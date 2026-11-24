@@ -71,6 +71,7 @@ export default function BillingView() {
         t("billing_f_unlimited"),
         t("billing_f_questions"),
         t("billing_f_approvals"),
+        t("billing_f_rebook_free"),
         t("billing_f_reminders"),
         t("billing_f_waitlist_one"),
         t("billing_f_apps"),

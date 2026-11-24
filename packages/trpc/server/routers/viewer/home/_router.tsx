@@ -3,7 +3,7 @@ import { router } from "../../../trpc";
 import { ZApplySetupInputSchema } from "./applySetup.schema";
 import { ZHomeCalendarInputSchema } from "./calendar.schema";
 import { ZPeekInputSchema } from "./peek.schema";
-import { ZSetSessionValueInputSchema } from "./setSessionValue.schema";
+import { ZSetServicePricesInputSchema } from "./setServicePrices.schema";
 
 export const homeRouter = router({
   get: authedProcedure.query(async ({ ctx }) => {
@@ -26,9 +26,9 @@ export const homeRouter = router({
     const { getMoneySavedService } = await import("@calcom/features/money-saved/lib/getMoneySavedService");
     return getMoneySavedService().getSummary(ctx.user.id);
   }),
-  setSessionValue: authedProcedure.input(ZSetSessionValueInputSchema).mutation(async ({ ctx, input }) => {
+  setServicePrices: authedProcedure.input(ZSetServicePricesInputSchema).mutation(async ({ ctx, input }) => {
     const { getMoneySavedService } = await import("@calcom/features/money-saved/lib/getMoneySavedService");
-    await getMoneySavedService().setSessionValue(ctx.user.id, input.value);
+    await getMoneySavedService().setServicePrices(ctx.user.id, input.prices);
     return { ok: true };
   }),
   applySetup: authedProcedure.input(ZApplySetupInputSchema).mutation(async ({ ctx, input }) => {

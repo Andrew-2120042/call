@@ -5843,13 +5843,17 @@
   "money_saved_title": "Saved this month",
   "money_saved_line": "This month Calbee {{parts}}.",
   "money_saved_empty": "When the waitlist fills a cancelled time or a client rebooks after cancelling, Calbee adds it up here.",
-  "money_saved_kept": "kept, at ${{price}} a session",
-  "money_saved_price_label": "Your usual price per session",
-  "money_saved_edit_price": "Change your session price",
+  "money_saved_kept": "kept this month",
   "money_saved_refilled_one": "refilled {{count}} cancelled session from your waitlist",
   "money_saved_refilled_other": "refilled {{count}} cancelled sessions from your waitlist",
   "money_saved_rebooked_one": "won back {{count}} client who cancelled",
   "money_saved_rebooked_other": "won back {{count}} clients who cancelled",
   "money_saved_caught_one": "caught {{count}} no-show before the day",
-  "money_saved_caught_other": "caught {{count}} no-shows before the day"
+  "money_saved_caught_other": "caught {{count}} no-shows before the day",
+  "money_saved_kept_partial": "kept so far; {{count}} more saved sessions have no price yet",
+  "money_saved_set_prices": "Set service prices",
+  "money_saved_edit_prices": "Edit prices",
+  "money_saved_prices_help": "What each service is worth to you, so Calbee can add up what it saved. Only you see this.",
+  "money_saved_service_count": "\u00b7 {{count}} saved",
+  "billing_f_rebook_free": "One-click rebooking when a client cancels"
 }

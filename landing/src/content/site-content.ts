@@ -417,6 +417,7 @@ export const pricing = [
       "Google Meet, Zoom and Microsoft Teams links",
       "Unlimited booking questions",
       "Approve requests before they're booked",
+      "New times offered when a client cancels, so they rebook in one click",
       "Waitlist on one service",
       "Buffers, daily limits and group sessions",
       "Embed, Zapier, HubSpot and Salesforce",
