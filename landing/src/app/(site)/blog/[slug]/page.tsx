@@ -11,6 +11,11 @@ import { categoryOf, readingMinutes } from "@/lib/blog";
 import { docSlug } from "@/content/docs";
 import { signupUrl, site } from "@/site.config";
 
+// Posts where a blueprint drawing (scripts/anatomy/blog-figures.mjs) says more than an app screenshot.
+// Bump when the drawings are rebuilt, so browsers fetch the new files instead of a cached copy.
+const FIGURE_VERSION = "dd8ded1e";
+const BLOG_FIGURES: Record<string, string> = { "free-meeting-scheduler": "calendar" };
+
 type Params = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
@@ -158,7 +163,14 @@ export default async function ArticlePage({ params }: Params) {
         </header>
 
         <div className="mx-auto mt-12 max-w-[1000px]">
-          <ReleaseShot image={pitchFor(a.slug).shot} priority />
+          {BLOG_FIGURES[a.slug] ? (
+            <figure className="mx-auto max-w-[720px] overflow-hidden rounded-2xl border border-line bg-[#131313]">
+              {/* eslint-disable-next-line @next/next/no-img-element -- a static SVG drawing, nothing to optimise */}
+              <img src={`/blog-figures/${BLOG_FIGURES[a.slug]}.svg?v=${FIGURE_VERSION}`} alt="" className="block h-auto w-full" />
+            </figure>
+          ) : (
+            <ReleaseShot image={pitchFor(a.slug).shot} priority />
+          )}
         </div>
 
         {/* The article sits in the middle of the page; the call to action rides in the right-hand gutter. */}
