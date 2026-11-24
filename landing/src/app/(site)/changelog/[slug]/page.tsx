@@ -23,12 +23,6 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-const AI_LINKS = [
-  { name: "ChatGPT", url: (u: string) => `https://chatgpt.com/?q=${encodeURIComponent(`Summarise this release: ${u}`)}` },
-  { name: "Claude", url: (u: string) => `https://claude.ai/new?q=${encodeURIComponent(`Summarise this release: ${u}`)}` },
-  { name: "Perplexity", url: (u: string) => `https://www.perplexity.ai/search?q=${encodeURIComponent(`Summarise this release: ${u}`)}` },
-];
-
 const H2 = "text-fg scroll-mt-24 text-[32px] leading-tight tracking-[-0.02em]";
 const LIST = "mt-5 list-disc space-y-2.5 ps-6 marker:text-line-strong";
 
@@ -57,14 +51,6 @@ export default async function ReleasePage({ params }: Params) {
         <p className="text-faint mt-6 text-[14px]">
           By the {site.name} team · {releaseDate(r.date, r.dateLabel)} · Issue #{r.issue}
         </p>
-        <div className="text-muted mt-4 flex flex-wrap items-center gap-2 text-[13px]">
-          <span>Summarise with AI:</span>
-          {AI_LINKS.map((ai) => (
-            <a key={ai.name} href={ai.url(url)} target="_blank" rel="noopener" className="rounded-full border border-line px-3 py-1 hover:border-line-strong">
-              Open in {ai.name}
-            </a>
-          ))}
-        </div>
         {r.image && <div className="mt-9"><ReleaseShot image={r.image} priority /></div>}
       </div>
 

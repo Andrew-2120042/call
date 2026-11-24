@@ -74,11 +74,6 @@ export default function Home() {
             </svg>
             No credit card required
           </p>
-          <p className="text-faint mt-2 text-[11px]">
-            By signing up, I agree to {site.name}&apos;s{" "}
-            <Link href="/terms" className="underline">Terms of Service</Link> and{" "}
-            <Link href="/privacy" className="underline">Privacy Policy</Link>.
-          </p>
           <PreviewSocialProof />
         </Container>
       </section>
