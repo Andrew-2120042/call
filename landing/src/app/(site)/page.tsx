@@ -334,26 +334,23 @@ export default function Home() {
         </Container>
       </section>
 
-      <Faq items={homeFaq} />
-
-      {/* The money problem in the reader's own words, then their own number. */}
-      <section className="border-t border-line py-24 sm:py-28">
+      {/* The money problem in a glance: four leaks and the reader's own yearly number. */}
+      <section className="border-t border-line py-24">
         <Container>
-          <div className="max-w-[46rem]">
+          <div className="mx-auto max-w-[40rem] text-center">
             <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Sound familiar?</p>
-            <h2 className="mt-3 text-[34px] leading-[1.1] tracking-[-0.02em] sm:text-[48px]">
-              Your calendar was full. Your bank account wasn't.
+            <h2 className="mt-3 text-[34px] leading-[1.1] tracking-[-0.02em] sm:text-[46px]">
+              Your calendar was full. Your bank account wasn&apos;t.
             </h2>
-            <p className="text-fg/70 mt-4 text-[18px] leading-relaxed">
-              Every booking tool gets you booked, then stops. These are the four ways coaches, therapists, tutors and
-              trainers say they lose money every week.
-            </p>
+            <p className="text-fg/70 mt-4 text-[17px]">Most booking tools get you booked, then stop. {site.name} keeps the money.</p>
           </div>
           <div className="mt-12">
             <MoneyLeaks />
           </div>
         </Container>
       </section>
+
+      <Faq items={homeFaq} />
 
       {/* Closing banner: the one white block on the page, like Apollo's bright one. */}
       <section className="pb-24 pt-8">
