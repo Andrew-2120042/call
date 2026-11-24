@@ -223,6 +223,8 @@ const nextConfig = (phase: string): NextConfig => {
 
   return {
     output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
+    // Development only: lets a custom domain mapped to localhost load the app, for testing book.example.com locally.
+    allowedDevOrigins: process.env.ALLOWED_DEV_ORIGINS?.split(",").filter(Boolean),
     serverExternalPackages: [
       "deasync",
       "http-cookie-agent",
