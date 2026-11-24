@@ -6,6 +6,7 @@ import { AudienceCarousel } from "@/components/audience-carousel";
 import { HoodPanel } from "@/components/graphics";
 import { FeatureRow, JobVisual } from "@/components/home-parts";
 import { ApprovalMock, NoShowMock, RebookMock, TeamMock, WaitlistMock } from "@/components/product-mocks";
+import { MoneyLeaks } from "@/components/money-leaks";
 import { Faq } from "@/components/sections";
 import { Container, JsonLd } from "@/components/ui";
 import { audiences, homeFaq } from "@/content/site-content";
@@ -57,12 +58,12 @@ export default function Home() {
             <span className="bg-brand rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-black">New</span>
             Calbee launches v3.0
           </Link>
-          <h1 className="mx-auto max-w-[20ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
-            Where every booking starts with one link
+          <h1 className="mx-auto max-w-[18ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
+            Stop losing money to cancellations and no‑shows
           </h1>
-          <p className="text-fg/80 mx-auto mt-6 max-w-[52ch] text-[17px] leading-snug">
-            Your free times, one link, booked in a few clicks. Built-in AI summaries for every booking request,
-            and AI rescheduling when you ask.
+          <p className="text-fg/80 mx-auto mt-6 max-w-[56ch] text-[18px] leading-snug">
+            A free booking link that refills cancelled sessions from your waitlist, catches no-shows the day before,
+            and wins back clients who cancel. With AI that reads every request for you.
           </p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />
@@ -97,6 +98,25 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* The money problem in the reader's own words, then their own number. */}
+      <section className="border-t border-line py-24 sm:py-28">
+        <Container>
+          <div className="max-w-[46rem]">
+            <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Sound familiar?</p>
+            <h2 className="mt-3 text-[34px] leading-[1.1] tracking-[-0.02em] sm:text-[48px]">
+              Your calendar was full. Your bank account wasn't.
+            </h2>
+            <p className="text-fg/70 mt-4 text-[18px] leading-relaxed">
+              Every booking tool gets you booked, then stops. These are the four ways coaches, therapists, tutors and
+              trainers say they lose money every week.
+            </p>
+          </div>
+          <div className="mt-12">
+            <MoneyLeaks />
+          </div>
+        </Container>
       </section>
 
       {/* Feature rows: product on a grey stage, words and points beside it, alternating sides. */}
@@ -260,11 +280,6 @@ export default function Home() {
                 title: "Group sessions",
                 body: "Let several people book the same time, for group coaching, classes or workshops, with a seat limit you choose.",
                 visual: <HoodPanel title="Group coaching" rows={[[null, "Seats", "8 per session"], [null, "Booked", "5 of 8"], [null, "Attendees", "Hidden from each other"]]} />,
-              },
-              {
-                title: "Up to five reminders",
-                body: "Remind clients a week, two days, a day, two hours or an hour before. Every plan, every service.",
-                visual: <HoodPanel title="Reminders" rows={[[null, "1 day before", "Email, with Confirm button"], [null, "2 hours before", "Email"], [null, "Sent", "Once, in their time zone"]]} />,
               },
               {
                 title: "Zapier, HubSpot and Salesforce",

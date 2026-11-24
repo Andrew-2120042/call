@@ -50,10 +50,10 @@ export const releases: Release[] = [
       {
         heading: "Everything you need, free",
         paragraphs: [
-          "No trial clock and no booking limits. Make as many services as you like, share one link, and let clients pick a time that works for both of you. Bookings land straight on your Google or Outlook calendar, and every client gets up to five reminders before the day.",
+          "No trial clock and no booking limits. Make as many services as you like, share one link, and let clients pick a time that works for both of you. Bookings land straight on your Google or Outlook calendar, and every client gets a reminder before the day.",
           "When someone cancels, we don't just let the time go. They get an email with new times and can rebook in one click, so a cancellation becomes a reschedule instead of a lost client.",
         ],
-        bullets: ["Unlimited services, bookings and calendars", "Approve requests before they're booked", "Up to 5 reminder emails per booking", "A waitlist on one service", "A one-click rebook email when someone cancels", "Unlimited booking questions, an embed for your website, and import from Calendly"],
+        bullets: ["Unlimited services, bookings and calendars", "Approve requests before they're booked", "A waitlist on one service", "A one-click rebook email when someone cancels", "Unlimited booking questions, an embed for your website, and import from Calendly"],
         image: SHOTS.publicPage,
         cta: { label: "Make your booking page", href: `${APP}/signup` },
       },

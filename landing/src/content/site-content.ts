@@ -417,7 +417,6 @@ export const pricing = [
       "Google Meet, Zoom and Microsoft Teams links",
       "Unlimited booking questions",
       "Approve requests before they're booked",
-      "Up to 5 reminder emails per booking",
       "Waitlist on one service",
       "Buffers, daily limits and group sessions",
       "Embed, Zapier, HubSpot and Salesforce",
@@ -518,7 +517,7 @@ export const homeFaq = [
   },
   {
     q: "Is the free plan really free?",
-    a: "Yes. No trial and no card. One person gets unlimited services, bookings and calendars, approvals, up to 5 reminders per booking, a waitlist on one service and unlimited booking questions, for as long as you like.",
+    a: "Yes. No trial and no card. One person gets unlimited services, bookings and calendars, approvals, reminders, a waitlist on one service and unlimited booking questions, for as long as you like.",
   },
   {
     q: "How does the waitlist fill a cancelled slot?",
