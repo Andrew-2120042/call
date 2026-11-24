@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlogArt } from "@/components/blog-art";
 import { PromoBanner, PromoNote, pitchFor } from "@/components/blog-promo";
+import { ReleaseShot } from "@/components/release-shot";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
 import { type Article, articles, type ToolReview } from "@/content/articles";
 import { categoryOf, readingMinutes } from "@/lib/blog";
-import { BLOG_ART, DEFAULT_ART } from "@/content/blog-art";
 import { docSlug } from "@/content/docs";
 import { signupUrl, site } from "@/site.config";
 
@@ -146,7 +145,7 @@ export default async function ArticlePage({ params }: Params) {
         </header>
 
         <div className="mx-auto mt-12 max-w-[1000px]">
-          <BlogArt art={BLOG_ART[a.slug] ?? DEFAULT_ART} />
+          <ReleaseShot image={pitchFor(a.slug).shot} priority />
         </div>
 
         {/* The article sits in the middle of the page; the call to action rides in the right-hand gutter. */}

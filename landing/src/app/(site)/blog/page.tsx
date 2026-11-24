@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BlogArt } from "@/components/blog-art";
+import Image from "next/image";
+import { pitchFor } from "@/components/blog-promo";
 import type { Article } from "@/content/articles";
-import { BLOG_ART, DEFAULT_ART } from "@/content/blog-art";
 import { articles } from "@/content/articles";
 import { docSlug } from "@/content/docs";
 import { BLOG_CATEGORIES, categoryOf, readingMinutes } from "@/lib/blog";
@@ -20,7 +20,9 @@ function Card({ a, large = false }: { a: Article; large?: boolean }) {
     <Link
       href={`/blog/${a.slug}`}
       className={`group flex flex-col rounded-xl border border-line p-4 transition hover:border-line-strong ${large ? "bg-surface sm:grid sm:grid-cols-[1.1fr_1fr] sm:items-center sm:gap-10 sm:p-6" : ""}`}>
-      <BlogArt art={BLOG_ART[a.slug] ?? DEFAULT_ART} compact />
+      <div className="aspect-[16/9] overflow-hidden rounded-lg border border-line bg-surface">
+        <Image src={pitchFor(a.slug).shot.src} alt={pitchFor(a.slug).shot.alt} width={800} height={450} sizes="(min-width: 1024px) 400px, 100vw" className="h-full w-full object-cover object-left-top" />
+      </div>
       <div className={large ? "mt-5 sm:mt-0" : "mt-4 flex flex-1 flex-col px-1 pb-1"}>
       <p className="text-faint text-[11px] font-medium uppercase tracking-[0.12em]">{categoryOf(a)}</p>
       <p className={`mt-3 font-serif leading-[1.12] tracking-[-0.015em] group-hover:underline ${large ? "text-[34px] sm:text-[44px]" : "text-[22px]"}`}>
