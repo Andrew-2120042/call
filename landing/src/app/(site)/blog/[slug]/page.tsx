@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PromoBanner, PromoNote, pitchFor } from "@/components/blog-promo";
 import { ReleaseShot } from "@/components/release-shot";
-import { CopyLinkButton } from "@/components/copy-link-button";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
 import { type Article, articles, type ToolReview } from "@/content/articles";
@@ -167,23 +166,6 @@ export default async function ArticlePage({ params }: Params) {
           <p className="text-faint mt-6 text-[13px]">
             By the {site.name} team · <time dateTime={a.updated}>{formatDate(a.updated)}</time> · {minutes} min read
           </p>
-          <div className="mt-4 flex justify-center gap-2 text-[12px]">
-            <a
-              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(a.title)}`}
-              target="_blank"
-              rel="noopener"
-              className="rounded-full border border-line px-3 py-1 hover:border-line-strong">
-              Share on X
-            </a>
-            <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
-              target="_blank"
-              rel="noopener"
-              className="rounded-full border border-line px-3 py-1 hover:border-line-strong">
-              LinkedIn
-            </a>
-            <CopyLinkButton url={url} />
-          </div>
         </header>
 
         <div className="mx-auto mt-12 max-w-[1000px]">
