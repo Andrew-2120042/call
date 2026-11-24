@@ -11,7 +11,7 @@ import { NotificationsBell } from "./NotificationsBell";
 import { useSidebar } from "./sidebarStore";
 import { UserDropdown } from "./user-dropdown/UserDropdown";
 
-/** Desktop top bar: search (⌘K), the Assistant, help and the account menu, above every page. */
+/** Desktop top bar: search (⌘K), the Agent, help and the account menu, above every page. */
 export function AppTopBar({ sidebarDrawer }: { sidebarDrawer?: boolean }) {
   const { status } = useSession();
   if (status !== "authenticated") return null;
@@ -58,7 +58,7 @@ function AppTopBarContent({ sidebarDrawer }: { sidebarDrawer?: boolean }) {
           onClick={toggleAssistant}
           aria-pressed={assistantOpen}
           data-testid="topbar-assistant"
-          className="bg-inverted text-inverted flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium">
+          className="text-subtle hover:text-emphasis hover:bg-subtle aria-pressed:bg-subtle aria-pressed:text-emphasis flex h-7 items-center gap-1.5 rounded-md px-2 text-[13px] font-medium transition">
           {t("assistant_page_title")}
         </button>
         <NotificationsBell />
