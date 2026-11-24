@@ -54,8 +54,8 @@ export default function Home() {
             Where every booking starts with one link
           </h1>
           <p className="text-fg/80 mx-auto mt-6 max-w-[52ch] text-[17px] leading-snug">
-            Your free times, one link, booked in a few clicks. Built-in AI summarises every booking request and
-            reschedules meetings when you ask.
+            Your free times, one link, booked in a few clicks. Built-in AI summaries for every booking request,
+            and AI rescheduling when you ask.
           </p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />
