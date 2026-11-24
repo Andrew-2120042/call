@@ -104,6 +104,11 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
           <span className="text-emphasis font-medium">{t("booking_rules_waitlist")}</span>
           {!features.waitlist && proBadge}
           <span className="text-subtle block text-sm">{t("booking_rules_waitlist_help")}</span>
+          {limits.maxWaitlistServices !== null && (
+            <span className="text-subtle mt-1 block text-sm">
+              {t("booking_rules_waitlist_free_limit", { count: limits.maxWaitlistServices })}
+            </span>
+          )}
           {query.data.waitlistEnabled && (
             <span className="text-subtle mt-1 block text-sm">
               {t("booking_rules_waitlist_link")}{" "}
@@ -134,6 +139,7 @@ export function BookingRulesCard({ eventTypeId }: { eventTypeId: number }) {
               <span>
                 <span className="text-emphasis block">
                   {t(mode === "IN_ORDER" ? "waitlist_offer_mode_in_order" : "waitlist_offer_mode_everyone")}
+                  {mode === "EVERYONE" && !features.waitlistEveryone && proBadge}
                 </span>
                 <span className="text-subtle block">
                   {t(

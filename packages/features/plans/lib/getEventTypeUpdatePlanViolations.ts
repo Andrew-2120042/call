@@ -16,6 +16,7 @@ export async function getEventTypeUpdatePlanViolations(params: {
   const touchesPaidSettings =
     params.update.requiresConfirmation !== undefined ||
     params.update.waitlistEnabled !== undefined ||
+    params.update.waitlistOfferMode !== undefined ||
     params.update.attendeeConfirmationHours !== undefined ||
     params.update.attendeeReminderMinutes !== undefined ||
     params.update.bookingFields !== undefined;
@@ -26,6 +27,9 @@ export async function getEventTypeUpdatePlanViolations(params: {
     select: {
       requiresConfirmation: true,
       waitlistEnabled: true,
+      waitlistOfferMode: true,
+      userId: true,
+      teamId: true,
       attendeeConfirmationHours: true,
       attendeeReminderMinutes: true,
       bookingFields: true,
@@ -35,5 +39,15 @@ export async function getEventTypeUpdatePlanViolations(params: {
 
   const planAccountId = (await getServicePlanAccountId(params.eventTypeId)) ?? params.userId;
   const plan = await getPlanService().getEffectivePlan(planAccountId);
-  return getEventTypePlanViolations(plan, params.update, current);
+  const otherWaitlistServices =
+    params.update.waitlistEnabled === true && !current.waitlistEnabled
+      ? await prisma.eventType.count({
+          where: {
+            id: { not: params.eventTypeId },
+            waitlistEnabled: true,
+            ...(current.teamId ? { teamId: current.teamId } : { userId: current.userId ?? params.userId, teamId: null }),
+          },
+        })
+      : 0;
+  return getEventTypePlanViolations(plan, params.update, current, otherWaitlistServices);
 }

@@ -121,6 +121,7 @@ export const updateHandler = async ({ ctx, input }: UpdateOptions) => {
     update: {
       requiresConfirmation: rest.requiresConfirmation,
       waitlistEnabled: rest.waitlistEnabled,
+      waitlistOfferMode: rest.waitlistOfferMode ?? undefined,
       attendeeConfirmationHours: rest.attendeeConfirmationHours,
       attendeeReminderMinutes: rest.attendeeReminderMinutes,
       bookingFields,

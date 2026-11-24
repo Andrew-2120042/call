@@ -4,6 +4,7 @@ import { getPlanLimits, planHasFeature } from "./entitlements";
 export type EventTypePlanSettings = {
   requiresConfirmation?: boolean;
   waitlistEnabled?: boolean;
+  waitlistOfferMode?: string;
   attendeeConfirmationHours?: number | null;
   attendeeReminderMinutes?: number[];
   bookingFields?: unknown;
@@ -28,7 +29,9 @@ const countCustomQuestions = (bookingFields: unknown) =>
 export const getEventTypePlanViolations = (
   plan: NodslotPlan,
   update: EventTypePlanSettings,
-  current: EventTypePlanSettings
+  current: EventTypePlanSettings,
+  /** How many of the account's other services already have the waitlist on. */
+  otherWaitlistServices = 0
 ): PlanViolation[] => {
   const violations: PlanViolation[] = [];
   const limits = getPlanLimits(plan);
@@ -43,8 +46,25 @@ export const getEventTypePlanViolations = (
       message: "Approving bookings before they're confirmed is a Pro feature",
     });
   }
-  if (update.waitlistEnabled === true && !current.waitlistEnabled && !planHasFeature(plan, "waitlist")) {
-    violations.push({ field: "waitlistEnabled", message: "The waitlist is a Pro feature" });
+  if (update.waitlistEnabled === true && !current.waitlistEnabled) {
+    if (!planHasFeature(plan, "waitlist")) {
+      violations.push({ field: "waitlistEnabled", message: "The waitlist is a Pro feature" });
+    } else if (limits.maxWaitlistServices !== null && otherWaitlistServices >= limits.maxWaitlistServices) {
+      violations.push({
+        field: "waitlistEnabled",
+        message: `Free includes the waitlist on ${limits.maxWaitlistServices} service. Pro turns it on for every service`,
+      });
+    }
+  }
+  if (
+    update.waitlistOfferMode === "EVERYONE" &&
+    current.waitlistOfferMode !== "EVERYONE" &&
+    !planHasFeature(plan, "waitlistEveryone")
+  ) {
+    violations.push({
+      field: "waitlistOfferMode",
+      message: "Offering a freed time to everyone at once is a Pro feature",
+    });
   }
   if (
     update.attendeeConfirmationHours != null &&
@@ -62,7 +82,7 @@ export const getEventTypePlanViolations = (
     if (next > limits.maxRemindersPerService && next > before) {
       violations.push({
         field: "attendeeReminderMinutes",
-        message: `Your plan allows ${limits.maxRemindersPerService} reminder per service`,
+        message: `Your plan allows ${limits.maxRemindersPerService} reminders per service`,
       });
     }
   }

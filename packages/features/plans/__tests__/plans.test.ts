@@ -14,19 +14,23 @@ const LATER = new Date("2026-12-13T12:00:00.000Z");
 const EARLIER = new Date("2026-11-01T12:00:00.000Z");
 
 describe("entitlements", () => {
-  it("gives Free approvals and questions, and keeps the income-protecting features for Pro", () => {
-    expect(planHasFeature(NodslotPlan.FREE, "approvalRequests")).toBe(false);
-    expect(planHasFeature(NodslotPlan.PRO, "approvalRequests")).toBe(true);
-    expect(planHasFeature(NodslotPlan.FREE, "waitlist")).toBe(false);
+  it("gives Free approvals, reminders and a one-service waitlist, and keeps the income engine for Pro", () => {
+    expect(planHasFeature(NodslotPlan.FREE, "approvalRequests")).toBe(true);
+    expect(planHasFeature(NodslotPlan.FREE, "multipleReminders")).toBe(true);
+    expect(planHasFeature(NodslotPlan.FREE, "waitlist")).toBe(true);
+    expect(planHasFeature(NodslotPlan.FREE, "waitlistEveryone")).toBe(false);
     expect(planHasFeature(NodslotPlan.FREE, "confirmOrRelease")).toBe(false);
+    expect(planHasFeature(NodslotPlan.FREE, "aiRequestInsights")).toBe(false);
     expect(planHasFeature(NodslotPlan.FREE, "customDomain")).toBe(false);
-    expect(planHasFeature(NodslotPlan.PRO, "waitlist")).toBe(true);
+    expect(planHasFeature(NodslotPlan.PRO, "waitlistEveryone")).toBe(true);
     expect(planHasFeature(NodslotPlan.PRO, "teamScheduling")).toBe(false);
     expect(planHasFeature(NodslotPlan.TEAM, "teamScheduling")).toBe(true);
     expect(getPlanLimits(NodslotPlan.FREE)).toEqual({
       maxScreeningQuestionsPerService: 50,
-      maxRemindersPerService: 1,
+      maxRemindersPerService: 5,
+      maxWaitlistServices: 1,
     });
+    expect(getPlanLimits(NodslotPlan.PRO).maxWaitlistServices).toBeNull();
   });
 
   it.each([
@@ -48,23 +52,27 @@ describe("getEventTypePlanViolations", () => {
   const question = { editable: "user" };
   const system = { editable: "system" };
 
-  it("blocks Free users from turning paid settings on", () => {
+  it("blocks Free users from turning Pro settings on", () => {
     const violations = getEventTypePlanViolations(
       NodslotPlan.FREE,
       {
         requiresConfirmation: true,
         waitlistEnabled: true,
+        waitlistOfferMode: "EVERYONE",
         attendeeConfirmationHours: 24,
-        attendeeReminderMinutes: [1440, 60],
+        attendeeReminderMinutes: [1440, 120, 60, 30, 15, 5],
       },
       { attendeeReminderMinutes: [1440] }
     );
-    expect(violations.map((v) => v.field)).toEqual([
-      "requiresConfirmation",
+    expect(violations.map((v) => v.field)).toEqual(["waitlistOfferMode", "attendeeConfirmationHours", "attendeeReminderMinutes"]);
+  });
+
+  it("lets Free turn the waitlist on for one service only", () => {
+    expect(getEventTypePlanViolations(NodslotPlan.FREE, { waitlistEnabled: true }, {}, 0)).toEqual([]);
+    expect(getEventTypePlanViolations(NodslotPlan.FREE, { waitlistEnabled: true }, {}, 1).map((v) => v.field)).toEqual([
       "waitlistEnabled",
-      "attendeeConfirmationHours",
-      "attendeeReminderMinutes",
     ]);
+    expect(getEventTypePlanViolations(NodslotPlan.PRO, { waitlistEnabled: true }, {}, 7)).toEqual([]);
   });
 
   it("lets a downgraded user save unrelated changes and turn things off", () => {

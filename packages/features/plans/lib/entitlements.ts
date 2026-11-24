@@ -3,6 +3,7 @@ import { NodslotPlan } from "@calcom/prisma/enums";
 export type PlanFeature =
   | "approvalRequests"
   | "waitlist"
+  | "waitlistEveryone"
   | "confirmOrRelease"
   | "aiRequestInsights"
   | "multipleReminders"
@@ -18,19 +19,20 @@ export type PlanLimits = {
   maxScreeningQuestionsPerService: number;
   /** Reminder offsets allowed per service. */
   maxRemindersPerService: number;
+  /** Services that can have the waitlist on at once; null means no limit. */
+  maxWaitlistServices: number | null;
 };
 
-// Free is a working booking link with unlimited questions. Pro is what protects income and the host's time:
-// approving requests first, filling cancellations, stopping no-shows, AI triage, and your own brand.
-const FREE_FEATURES: PlanFeature[] = ["unlimitedScreeningQuestions"];
+// Free covers everything needed to run a calendar, including approvals, several reminders and the waitlist on
+// one service, so people feel a cancellation get refilled before they pay. Pro is the full income-protecting
+// engine: the waitlist everywhere and in every mode, confirm-or-release, AI triage and your own brand.
+const FREE_FEATURES: PlanFeature[] = ["unlimitedScreeningQuestions", "approvalRequests", "multipleReminders", "waitlist"];
 
 const PRO_FEATURES: PlanFeature[] = [
   ...FREE_FEATURES,
-  "approvalRequests",
-  "waitlist",
+  "waitlistEveryone",
   "confirmOrRelease",
   "aiRequestInsights",
-  "multipleReminders",
   "removeBranding",
   "customDomain",
   "rebookFollowUp",
@@ -44,9 +46,9 @@ const PLAN_FEATURES: Record<NodslotPlan, ReadonlySet<PlanFeature>> = {
 };
 
 const PLAN_LIMITS: Record<NodslotPlan, PlanLimits> = {
-  [NodslotPlan.FREE]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 1 },
-  [NodslotPlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
-  [NodslotPlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5 },
+  [NodslotPlan.FREE]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5, maxWaitlistServices: 1 },
+  [NodslotPlan.PRO]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5, maxWaitlistServices: null },
+  [NodslotPlan.TEAM]: { maxScreeningQuestionsPerService: 50, maxRemindersPerService: 5, maxWaitlistServices: null },
 };
 
 /** Status of the in-app 14-day Pro trial (no card). Distinct from a provider's "trialing" subscription. */

@@ -21,7 +21,7 @@ const COMPARISON: { groupKey: string; rows: { key: string; free: Cell; pro: Cell
     rows: [
       { key: "billing_f_page", free: true, pro: true, team: true },
       { key: "billing_f_unlimited", free: true, pro: true, team: true },
-      { key: "billing_f_approvals", free: false, pro: true, team: true },
+      { key: "billing_f_approvals", free: true, pro: true, team: true },
       { key: "billing_f_questions", free: true, pro: true, team: true },
       { key: "billing_f_apps", free: true, pro: true, team: true },
       { key: "billing_f_import", free: true, pro: true, team: true },
@@ -31,9 +31,10 @@ const COMPARISON: { groupKey: string; rows: { key: string; free: Cell; pro: Cell
   {
     groupKey: "upgrade_group_fill",
     rows: [
-      { key: "upgrade_row_reminders", free: "1", pro: "5", team: "5" },
+      { key: "upgrade_row_reminders", free: "5", pro: "5", team: "5" },
       { key: "upgrade_row_rebook_emails", free: "1", pro: "2", team: "2" },
-      { key: "billing_f_waitlist", free: false, pro: true, team: true },
+      { key: "billing_f_waitlist", free: "upgrade_cell_one_service", pro: "upgrade_cell_every_service", team: "upgrade_cell_every_service" },
+      { key: "billing_f_waitlist_everyone", free: false, pro: true, team: true },
       { key: "billing_f_confirm", free: false, pro: true, team: true },
       { key: "billing_f_ai_summaries", free: false, pro: true, team: true },
     ],
