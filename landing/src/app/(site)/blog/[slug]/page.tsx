@@ -36,54 +36,67 @@ const isReview = (a: Article) => ["Best apps", "Alternatives", "Comparisons"].in
 
 function ToolCard({ tool }: { tool: ToolReview }) {
   const ours = tool.name === site.name;
+  const rows = Math.max(tool.pros.length, tool.cons.length);
+  const label = "bg-surface px-5 py-4 text-left align-top font-medium text-fg";
+  const cell = "px-5 py-4 align-top text-fg/85";
   return (
-    <div className="mt-5 rounded-xl border border-line bg-surface p-5 sm:p-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="font-serif text-[24px] leading-tight">
-          {tool.name} <span className="text-faint font-sans text-[13px]">({tool.platforms})</span>
-        </h3>
-        <a
-          href={tool.url}
-          rel={ours ? undefined : "nofollow noopener"}
-          target={ours ? undefined : "_blank"}
-          className="text-[13px] underline underline-offset-[3px]">
-          {ours ? `Try ${site.name} free` : `Visit ${tool.name}`} ↗
-        </a>
-      </div>
-      <p className="mt-2 text-[15px]">
-        <span className="font-medium">Best for:</span> <span className="text-fg/80">{tool.bestFor}</span>
-      </p>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <div>
-          <p className="text-[13px] font-semibold">{tool.name} pros</p>
-          <ul className="mt-2 space-y-1.5 text-[14px]">
-            {tool.pros.map((pro) => (
-              <li key={pro} className="flex gap-2">
-                <span className="mt-0.5 text-emerald-400" aria-hidden>
-                  ✓
+    <div className="mt-6 overflow-x-auto rounded-xl border border-line">
+      <table className="w-full min-w-[560px] table-fixed border-collapse text-left text-[16px] leading-snug">
+        <caption className="sr-only">{tool.name} at a glance</caption>
+        <colgroup>
+          <col className="w-[28%]" />
+          <col />
+        </colgroup>
+        <thead>
+          <tr className="border-b border-line bg-surface">
+            <th scope="colgroup" colSpan={2} className="px-5 py-4">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <span className="font-serif text-[24px] font-normal">
+                  {tool.name} <span className="text-faint font-sans text-[14px]">({tool.platforms})</span>
                 </span>
-                <span className="text-fg/85">{pro}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className="text-[13px] font-semibold">{tool.name} cons</p>
-          <ul className="mt-2 space-y-1.5 text-[14px]">
-            {tool.cons.map((con) => (
-              <li key={con} className="flex gap-2">
-                <span className="mt-0.5 text-red-400" aria-hidden>
-                  ✕
-                </span>
-                <span className="text-fg/85">{con}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <p className="mt-4 border-t border-line pt-3 text-[14px]">
-        <span className="font-medium">{tool.name} pricing:</span> <span className="text-fg/80">{tool.pricing}</span>
-      </p>
+                <a
+                  href={tool.url}
+                  rel={ours ? undefined : "nofollow noopener"}
+                  target={ours ? undefined : "_blank"}
+                  className="text-[14px] font-normal underline underline-offset-[3px]">
+                  {ours ? `Try ${site.name} free` : `Visit ${tool.name}`} ↗
+                </a>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-line">
+          <tr>
+            <th scope="row" className={`${label} border-r border-line`}>Best for</th>
+            <td className={cell}>{tool.bestFor}</td>
+          </tr>
+          <tr>
+            <th scope="row" className={`${label} border-r border-line`}>Pricing</th>
+            <td className={cell}>{tool.pricing}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table className="w-full min-w-[560px] table-fixed border-collapse border-t border-line text-left text-[16px] leading-snug">
+        <caption className="sr-only">{tool.name} pros and cons</caption>
+        <thead>
+          <tr className="border-b border-line bg-surface">
+            <th scope="col" className="w-1/2 border-r border-line px-5 py-3.5 font-medium">
+              <span className="text-emerald-400" aria-hidden>✓ </span>Pros
+            </th>
+            <th scope="col" className="w-1/2 px-5 py-3.5 font-medium">
+              <span className="text-red-400" aria-hidden>✕ </span>Cons
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-line">
+          {Array.from({ length: rows }, (_, i) => (
+            <tr key={i}>
+              <td className={`${cell} border-r border-line`}>{tool.pros[i] ?? ""}</td>
+              <td className={cell}>{tool.cons[i] ?? ""}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
