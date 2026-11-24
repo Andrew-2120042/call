@@ -52,30 +52,36 @@ const earlierArticles: Article[] = [
   {
     slug: "calendly-vs-cal-com",
     category: "Comparisons",
-    title: "Calendly vs Cal.com (2027): pricing, free plans and which to pick",
+    title: `Calendly vs Cal.com vs ${site.name} (2027): pricing, free plans and which to pick`,
     description:
       "Calendly vs Cal.com compared on free plans, team pricing, round robin and reminders, with a third option if cancellations and no-shows are your real problem.",
     keyword: "Calendly vs Cal.com",
     published: "2026-11-15",
     updated: "2026-11-15",
     answer:
-      "Cal.com has the more generous free plan (unlimited booking links and calendars) and cheaper teams at $12 per user per month. Calendly is more established but its free plan allows one event type and one calendar, and Teams costs $16 per seat. Neither has a built-in waitlist for cancelled slots.",
+      `${site.name} has the best free plan of the three (unlimited services, bookings and calendars) and the cheapest team price: $69 a month for up to 10 people. Calendly's free plan allows one event type and one calendar and Teams costs $16 per seat; Cal.com costs $12 per user. Only ${site.name} has a waitlist that refills cancelled slots.`,
     sections: [
       {
         heading: "Side-by-side",
         table: {
-          head: ["", "Calendly", "Cal.com", `${site.name}`],
+          head: ["", `${site.name}`, "Calendly", "Cal.com"],
           rows: [
-            ["Free plan", "1 event type, 1 calendar, one-on-one only", "1 user, unlimited links and calendars", "1 user, unlimited services and calendars"],
-            ["Approve bookings first", "Not built in", "Yes (free)", "Yes (Pro, with an AI summary)"],
-            ["Automated reminders", "Paid plans", "Free plan includes notifications", "1 free; more on Pro"],
-            ["Round robin", "Teams, $16/seat/month", "Teams, $12/user/month", "Team, $69/month for up to 10"],
-            ["Waitlist that refills cancellations", "No", "No", "Yes (Pro)"],
-            ["Confirm-or-release for no-shows", "No", "No", "Yes (Pro)"],
+            ["Free plan", "Unlimited services, bookings and calendars", "1 event type, 1 calendar, one-on-one only", "1 user, unlimited links and calendars"],
+            ["Approve bookings first", "Yes, with an AI summary of every request (Pro)", "Not built in", "Yes"],
+            ["Automated reminders", "On every booking, free; up to 5 on Pro", "Paid plans", "Free plan includes notifications"],
+            ["Round robin", "Team, $69/month for up to 10", "Teams, $16/seat/month", "Teams, $12/user/month"],
+            ["Waitlist that refills cancellations", "Yes (Pro)", "No", "No"],
+            ["Confirm-or-release for no-shows", "Yes (Pro)", "No", "No"],
           ],
         },
         paragraphs: [
           "Calendly and Cal.com prices are their per-seat prices with yearly billing, from each company's pricing page.",
+        ],
+      },
+      {
+        heading: `Choose ${site.name} if`,
+        paragraphs: [
+          `Your calendar is full and the problem is what happens afterwards: cancellations that leave gaps, clients who don't show, and requests you want to read before accepting. ${site.name} keeps scheduling free and adds a waitlist that offers freed slots automatically, one-click attendance confirmation that can release the time, and AI summaries of booking requests.`,
         ],
       },
       {
@@ -90,12 +96,6 @@ const earlierArticles: Article[] = [
         bullets: [
           "You want a capable free plan with unlimited booking links.",
           "You want to self-host or need deep configuration and routing.",
-        ],
-      },
-      {
-        heading: `Choose ${site.name} if`,
-        paragraphs: [
-          `Your calendar is full and the problem is what happens afterwards: cancellations that leave gaps, clients who don't show, and requests you want to read before accepting. ${site.name} keeps scheduling free and adds a waitlist that offers freed slots automatically, one-click attendance confirmation that can release the time, and AI summaries of booking requests.`,
         ],
       },
       {

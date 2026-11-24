@@ -14,7 +14,28 @@ import { signupUrl, site } from "@/site.config";
 // Posts where a blueprint drawing (scripts/anatomy/blog-figures.mjs) says more than an app screenshot.
 // Bump when the drawings are rebuilt, so browsers fetch the new files instead of a cached copy.
 const FIGURE_VERSION = "dd8ded1e";
-const BLOG_FIGURES: Record<string, string> = { "free-meeting-scheduler": "calendar" };
+const BLOG_FIGURES: Record<string, string> = {
+  "free-meeting-scheduler": "calendar",
+  "is-calendly-free": "calendar",
+  "how-to-get-more-leads": "calendar",
+  "how-to-get-clients-on-calls": "calendar",
+  "best-scheduling-software-2027": "compare",
+  "calendly-vs-cal-com": "compare",
+  "calendly-alternatives": "compare",
+  "cal-com-alternatives": "compare",
+  "acuity-scheduling-alternatives": "compare",
+  "youcanbookme-alternatives": "compare",
+  "savvycal-alternatives": "compare",
+  "tidycal-alternatives": "compare",
+  "doodle-alternatives": "compare",
+  "setmore-alternatives": "compare",
+  "zoho-bookings-alternatives": "compare",
+  "square-appointments-alternatives": "compare",
+  "microsoft-bookings-alternatives": "compare",
+  "google-calendar-appointment-schedule-alternatives": "compare",
+  "round-robin-scheduling": "rotation",
+  "team-scheduling-without-per-seat-pricing": "rotation",
+};
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -38,6 +59,9 @@ const formatDate = (iso: string) =>
 
 // Review-style posts say how they were written; the reader should know Calbee is ours.
 const isReview = (a: Article) => ["Best apps", "Alternatives", "Comparisons"].includes(categoryOf(a));
+
+/** Our own row leads every comparison table, above the tool the post is about. */
+const calbeeFirst = (rows: string[][]) => [...rows.filter((r) => r[0] === site.name), ...rows.filter((r) => r[0] !== site.name)];
 
 function ToolCard({ tool }: { tool: ToolReview }) {
   const ours = tool.name === site.name;
@@ -209,7 +233,7 @@ export default async function ArticlePage({ params }: Params) {
                           <tr>{s.table.head.map((h) => <th key={h} scope="col" className="px-4 py-3 font-semibold">{h}</th>)}</tr>
                         </thead>
                         <tbody className="divide-y divide-line">
-                          {s.table.rows.map((row) => (
+                          {calbeeFirst(s.table.rows).map((row) => (
                             <tr key={row[0]} className={row[0] === site.name ? "bg-surface" : undefined}>
                               {row.map((cell, i) =>
                                 i === 0 ? (

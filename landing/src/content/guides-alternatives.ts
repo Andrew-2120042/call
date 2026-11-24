@@ -123,7 +123,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best free Acuity alternative: Cal.com", tool: tools.cal, body: "Cal.com's free plan includes payments through Stripe and PayPal for one person, with unlimited booking links. Expect more settings to configure." },
       { heading: "Best simple Acuity alternative: Setmore", tool: more.setmore, body: "Setmore gives small teams a free branded booking page with staff calendars; SMS reminders and branding removal are on Pro." },
     ],
-    table: [["Acuity (reference)", "Paid appointments, intake", "None", "$16/month (yearly)"], [n, "Client sessions, cancellations", "1 person, unlimited services", "$12/month"], ["Square Appointments", "Payments, in-person services", "1 location", "Per location"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"], ["Setmore", "Small service teams", "A few staff", "About $5/user/month (yearly)"]],
+    table: [["Acuity (reference)", "Paid appointments, intake", "None", "$16/month (yearly)"], [n, "Client sessions, cancellations", "Unlimited services and calendars", "$12/month"], ["Square Appointments", "Payments, in-person services", "1 location", "Per location"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"], ["Setmore", "Small service teams", "A few staff", "About $5/user/month (yearly)"]],
     faq: [
       { q: "Is there a free alternative to Acuity Scheduling?", a: `Yes. ${n}, Cal.com, Setmore and Square Appointments all have free plans; Acuity doesn't.` },
       { q: "Which Acuity alternative takes payments?", a: "Square Appointments, Cal.com and Setmore can take payments at booking. Calbee doesn't yet." },
@@ -143,7 +143,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best YouCanBookMe alternative with polls: zcal", tool: tools.zcal, body: "zcal is free with unlimited links and adds meeting polls, which YouCanBookMe doesn't do." },
       { heading: "Best known YouCanBookMe alternative: Calendly", tool: tools.calendly, body: "Calendly is the most recognised booking link, with routing and deep integrations on paid plans." },
     ],
-    table: [["YouCanBookMe (reference)", "Custom forms and emails", "1 page, 1 calendar", "About $9/month"], [n, "Cancellations, no-shows, approvals", "1 person, unlimited services", "$12/month"], ["Cal.com", "Most free features", "1 user, unlimited links", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"], ["Calendly", "Recognised link", "1 event type", "$10/seat/month (yearly)"]],
+    table: [["YouCanBookMe (reference)", "Custom forms and emails", "1 page, 1 calendar", "About $9/month"], [n, "Cancellations, no-shows, approvals", "Unlimited services and calendars", "$12/month"], ["Cal.com", "Most free features", "1 user, unlimited links", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"], ["Calendly", "Recognised link", "1 event type", "$10/seat/month (yearly)"]],
     faq: [
       { q: "Is YouCanBookMe free?", a: "There's a free plan with one booking page and one calendar connection, and YouCanBookMe branding. More pages and calendars need a paid plan." },
       { q: "Which YouCanBookMe alternative lets me approve bookings?", a: `${n} (Pro, with an AI summary of each request) and Cal.com (free, 'requires confirmation').` },
@@ -163,7 +163,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best SavvyCal alternative for teams: Calendly", tool: tools.calendly, body: "Calendly Teams adds routing forms and round robin for sales teams, at $16 per seat a month billed yearly." },
       { heading: "Best SavvyCal alternative with polls: zcal", tool: tools.zcal, body: "zcal is free and includes meeting polls, similar to SavvyCal's polling, without a subscription." },
     ],
-    table: [["SavvyCal (reference)", "The booker's experience", "None for bookings", "About $12/user/month"], [n, "Cancellations, no-shows", "1 person, unlimited services", "$12/month"], ["Cal.com", "Most free features", "1 user, unlimited links", "$12/user/month (yearly)"], ["Calendly", "Sales teams", "1 event type", "$10/seat/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"]],
+    table: [["SavvyCal (reference)", "The booker's experience", "None for bookings", "About $12/user/month"], [n, "Cancellations, no-shows", "Unlimited services and calendars", "$12/month"], ["Cal.com", "Most free features", "1 user, unlimited links", "$12/user/month (yearly)"], ["Calendly", "Sales teams", "1 event type", "$10/seat/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"]],
     faq: [
       { q: "Is SavvyCal free?", a: "SavvyCal doesn't have a standing free plan for taking bookings; paid plans start around $12 per user a month." },
       { q: "What is a free alternative to SavvyCal?", a: `Cal.com, zcal and ${n} all have free plans with unlimited booking types for one person.` },
@@ -181,7 +181,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best free TidyCal alternative: Cal.com", tool: tools.cal, body: "Cal.com's free plan connects unlimited calendars, which fixes TidyCal's one-calendar limit, and includes payments." },
       { heading: "Best TidyCal alternative with polls: zcal", tool: tools.zcal, body: "zcal is free with unlimited links, several calendars and meeting polls." },
     ],
-    table: [["TidyCal (reference)", "Paying once", "1 calendar", "$29 one-time"], [n, "Cancellations, no-shows", "1 person, Google + Outlook", "$12/month"], ["Cal.com", "Most free features", "Unlimited calendars", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Several calendars", "Pro per user"]],
+    table: [["TidyCal (reference)", "Paying once", "1 calendar", "$29 one-time"], [n, "Cancellations, no-shows", "Unlimited services and calendars", "$12/month"], ["Cal.com", "Most free features", "Unlimited calendars", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Several calendars", "Pro per user"]],
     faq: [
       { q: "Is TidyCal really a one-time payment?", a: "The Individual ($29) and Agency ($79) plans are one-time purchases. Removing TidyCal branding needs the separate Pro subscription." },
       { q: "What's a better free alternative to TidyCal?", a: "Cal.com checks unlimited calendars for free; Calbee checks Google Calendar and Outlook and adds no-show protection on Pro." },
@@ -200,7 +200,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Doodle alternative for teams: Calendly", tool: tools.calendly, body: "Calendly covers group and team scheduling with collective events and round robin on paid plans." },
       { heading: "Best Doodle alternative for the booker: SavvyCal", tool: tools.savvycal, body: "SavvyCal combines polls with booking links and lets participants overlay their own calendar." },
     ],
-    table: [["Doodle (reference)", "Group polls", "1 poll, 1 booking page, ads", "Per seat"], ["zcal", "Free polls", "Unlimited links and polls", "Pro per user"], [n, "Client sessions", "1 person, unlimited services", "$12/month"], ["Calendly", "Teams", "1 event type", "$10/seat/month (yearly)"], ["SavvyCal", "Booker experience", "Polls only", "About $12/user/month"]],
+    table: [["Doodle (reference)", "Group polls", "1 poll, 1 booking page, ads", "Per seat"], ["zcal", "Free polls", "Unlimited links and polls", "Pro per user"], [n, "Client sessions", "Unlimited services and calendars", "$12/month"], ["Calendly", "Teams", "1 event type", "$10/seat/month (yearly)"], ["SavvyCal", "Booker experience", "Polls only", "About $12/user/month"]],
     faq: [
       { q: "Is Doodle still free?", a: "There's a free plan, but it shows ads and limits you to one group poll, one booking page and one 1:1 link." },
       { q: "What's the best free alternative to Doodle polls?", a: "zcal includes meeting polls on its free plan, without ads." },
@@ -218,7 +218,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Setmore alternative with payments: Square Appointments", tool: more.square, body: "Square Appointments is free for one location and handles payments, deposits and no-show fees, with a waitlist on paid plans." },
       { heading: "Best Setmore alternative for appointment businesses: Acuity", tool: tools.acuity, body: "Acuity goes deeper on intake forms, packages and client history, with no free plan." },
     ],
-    table: [["Setmore (reference)", "Small service teams", "A few staff", "About $5/user/month (yearly)"], [n, "Client sessions, cancellations", "1 person, unlimited services", "$12/month"], ["Square Appointments", "Payments, in-person", "1 location", "Per location"], ["Acuity", "Intake and packages", "None", "$16/month (yearly)"]],
+    table: [["Setmore (reference)", "Small service teams", "A few staff", "About $5/user/month (yearly)"], [n, "Client sessions, cancellations", "Unlimited services and calendars", "$12/month"], ["Square Appointments", "Payments, in-person", "1 location", "Per location"], ["Acuity", "Intake and packages", "None", "$16/month (yearly)"]],
     faq: [
       { q: "Is Setmore free?", a: "Yes, there's a free plan for a few staff. SMS reminders, branding removal and some calendar features need Pro." },
       { q: "Which Setmore alternative has a waitlist?", a: `${n}, Acuity and Square Appointments (Plus and Premium) all have waitlists.` },
@@ -236,7 +236,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Zoho Bookings alternative for sales teams: Calendly", tool: tools.calendly, body: "Calendly Teams has routing forms and CRM integrations for sales teams outside the Zoho suite." },
       { heading: "Best free Zoho Bookings alternative: Cal.com", tool: tools.cal, body: "Cal.com is free for one person and connects to Salesforce and HubSpot as well as calendars." },
     ],
-    table: [["Zoho Bookings (reference)", "Zoho CRM users", "A few users", "About $6/user/month (yearly)"], [n, "Small teams, flat price", "1 person, unlimited services", "$12/month; Team $69 for 10"], ["Calendly", "Sales teams", "1 event type", "$10/seat/month (yearly)"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"]],
+    table: [["Zoho Bookings (reference)", "Zoho CRM users", "A few users", "About $6/user/month (yearly)"], [n, "Small teams, flat price", "Unlimited services and calendars", "$12/month; Team $69 for 10"], ["Calendly", "Sales teams", "1 event type", "$10/seat/month (yearly)"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"]],
     faq: [
       { q: "Is Zoho Bookings free?", a: "There's a free plan for a few users; paid plans are priced per staff member." },
       { q: "Is Zoho Bookings worth it without Zoho CRM?", a: "Its biggest strength is the Zoho CRM connection. Without Zoho, a dedicated booking tool is usually simpler." },
@@ -254,7 +254,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Square Appointments alternative for appointment businesses: Acuity", tool: tools.acuity, body: "Acuity handles payments, packages and intake forms without tying you to Square hardware." },
       { heading: "Best free Square Appointments alternative: Setmore", tool: more.setmore, body: "Setmore gives small service teams a free booking page and staff calendars, with payments through Square or Stripe." },
     ],
-    table: [["Square Appointments (reference)", "In-person, Square payments", "1 location", "Per location"], [n, "Client sessions", "1 person, unlimited services", "$12/month"], ["Acuity", "Payments and intake", "None", "$16/month (yearly)"], ["Setmore", "Small service teams", "A few staff", "About $5/user/month (yearly)"]],
+    table: [["Square Appointments (reference)", "In-person, Square payments", "1 location", "Per location"], [n, "Client sessions", "Unlimited services and calendars", "$12/month"], ["Acuity", "Payments and intake", "None", "$16/month (yearly)"], ["Setmore", "Small service teams", "A few staff", "About $5/user/month (yearly)"]],
     faq: [
       { q: "Is Square Appointments free?", a: "Yes, for one location. Plus and Premium are priced per location and add features like the waitlist." },
       { q: "Does Square Appointments have a waitlist?", a: "Yes, on the Plus and Premium plans. Calbee's waitlist is part of Pro at $12 a month." },
@@ -272,7 +272,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Microsoft Bookings alternative for teams: Calendly", tool: tools.calendly, body: "Calendly connects to Outlook and Microsoft 365 and is easier to customise for external clients." },
       { heading: "Best free Microsoft Bookings alternative: Cal.com", tool: tools.cal, body: "Cal.com is free for one person and connects to Outlook calendars, without a Microsoft 365 licence." },
     ],
-    table: [["Microsoft Bookings (reference)", "Microsoft 365 companies", "Part of Microsoft 365", "Microsoft 365 Business Basic"], [n, "Client sessions with Outlook", "1 person, unlimited services", "$12/month"], ["Calendly", "Teams", "1 event type", "$10/seat/month (yearly)"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"]],
+    table: [["Microsoft Bookings (reference)", "Microsoft 365 companies", "Part of Microsoft 365", "Microsoft 365 Business Basic"], [n, "Client sessions with Outlook", "Unlimited services and calendars", "$12/month"], ["Calendly", "Teams", "1 event type", "$10/seat/month (yearly)"], ["Cal.com", "Most free features", "1 user", "$12/user/month (yearly)"]],
     faq: [
       { q: "Can I use Microsoft Bookings without Microsoft 365?", a: "No. Bookings comes with Microsoft 365 business plans and isn't sold separately." },
       { q: "Which Microsoft Bookings alternative works with Outlook?", a: `${n}, Calendly and Cal.com all sync with Outlook calendars.` },
@@ -291,7 +291,7 @@ export const alternativeGuides: Article[] = [
       { heading: "Best Google Calendar alternative with polls: zcal", tool: tools.zcal, body: "zcal adds unlimited links and meeting polls for free." },
       { heading: "Best known Google Calendar alternative: Calendly", tool: tools.calendly, body: "Calendly is the most familiar booking link and connects to Google Calendar and Meet." },
     ],
-    table: [["Google Calendar (reference)", "One kind of meeting", "1 booking page", "Workspace / Google One"], [n, "Client sessions", "1 person, unlimited services", "$12/month"], ["Cal.com", "Most free features", "Unlimited links", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"], ["Calendly", "Recognised link", "1 event type", "$10/seat/month (yearly)"]],
+    table: [["Google Calendar (reference)", "One kind of meeting", "1 booking page", "Workspace / Google One"], [n, "Client sessions", "Unlimited services and calendars", "$12/month"], ["Cal.com", "Most free features", "Unlimited links", "$12/user/month (yearly)"], ["zcal", "Free with polls", "Unlimited links", "Pro per user"], ["Calendly", "Recognised link", "1 event type", "$10/seat/month (yearly)"]],
     faq: [
       { q: "Is Google Calendar's booking page free?", a: "Yes, a personal Google account gets one appointment schedule. Reminders, payments and more pages need Google Workspace or Google One." },
       { q: "Do these alternatives still use my Google Calendar?", a: "Yes. Calbee, Cal.com, zcal and Calendly all check your Google Calendar for conflicts and add bookings to it." },
