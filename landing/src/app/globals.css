@@ -250,3 +250,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* Google's sign-in prompt is a light iframe; on our dark page the browser paints it a white box unless the frame's
+   container uses the same light colour scheme as its contents. */
+#credential_picker_container,
+#credential_picker_iframe {
+  color-scheme: light;
+}
