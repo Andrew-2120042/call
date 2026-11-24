@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { GoogleOneTap } from "@/components/google-one-tap";
 import { Footer, Header } from "@/components/site-chrome";
 
 export default function SiteLayout({ children }: { children: ReactNode }) {
@@ -8,6 +9,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Header />
       <main>{children}</main>
       <Footer />
+      <GoogleOneTap />
     </div>
   );
 }

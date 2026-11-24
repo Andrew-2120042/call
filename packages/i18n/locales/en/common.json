@@ -5855,5 +5855,6 @@
   "money_saved_edit_prices": "Edit prices",
   "money_saved_prices_help": "What each service is worth to you, so Calbee can add up what it saved. Only you see this.",
   "money_saved_service_count": "\u00b7 {{count}} saved",
-  "billing_f_rebook_free": "One-click rebooking when a client cancels"
+  "billing_f_rebook_free": "One-click rebooking when a client cancels",
+  "google_handoff_signing_in": "Signing you in with Google…"
 }
