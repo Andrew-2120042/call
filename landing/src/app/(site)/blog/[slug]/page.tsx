@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogArt } from "@/components/blog-art";
-import { SectionFigure } from "@/components/section-figure";
-import { stickerFor } from "@/lib/section-sticker";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
@@ -160,20 +158,11 @@ export default async function ArticlePage({ params }: Params) {
             </div>
 
             <div className="text-fg/85 text-[18px] leading-[1.75]">
-              {a.sections.map((s, i) => (
+              {a.sections.map((s) => (
                 <section key={s.heading}>
                   <h2 id={docSlug(s.heading)} className="text-fg mt-14 scroll-mt-24 text-[30px] leading-tight tracking-[-0.02em]">
                     {s.heading}
                   </h2>
-                  {/* Every other section gets a picture of what it's about, so long guides don't read as a wall of text. */}
-                  {!s.tool && i % 2 === 1 && (
-                    <SectionFigure
-                      sticker={stickerFor(`${s.heading} ${s.paragraphs?.[0] ?? ""}`, (BLOG_ART[a.slug] ?? DEFAULT_ART).stickers[i % 3])}
-                      caption={s.heading}
-                      palette={(BLOG_ART[a.slug] ?? DEFAULT_ART).palette}
-                      offset={i * 25}
-                    />
-                  )}
                   {s.tool && <ToolCard tool={s.tool} />}
                   {s.paragraphs?.map((p) => <p key={p} className="mt-5">{p}</p>)}
                   {s.bullets && (
