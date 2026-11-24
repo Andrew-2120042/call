@@ -72,6 +72,20 @@ export default function Home() {
             <Link href="/terms" className="underline">Terms of Service</Link> and{" "}
             <Link href="/privacy" className="underline">Privacy Policy</Link>.
           </p>
+          {/* Design preview only: this number isn't real, so it never renders outside local development. */}
+          {process.env.NODE_ENV === "development" && (
+            <div className="mt-8 flex items-center justify-center gap-3" data-preview="social-proof">
+              <div className="flex -space-x-2">
+                {["#ff58a8", "#ffe14a", "#15b9a6", "#2b50e0", "#ff7a1a"].map((c) => (
+                  <span key={c} className="h-8 w-8 rounded-full border-2 border-bg" style={{ background: c }} />
+                ))}
+              </div>
+              <p className="text-fg/80 text-[14px]">
+                Used by <span className="text-fg font-semibold">50,000+</span> coaches, therapists and consultants
+              </p>
+              <span className="rounded border border-amber-400/40 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-amber-300">preview</span>
+            </div>
+          )}
         </Container>
       </section>
 

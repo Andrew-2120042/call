@@ -19,21 +19,30 @@ Draft written 2026-11-20. Uses the current name "Calbee"; swap in the new name a
 
 ## The listing
 
+**Name:** Calbee
+
 **Tagline (60 characters max):**
-Booking link that refills cancelled slots on its own
+Everything you need to book meetings, free. Pro for extras
 
 Alternatives:
-- Get booked. Stay booked. A booking link that fills gaps
-- The booking link with a waitlist built in
+- One booking link. Everything you need for meetings, free
+- The free booking link that keeps your calendar full
 
 **Description (260 characters max):**
-A free booking link for coaches, therapists and consultants. When a client cancels, the next person on your waitlist is offered the slot automatically. Clients confirm before the day or the time frees up, and every request comes with an AI summary.
+Calbee is a booking link with everything you need for meetings, free: unlimited services, calendar sync, reminders and rebooking. Pro adds the extras: a waitlist that refills cancellations, confirm-or-release, approvals with AI summaries and an assistant.
+
+**What's free vs Pro (for the gallery and first comment):**
+- Free, forever: unlimited services and bookings, Google Calendar and Outlook sync, unlimited booking questions, a reminder on every booking, a one-click rebook email when someone cancels, embed on your site, import from Calendly, free tools and templates.
+- Pro ($12/month, 14-day trial without a card): waitlist that refills cancelled times, confirm-or-release for no-shows, approvals with an AI summary of every request, the assistant that reschedules when you say yes, more reminders, a second rebooking email.
+- Team ($69/month for up to 10 people): round robin, collective and managed services, a team page and a team waitlist.
 
 **Topics:** Productivity, Calendar, Scheduling, SaaS, Artificial Intelligence
 
 **Pricing tag:** Free (with paid plans)
 
-**Launch offer (optional):** a Product Hunt code for 3 months of Pro free, or 50% off the first year.
+**Launch offer (optional):** a Product Hunt code for 3 months of Pro free.
+
+**Wording to avoid:** "most awaited", "used by thousands", or anything that suggests an earlier launch or a user count we don't have. Product Hunt's community checks, and the changelog shows the real start date (first version March 2026, rebuilt from 13 Nov 2026). The real story is a better one: built early 2026, paused, rebuilt and launched.
 
 ## Gallery (1270×760 images; the first one shows up in the feed)
 
@@ -59,7 +68,7 @@ So Calbee keeps working after the booking:
 - **Read every request first.** Each one arrives with a short AI summary and a spam check.
 - **An assistant that does the work.** "Move this week's meetings to next week" — it lists the changes and does them after you say yes.
 
-The booking link itself is free forever with unlimited services. Pro is $12 a month, and a team of up to 10 is $69 in total, not per seat.
+Everything you need to book meetings is free, forever: unlimited services, calendar sync, reminders and a rebook email when someone cancels. Pro ($12 a month, with a 14-day trial and no card) is for the extras above, and a team of up to 10 is $69 in total, not per seat.
 
 I'd love to hear what costs *you* the most time in your calendar. I'm here all day to answer questions.
 

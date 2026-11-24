@@ -19,7 +19,7 @@ export function Logo({ className = "" }: { className?: string }) {
 
 const resourcesMenu = [
   { href: "/docs", label: "Docs", hint: `How every part of ${site.name} works` },
-  { href: "/docs/changelog", label: "Changelog", hint: "What's new, every week" },
+  { href: "/changelog", label: "Changelog", hint: "Every release, newest first" },
   { href: "/blog", label: "Guides", hint: "Comparisons, pricing explained, how-tos" },
   { href: "/templates", label: "Templates", hint: "Cancellation policies, reminder emails and more, free to copy" },
   { href: "/tools", label: "Free tools", hint: "Time zone converter and meeting planner" },
@@ -98,7 +98,7 @@ export function Footer() {
       title: "Company",
       links: [
         { href: "/docs", label: "Docs" },
-        { href: "/docs/changelog", label: "Changelog" },
+        { href: "/changelog", label: "Changelog" },
         { href: `mailto:${site.supportEmail}`, label: "Contact" },
         { href: "/privacy", label: "Privacy" },
         { href: "/terms", label: "Terms" },

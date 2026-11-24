@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { articles } from "@/content/articles";
 import { docs } from "@/content/docs";
 import { audiences, comparisons, features } from "@/content/site-content";
+import { releases } from "@/content/releases";
 import { templates } from "@/content/templates";
 import { site } from "@/site.config";
 
@@ -15,6 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/features", 0.8),
     page("/templates", 0.7),
     page("/tools", 0.6),
+    page("/changelog", 0.6),
+    ...releases.map((r) => page(`/changelog/${r.slug}`, 0.5)),
     page("/tools/time-zone-converter", 0.7),
     page("/tools/meeting-planner", 0.7),
     ...templates.map((t) => page(`/templates/${t.slug}`, 0.7)),
