@@ -44,7 +44,7 @@ export const answerGuides: Article[] = [
         paragraphs: [
           `On a day with taken times, ${n}'s booking page shows a "Join the waitlist" link. Clients can wait for one specific time, any time that day, or anything earlier than a booking they already have.`,
           "When a booking is cancelled (or released because the client didn't confirm), the first person in line gets a private claim link by email. They have two hours, never past the start of the slot, and if they don't claim it the offer moves to the next person on its own. You can switch to offering everyone at once, first to claim wins.",
-          "The waitlist is part of Pro ($12 a month) and Team, and the 14-day Pro trial includes it.",
+          "Free includes the waitlist on one service. Pro ($12 a month) and Team put it on every service.",
         ],
       },
       {

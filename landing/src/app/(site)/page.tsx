@@ -232,6 +232,7 @@ export default function Home() {
                 <h2 data-reveal className="mt-3 max-w-[16ch] text-3xl font-normal leading-tight tracking-[-0.025em] sm:text-5xl">
                   Don&apos;t change how you work. Just add {site.name}.
                 </h2>
+                <p className="text-muted mt-4 max-w-[52ch] text-[16px] leading-relaxed">Everything below is included on the free plan.</p>
               </>
             }
             items={[
@@ -249,6 +250,31 @@ export default function Home() {
                 title: "Limits and buffers",
                 body: "Minimum notice, buffers, daily limits and how far ahead people can book.",
                 visual: <HoodPanel title="Limits" rows={[[null, "Minimum notice", "4 hours"], [null, "Buffer after", "15 minutes"], [null, "Most per day", "6 bookings"], [null, "Book ahead", "Up to 60 days"]]} />,
+              },
+              {
+                title: "Calendar overlay",
+                body: "Clients can lay their own calendar over your free times and pick one that suits both of you, without switching tabs.",
+                visual: <HoodPanel title="Overlay my calendar" rows={[[null, "Your free times", "Tue 10:00, 11:00, 14:00"], [null, "Their calendar", "Busy 10:00 to 11:30"], [null, "Works for both", "Tue 14:00"]]} />,
+              },
+              {
+                title: "Group sessions",
+                body: "Let several people book the same time, for group coaching, classes or workshops, with a seat limit you choose.",
+                visual: <HoodPanel title="Group coaching" rows={[[null, "Seats", "8 per session"], [null, "Booked", "5 of 8"], [null, "Attendees", "Hidden from each other"]]} />,
+              },
+              {
+                title: "Up to five reminders",
+                body: "Remind clients a week, two days, a day, two hours or an hour before. Every plan, every service.",
+                visual: <HoodPanel title="Reminders" rows={[[null, "1 day before", "Email, with Confirm button"], [null, "2 hours before", "Email"], [null, "Sent", "Once, in their time zone"]]} />,
+              },
+              {
+                title: "Zapier, HubSpot and Salesforce",
+                body: "Send every booking to your CRM, spreadsheet or anywhere else with Zapier, Make, HubSpot, Salesforce or Pipedrive.",
+                visual: <HoodPanel title="Connected" rows={[["/logos/zapier.svg", "Zapier", "New booking → Google Sheets"], [null, "HubSpot", "Contact created"], [null, "Salesforce", "Event logged"]]} />,
+              },
+              {
+                title: "Import from Calendly",
+                body: "Paste a Calendly access token and your services and weekly hours come across in about a minute.",
+                visual: <HoodPanel title="Import" rows={[[null, "Services", "6 imported"], [null, "Weekly hours", "Mon to Fri, 9 to 5"], [null, "Time taken", "About a minute"]]} />,
               },
               {
                 title: "Embeds and webhooks",

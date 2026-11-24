@@ -14,7 +14,7 @@ export function pitchFor(slug: string): Pitch {
     return { title: "Know who's booking before you say yes", body: "Every request comes with a short AI summary and a Good fit or Fit unclear label.", shot: SHOTS.requests, button: `Try ${site.name} free` };
   if (/team|round-robin|seat/.test(slug))
     return { title: "One booking link for your whole team", body: "Round robin, a shared team page and a team waitlist. $69 a month for up to 10 people.", shot: SHOTS.teams, button: "See the Team plan" };
-  return { title: "A free booking link that keeps your calendar full", body: "Unlimited services, calendar sync and reminders, free. Add a waitlist and AI request summaries on Pro.", shot: SHOTS.home, button: `Get ${site.name} free` };
+  return { title: "A free booking link that keeps your calendar full", body: "Unlimited services, calendars, approvals and reminders, free, plus a waitlist on one service. Pro puts it on every service and adds AI request summaries.", shot: SHOTS.home, button: `Get ${site.name} free` };
 }
 
 /** A wide coloured banner between sections, with the product on the right. */

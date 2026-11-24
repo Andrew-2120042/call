@@ -50,10 +50,10 @@ export const releases: Release[] = [
       {
         heading: "Everything you need, free",
         paragraphs: [
-          "No trial clock and no booking limits. Make as many services as you like, share one link, and let clients pick a time that works for both of you. Bookings land straight on your Google or Outlook calendar, and every client gets a reminder before the day.",
+          "No trial clock and no booking limits. Make as many services as you like, share one link, and let clients pick a time that works for both of you. Bookings land straight on your Google or Outlook calendar, and every client gets up to five reminders before the day.",
           "When someone cancels, we don't just let the time go. They get an email with new times and can rebook in one click, so a cancellation becomes a reschedule instead of a lost client.",
         ],
-        bullets: ["Unlimited services and bookings", "Google Calendar and Outlook sync", "A reminder on every booking", "A one-click rebook email when someone cancels", "Unlimited booking questions, an embed for your website, and import from Calendly"],
+        bullets: ["Unlimited services, bookings and calendars", "Approve requests before they're booked", "Up to 5 reminder emails per booking", "A waitlist on one service", "A one-click rebook email when someone cancels", "Unlimited booking questions, an embed for your website, and import from Calendly"],
         image: SHOTS.publicPage,
         cta: { label: "Make your booking page", href: `${APP}/signup` },
       },
@@ -63,7 +63,7 @@ export const releases: Release[] = [
           "Pro is for the moments a plain booking link can't handle. When a 10am cancels the night before, the waitlist offers it to the next person in line, who claims it with one click. When a request comes in from someone you've never met, you see a short AI summary of who they are and whether they look like a fit, before you say yes.",
           "Pro is $12 a month. Try it free for 14 days, with no card, and nothing is charged when the trial ends.",
         ],
-        bullets: ["A waitlist that refills cancelled times", "Confirm-or-release, so no-shows free up their time", "Approvals with an AI summary of every request", "An assistant that moves and cancels bookings once you say yes"],
+        bullets: ["The waitlist on every service, offered in order or to everyone at once", "Confirm-or-release, so no-shows free up their time", "An AI summary of every request", "An agent that moves and cancels bookings once you say yes"],
         image: SHOTS.requests,
       },
       {
@@ -90,7 +90,7 @@ export const releases: Release[] = [
       },
     ],
     improvements: [
-      "We've moved approvals to Pro, and every request now comes with an AI summary.",
+      "Approvals are free on every plan, and Pro adds an AI summary to each request.",
       "We've tested Outlook end to end: busy times hide from your page, bookings land in Outlook, and cancelling removes them.",
       "We've made the text bigger and clearer across the website and the help docs.",
       "We now explain plainly when a personal Microsoft account can't create Teams meeting links.",

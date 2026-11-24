@@ -287,7 +287,7 @@ export const guides2027: Article[] = [
         table: {
           head: ["Tool", "Booking types", "Calendars checked", "Reminders", "Main limit"],
           rows: [
-            [n, "Unlimited", "Unlimited (Google and Outlook)", "Email reminder on every booking", "None for taking bookings; waitlist and AI extras on Pro"],
+            [n, "Unlimited", "Unlimited (Google and Outlook)", "Email reminder on every booking", "None for taking bookings; waitlist free on one service"],
             ["Cal.com", "Unlimited", "Unlimited", "Email and SMS", "One user; no round robin"],
             ["zcal", "Unlimited", "Several", "Email", "Round robin and SMS need Pro"],
             ["Calendly", "1", "1", "Not on free", "One event type"],
@@ -442,7 +442,7 @@ export const guides2027: Article[] = [
       { q: "What is the best free alternative to Calendly?", a: `${n}. Its free plan has unlimited services, bookings and calendars, where Calendly's stops at one event type and one calendar. Cal.com and zcal are also free.` },
       { q: "Is there a Calendly alternative without per-seat pricing?", a: `Yes. ${n} Team is $69 a month for up to 10 people in total, and TidyCal avoids subscriptions with a one-time payment.` },
       { q: "Can I import my Calendly event types?", a: `${n} imports from Calendly in about a minute: paste a Calendly personal access token into Settings → Import from Calendly.` },
-      { q: "Does Calendly have a waitlist?", a: `Not built in. Filling a cancelled Calendly slot from a waitlist needs webhooks or another tool. ${n} Pro includes one.` },
+      { q: "Does Calendly have a waitlist?", a: `Not built in. Filling a cancelled Calendly slot from a waitlist needs webhooks or another tool. ${n} includes one, free on one service.` },
     ],
     sources: [src.calendly, src.cal, src.acuity, src.zcal, src.tidycal, src.hubspot, src.savvycal, src.bookings],
   },

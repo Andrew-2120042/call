@@ -257,7 +257,7 @@ export const alternativeGuides: Article[] = [
     table: [["Square Appointments (reference)", "In-person, Square payments", "1 location", "Per location"], [n, "Client sessions", "Unlimited services and calendars", "$12/month"], ["Acuity", "Payments and intake", "None", "$16/month (yearly)"], ["Setmore", "Small service teams", "A few staff", "About $5/user/month (yearly)"]],
     faq: [
       { q: "Is Square Appointments free?", a: "Yes, for one location. Plus and Premium are priced per location and add features like the waitlist." },
-      { q: "Does Square Appointments have a waitlist?", a: "Yes, on the Plus and Premium plans. Calbee's waitlist is part of Pro at $12 a month." },
+      { q: "Does Square Appointments have a waitlist?", a: "Yes, on the Plus and Premium plans. Calbee's waitlist is free on one service, and on every service with Pro at $12 a month." },
     ],
     sources: [{ label: "Square Appointments pricing", url: "https://squareup.com/appointments/pricing" }, { label: "Square: waitlist with Square Appointments", url: "https://squareup.com/help/us/en/article/7923" }],
   }),
