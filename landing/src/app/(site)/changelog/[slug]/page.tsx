@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReleaseCollage } from "@/components/release-collage";
+import { SectionFigure } from "@/components/section-figure";
+import { stickerFor } from "@/lib/section-sticker";
+import type { PaletteName } from "@/stickers/fun";
 import { BreadcrumbLd, Container, JsonLd } from "@/components/ui";
 import { docSlug } from "@/content/docs";
 import { findRelease, releases } from "@/content/releases";
 import { signupUrl, site } from "@/site.config";
 import { releaseDate } from "../page";
+
+const FIGURE_PALETTES: PaletteName[] = ["riso", "matcha", "candy", "aqua", "sunset", "clay"];
 
 type Params = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
@@ -69,10 +74,11 @@ export default async function ReleasePage({ params }: Params) {
           </div>
         </aside>
         <article className="mx-auto w-full min-w-0 max-w-[720px] text-[18px] leading-[1.75] text-fg/85">
-          {r.sections.map((s) => (
+          {r.sections.map((s, i) => (
             <section key={s.heading} className="mt-14 first:mt-0">
               <h2 id={docSlug(s.heading)} className="text-fg scroll-mt-24 text-[30px] leading-tight tracking-[-0.02em]">{s.heading}</h2>
-              <p className="mt-4">{s.body}</p>
+              <SectionFigure sticker={stickerFor(s.heading + " " + s.body)} caption={s.heading} palette={FIGURE_PALETTES[i % FIGURE_PALETTES.length]} offset={i * 30} />
+              <p className="mt-6">{s.body}</p>
               {s.bullets && <ul className="mt-4 list-disc space-y-2 ps-6 marker:text-line-strong">{s.bullets.map((b) => <li key={b}>{b}</li>)}</ul>}
             </section>
           ))}

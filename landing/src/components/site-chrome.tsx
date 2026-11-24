@@ -30,10 +30,11 @@ const resourcesMenu = [
 export function Header() {
   return (
     <>
-      <div className="border-b border-line bg-bg">
-        <Container className="flex h-9 items-center justify-center text-[12px]">
-          <Link href="/features/team-scheduling" className="text-muted hover:text-fg transition">
-            New: team waitlists, managed services and a weekly coverage view <span aria-hidden>→</span>
+      <div className="bg-brand">
+        <Container className="flex h-9 items-center justify-center text-[13px]">
+          <Link href="/changelog/v3-0" className="truncate font-medium text-black hover:underline">
+            <span className="me-2 rounded bg-black px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-brand">New</span>
+            Calbee v3.0 is here: everything you need for meetings, now free <span aria-hidden>→</span>
           </Link>
         </Container>
       </div>

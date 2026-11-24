@@ -51,6 +51,12 @@ export default function Home() {
       {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
         <Container className="relative pt-16 pb-16 text-center sm:pt-24">
+          <Link
+            href="/changelog/v3-0"
+            className="mb-7 inline-flex items-center gap-2.5 rounded-lg border border-line bg-surface py-1.5 ps-1.5 pe-3.5 text-[15px] transition hover:border-line-strong">
+            <span className="bg-brand rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-black">New</span>
+            Calbee launches v3.0
+          </Link>
           <h1 className="mx-auto max-w-[20ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
             Where every booking starts with one link
           </h1>
