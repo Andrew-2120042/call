@@ -19,6 +19,7 @@ import { defaultDayRange as DEFAULT_DAY_RANGE } from "@calcom/lib/availability";
 import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { weekdayNames } from "@calcom/lib/weekday";
 import type { TimeRange } from "@calcom/types/schedule";
+import { addBreakToWeek } from "../lib/lunch-break";
 import cn from "@calcom/ui/classNames";
 import { Button } from "@calcom/ui/components/button";
 import { Dropdown, DropdownMenuContent, DropdownMenuTrigger } from "@calcom/ui/components/dropdown";
@@ -204,6 +205,7 @@ export const ScheduleComponent = <
 
   return (
     <div className={cn("flex flex-col gap-4 p-2 sm:p-4", classNames?.schedule)}>
+      {!disabled && <LunchBreakBar name={name} userTimeFormat={userTimeFormat} />}
       {/* First iterate for each day */}
       {weekdayNames(i18n.language, weekStart, "long").map((weekday, num) => {
         const weekdayIndex = (num + weekStart) % 7;
@@ -227,6 +229,71 @@ export const ScheduleComponent = <
     </div>
   );
 };
+
+// Every 15 minutes from 6am to 10pm, as minutes since midnight, for the lunch break pickers.
+const BREAK_TIMES = Array.from({ length: (22 - 6) * 4 + 1 }, (_, i) => 6 * 60 + i * 15);
+
+/** One click puts a break (1–2pm by default, adjustable) into every working day, so nobody can book over lunch. */
+function LunchBreakBar({ name, userTimeFormat }: { name: string; userTimeFormat: number | null }) {
+  const { t } = useLocale();
+  const { getValues, setValue } = useFormContext();
+  const [open, setOpen] = useState(false);
+  const [start, setStart] = useState(13 * 60);
+  const [end, setEnd] = useState(14 * 60);
+  const [done, setDone] = useState(false);
+  const label = (minutes: number) =>
+    dayjs.utc().startOf("day").add(minutes, "minute").format(userTimeFormat === 24 ? "HH:mm" : "h:mma");
+
+  if (!open) {
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-dashed border-subtle px-3 py-2.5">
+        <p className="text-subtle text-sm">{t("lunch_break_hint")}</p>
+        <Button type="button" color="secondary" size="sm" StartIcon="clock" onClick={() => setOpen(true)} data-testid="add-lunch-break">
+          {t("add_lunch_break")}
+        </Button>
+      </div>
+    );
+  }
+  const select = (value: number, onChange: (v: number) => void, testId: string) => (
+    <select
+      value={value}
+      data-testid={testId}
+      onChange={(event) => {
+        onChange(Number(event.target.value));
+        setDone(false);
+      }}
+      className="border-default bg-default text-emphasis h-9 rounded-md border px-2 text-sm">
+      {BREAK_TIMES.map((m) => (
+        <option key={m} value={m}>
+          {label(m)}
+        </option>
+      ))}
+    </select>
+  );
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-md border border-subtle px-3 py-2.5">
+      <span className="text-emphasis text-sm font-medium">{t("lunch_break")}</span>
+      {select(start, setStart, "lunch-break-start")}
+      <span className="text-subtle text-sm">-</span>
+      {select(end, setEnd, "lunch-break-end")}
+      <Button
+        type="button"
+        size="sm"
+        disabled={end <= start}
+        data-testid="apply-lunch-break"
+        onClick={() => {
+          // Set each day on its own path: a day's field array only re-renders when its own value changes.
+          addBreakToWeek(getValues(name), start, end).forEach((day, index) =>
+            setValue(`${name}.${index}`, day, { shouldDirty: true })
+          );
+          setDone(true);
+        }}>
+        {t("apply_to_working_days")}
+      </Button>
+      {done && <span className="text-subtle text-sm">{t("lunch_break_added")}</span>}
+    </div>
+  );
+}
 
 export const DayRanges = <TFieldValues extends FieldValues>({
   name,
@@ -276,10 +343,10 @@ export const DayRanges = <TFieldValues extends FieldValues>({
                 disabled={disabled}
                 data-testid="add-time-availability"
                 tooltip={labels?.addTime ?? t("add_time_availability")}
-                className="text-default"
+                className="text-default whitespace-nowrap"
                 type="button"
                 color="minimal"
-                variant="icon"
+                size="sm"
                 StartIcon="plus"
                 onClick={() => {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -295,8 +362,9 @@ export const DayRanges = <TFieldValues extends FieldValues>({
                   if (slotRange?.prepend) {
                     prepend(slotRange.prepend);
                   }
-                }}
-              />
+                }}>
+                {t("add_hours_or_break")}
+              </Button>
             )}
             {index === 0 && copyButton && <div className="block">{copyButton}</div>}
             {fields.length > 1 && (
