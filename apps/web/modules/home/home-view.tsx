@@ -14,6 +14,7 @@ import type { PeekTarget } from "~/peek/peekStore";
 import { usePeek } from "~/peek/peekStore";
 import { HomeSkeleton } from "~/shell/skeletons";
 import { HomeCalendar } from "./HomeCalendar";
+import { MoneySavedStrip } from "./MoneySavedStrip";
 import { SetupChecklist } from "./SetupChecklist";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -77,6 +78,8 @@ export default function HomeView() {
           </button>
         </div>
       </header>
+
+      <MoneySavedStrip />
 
       <div className="mt-6">
         <SetupChecklist setup={data.setup} pageUrl={data.pageUrl} />

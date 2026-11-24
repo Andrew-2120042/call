@@ -58,12 +58,12 @@ export default function Home() {
             <span className="bg-brand rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-black">New</span>
             Calbee launches v3.0
           </Link>
-          <h1 className="mx-auto max-w-[18ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
-            Stop losing money to cancellations and no‑shows
+          <h1 className="mx-auto max-w-[20ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
+            Where every booking starts with one link
           </h1>
-          <p className="text-fg/80 mx-auto mt-6 max-w-[56ch] text-[18px] leading-snug">
-            A free booking link that refills cancelled sessions from your waitlist, catches no-shows the day before,
-            and wins back clients who cancel. With AI that reads every request for you.
+          <p className="text-fg/80 mx-auto mt-6 max-w-[52ch] text-[17px] leading-snug">
+            Your free times, one link, booked in a few clicks. Built-in AI summaries for every booking request,
+            and AI rescheduling when you ask.
           </p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />
@@ -124,12 +124,12 @@ export default function Home() {
         <Container className="space-y-32">
           <FeatureRow
             eyebrow="Fill cancellations"
-            title="Cancelled times refill themselves"
-            body="People join a waitlist for times that are taken. The moment one frees up, the first in line is offered it by email."
+            title="Get paid for the slot someone cancelled"
+            body="A client cancels at 8am. By 9, someone from your waitlist has taken the time, and you didn't send a single message."
             points={[
-              { title: "First in line, first offered.", body: "One private claim link at a time, so nobody double books." },
-              { title: "Never stuck on one person.", body: "An unclaimed offer moves to the next person on its own." },
-              { title: "Any time that day, or earlier.", body: "Clients can wait for a whole day, or for anything sooner." },
+              { title: "No more wasted days.", body: "Each cancelled time is offered to the next person waiting, automatically." },
+              { title: "No double bookings.", body: "One private claim link at a time. If they don't take it, it moves to the next person." },
+              { title: "Gaps you didn't know you had.", body: "Clients can wait for any time that day, or anything earlier than their booking." },
             ]}
             href="/features/waitlist-scheduling"
             cta="See how the waitlist works"
@@ -137,39 +137,39 @@ export default function Home() {
           />
           <FeatureRow
             flip
-            eyebrow="Approve requests"
-            title="Read every request before you say yes"
-            body="Read who is asking before a booking lands on your calendar. Each request arrives with a short summary of who they are and whether they're a fit."
-            points={[
-              { title: "Ask what you need.", body: "Unlimited booking questions on every plan." },
-              { title: "Decide in seconds.", body: "Long answers become a few clear lines, with spam flagged." },
-              { title: "Accept from anywhere.", body: "The calendar, the email, or just ask the Assistant." },
-            ]}
-            href="/features/booking-approval"
-            cta="See approvals"
-            visual={<ApprovalMock />}
-          />
-          <FeatureRow
             eyebrow="Stop no-shows"
-            title="Know who's actually coming"
-            body="Clients confirm in one click before your deadline. If they don't, the time can go to someone on the waitlist."
+            title="Stop sitting in an empty room"
+            body="Clients confirm the day before in one click. If someone doesn't, you know in time to give the hour to someone who'll actually come."
             points={[
-              { title: "Confirm or release.", body: "Pick the deadline; unconfirmed bookings free themselves up." },
-              { title: "Reminders that land.", body: "A day before, an hour before, or both." },
-              { title: "Series stay on track.", body: "Weekly sessions booked in one go, confirmed one at a time." },
+              { title: "Know the night before.", body: "Not fifteen minutes into an empty Zoom." },
+              { title: "No chasing.", body: "The reminder asks, the client answers, and you don't send a thing." },
+              { title: "The hour isn't wasted.", body: "Unconfirmed times can free themselves up for your waitlist." },
             ]}
             href="/features/no-show-protection"
             cta="See no-show protection"
             visual={<NoShowMock />}
           />
           <FeatureRow
+            eyebrow="Approve requests"
+            title="Only say yes to clients who'll show up"
+            body="The people who ghost are usually the ones who booked on impulse. Ask a few questions, read a short AI summary of each request, and decide before it lands on your calendar."
+            points={[
+              { title: "Spot the serious ones.", body: "Every request gets a Good fit or Fit unclear label." },
+              { title: "Spam stays out.", body: "Junk requests are flagged before they cost you an hour." },
+              { title: "Decide in seconds.", body: "Accept from the calendar, the email, or just ask the Agent." },
+            ]}
+            href="/features/booking-approval"
+            cta="See approvals"
+            visual={<ApprovalMock />}
+          />
+          <FeatureRow
             flip
             eyebrow="Win them back"
-            title="A retention agent on every cancellation"
-            body="When a client cancels, they're offered new times on the spot, then a follow-up email with one opening they can take in a click."
+            title="Turn a cancellation into a rebooking"
+            body="Most clients who cancel mean to come back, then never do. Calbee offers them new times the moment they cancel, then follows up with one they can take in a click."
             points={[
-              { title: "New times, right away.", body: "Picked around when they like to meet." },
-              { title: "A follow-up that books.", body: "Ten minutes later, one open time by email." },
+              { title: "Rebooked before they forget.", body: "New times right on the cancellation page." },
+              { title: "A follow-up that books.", body: "An email with an open time, one click to take it." },
               { title: "Nothing to set up.", body: "It's on for every one-to-one service." },
             ]}
             href="/features/ai-booking-summaries"

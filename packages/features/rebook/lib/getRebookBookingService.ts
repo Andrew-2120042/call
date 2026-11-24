@@ -1,6 +1,7 @@
 import type { CreateRegularBookingData } from "@calcom/features/bookings/lib/dto/types";
 import { prisma } from "@calcom/prisma";
 import { CreationSource } from "@calcom/prisma/enums";
+import { REBOOK_SOURCE } from "@calcom/features/money-saved/repositories/MoneySavedRepository";
 import { RebookRepository } from "../repositories/RebookRepository";
 import { type CreateRebooking, RebookBookingService } from "../services/RebookBookingService";
 
@@ -17,7 +18,8 @@ const createRebooking: CreateRebooking = async (params) => {
     timeZone: params.timeZone,
     language: params.language,
     user: params.username ?? undefined,
-    metadata: {},
+    // Tagged so the money-saved summary on Home can count sessions won back after a cancellation.
+    metadata: { calbeeSource: REBOOK_SOURCE },
     responses: params.responses,
     creationSource: CreationSource.WEBAPP,
   };

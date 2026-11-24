@@ -26,6 +26,18 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 - [ ] **Repeating bookings:** if a later week of a weekly series is already taken, the whole series fails with "This slot is no longer available", but the first week is saved anyway. Comes from the underlying Cal booking engine. Fix: check every week before booking and say which week is taken.
 - [x] Fixed: login page imported a server-only module; Teams connect error showed raw JSON; waitlist claim said "no longer available" when it was only a short rate limit; assistant labels mentioned a server key name.
 
+## Later: needs payments (Stripe, after the US company is registered)
+
+Decided 2026-11-24. Don't build these until Stripe is live.
+- **Payments at booking**: already built and hidden in the app; switch on once Stripe is connected. Free on every plan, like Cal.com and TidyCal.
+- **Deposits and card on file**: the fix people mention most for no-shows ("no payment, no commitment"). See MONEY-RESEARCH.md.
+- **Late-cancel rules**: clients can't cancel themselves inside X hours, and a late cancel or no-show can keep the deposit.
+- **Cancellation policy shown at booking**: only meaningful once a deposit is at stake.
+- **Session packages (5-packs, 10-packs) and subscriptions**, like TidyCal and Calendly.
+
+Not doing: text (SMS) reminders (cost per text, decided 2026-11-24), meeting polls, and a per-client reliability record.
+Next big build after launch: the Claude/ChatGPT connector (MCP-PLAN.md).
+
 ## Come back to (owner asked to be reminded, 2026-11-19)
 - [x] **Redesign the landing page** (done 2026-11-19/20: Apollo-style layout, dark, serif headings, own pricing page). It reads like a tech tool; it should feel like a calendar and show the product. Layout like Apollo's site (recording `~/Desktop/Screen Recording 2026-11-19 at 8.58.54 PM.mov`, frames in `docs/design-refs/landing-layout-apollo.jpg`): big product-demo blocks, a UI mock beside each feature's text, a row of 4 feature cards, customer stories, a huge closing banner, a big footer. Colours like Cal.com's (recording `... 8.57.34 PM.mov`, `docs/design-refs/landing-colours-calcom.jpg`): black or near-black, not Apollo's bright colours, with calendar pieces inside the headline (a photo, a clock, an "Intro call · 30m · Booked" chip) and a real app screenshot under it.
 - [ ] **Slack** (listed on the Apps page as "Not available yet" since 2026-11-20): post new bookings, requests and cancellations to a channel, with Accept/Decline buttons. Needs the owner to create a Slack app at api.slack.com/apps (Claude gives the exact settings).

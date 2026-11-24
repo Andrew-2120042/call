@@ -30,12 +30,12 @@ export function FeatureRow({
         <div>
           <p className="text-faint font-mono text-[11px] uppercase tracking-[0.12em]">{eyebrow}</p>
           <h3 className="mt-3 max-w-[18ch] text-[30px] leading-[1.1] sm:text-[34px]">{title}</h3>
-          <p className="text-fg/75 mt-3 max-w-[48ch] text-[14px] leading-snug">{body}</p>
+          <p className="text-fg/75 mt-4 max-w-[48ch] text-[17px] leading-relaxed">{body}</p>
         </div>
         <div>
           <ul className="space-y-2.5">
             {points.map((point) => (
-              <li key={point.title} className="flex gap-2.5 text-[13px] leading-snug">
+              <li key={point.title} className="flex gap-2.5 text-[15px] leading-snug">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="mt-[2px] shrink-0" aria-hidden>
                   <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
