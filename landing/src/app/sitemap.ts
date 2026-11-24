@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { articles } from "@/content/articles";
 import { docs } from "@/content/docs";
 import { audiences, comparisons, features } from "@/content/site-content";
+import { templates } from "@/content/templates";
 import { site } from "@/site.config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -11,6 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("", 1),
     page("/pricing", 0.9),
     page("/ai", 0.6),
+    page("/features", 0.8),
+    page("/templates", 0.7),
+    ...templates.map((t) => page(`/templates/${t.slug}`, 0.7)),
     ...features.map((f) => page(`/features/${f.slug}`, 0.8)),
     ...comparisons.map((c) => page(`/compare/${c.slug}`, 0.8)),
     ...audiences.map((a) => page(`/for/${a.slug}`, 0.7)),

@@ -21,6 +21,7 @@ const resourcesMenu = [
   { href: "/docs", label: "Docs", hint: `How every part of ${site.name} works` },
   { href: "/docs/changelog", label: "Changelog", hint: "What's new, every week" },
   { href: "/blog", label: "Guides", hint: "Comparisons, pricing explained, how-tos" },
+  { href: "/templates", label: "Templates", hint: "Cancellation policies, reminder emails and more, free to copy" },
   ...comparisons.map((c) => ({ href: `/compare/${c.slug}`, label: `${c.competitor} alternative`, hint: c.title })),
   { href: "/blog/best-scheduling-software-2027", label: "Best scheduling software 2027", hint: "An honest shortlist" },
 ];

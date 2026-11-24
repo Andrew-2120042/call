@@ -1,6 +1,7 @@
 import { articles } from "@/content/articles";
 import { docs } from "@/content/docs";
 import { audiences, comparisons, features, pricing } from "@/content/site-content";
+import { templates } from "@/content/templates";
 import { site } from "@/site.config";
 
 export const dynamic = "force-static";
@@ -34,6 +35,9 @@ export function GET() {
     "",
     "## Guides",
     ...articles.map((a) => `- [${a.title}](${site.url}/blog/${a.slug}): ${a.answer}`),
+    "",
+    "## Templates",
+    ...templates.map((t) => `- [${t.title}](${site.url}/templates/${t.slug}): ${t.description}`),
     "",
     "## Docs",
     ...docs.map((d) => `- [${d.title}](${site.url}${d.slug === "introduction" ? "/docs" : `/docs/${d.slug}`}): ${d.description}`),

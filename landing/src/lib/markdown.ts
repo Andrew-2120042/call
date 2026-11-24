@@ -11,6 +11,7 @@ import {
   pricing,
   pricingCompare,
 } from "@/content/site-content";
+import { type TemplatePage, templates } from "@/content/templates";
 import { site } from "@/site.config";
 
 // Plain Markdown copies of every page, built from the same content as the HTML pages, so AI assistants and
@@ -159,6 +160,20 @@ export function docMd(d: DocPage) {
   return [`# ${d.title}`, d.description, ...d.blocks.map(blockMd).filter((b) => b !== null)].join("\n\n");
 }
 
+export function templateMd(t: TemplatePage) {
+  return [
+    `# ${t.title}`,
+    t.answer,
+    "## When to use it",
+    t.whenToUse.map((w) => `- ${w}`).join("\n"),
+    ...t.variants.map((v) => `## ${v.name}\n\n${v.note ? `${v.note}\n\n` : ""}\`\`\`\n${v.text}\n\`\`\``),
+    "## Tips",
+    t.tips.map((tip) => `- ${tip}`).join("\n"),
+    "## Questions",
+    faq(t.faq),
+  ].join("\n\n");
+}
+
 /** Every public page as [path, markdown], in sitemap order. */
 export function allPagesMd(): [string, string][] {
   return [
@@ -168,6 +183,7 @@ export function allPagesMd(): [string, string][] {
     ...comparisons.map((c): [string, string] => [`/compare/${c.slug}`, comparisonMd(c)]),
     ...audiences.map((a): [string, string] => [`/for/${a.slug}`, audienceMd(a)]),
     ...articles.map((a): [string, string] => [`/blog/${a.slug}`, articleMd(a)]),
+    ...templates.map((t): [string, string] => [`/templates/${t.slug}`, templateMd(t)]),
     ...docs.map((d): [string, string] => [docPath(d), docMd(d)]),
   ];
 }
