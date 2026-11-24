@@ -26,6 +26,13 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 - [ ] **Repeating bookings:** if a later week of a weekly series is already taken, the whole series fails with "This slot is no longer available", but the first week is saved anyway. Comes from the underlying Cal booking engine. Fix: check every week before booking and say which week is taken.
 - [x] Fixed: login page imported a server-only module; Teams connect error showed raw JSON; waitlist claim said "no longer available" when it was only a short rate limit; assistant labels mentioned a server key name.
 
+## Google sign-in (found 2026-11-25) — do before launch
+
+- **Name on the Google prompt**: "Sign in to … with Google" shows the old name. Calbee's Google sign-in client ("Slotwise web") lives in the **Usuals** Google Cloud project (app name "Usuals", shared with usuals.site), so renaming there would also rename Usuals. Plan: a separate Google Cloud project just for Calbee, named Calbee, with its own sign-in client; then update GOOGLE_API_CREDENTIALS in production.
+- **Testing mode blocks real users**: that Google app is in "Testing" with 0 test users, so on the live site ordinary people can be blocked from "Sign in with Google" and from connecting Google Calendar. Must be set to "In production" before launch. Calendar access means Google reviews the app (days to weeks); it needs the new domain, a privacy page and terms page (both exist on the website).
+- **Allowed websites** were added on 2026-11-25: nodslot.site, www.nodslot.site, localhost, localhost:3100. Add the new domain when it's bought.
+- **Live website** needs `NEXT_PUBLIC_GOOGLE_CLIENT_ID` set in the landing Vercel project (after the Vercel CLI is logged back into the Calbee account).
+
 ## Later: needs payments (Stripe, after the US company is registered)
 
 Decided 2026-11-24. Don't build these until Stripe is live.
