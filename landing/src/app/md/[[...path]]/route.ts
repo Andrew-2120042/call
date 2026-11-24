@@ -10,6 +10,7 @@ export function generateStaticParams() {
 // Reached through the `<page>.md` rewrite in next.config.ts.
 export async function GET(_request: Request, { params }: { params: Promise<{ path?: string[] }> }) {
   const { path } = await params;
-  const body = pageMd(path?.length ? `/${path.join("/")}` : "/");
-  return body ? markdownResponse(body) : new Response("Not found", { status: 404 });
+  const pagePath = path?.length ? `/${path.join("/")}` : "/";
+  const body = pageMd(pagePath);
+  return body ? markdownResponse(body, pagePath) : new Response("Not found", { status: 404 });
 }

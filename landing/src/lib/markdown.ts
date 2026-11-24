@@ -198,7 +198,11 @@ export function pageMd(path: string): string | null {
   return found ? found[1] : null;
 }
 
-export const markdownResponse = (body: string) =>
+/**
+ * Points search engines at the HTML page as the original (so the .md copy isn't a duplicate), without a noindex:
+ * AI crawlers are served this same response at the page's own address, and must be allowed to index it.
+ */
+export const markdownResponse = (body: string, path = "/") =>
   new Response(`${body.trim()}\n`, {
-    headers: { "content-type": "text/markdown; charset=utf-8", "x-robots-tag": "noindex, follow" },
+    headers: { "content-type": "text/markdown; charset=utf-8", link: `<${site.url}${path === "/" ? "" : path}>; rel="canonical"` },
   });

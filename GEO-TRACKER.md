@@ -30,3 +30,34 @@ How it was run: ChatGPT web, logged in, **Temporary chat** (so memory doesn't bi
 - Listings on the directories AI tools read: Product Hunt, G2, Capterra, AlternativeTo, SaaSHub (owner sign-ups needed).
 - Pages for coaches, tutors and personal trainers (questions 3, 8, 10) with real, profession-specific facts.
 - Re-run these 12 questions on 2026-12-23.
+
+## 2026-11-24: Perplexity and Claude (after Ramp's "every AI behaves differently")
+
+Six of the same buyer questions (1, 2, 4, 5, 6, 7), asked in Perplexity (logged out) and Claude (incognito, web search on). **Calbee named in 0 of 6 on both.**
+
+| # | Perplexity named | Claude named |
+|---|---|---|
+| 1 Calendly alternative | Cal.com, Acuity, SavvyCal, TidyCal, Doodle, Microsoft Bookings, Zoho, OnceHub, Chili Piper | Cal.com, Acuity, TidyCal, Doodle, Microsoft Bookings, Setmore, Zoho, Koalendar |
+| 2 Free meeting scheduler | Cal.com, zcal, Doodle, HubSpot, Setmore | Cal.com, zcal, HubSpot, Google Calendar |
+| 4 Waitlist that fills cancellations | Acuity, Square (+ small waitlist apps) | Acuity, Square (quotes their help pages) |
+| 5 Reduce no-shows | Cal.com, SimplePractice, Practice Better | SimplePractice, Doodle |
+| 6 Team without per-seat pricing | Calendly, Cal.com, Acuity, Square | Calendly, Cal.com, Appointlet |
+| 7 Approve requests (consultants) | TidyCal, Appointlet | SavvyCal, Zoho, Koalendar, OnceHub |
+
+**How each behaves:** ChatGPT and Claude mostly quote the tools' **own** feature and help pages. Perplexity quotes **third-party "best of" articles** and **job pages** (e.g. tidycal.com/for/consultants).
+
+### Pages AI already quotes (where Calbee should be mentioned)
+Ramp's finding: get mentioned on pages AI already trusts, not more blogs. These are the pages Perplexity quoted:
+- usebund.com/blog/calendly-alternatives
+- larksuite.com/en_us/blog/calendly-alternatives and /meeting-scheduling-app
+- serpastra.com/blog/best-scheduling-software-for-small-business
+- fabric.so/…/best-scheduling-tool-for-founders
+- wpamelia.com/scheduling-software-for-small-businesses
+- blog.hubspot.com/sales/best-scheduling-app
+- wix.com app market (waitlist apps), gaplets.com, waitly.ai (waitlist question)
+
+The honest way in: email each author with a short, factual note (what Calbee does that the list is missing, e.g. a built-in waitlist and flat team pricing) and offer a free Pro account to test. No paid placements disguised as editorial, no fake reviews (Claude's usage policy and Google's guidelines).
+
+### Done 2026-11-24 for Ramp's other findings
+- **Markdown for AI:** AI crawlers (GPTBot, ClaudeBot, PerplexityBot and others) now get each page's Markdown copy automatically, same content as the HTML page; search engines and people get the normal page.
+- **Who's visiting:** every AI crawler visit is logged in Vercel as `ai_bot_visit` with the bot and page.
