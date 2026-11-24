@@ -100,25 +100,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The money problem in the reader's own words, then their own number. */}
-      <section className="border-t border-line py-24 sm:py-28">
-        <Container>
-          <div className="max-w-[46rem]">
-            <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Sound familiar?</p>
-            <h2 className="mt-3 text-[34px] leading-[1.1] tracking-[-0.02em] sm:text-[48px]">
-              Your calendar was full. Your bank account wasn't.
-            </h2>
-            <p className="text-fg/70 mt-4 text-[18px] leading-relaxed">
-              Every booking tool gets you booked, then stops. These are the four ways coaches, therapists, tutors and
-              trainers say they lose money every week.
-            </p>
-          </div>
-          <div className="mt-12">
-            <MoneyLeaks />
-          </div>
-        </Container>
-      </section>
-
       {/* Feature rows: product on a grey stage, words and points beside it, alternating sides. */}
       <section id="product" className="scroll-mt-20 border-t border-line py-28">
         <Container className="space-y-32">
@@ -354,6 +335,25 @@ export default function Home() {
       </section>
 
       <Faq items={homeFaq} />
+
+      {/* The money problem in the reader's own words, then their own number. */}
+      <section className="border-t border-line py-24 sm:py-28">
+        <Container>
+          <div className="max-w-[46rem]">
+            <p className="text-faint font-mono text-[11px] uppercase tracking-[0.16em]">Sound familiar?</p>
+            <h2 className="mt-3 text-[34px] leading-[1.1] tracking-[-0.02em] sm:text-[48px]">
+              Your calendar was full. Your bank account wasn't.
+            </h2>
+            <p className="text-fg/70 mt-4 text-[18px] leading-relaxed">
+              Every booking tool gets you booked, then stops. These are the four ways coaches, therapists, tutors and
+              trainers say they lose money every week.
+            </p>
+          </div>
+          <div className="mt-12">
+            <MoneyLeaks />
+          </div>
+        </Container>
+      </section>
 
       {/* Closing banner: the one white block on the page, like Apollo's bright one. */}
       <section className="pb-24 pt-8">
