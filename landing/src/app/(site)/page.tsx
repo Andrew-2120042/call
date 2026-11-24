@@ -19,14 +19,17 @@ const integrations = [
   { name: "Zapier", logo: "/logos/zapier.svg" },
 ];
 
-/** The product in one gesture, set inside the headline: a cancelled time turning back into a booking. */
-function SlotFlip() {
+/** A booking card set inside the headline: a picked time turning into a booking, the product in one gesture. */
+function BookingChip() {
   return (
-    <span className="relative mx-1 inline-flex translate-y-[-0.12em] items-center gap-2 rounded-full border border-line-strong bg-card py-1.5 pr-3 pl-3.5 align-middle font-sans text-[15px] leading-none tracking-normal shadow-sm sm:gap-2.5 sm:py-2 sm:text-[20px]">
-      <span className="text-fg">10:00</span>
+    <span className="relative mx-1 inline-flex translate-y-[-0.12em] items-center gap-2.5 rounded-2xl border border-line-strong bg-card py-1.5 pr-2 pl-3 align-middle font-sans text-[14px] leading-none tracking-normal shadow-sm sm:gap-3 sm:py-2 sm:pl-3.5 sm:text-[18px]">
+      <span className="flex flex-col items-start gap-1 text-left">
+        <span className="text-fg font-medium">Intro call</span>
+        <span className="text-faint text-[11px] sm:text-[13px]">30m</span>
+      </span>
       <span className="relative inline-grid">
-        <span className="slot-flip-out col-start-1 row-start-1 rounded-full bg-amber-100 px-2 py-1 text-[12px] text-amber-700 sm:text-[14px]">Cancelled</span>
-        <span className="slot-flip-in col-start-1 row-start-1 rounded-full bg-emerald-100 px-2 py-1 text-center text-[12px] text-emerald-700 sm:text-[14px]">Booked</span>
+        <span className="slot-flip-out col-start-1 row-start-1 rounded-lg border border-line-strong px-2.5 py-1.5 text-[12px] text-fg sm:text-[15px]">10:30 AM</span>
+        <span className="slot-flip-in col-start-1 row-start-1 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-center text-[12px] font-medium text-emerald-700 sm:text-[15px]">Booked</span>
       </span>
     </span>
   );
@@ -63,12 +66,11 @@ export default function Home() {
       {/* Hero: a calendar sentence, then the product on a dark stage. */}
       <section className="relative overflow-hidden">
         <Container className="relative pt-16 pb-16 text-center sm:pt-24">
-          <h1 className="mx-auto max-w-[18ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
-            Cancelled slots <SlotFlip /> fill themselves
+          <h1 className="mx-auto max-w-[20ch] font-serif text-[44px] leading-[1.04] tracking-[-0.025em] sm:text-[76px]">
+            Where every booking <BookingChip /> starts with one link
           </h1>
-          <p className="text-fg/80 mx-auto mt-6 max-w-[46ch] text-[15px] leading-snug">
-            Your booking link with a waitlist built in. When a client cancels, the next person waiting gets that time
-            automatically, and clients confirm before the day so no-shows don&apos;t leave gaps.
+          <p className="text-fg/80 mx-auto mt-6 max-w-[46ch] text-[17px] leading-snug">
+            Your free times, one link, booked in a few clicks.
           </p>
           <div className="mt-8 flex justify-center">
             <EmailSignup />

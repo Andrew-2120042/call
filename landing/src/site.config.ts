@@ -8,7 +8,7 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? `https://${BRAND.domain}`,
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? `https://app.${BRAND.domain}`,
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? `support@${BRAND.domain}`,
-  tagline: "The booking link that fills its own cancellations",
+  tagline: "Every booking starts with one link",
   description:
     `${BRAND.name} is a booking link for professionals. Free scheduling with unlimited services, plus approvals, a waitlist that refills cancelled slots, confirm-or-release for no-shows, and simple team pricing.`,
 };
