@@ -15,9 +15,9 @@ Calendly's sitemap blocks automated requests, so it isn't in the table.
 
 ## Order of work
 1. **Templates** (done 2026-11-24): cancellation policy, no-show policy, reminder emails, confirmation request, waitlist offer, rebooking email after a cancellation. Retention-focused, which is what Calbee is for.
-2. **Alternatives**: Acuity, YouCanBookMe, SavvyCal, TidyCal, Doodle, Setmore, Zoho Bookings, Square Appointments, Microsoft Bookings, Google Calendar appointment schedules. Each needs its own research from the vendor's pricing and help pages.
-3. **Professions** (one page each, with facts specific to that job): personal trainers, photographers, lawyers, financial advisors, real estate agents, recruiters, music teachers, nutritionists, life coaches, career coaches.
-4. **Free tools**: time zone converter, meeting planner across time zones, world clock.
+2. **Alternatives** (done 2026-11-24, 10 posts): Acuity, YouCanBookMe, SavvyCal, TidyCal, Doodle, Setmore, Zoho Bookings, Square Appointments, Microsoft Bookings, Google Calendar appointment schedules. Each needs its own research from the vendor's pricing and help pages.
+3. **Professions** (done 2026-11-24, 8 pages with suggested services and questions): personal trainers, photographers, lawyers, financial advisors, real estate agents, music teachers, nutritionists, recruiters. Still to add: life coaches, career coaches.
+4. **Free tools** (done 2026-11-24): time zone converter and meeting planner at /tools. Still to add: world clock, one page per popular conversion (e.g. IST to EST).
 5. **X vs Y**: Calendly vs Acuity, Calendly vs SavvyCal, Calendly vs Google Calendar, Cal.com vs SavvyCal, Acuity vs Square.
 
 ## Rules (from the SEO map post and Claude's/Google's policies)

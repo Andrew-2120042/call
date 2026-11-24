@@ -1,4 +1,5 @@
 import { site } from "@/site.config";
+import { alternativeGuides } from "./guides-alternatives";
 import { answerGuides } from "./guides-answers";
 import { guides2027 } from "./guides-2027";
 // Long-form articles written for specific searches. Competitor facts were checked against their official
@@ -323,6 +324,6 @@ const earlierArticles: Article[] = [
 ];
 
 // The 2027 guides come first; the long "best schedulers" guide replaces the earlier short version of that page.
-const newer = [...guides2027, ...answerGuides];
+const newer = [...guides2027, ...answerGuides, ...alternativeGuides];
 const replaced = new Set(newer.map((guide) => guide.slug));
 export const articles: Article[] = [...newer, ...earlierArticles.filter((article) => !replaced.has(article.slug))];

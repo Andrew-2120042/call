@@ -99,7 +99,11 @@ export function audienceMd(a: Audience) {
     highlighted.map((f) => `- **${f.name}** (${f.plan}): ${f.summary}`).join("\n"),
     "## Example",
     a.example,
-  ].join("\n\n");
+    a.services ? `## Services to set up first\n\n${table(["Service", "Length", "How to set it up"], a.services.map((sv) => [sv.name, sv.length, sv.note]))}` : "",
+    a.faq ? `## Questions\n\n${faq(a.faq)}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 export function articleMd(a: Article) {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections";
-import { BreadcrumbLd, ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
+import { BreadcrumbLd, ButtonLink, Container, Eyebrow, JsonLd, PlanBadge } from "@/components/ui";
 import { audiences, features } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -55,6 +55,51 @@ export default async function AudiencePage({ params }: Params) {
           <p className="text-faint text-xs font-medium uppercase tracking-[0.12em]">In practice</p>
           <p className="mt-3 leading-relaxed">{a.example}</p>
         </div>
+        {a.services && (
+          <>
+            <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">Services to set up first</h2>
+            <div className="mt-5 overflow-x-auto rounded-2xl border border-line">
+              <table className="w-full min-w-[520px] text-left text-[15px]">
+                <thead className="bg-surface">
+                  <tr>
+                    <th scope="col" className="px-5 py-3 font-medium">Service</th>
+                    <th scope="col" className="px-5 py-3 font-medium">Length</th>
+                    <th scope="col" className="px-5 py-3 font-medium">How to set it up</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {a.services.map((sv) => (
+                    <tr key={sv.name}>
+                      <th scope="row" className="px-5 py-3.5 font-medium">{sv.name}</th>
+                      <td className="text-muted px-5 py-3.5 whitespace-nowrap">{sv.length}</td>
+                      <td className="text-muted px-5 py-3.5">{sv.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+        {a.faq && (
+          <>
+            <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">Questions from {a.plural}</h2>
+            <div className="mt-4 divide-y divide-line border-y border-line">
+              {a.faq.map((f) => (
+                <div key={f.q} className="py-4">
+                  <h3 className="font-sans font-medium">{f.q}</h3>
+                  <p className="text-muted mt-1.5 leading-relaxed">{f.a}</p>
+                </div>
+              ))}
+            </div>
+            <JsonLd
+              data={{
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+              }}
+            />
+          </>
+        )}
       </Container>
       <FinalCta title={`A booking link made for ${a.plural}`} />
     </>

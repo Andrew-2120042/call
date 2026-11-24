@@ -193,6 +193,9 @@ export type Audience = {
   /** Feature slugs to highlight, in order. */
   highlights: string[];
   example: string;
+  /** Services to set up first, with typical lengths for this job. */
+  services?: { name: string; length: string; note: string }[];
+  faq?: { q: string; a: string }[];
 };
 
 export const audiences: Audience[] = [
@@ -255,6 +258,149 @@ export const audiences: Audience[] = [
     pains: ["Per-seat pricing as the team grows", "Client calls landing on the wrong person", "Finding a time when the whole team is free"],
     highlights: ["team-scheduling", "booking-approval", "ai-booking-summaries"],
     example: "A new lead books a discovery call on your team page. Round robin gives it to whoever is free, and the AI summary tells them what the lead needs.",
+  },
+  {
+    slug: "personal-trainers",
+    name: "Personal trainer",
+    plural: "personal trainers",
+    title: "Booking software for personal trainers that keeps your sessions full",
+    summary: "Clients book sessions around your gym hours, late cancellations get refilled from a waitlist, and everyone confirms before an early start.",
+    pains: ["Early-morning sessions that clients skip", "Last-minute cancellations on your busiest slots", "Juggling sessions across gyms, parks and video calls"],
+    highlights: ["waitlist-scheduling", "no-show-protection", "team-scheduling"],
+    example: "A client cancels Thursday's 7am at 9pm the night before. The next person on your waitlist gets the offer, claims it before bed, and your morning stays full.",
+    services: [
+      { name: "Free consultation", length: "20 min", note: "Goals and a quick movement check; books instantly." },
+      { name: "1:1 session", length: "45 or 60 min", note: "Ask clients to confirm 12 hours before early starts." },
+      { name: "Online check-in", length: "15 min", note: "With a Google Meet link for remote clients." },
+    ],
+    faq: [
+      { q: "Can clients book recurring weekly sessions?", a: "Yes. A service can let clients book a repeating series, like every Tuesday at 7am for eight weeks." },
+      { q: "Can I block the hours I'm at the gym floor?", a: "Yes. Set your working hours per day, add a break, and switch off days you don't take sessions." },
+    ],
+  },
+  {
+    slug: "photographers",
+    name: "Photographer",
+    plural: "photographers",
+    title: "Booking software for photographers: consultations, shoots and mini sessions",
+    summary: "Let clients pick a consultation or shoot slot, read what they want before you accept, and fill cancelled mini-session slots from a waitlist.",
+    pains: ["Enquiries that turn out not to fit your style or budget", "Popular mini-session days that sell out, then lose a slot to a cancellation", "Travel time between shoots"],
+    highlights: ["booking-approval", "ai-booking-summaries", "waitlist-scheduling"],
+    example: "Your autumn mini-session day sells out. Two slots cancel the week before, and both are claimed from the waitlist within an hour, without a single message from you.",
+    services: [
+      { name: "Discovery call", length: "20 min", note: "Ask about the occasion, location and budget; use approvals." },
+      { name: "Portrait session", length: "60–90 min", note: "Add a buffer after for travel and backing up cards." },
+      { name: "Mini session", length: "20 min", note: "Turn on the waitlist so cancelled slots refill." },
+    ],
+    faq: [
+      { q: "Can I add travel time between shoots?", a: "Yes. Add a buffer before and after any service so back-to-back bookings leave you time to travel." },
+      { q: "Can I screen enquiries before booking?", a: "Yes. With approvals, each request waits for you with a short AI summary of what the client wants." },
+    ],
+  },
+  {
+    slug: "lawyers",
+    name: "Lawyer",
+    plural: "lawyers",
+    title: "Client booking for lawyers: consultations you can screen first",
+    summary: "Prospective clients request a consultation and answer your intake questions; you check the matter and conflicts before accepting.",
+    pains: ["Consultation requests outside your practice area", "Time lost to calls that should have been declined", "Clients who don't show for paid consultations"],
+    highlights: ["booking-approval", "ai-booking-summaries", "no-show-protection"],
+    example: "A prospect requests a 30-minute consultation about a lease dispute. The summary flags it as in scope, you accept, and they confirm the day before.",
+    services: [
+      { name: "Initial consultation", length: "30 min", note: "Use approvals and ask for the matter type and the other party's name." },
+      { name: "Follow-up meeting", length: "45–60 min", note: "For existing clients; books instantly." },
+    ],
+    faq: [
+      { q: "Can I check for conflicts before accepting?", a: "Yes. Ask for the other party's name as a booking question and use approvals, so nothing is confirmed until you accept." },
+      { q: "Should I store sensitive case details in booking questions?", a: "Keep booking questions to what you need to decide whether to accept. Collect confidential details through your usual secure channels." },
+    ],
+  },
+  {
+    slug: "financial-advisors",
+    name: "Financial advisor",
+    plural: "financial advisors",
+    title: "Scheduling for financial advisors: reviews, discovery calls and a team page",
+    summary: "Prospects book discovery calls, existing clients book annual reviews, and a team page shares bookings across your advisors.",
+    pains: ["Discovery calls with prospects who aren't a fit", "Annual reviews that slip because clients forget to book", "Sharing new enquiries fairly across advisors"],
+    highlights: ["booking-approval", "team-scheduling", "no-show-protection"],
+    example: "A new enquiry books through your firm's team page; round robin gives it to the advisor who's free, and the AI summary tells them what the prospect wants to discuss.",
+    services: [
+      { name: "Discovery call", length: "30 min", note: "Use approvals and ask about goals and investable assets." },
+      { name: "Annual review", length: "60 min", note: "For existing clients; ask them to confirm the day before." },
+    ],
+    faq: [
+      { q: "Can several advisors share one booking page?", a: "Yes. The Team plan covers up to 10 people for $69 a month, with round robin and a shared team page." },
+    ],
+  },
+  {
+    slug: "real-estate-agents",
+    name: "Real estate agent",
+    plural: "real estate agents",
+    title: "Booking links for real estate agents: viewings, valuations and calls",
+    summary: "Buyers book viewings in open slots, sellers book valuations, and cancelled viewings go to the next person waiting.",
+    pains: ["Viewings that don't turn up", "Back-and-forth messages to find a viewing time", "Popular properties with more interest than slots"],
+    highlights: ["waitlist-scheduling", "no-show-protection", "booking-approval"],
+    example: "A property gets ten viewing requests for six Saturday slots. The other four join the waitlist, and when two viewings cancel, the slots are claimed within the hour.",
+    services: [
+      { name: "Property viewing", length: "20–30 min", note: "Turn on the waitlist for popular listings." },
+      { name: "Valuation visit", length: "45 min", note: "Use approvals to check the address and timing." },
+      { name: "Buyer call", length: "15 min", note: "Books instantly." },
+    ],
+    faq: [
+      { q: "Can buyers join a waitlist for a full viewing day?", a: "Yes. They can wait for a specific time or any time that day, and get offered the slot if someone cancels." },
+    ],
+  },
+  {
+    slug: "music-teachers",
+    name: "Music teacher",
+    plural: "music teachers",
+    title: "Lesson booking for music teachers: weekly lessons and trial lessons",
+    summary: "Students book trial lessons and weekly slots, reschedule from their email, and cancelled lessons go to students waiting for a better time.",
+    pains: ["Students who cancel the day of the lesson", "Parents messaging to swap lesson times", "Popular after-school slots that are always full"],
+    highlights: ["waitlist-scheduling", "no-show-protection", "booking-approval"],
+    example: "A student wants a 4pm Wednesday slot but it's taken, so they join the waitlist for 'anything earlier'. When the 4pm student cancels, the offer goes straight to them.",
+    services: [
+      { name: "Trial lesson", length: "30 min", note: "Books instantly; ask the instrument and level." },
+      { name: "Weekly lesson", length: "30, 45 or 60 min", note: "Let students book a repeating series." },
+    ],
+    faq: [
+      { q: "Can students book the same time every week?", a: "Yes. Turn on recurring bookings so a student can book a weekly series in one go." },
+      { q: "Can parents reschedule without messaging me?", a: "Yes. Every confirmation email has a reschedule link that only shows your free times." },
+    ],
+  },
+  {
+    slug: "nutritionists",
+    name: "Nutritionist",
+    plural: "nutritionists and dietitians",
+    title: "Booking software for nutritionists and dietitians",
+    summary: "Clients book initial assessments and follow-ups, answer intake questions in advance, and confirm before each appointment.",
+    pains: ["Follow-ups that clients forget", "Intake details collected at the start of the session instead of before", "Late cancellations on longer initial assessments"],
+    highlights: ["no-show-protection", "waitlist-scheduling", "ai-booking-summaries"],
+    example: "A new client books a 60-minute assessment and answers questions about goals and dietary needs, so you start the session prepared instead of filling in forms.",
+    services: [
+      { name: "Initial assessment", length: "60 min", note: "Ask about goals and dietary requirements as booking questions." },
+      { name: "Follow-up", length: "30 min", note: "Ask clients to confirm the day before." },
+    ],
+    faq: [
+      { q: "Should I collect medical history in booking questions?", a: "Ask only what you need to prepare. Keep detailed health information in your usual secure records." },
+    ],
+  },
+  {
+    slug: "recruiters",
+    name: "Recruiter",
+    plural: "recruiters",
+    title: "Interview scheduling for recruiters and small hiring teams",
+    summary: "Candidates book screening calls in open slots, interviews go to whichever interviewer is free, and everyone gets reminders.",
+    pains: ["Days spent emailing candidates to find a time", "Interviewers' calendars that don't line up", "Candidates who don't show for screening calls"],
+    highlights: ["team-scheduling", "no-show-protection", "booking-approval"],
+    example: "You send one screening link to twenty candidates. They book across the week, confirm the day before, and the panel interview only offers times when all interviewers are free.",
+    services: [
+      { name: "Screening call", length: "15–20 min", note: "Books instantly; ask for the role and notice period." },
+      { name: "Panel interview", length: "45–60 min", note: "A collective team service, so every interviewer is free." },
+    ],
+    faq: [
+      { q: "Can an interview only show times when every interviewer is free?", a: "Yes. A collective team service only offers times when every host is free." },
+    ],
   },
 ];
 

@@ -24,7 +24,7 @@ const src = {
 };
 
 // Reviews are shared between articles so each tool is described the same way everywhere.
-const tools = {
+export const tools = {
   calendly: {
     name: "Calendly",
     platforms: "Web, iOS, Android",
