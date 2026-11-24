@@ -16,7 +16,8 @@ export const SHOTS = {
 
 export type Release = {
   slug: string;
-  version: string;
+  /** Only the launch carries a version number. */
+  version?: string;
   issue: number;
   date: string;
   /** Shown instead of the exact date when only the month is known. */
@@ -38,7 +39,7 @@ export const releases: Release[] = [
   {
     slug: "v3-0",
     version: "v3.0",
-    issue: 7,
+    issue: 4,
     date: "2026-11-24",
     title: "Calbee v3.0: Everything you need for meetings, now free",
     summary: "Our biggest release yet. The whole booking link is free, the extras live on Pro, and Calbee has a new name.",
@@ -81,10 +82,6 @@ export const releases: Release[] = [
         image: SHOTS.teams,
       },
       {
-        heading: "Meet Calbee",
-        paragraphs: ["We've changed our name to Calbee. Same product, same people, and your booking links keep working. There's nothing to change on your side."],
-      },
-      {
         heading: "Free tools and templates",
         paragraphs: [
           "We've put together a few things that are useful even if you don't use Calbee: a time zone converter, a meeting planner that finds a time across several cities, and copy-ready templates for cancellation and no-show policies, reminders, confirmations, waitlist offers and rebooking emails.",
@@ -104,11 +101,11 @@ export const releases: Release[] = [
     ],
   },
   {
-    slug: "v2-2",
-    version: "v2.2",
-    issue: 6,
-    date: "2026-11-20",
-    title: "Calbee v2.2: One-click rebooking, an assistant that does the work & a Pro trial",
+    slug: "august-2026-rebooking",
+    issue: 3,
+    date: "2026-08-20",
+    dateLabel: "August 2026",
+    title: "One-click rebooking, an assistant that does the work & a Pro trial",
     summary: "Win back cancellations in one click, hand busywork to the assistant, and try Pro free for 14 days.",
     intro:
       "This release is about the clients you already have. A cancelled session shouldn't be the end of the relationship, and moving a week of bookings shouldn't take an afternoon. Here's what we built.",
@@ -147,11 +144,11 @@ export const releases: Release[] = [
     improvements: ["We've added black, grey and white themes for booking pages.", "We keep menus and pop-ups on screen near the edges of the window.", "We've given the embed window a close button and a one-click copy for the code."],
   },
   {
-    slug: "v2-1",
-    version: "v2.1",
-    issue: 5,
-    date: "2026-11-15",
-    title: "Calbee v2.1: Teams, round robin & integrations",
+    slug: "august-2026-teams",
+    issue: 2,
+    date: "2026-08-04",
+    dateLabel: "August 2026",
+    title: "Teams, round robin & integrations",
     summary: "Calbee now works for small teams, at one flat price instead of per seat.",
     intro: "Coaching studios, small clinics and agencies kept asking for one thing: a way to share bookings between a few people without paying for every seat. This release is for them.",
     image: SHOTS.teams,
@@ -178,14 +175,14 @@ export const releases: Release[] = [
     ],
   },
   {
-    slug: "v2-0",
-    version: "v2.0",
-    issue: 4,
-    date: "2026-11-13",
-    title: "Calbee v2.0: Back, and rebuilt around keeping your calendar full",
-    summary: "We picked the project back up and rebuilt it around one idea: a booking link should keep working after someone books.",
+    slug: "june-2026-first-release",
+    issue: 1,
+    date: "2026-06-10",
+    dateLabel: "June 2026",
+    title: "Calbee is here: a booking link that keeps your calendar full",
+    summary: "Our first release: a booking link that keeps working after someone books.",
     intro:
-      "After a few months away, we came back to the booking link with a clear idea of what was missing. Every tool we tried stopped helping the moment someone booked. But the expensive part comes after: the late cancellation, the no-show, the request from someone who isn't a fit. v2.0 is built around that.",
+      "Every booking tool we tried stopped helping the moment someone booked. But the expensive part of running a calendar comes after that: the late cancellation, the no-show, the request from someone who isn't a fit. So we built Calbee around it. Here's what's in the first release.",
     image: SHOTS.requests,
     sections: [
       {
@@ -201,49 +198,6 @@ export const releases: Release[] = [
         heading: "Confirm-or-release",
         paragraphs: ["Clients confirm before the day with one click. If they don't, you're told, and the time can be released for someone on the waitlist."],
       },
-    ],
-  },
-  {
-    slug: "v1-2",
-    version: "v1.2",
-    issue: 3,
-    date: "2026-06-01",
-    dateLabel: "June 2026",
-    title: "v1.2: Import from Calendly, calendar health & embeds",
-    summary: "Move from Calendly in a minute, get warned when a calendar stops syncing, and put your booking page on your own site.",
-    intro: "Most people who tried Calbee in the spring were coming from Calendly, so this release is about making the move painless.",
-    sections: [
-      { heading: "Import from Calendly", paragraphs: ["Bring your event types and weekly hours across in about a minute, so your new page looks like your old one from day one."] },
-      { heading: "Calendar health check", paragraphs: ["If a connected calendar stops syncing, we warn you straight away, before it causes a double booking."] },
-      { heading: "Embed on your website", paragraphs: ["Copy one snippet to put your booking page inside your own website, inline or as a pop-up button."] },
-    ],
-  },
-  {
-    slug: "v1-1",
-    version: "v1.1",
-    issue: 2,
-    date: "2026-05-01",
-    dateLabel: "May 2026",
-    title: "v1.1: Booking questions and better reminders",
-    summary: "Ask clients what you need before they book, and remind them at the right time.",
-    intro: "The first people using Calbee wanted to know a little about clients before a session. So we added questions, and tuned reminders so fewer people forget.",
-    sections: [
-      { heading: "Booking questions", paragraphs: ["Ask anything before someone books: a short answer, a choice from a list, or a phone number. Answers show up on the booking."] },
-      { heading: "Reminders that arrive at the right time", paragraphs: ["Every client gets a reminder email before their booking, sent exactly once, in their own time zone."] },
-    ],
-  },
-  {
-    slug: "v1-0",
-    version: "v1.0",
-    issue: 1,
-    date: "2026-03-01",
-    dateLabel: "March 2026",
-    title: "v1.0: The first version",
-    summary: "A booking link for coaches and consultants, with calendar sync and reminders.",
-    intro: "We started building in January 2026 and shipped the first version in March: one link with your free times, for coaches, therapists and consultants who were tired of back-and-forth emails.",
-    sections: [
-      { heading: "One booking link", paragraphs: ["Share one link with your free times. Clients pick one, and it lands on your calendar."] },
-      { heading: "Calendar sync", paragraphs: ["Busy times in Google Calendar block your page, so nobody books you twice."] },
     ],
   },
 ];

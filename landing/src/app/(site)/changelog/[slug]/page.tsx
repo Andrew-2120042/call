@@ -45,12 +45,12 @@ export default async function ReleasePage({ params }: Params) {
   const older = releases.slice(index + 1, index + 3);
   return (
     <Container className="max-w-[1160px] pt-10 pb-24">
-      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Changelog", path: "/changelog" }, { name: r.version, path: `/changelog/${r.slug}` }]} />
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Changelog", path: "/changelog" }, { name: r.version ?? releaseDate(r.date, r.dateLabel), path: `/changelog/${r.slug}` }]} />
       <JsonLd data={{ "@context": "https://schema.org", "@type": "BlogPosting", headline: r.title, description: r.summary, datePublished: r.date, image: r.image ? `${site.url}${r.image.src}` : undefined, mainEntityOfPage: url, author: { "@type": "Organization", name: `${site.name} team` } }} />
 
       <div className="mx-auto max-w-[880px]">
         <nav className="text-faint flex gap-1.5 text-[13px]" aria-label="Breadcrumb">
-          <Link href="/changelog" className="hover:text-fg">Changelog</Link><span>›</span><span>{r.version}</span>
+          <Link href="/changelog" className="hover:text-fg">Changelog</Link><span>›</span><span>{r.version ?? releaseDate(r.date, r.dateLabel)}</span>
         </nav>
         <h1 className="mt-5 text-[38px] leading-[1.08] tracking-[-0.025em] sm:text-[52px]">{r.title}</h1>
         <p className="text-fg/80 mt-5 text-[18px] leading-relaxed">{r.intro}</p>
@@ -119,7 +119,7 @@ export default async function ReleasePage({ params }: Params) {
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {older.map((o) => (
                   <Link key={o.slug} href={`/changelog/${o.slug}`} className="rounded-xl border border-line p-4 text-[15px] leading-snug transition hover:border-line-strong">
-                    <span className="text-faint block font-mono text-[12px]">{o.version} · {releaseDate(o.date, o.dateLabel)}</span>
+                    <span className="text-faint block font-mono text-[12px]">{o.version ? `${o.version} · ` : ""}{releaseDate(o.date, o.dateLabel)}</span>
                     {o.title}
                   </Link>
                 ))}

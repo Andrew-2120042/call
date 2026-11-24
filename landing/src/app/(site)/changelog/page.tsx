@@ -22,7 +22,7 @@ export default function ChangelogIndex() {
         {releases.map((r, i) => (
           <article key={r.slug} className="border-t border-line pt-10">
             <p className="text-faint text-[13px]">
-              <span className="text-fg font-mono">{r.version}</span> · {releaseDate(r.date, r.dateLabel)}
+              {r.version && <><span className="text-fg font-mono">{r.version}</span> · </>}{releaseDate(r.date, r.dateLabel)}
             </p>
             <Link href={`/changelog/${r.slug}`} className="group block">
               <h2 className="mt-2 text-[30px] leading-tight tracking-[-0.02em] group-hover:underline">{r.title}</h2>
@@ -34,7 +34,7 @@ export default function ChangelogIndex() {
               </Link>
             )}
             <Link href={`/changelog/${r.slug}`} className="mt-5 inline-block text-[15px] underline underline-offset-[3px]">
-              Read the {r.version} notes →
+              Read the full notes →
             </Link>
           </article>
         ))}
