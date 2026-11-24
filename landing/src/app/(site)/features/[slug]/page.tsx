@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Band, Card, PageHero, Statement, Steps } from "@/components/page-kit";
 import { Faq, FinalCta } from "@/components/sections";
-import { BreadcrumbLd, ButtonLink, Container, Eyebrow, PlanBadge } from "@/components/ui";
+import { BreadcrumbLd, ButtonLink, PlanBadge } from "@/components/ui";
+import { FEATURE_SHOTS } from "@/content/page-shots";
 import { features } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -30,52 +32,41 @@ export default async function FeaturePage({ params }: Params) {
   const others = features.filter((f) => f.slug !== feature.slug).slice(0, 3);
   return (
     <>
-      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Features", path: "/#product" }, { name: feature.name, path: `/features/${feature.slug}` }]} />
-      <Container className="max-w-3xl pt-20">
-        <div className="flex items-center gap-3">
-          <Eyebrow>{feature.name}</Eyebrow>
-          <PlanBadge plan={feature.plan} />
-        </div>
-        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{feature.title}</h1>
-        <p className="text-muted mt-5 text-lg leading-relaxed">{feature.summary}</p>
-        <div className="mt-8 flex gap-3">
-          <ButtonLink href={signupUrl}>Try it free</ButtonLink>
-          <ButtonLink href="/pricing" variant="secondary">Pricing</ButtonLink>
-        </div>
-      </Container>
-
-      <Container className="max-w-3xl py-16">
-        <div className="rounded-2xl border border-line bg-surface p-6">
-          <p className="text-faint text-xs font-medium uppercase tracking-[0.12em]">The problem</p>
-          <p className="mt-3 leading-relaxed">{feature.problem}</p>
-        </div>
-        <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">How it works</h2>
-        <ol className="mt-6 space-y-6">
-          {feature.how.map((step, i) => (
-            <li key={step.title} className="flex gap-4">
-              <span className="grid h-7 w-7 flex-none place-items-center rounded-full border border-line-strong text-xs">{i + 1}</span>
-              <div>
-                <h3 className="font-sans font-medium">{step.title}</h3>
-                <p className="text-muted mt-1 text-sm leading-relaxed">{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Container>
-
+      <BreadcrumbLd siteUrl={site.url} trail={[{ name: "Features", path: "/features" }, { name: feature.name, path: `/features/${feature.slug}` }]} />
+      <PageHero
+        eyebrow={feature.name}
+        badge={<PlanBadge plan={feature.plan} />}
+        title={feature.title}
+        summary={feature.summary}
+        image={FEATURE_SHOTS[feature.slug]}
+        actions={
+          <>
+            <ButtonLink href={signupUrl}>Try it free</ButtonLink>
+            <ButtonLink href="/pricing" variant="secondary">See pricing</ButtonLink>
+          </>
+        }
+      />
+      <Statement label="The problem">{feature.problem}</Statement>
+      <Band title="How it works">
+        <Steps steps={feature.how} />
+      </Band>
       <Faq items={feature.faq} />
-
-      <Container className="py-8">
-        <h2 className="text-lg font-normal">More features</h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+      <Band title="More features">
+        <div className="grid gap-5 md:grid-cols-3">
           {others.map((f) => (
-            <Link key={f.slug} href={`/features/${f.slug}`} className="rounded-xl border border-line bg-surface p-4 text-sm transition hover:border-line-strong">
-              <span className="font-medium">{f.name}</span>
-              <span className="text-muted mt-1 block">{f.title}</span>
+            <Link key={f.slug} href={`/features/${f.slug}`} className="group">
+              <Card className="h-full transition group-hover:border-line-strong">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-muted text-[13px] font-medium uppercase tracking-[0.14em]">{f.name}</span>
+                  <PlanBadge plan={f.plan} />
+                </div>
+                <p className="mt-4 text-[21px] leading-snug">{f.title}</p>
+                <span className="text-fg/60 mt-6 inline-block text-[15px] group-hover:text-fg">Learn more →</span>
+              </Card>
             </Link>
           ))}
         </div>
-      </Container>
+      </Band>
       <FinalCta />
     </>
   );

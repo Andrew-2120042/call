@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogArt } from "@/components/blog-art";
+import { PromoBanner, PromoNote, pitchFor } from "@/components/blog-promo";
 import { CopyLinkButton } from "@/components/copy-link-button";
 import { FinalCta } from "@/components/sections";
 import { JsonLd } from "@/components/ui";
@@ -100,6 +101,11 @@ export default async function ArticlePage({ params }: Params) {
     ...articles.filter((x) => x.slug !== a.slug && categoryOf(x) !== category),
   ].slice(0, 3);
 
+  const pitch = pitchFor(a.slug);
+  // One banner early, one small note further down, like a magazine's in-article ads; never on the first section.
+  const bannerAt = Math.min(2, a.sections.length - 1);
+  const noteAt = a.sections.findIndex((s, i) => i > bannerAt && !s.tool && (s.paragraphs?.length ?? 0) > 0);
+
   return (
     <>
       <div className="mx-auto max-w-[1480px] px-5 pt-8 sm:px-8">
@@ -158,12 +164,14 @@ export default async function ArticlePage({ params }: Params) {
             </div>
 
             <div className="text-fg/85 text-[18px] leading-[1.75]">
-              {a.sections.map((s) => (
-                <section key={s.heading}>
+              {a.sections.map((s, i) => (
+                <section key={s.heading} className="flow-root">
+                  {i === bannerAt && <PromoBanner pitch={pitch} />}
                   <h2 id={docSlug(s.heading)} className="text-fg mt-14 scroll-mt-24 text-[30px] leading-tight tracking-[-0.02em]">
                     {s.heading}
                   </h2>
                   {s.tool && <ToolCard tool={s.tool} />}
+                  {i === noteAt && s.paragraphs?.length ? <PromoNote /> : null}
                   {s.paragraphs?.map((p) => <p key={p} className="mt-5">{p}</p>)}
                   {s.bullets && (
                     <ul className="mt-5 list-disc space-y-2.5 ps-6 marker:text-line-strong">
@@ -246,18 +254,15 @@ export default async function ArticlePage({ params }: Params) {
 
           <aside className="hidden xl:col-start-3 min-[1360px]:block">
             <div className="sticky top-24 max-w-[264px]">
-              <div className="rounded-xl border border-line bg-surface p-5 2xl:p-6">
-                <p className="font-serif text-[24px] leading-[1.15] 2xl:text-[27px]">Still comparing scheduling tools?</p>
-                <p className="text-fg/75 mt-3 text-[15px] leading-relaxed">
-                  {site.name} is a free booking link that refills cancelled times from a waitlist and asks clients to
-                  confirm before the day.
-                </p>
+              <div className="rounded-xl bg-[#cdbdff] p-6 text-black">
+                <p className="font-serif text-[26px] leading-[1.12]">{pitch.title}</p>
+                <p className="mt-3 text-[15px] leading-relaxed text-black/75">{pitch.body}</p>
                 <a
                   href={signupUrl}
-                  className="bg-brand mt-5 inline-flex h-10 w-full items-center justify-center rounded-md px-4 text-[14px] font-medium text-black transition hover:brightness-95">
-                  Try {site.name} free
+                  className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-md bg-black px-4 text-[14px] font-medium text-white transition hover:bg-black/85">
+                  Get started
                 </a>
-                <p className="text-faint mt-2 text-center text-[12px]">No credit card needed</p>
+                <p className="mt-2 text-center text-[12px] text-black/60">Free forever. No credit card.</p>
               </div>
             </div>
           </aside>

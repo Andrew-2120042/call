@@ -21,7 +21,7 @@ export function ButtonLink({
       ? "bg-fg text-bg hover:bg-fg/85"
       : "border border-line-strong text-fg hover:bg-raised";
   const external = href.startsWith("http");
-  const cls = `inline-flex h-10 items-center justify-center rounded-md px-5 text-sm font-medium transition ${styles} ${className}`;
+  const cls = `inline-flex h-11 items-center justify-center rounded-md px-6 text-[15px] font-medium transition ${styles} ${className}`;
   return external ? (
     <a href={href} className={cls}>
       {children}
@@ -39,7 +39,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 
 export function PlanBadge({ plan }: { plan: string }) {
   const color = plan === "Free" ? "text-emerald-400 bg-emerald-400/10" : "text-accent bg-accent-soft";
-  return <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${color}`}>{plan}</span>;
+  return <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-medium ${color}`}>{plan}</span>;
 }
 
 /** Renders schema.org data for search engines. */

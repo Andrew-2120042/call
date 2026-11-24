@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FinalCta } from "@/components/sections";
-import { BreadcrumbLd, ButtonLink, Container, Eyebrow, JsonLd, PlanBadge } from "@/components/ui";
+import { Band, Card, PageHero, Statement } from "@/components/page-kit";
+import { Faq, FinalCta } from "@/components/sections";
+import { BreadcrumbLd, ButtonLink, PlanBadge } from "@/components/ui";
+import { FEATURE_SHOTS } from "@/content/page-shots";
 import { audiences, features } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -22,85 +24,76 @@ export default async function AudiencePage({ params }: Params) {
   const { slug } = await params;
   const a = audiences.find((x) => x.slug === slug);
   if (!a) notFound();
-  const picked = a.highlights.map((slug) => features.find((f) => f.slug === slug)).filter((f) => f !== undefined);
+  const picked = a.highlights.map((s) => features.find((f) => f.slug === s)).filter((f) => f !== undefined);
   return (
     <>
       <BreadcrumbLd siteUrl={site.url} trail={[{ name: `For ${a.plural}`, path: `/for/${a.slug}` }]} />
-      <Container className="max-w-3xl pt-20">
-        <Eyebrow>For {a.plural}</Eyebrow>
-        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{a.title}</h1>
-        <p className="text-muted mt-5 text-lg leading-relaxed">{a.summary}</p>
-        <div className="mt-8"><ButtonLink href={signupUrl}>Sign up free</ButtonLink></div>
-      </Container>
-      <Container className="max-w-3xl py-14">
-        <h2 className="text-2xl font-normal tracking-[-0.02em]">Sound familiar?</h2>
-        <ul className="mt-5 space-y-2">
+      <PageHero
+        eyebrow={`For ${a.plural}`}
+        title={a.title}
+        summary={a.summary}
+        image={FEATURE_SHOTS[a.highlights[0]]}
+        actions={
+          <>
+            <ButtonLink href={signupUrl}>Sign up free</ButtonLink>
+            <ButtonLink href="/pricing" variant="secondary">See pricing</ButtonLink>
+          </>
+        }
+      />
+
+      <Band title="Sound familiar?">
+        <div className="grid gap-5 md:grid-cols-3">
           {a.pains.map((p) => (
-            <li key={p} className="text-muted flex gap-3"><span className="text-faint">—</span>{p}</li>
+            <Card key={p}><p className="text-[21px] leading-snug">{p}</p></Card>
           ))}
-        </ul>
-        <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">What helps most</h2>
-        <div className="mt-6 grid gap-3">
+        </div>
+      </Band>
+
+      <Band title="What helps most" intro={`The three ${site.name} features ${a.plural} use most.`}>
+        <div className="grid gap-5 md:grid-cols-3">
           {picked.map((f) => (
-            <Link key={f.slug} href={`/features/${f.slug}`} className="rounded-2xl border border-line bg-surface p-5 transition hover:border-line-strong">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-sans font-medium">{f.name}</h3>
-                <PlanBadge plan={f.plan} />
-              </div>
-              <p className="text-muted mt-2 text-sm leading-relaxed">{f.summary}</p>
+            <Link key={f.slug} href={`/features/${f.slug}`} className="group">
+              <Card className="h-full transition group-hover:border-line-strong">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-sans text-[21px] font-medium">{f.name}</h3>
+                  <PlanBadge plan={f.plan} />
+                </div>
+                <p className="text-fg/70 mt-4 text-[17px] leading-relaxed">{f.summary}</p>
+                <span className="text-fg/60 mt-6 inline-block text-[15px] group-hover:text-fg">How it works →</span>
+              </Card>
             </Link>
           ))}
         </div>
-        <div className="mt-14 rounded-2xl border border-line bg-surface p-6">
-          <p className="text-faint text-xs font-medium uppercase tracking-[0.12em]">In practice</p>
-          <p className="mt-3 leading-relaxed">{a.example}</p>
-        </div>
-        {a.services && (
-          <>
-            <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">Services to set up first</h2>
-            <div className="mt-5 overflow-x-auto rounded-2xl border border-line">
-              <table className="w-full min-w-[520px] text-left text-[15px]">
-                <thead className="bg-surface">
-                  <tr>
-                    <th scope="col" className="px-5 py-3 font-medium">Service</th>
-                    <th scope="col" className="px-5 py-3 font-medium">Length</th>
-                    <th scope="col" className="px-5 py-3 font-medium">How to set it up</th>
+      </Band>
+
+      <Statement label="In practice">{a.example}</Statement>
+
+      {a.services && (
+        <Band title="Services to set up first" intro="A starting point you can change in a minute.">
+          <div className="overflow-x-auto rounded-2xl border border-line">
+            <table className="w-full min-w-[560px] text-left text-[17px]">
+              <thead className="bg-surface">
+                <tr>
+                  <th scope="col" className="px-6 py-4 font-medium">Service</th>
+                  <th scope="col" className="px-6 py-4 font-medium">Length</th>
+                  <th scope="col" className="px-6 py-4 font-medium">How to set it up</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {a.services.map((sv) => (
+                  <tr key={sv.name}>
+                    <th scope="row" className="px-6 py-5 font-medium">{sv.name}</th>
+                    <td className="text-fg/70 whitespace-nowrap px-6 py-5">{sv.length}</td>
+                    <td className="text-fg/70 px-6 py-5 leading-relaxed">{sv.note}</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-line">
-                  {a.services.map((sv) => (
-                    <tr key={sv.name}>
-                      <th scope="row" className="px-5 py-3.5 font-medium">{sv.name}</th>
-                      <td className="text-muted px-5 py-3.5 whitespace-nowrap">{sv.length}</td>
-                      <td className="text-muted px-5 py-3.5">{sv.note}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-        {a.faq && (
-          <>
-            <h2 className="mt-14 text-2xl font-normal tracking-[-0.02em]">Questions from {a.plural}</h2>
-            <div className="mt-4 divide-y divide-line border-y border-line">
-              {a.faq.map((f) => (
-                <div key={f.q} className="py-4">
-                  <h3 className="font-sans font-medium">{f.q}</h3>
-                  <p className="text-muted mt-1.5 leading-relaxed">{f.a}</p>
-                </div>
-              ))}
-            </div>
-            <JsonLd
-              data={{
-                "@context": "https://schema.org",
-                "@type": "FAQPage",
-                mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-              }}
-            />
-          </>
-        )}
-      </Container>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Band>
+      )}
+
+      {a.faq && <Faq items={a.faq} title={`Questions from ${a.plural}`} />}
       <FinalCta title={`A booking link made for ${a.plural}`} />
     </>
   );

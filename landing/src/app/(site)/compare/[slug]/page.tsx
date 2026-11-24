@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FinalCta } from "@/components/sections";
-import { BreadcrumbLd, ButtonLink, Container, Eyebrow } from "@/components/ui";
+import { Band, Card, PageHero, Statement } from "@/components/page-kit";
+import { BreadcrumbLd, ButtonLink } from "@/components/ui";
+import { COMPARE_SHOT } from "@/content/page-shots";
 import { comparisons } from "@/content/site-content";
 import { signupUrl, site } from "@/site.config";
 
@@ -35,46 +37,52 @@ export default async function ComparePage({ params }: Params) {
   return (
     <>
       <BreadcrumbLd siteUrl={site.url} trail={[{ name: `${c.competitor} alternative`, path: `/compare/${c.slug}` }]} />
-      <Container className="max-w-3xl pt-20">
-        <Eyebrow>{site.name} vs {c.competitor}</Eyebrow>
-        <h1 className="mt-4 text-[40px] font-normal leading-[1.05] tracking-[-0.025em] sm:text-[60px]">{c.title}</h1>
-        <p className="text-muted mt-5 text-lg leading-relaxed">{c.summary}</p>
-      </Container>
-      <Container className="max-w-3xl py-14">
+      <PageHero
+        eyebrow={`${site.name} vs ${c.competitor}`}
+        title={c.title}
+        summary={c.summary}
+        image={COMPARE_SHOT}
+        actions={
+          <>
+            <ButtonLink href={signupUrl}>Switch for free</ButtonLink>
+            <ButtonLink href="/pricing" variant="secondary">See pricing</ButtonLink>
+          </>
+        }
+      />
+      <Band title={`${site.name} and ${c.competitor}, side by side`}>
         <div className="overflow-x-auto rounded-2xl border border-line">
-          <table className="w-full min-w-[520px] text-left text-sm">
+          <table className="w-full min-w-[600px] text-left text-[17px]">
             <thead className="bg-surface">
               <tr>
-                <th className="px-5 py-3 font-medium" scope="col"> </th>
-                <th className="px-5 py-3 font-medium" scope="col">{site.name}</th>
-                <th className="text-muted px-5 py-3 font-medium" scope="col">{c.competitor}</th>
+                <th className="px-6 py-4 font-medium" scope="col"><span className="sr-only">Feature</span></th>
+                <th className="px-6 py-4 font-medium" scope="col">{site.name}</th>
+                <th className="text-fg/60 px-6 py-4 font-medium" scope="col">{c.competitor}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
               {c.rows.map((row) => (
                 <tr key={row.label}>
-                  <th scope="row" className="px-5 py-3.5 font-normal">{row.label}</th>
-                  <td className="px-5 py-3.5">{row.us}</td>
-                  <td className="text-muted px-5 py-3.5">{row.them}</td>
+                  <th scope="row" className="px-6 py-5 font-normal">{row.label}</th>
+                  <td className="px-6 py-5 font-medium">{row.us}</td>
+                  <td className="text-fg/60 px-6 py-5">{row.them}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-faint mt-3 text-xs">Based on public information at the time of writing. Check each product for current details.</p>
-        <p className="mt-10 leading-relaxed">{c.verdict}</p>
-        {GUIDES[c.slug] && (
-          <p className="mt-4">
-            <Link href={GUIDES[c.slug]} className="underline underline-offset-[3px]">
-              Read the full guide: every {c.competitor} alternative compared
-            </Link>
-          </p>
-        )}
-        <div className="mt-8 flex gap-3">
-          <ButtonLink href={signupUrl}>Switch for free</ButtonLink>
-          <ButtonLink href="/pricing" variant="secondary">Pricing</ButtonLink>
-        </div>
-      </Container>
+        <p className="text-faint mt-4 text-[14px]">Based on public information at the time of writing. Check each product for current details.</p>
+      </Band>
+      <Statement label="Our take">{c.verdict}</Statement>
+      {GUIDES[c.slug] && (
+        <Band title={`Comparing more than ${c.competitor}?`}>
+          <Link href={GUIDES[c.slug]} className="group block max-w-xl">
+            <Card className="transition group-hover:border-line-strong">
+              <p className="text-[21px] leading-snug">Every {c.competitor} alternative compared, with prices and who each one suits</p>
+              <span className="text-fg/60 mt-6 inline-block text-[15px] group-hover:text-fg">Read the full guide →</span>
+            </Card>
+          </Link>
+        </Band>
+      )}
       <FinalCta />
     </>
   );
