@@ -32,7 +32,7 @@ export const chatHandler = async ({
     });
   }
   if (!(await getPlanService().hasFeature(ctx.user.id, "assistant"))) {
-    throw new TRPCError({ code: "FORBIDDEN", message: "The assistant is part of Pro. Start a free trial to use it." });
+    throw new TRPCError({ code: "FORBIDDEN", message: "The Agent is part of Pro. Start a free trial to use it." });
   }
   await checkTrpcRateLimit(`assistant:${ctx.user.id}`);
   if (input.messages[input.messages.length - 1].role !== "user") {
