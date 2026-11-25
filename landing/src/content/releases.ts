@@ -169,8 +169,8 @@ export const releases: Release[] = [
         paragraphs: ["Not sure which service to book? Clients can describe what they need in a sentence, and the team page suggests the right one. They can also ask who's free at a particular time."],
       },
       {
-        heading: "Zapier, Make and more",
-        paragraphs: ["Our own Zapier and Make apps, plus HubSpot, Salesforce, Pipedrive, Google Analytics, Tag Manager and Meta Pixel."],
+        heading: "Zapier and more",
+        paragraphs: ["Our own Zapier app, plus Google Analytics, Tag Manager and Meta Pixel. Make, HubSpot, Salesforce and Pipedrive are coming soon."],
       },
     ],
   },

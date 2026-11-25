@@ -45,9 +45,10 @@ export const CURATED_APP_GROUPS: {
     titleKey: "apps_group_crm",
     subtitleKey: "apps_group_crm_sub",
     apps: [
-      { slug: "hubspot", descriptionKey: "apps_desc_hubspot" },
-      { slug: "salesforce", descriptionKey: "apps_desc_salesforce" },
-      { slug: "pipedrive-crm", descriptionKey: "apps_desc_pipedrive", name: "Pipedrive" },
+      // Each CRM needs its own developer app registered with the vendor before it can connect (see LAUNCH-TODO.md).
+      { slug: "hubspot", descriptionKey: "apps_desc_hubspot", comingSoon: true },
+      { slug: "salesforce", descriptionKey: "apps_desc_salesforce", comingSoon: true },
+      { slug: "pipedrive-crm", descriptionKey: "apps_desc_pipedrive", name: "Pipedrive", comingSoon: true },
     ],
   },
   {
@@ -78,7 +79,7 @@ export const CURATED_APP_GROUPS: {
     subtitleKey: "apps_group_automations_sub",
     apps: [
       { slug: "zapier", descriptionKey: "apps_desc_zapier" },
-      { slug: "make", descriptionKey: "apps_desc_make" },
+      { slug: "make", descriptionKey: "apps_desc_make", comingSoon: true },
       {
         slug: "webhooks",
         descriptionKey: "apps_desc_webhooks",

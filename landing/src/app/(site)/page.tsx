@@ -263,9 +263,9 @@ export default function Home() {
                 visual: <HoodPanel title="Group coaching" rows={[[null, "Seats", "8 per session"], [null, "Booked", "5 of 8"], [null, "Attendees", "Hidden from each other"]]} />,
               },
               {
-                title: "Zapier, HubSpot and Salesforce",
-                body: "Send every booking to your CRM, spreadsheet or anywhere else with Zapier, Make, HubSpot, Salesforce or Pipedrive.",
-                visual: <HoodPanel title="Connected" rows={[["/logos/zapier.svg", "Zapier", "New booking → Google Sheets"], [null, "HubSpot", "Contact created"], [null, "Salesforce", "Event logged"]]} />,
+                title: "Zapier and webhooks",
+                body: "Send every booking to a spreadsheet, your CRM or anywhere else with Zapier or webhooks. Make, HubSpot, Salesforce and Pipedrive are coming soon.",
+                visual: <HoodPanel title="Connected" rows={[["/logos/zapier.svg", "Zapier", "New booking → Google Sheets"], [null, "Webhook", "booking.created → your URL"], [null, "HubSpot", "Coming soon"]]} />,
               },
               {
                 title: "Import from Calendly",

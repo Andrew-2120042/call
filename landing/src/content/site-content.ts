@@ -420,7 +420,7 @@ export const pricing = [
       "New times offered when a client cancels, so they rebook in one click",
       "Waitlist on one service",
       "Buffers, daily limits and group sessions",
-      "Embed, Zapier, HubSpot and Salesforce",
+      "Embed on your site, Zapier and webhooks",
     ],
   },
   {
@@ -472,7 +472,8 @@ export const pricingCompare: { group: string; rows: { label: string; values: [st
       { label: "Clients overlay their own calendar", values: [true, true, true] },
       { label: "Buffers and daily or weekly limits", values: [true, true, true] },
       { label: "Group sessions (several people, one time)", values: [true, true, true] },
-      { label: "Zapier, Make, HubSpot, Salesforce, webhooks", values: [true, true, true] },
+      { label: "Zapier and webhooks", values: [true, true, true] },
+      { label: "Make, HubSpot, Salesforce, Pipedrive", values: ["Coming soon", "Coming soon", "Coming soon"] },
       { label: "Your own domain", values: [false, true, true] },
       { label: `Remove the ${site.name} badge`, values: [false, true, true] },
     ],
@@ -534,7 +535,7 @@ export const homeFaq = [
   },
   {
     q: `Which calendars and video apps work with ${site.name}?`,
-    a: "Google Calendar and Outlook (Microsoft 365) are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom or Microsoft Teams link. Zapier, Make and webhooks connect everything else.",
+    a: "Google Calendar and Outlook (Microsoft 365) are checked for conflicts and get new bookings. Bookings can include a Google Meet, Zoom or Microsoft Teams link. Zapier and webhooks connect everything else.",
   },
   {
     q: "Do my clients need an account?",
