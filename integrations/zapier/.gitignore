@@ -1,5 +1,4 @@
-node_modules
+node_modules/
 .zapierapprc
-build
+build/
 *.zip
-.env

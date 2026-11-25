@@ -1,17 +1,8 @@
-# Calbee for Zapier
+# Calbee on Zapier
 
-A Zapier Platform CLI app with four instant triggers (new booking, booking request, rescheduled, cancelled),
-signed in with a Calbee API key. The server side is `/api/integrations/zapier/*` in the main app.
+Calbee's public app on Zapier. Booking triggers use REST hooks against `/api/integrations/zapier/*` in the
+Calbee app, authenticated with a Calbee API key (created on Apps → Zapier in Calbee).
 
-```bash
-cd integrations/zapier
-npm install
-npx zapier-platform login            # opens your Zapier account
-npx zapier-platform register "Calbee"
-npx zapier-platform push
-npx zapier-platform env:set 1.0.0 BASE_URL=https://app.<your-domain>
-```
-
-Then in developer.zapier.com → your app → **Sharing** → copy the invite link, set `ZAPIER_INVITE_LINK` in the
-app's env and run `seed-app-store`. Going public in Zapier's directory needs a live domain, a few active users and
-Zapier's review; the invite link works before that.
+- `npm install` then `npx zapier-platform-cli validate` to check the definition.
+- Deploy: `ZAPIER_DEPLOY_KEY=… npx zapier-platform-cli push` (deploy key from developer.zapier.com → Settings → Deploy keys).
+- When the app's domain changes, set `CALBEE_APP_URL` in the integration's environment (`zapier env:set`) and push a new version.

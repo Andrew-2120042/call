@@ -1,18 +1,13 @@
 {
-  "name": "nodslot-zapier",
+  "name": "calbee-zapier",
   "version": "1.0.0",
-  "description": "Calbee for Zapier: instant triggers for new, requested, rescheduled and cancelled bookings.",
-  "private": true,
+  "description": "Calbee's app on Zapier: booking triggers over REST hooks, authenticated with a Calbee API key.",
   "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "zapier-platform test",
-    "validate": "zapier-platform validate",
-    "push": "zapier-platform push"
+    "test": "node test.js"
   },
   "dependencies": {
     "zapier-platform-core": "19.3.0"
-  },
-  "devDependencies": {
-    "zapier-platform-cli": "19.3.0"
   }
 }
