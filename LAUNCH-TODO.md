@@ -28,10 +28,10 @@ Everything still needed before Calbee goes live. Tick items off as they're done.
 
 ## Google sign-in (found 2026-11-25) — do before launch
 
-- **Name on the Google prompt**: "Sign in to … with Google" shows the old name. Calbee's Google sign-in client ("Slotwise web") lives in the **Usuals** Google Cloud project (app name "Usuals", shared with usuals.site), so renaming there would also rename Usuals. Plan: a separate Google Cloud project just for Calbee, named Calbee, with its own sign-in client; then update GOOGLE_API_CREDENTIALS in production.
-- **Testing mode blocks real users**: that Google app is in "Testing" with 0 test users, so on the live site ordinary people can be blocked from "Sign in with Google" and from connecting Google Calendar. Must be set to "In production" before launch. Calendar access means Google reviews the app (days to weeks); it needs the new domain, a privacy page and terms page (both exist on the website).
-- **Allowed websites** were added on 2026-11-25: nodslot.site, www.nodslot.site, localhost, localhost:3100. Add the new domain when it's bought.
-- **Live website** needs `NEXT_PUBLIC_GOOGLE_CLIENT_ID` set in the landing Vercel project (after the Vercel CLI is logged back into the Calbee account).
+- **Name on the Google prompt**: "Sign in to … with Google" shows the old name. The client used **locally** ("Slotwise web") lives in the **Usuals** Google Cloud project (app name "Usuals", shared with usuals.site, publishing status "Testing"), so renaming there would also rename Usuals. Plan: a separate Google Cloud project just for Calbee, named Calbee, with its own sign-in client.
+- **Check which Google client production uses** (needs the Vercel login fixed): the item above says production was published 2026-11-20 but unverified. If production also points at the Usuals/Testing client, real users are blocked; either way, Google's review (calendar scopes) is needed before launch to remove the warning screen and 100-user cap.
+- **Allowed websites** added 2026-11-25 on the local client: nodslot.site, www.nodslot.site, localhost, localhost:3100. Add the same to the production client, and the new domain when it's bought, or the sign-in prompt shows "origin not allowed".
+- **Live website** needs `NEXT_PUBLIC_GOOGLE_CLIENT_ID` (the production client's ID) set in the landing Vercel project.
 
 ## Later: needs payments (Stripe, after the US company is registered)
 
