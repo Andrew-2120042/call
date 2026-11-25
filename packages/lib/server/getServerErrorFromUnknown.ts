@@ -158,6 +158,7 @@ export function getHttpStatusCode(cause: Error | ErrorWithCode): number {
       return 400;
     // 409 Conflict
     case ErrorCode.NoAvailableUsersFound:
+    case ErrorCode.RecurringWeekUnavailable:
     case ErrorCode.FixedHostsUnavailableForBooking:
     case ErrorCode.RoundRobinHostsUnavailableForBooking:
     case ErrorCode.AlreadySignedUpForBooking:

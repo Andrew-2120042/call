@@ -904,37 +904,46 @@ async function handler(
       ) {
         const start = input.bookingData.allRecurringDates[i].start;
         const end = input.bookingData.allRecurringDates[i].end;
-        if (isTeamEvent) {
-          // each fixed user must be available
-          for (const key in fixedUsers) {
+        try {
+          if (isTeamEvent) {
+            // each fixed user must be available
+            for (const key in fixedUsers) {
+              if (!skipAvailabilityCheck) {
+                await ensureAvailableUsers(
+                  { ...eventTypeWithUsers, users: [fixedUsers[key]] },
+                  {
+                    dateFrom: dayjs(start).tz(reqBody.timeZone).format(),
+                    dateTo: dayjs(end).tz(reqBody.timeZone).format(),
+                    timeZone: reqBody.timeZone,
+                    originalRescheduledBooking: originalRescheduledBooking ?? null,
+                  },
+                  tracingLogger,
+                  calendarFetchMode
+                );
+              }
+            }
+          } else {
             if (!skipAvailabilityCheck) {
               await ensureAvailableUsers(
-                { ...eventTypeWithUsers, users: [fixedUsers[key]] },
+                eventTypeWithUsers,
                 {
                   dateFrom: dayjs(start).tz(reqBody.timeZone).format(),
                   dateTo: dayjs(end).tz(reqBody.timeZone).format(),
                   timeZone: reqBody.timeZone,
-                  originalRescheduledBooking: originalRescheduledBooking ?? null,
+                  originalRescheduledBooking,
                 },
                 tracingLogger,
                 calendarFetchMode
               );
             }
           }
-        } else {
-          if (!skipAvailabilityCheck) {
-            await ensureAvailableUsers(
-              eventTypeWithUsers,
-              {
-                dateFrom: dayjs(start).tz(reqBody.timeZone).format(),
-                dateTo: dayjs(end).tz(reqBody.timeZone).format(),
-                timeZone: reqBody.timeZone,
-                originalRescheduledBooking,
-              },
-              tracingLogger,
-              calendarFetchMode
-            );
-          }
+        } catch (error) {
+          // Week 1 keeps the usual "pick another time" error; a later week says which one is taken.
+          if (i === 0) throw error;
+          throw new ErrorWithCode(ErrorCode.RecurringWeekUnavailable, ErrorCode.RecurringWeekUnavailable, {
+            startTime: start,
+            week: i + 1,
+          });
         }
       }
     }

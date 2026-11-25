@@ -288,7 +288,10 @@ const getError = ({
   let date = "";
   let count = 0;
 
-  if (error.message === ErrorCode.BookerLimitExceededReschedule) {
+  if (
+    error.message === ErrorCode.BookerLimitExceededReschedule ||
+    error.message === ErrorCode.RecurringWeekUnavailable
+  ) {
     const formattedDate = formatEventFromTime({
       date: error.data.startTime,
       timeFormat,
@@ -300,6 +303,9 @@ const getError = ({
 
   if (error.message === ErrorCode.BookerLimitExceeded && error.data?.count) {
     count = error.data.count;
+  }
+  if (error.message === ErrorCode.RecurringWeekUnavailable && error.data?.week) {
+    count = error.data.week;
   }
 
   const messageKey =

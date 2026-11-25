@@ -28,7 +28,9 @@ export const handleNewRecurringBooking = async function (
   });
   const appsStatus: AppsStatus[] | undefined = undefined;
 
-  const numSlotsToCheckForAvailability = 1;
+  // Every week is checked before the first one is saved, so a clash in week 6 can't leave week 1 booked (and its
+  // confirmation sent) with the rest of the series missing.
+  const numSlotsToCheckForAvailability = data.length;
 
   let thirdPartyRecurringEventId = null;
 

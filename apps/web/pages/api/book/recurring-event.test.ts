@@ -379,11 +379,8 @@ describe("handleNewBooking", () => {
       );
 
       test(
-        `should create successful bookings for the number of slots requested even if the third slot is already booked as long as first two slots are free
-          1. Should create the same number of bookings as requested slots in the database
-          2. Should send emails for the first booking only to the booker as well as organizer
-          3. Should create a calendar event for every booking in the destination calendar
-          3. Should trigger BOOKING_CREATED webhook for every booking
+        `should refuse the whole series, booking nothing, when the third week is already taken
+          (Calbee: a series is checked week by week before anything is saved, so it is never half-booked.)
       `,
         async ({ emails }) => {
           const recurringCountInRequest = 4;
@@ -503,103 +500,16 @@ describe("handleNewBooking", () => {
               }),
           });
 
-          const createdBookings = await handleRecurringEventBooking(req);
-          expect(createdBookings.length).toBe(numOfSlotsToBeBooked);
-          for (const [index, createdBooking] of Object.entries(createdBookings)) {
-            logger.debug("Assertion for Booking with index:", index, { createdBooking });
-            expect(createdBooking.responses).toEqual(
-              expect.objectContaining({
-                email: booker.email,
-                name: booker.name,
-              })
-            );
-
-            expect(createdBooking).toEqual(
-              expect.objectContaining({
-                location: "integrations:daily",
-              })
-            );
-
-            await expectBookingToBeInDatabase({
-              description: "",
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              uid: createdBooking.uid!,
-              eventTypeId: mockBookingData.eventTypeId,
-              status: BookingStatus.ACCEPTED,
-              recurringEventId: mockBookingData.recurringEventId,
-              references: [
-                {
-                  type: "daily_video",
-                  uid: "MOCK_ID",
-                  meetingId: "MOCK_ID",
-                  meetingPassword: "MOCK_PASS",
-                  meetingUrl: "http://mock-dailyvideo.example.com/meeting-1",
-                },
-                {
-                  type: "google_calendar",
-                  uid: "MOCKED_GOOGLE_CALENDAR_EVENT_ID",
-                  meetingId: "MOCKED_GOOGLE_CALENDAR_EVENT_ID",
-                  meetingPassword: "MOCK_PASSWORD",
-                },
-              ],
-            });
-
-            expectBookingCreatedWebhookToHaveBeenFired({
-              booker,
-              organizer,
-              location: "integrations:daily",
-              subscriberUrl: "http://my-webhook.example.com",
-              //FIXME: File a bug - All recurring bookings seem to have the same URL. They should have same CalVideo URL which could mean that future recurring meetings would have already expired by the time they are needed.
-              videoCallUrl: `${WEBAPP_URL}/video/${createdBookings[0].uid}`,
-            });
-          }
-
-          expectSuccessfulBookingCreationEmails({
-            booker,
-            booking: {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              uid: createdBookings[0].uid!,
-              urlOrigin: WEBAPP_URL,
-            },
-            organizer,
-            emails,
-            iCalUID: "MOCKED_GOOGLE_CALENDAR_ICS_ID",
-            recurrence: {
-              ...recurrence,
-              count: recurringCountInRequest,
-            },
-          });
-
-          expect(emails.get().length).toBe(2);
-
-          expectSuccessfulCalendarEventCreationInCalendar(calendarMock, [
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-          ]);
+          await expect(handleRecurringEventBooking(req)).rejects.toThrow(ErrorCode.RecurringWeekUnavailable);
+          expect(emails.get().length).toBe(0);
+          expect(calendarMock.createEventCalls.length).toBe(0);
         },
         timeout
       );
 
       test(
-        `should create successful bookings for the number of slots requested even if the last slot is already booked as long as first two slots are free
-          1. Should create the same number of bookings as requested slots in the database
-          2. Should send emails for the first booking only to the booker as well as organizer
-          3. Should create a calendar event for every booking in the destination calendar
-          3. Should trigger BOOKING_CREATED webhook for every booking
+        `should refuse the whole series, booking nothing, when the last week is already taken
+          (Calbee: a series is checked week by week before anything is saved, so it is never half-booked.)
       `,
         async ({ emails }) => {
           const recurringCountInRequest = 4;
@@ -719,93 +629,9 @@ describe("handleNewBooking", () => {
               }),
           });
 
-          const createdBookings = await handleRecurringEventBooking(req);
-          expect(createdBookings.length).toBe(numOfSlotsToBeBooked);
-          for (const [index, createdBooking] of Object.entries(createdBookings)) {
-            logger.debug("Assertion for Booking with index:", index, { createdBooking });
-            expect(createdBooking.responses).toEqual(
-              expect.objectContaining({
-                email: booker.email,
-                name: booker.name,
-              })
-            );
-
-            expect(createdBooking).toEqual(
-              expect.objectContaining({
-                location: "integrations:daily",
-              })
-            );
-
-            await expectBookingToBeInDatabase({
-              description: "",
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              uid: createdBooking.uid!,
-              eventTypeId: mockBookingData.eventTypeId,
-              status: BookingStatus.ACCEPTED,
-              recurringEventId: mockBookingData.recurringEventId,
-              references: [
-                {
-                  type: "daily_video",
-                  uid: "MOCK_ID",
-                  meetingId: "MOCK_ID",
-                  meetingPassword: "MOCK_PASS",
-                  meetingUrl: "http://mock-dailyvideo.example.com/meeting-1",
-                },
-                {
-                  type: "google_calendar",
-                  uid: "MOCKED_GOOGLE_CALENDAR_EVENT_ID",
-                  meetingId: "MOCKED_GOOGLE_CALENDAR_EVENT_ID",
-                  meetingPassword: "MOCK_PASSWORD",
-                },
-              ],
-            });
-
-            expectBookingCreatedWebhookToHaveBeenFired({
-              booker,
-              organizer,
-              location: "integrations:daily",
-              subscriberUrl: "http://my-webhook.example.com",
-              //FIXME: File a bug - All recurring bookings seem to have the same URL. They should have same CalVideo URL which could mean that future recurring meetings would have already expired by the time they are needed.
-              videoCallUrl: `${WEBAPP_URL}/video/${createdBookings[0].uid}`,
-            });
-          }
-
-          expectSuccessfulBookingCreationEmails({
-            booking: {
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              uid: createdBookings[0].uid!,
-              urlOrigin: WEBAPP_URL,
-            },
-            booker,
-            organizer,
-            emails,
-            iCalUID: "MOCKED_GOOGLE_CALENDAR_ICS_ID",
-            recurrence: {
-              ...recurrence,
-              count: recurringCountInRequest,
-            },
-          });
-
-          expect(emails.get().length).toBe(2);
-
-          expectSuccessfulCalendarEventCreationInCalendar(calendarMock, [
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-            {
-              calendarId: "event-type-1@google-calendar.com",
-              videoCallUrl: "http://mock-dailyvideo.example.com/meeting-1",
-            },
-          ]);
+          await expect(handleRecurringEventBooking(req)).rejects.toThrow(ErrorCode.RecurringWeekUnavailable);
+          expect(emails.get().length).toBe(0);
+          expect(calendarMock.createEventCalls.length).toBe(0);
         },
         timeout
       );
